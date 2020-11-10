@@ -1,0 +1,21 @@
+{
+    "name": "shared",
+    "version": "0.0.1",
+    "description": "",
+    "files": [
+        "lib/**/*"
+    ],
+    "scripts": {
+        "prepare": "tsc -p tsconfig.json",
+        "start": "tsc -p tsconfig.json -w"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "moment": "^2.29.1"
+    },
+    "devDependencies": {
+        "typescript": "^4.0.5"
+    }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "mobile",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest --watchAll=false",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@sentry/react-native": "^1.9.0",
+    "aidbox-react": "git+https://github.com/beda-software/aidbox-react.git",
+    "lodash": "^4.17.20",
+    "react": "16.13.1",
+    "react-native": "0.63.3",
+    "react-native-navigation": "^7.2.0",
+    "shared": "0.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/runtime": "^7.8.4",
+    "@testing-library/react-hooks": "^3.4.2",
+    "@testing-library/react-native": "^7.1.0",
+    "@types/jest": "^25.2.3",
+    "@types/lodash": "^4.14.163",
+    "@types/react-native": "^0.63.2",
+    "@types/react-native-navigation": "^2.0.0",
+    "@types/react-test-renderer": "^16.9.2",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-test-renderer": "16.13.1",
+    "typescript": "^4.0.5"
+  }
+}

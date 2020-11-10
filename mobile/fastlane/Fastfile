@@ -1,0 +1,206 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+lane :prepare do |options| 
+  git_submodule_update("init": true, "recursive": true)
+  yarn(options: "network-concurrency=1", package_path: "../package.json")
+
+  if ENV["BITRISEIO_ANDROID_KEYSTORE_URL"]
+    ENV["ANDROID_RELEASE_STORE_FILE"] = Dir.pwd + "/release.keystore"
+    sh("curl", ENV["BITRISEIO_ANDROID_KEYSTORE_URL"], "-o", ENV["ANDROID_RELEASE_STORE_FILE"])
+  end
+  if ENV["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
+    ENV["ANDROID_RELEASE_STORE_PASSWORD"] = ENV["BITRISEIO_ANDROID_KEYSTORE_PASSWORD"]
+  end
+  if ENV["BITRISEIO_ANDROID_KEYSTORE_ALIAS"]
+    ENV["ANDROID_RELEASE_KEY_ALIAS"] = ENV["BITRISEIO_ANDROID_KEYSTORE_ALIAS"]
+  end
+  if ENV["BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD"]
+    ENV["ANDROID_RELEASE_KEY_PASSWORD"] = ENV["BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD"]
+  end
+  if ENV["BITRISEIO_SENTRY_PROPERTIES_URL"]
+    ENV["SENTRY_PROPERTIES"] = Dir.pwd + "/sentry.properties"
+    sh("curl", ENV["BITRISEIO_SENTRY_PROPERTIES_URL"], "-o", ENV["SENTRY_PROPERTIES"])
+  end
+  if ENV["BITRISEIO_SUPPLY_JSON_KEY_URL"]
+    ENV["SUPPLY_JSON_KEY"] = Dir.pwd + "/supply.json"
+    sh("curl", ENV["BITRISEIO_SUPPLY_JSON_KEY_URL"], "-o", ENV["SUPPLY_JSON_KEY"])
+  end
+end
+
+lane :copy_constants do |options|
+  sh("cp", "../src/services/initialize.#{options[:stage]}.ts", "../src/services/initialize.ts")
+end
+
+platform :ios do
+  before_all do |lane, options|
+    prepare
+    ensure_env_vars(
+      env_vars: [
+        "SENTRY_PROPERTIES",
+        "KEYCHAIN_PASSWORD",
+        "MATCH_PASSWORD",
+        "FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"
+      ]
+    )
+    sh("cp", ENV["SENTRY_PROPERTIES"], "../ios/sentry.properties")
+
+    clear_derived_data
+    create_keychain(
+      name: "ci",
+      password: ENV["KEYCHAIN_PASSWORD"],
+      unlock: true,
+      timeout: 3600,
+    )
+    match(
+      type: "appstore",
+      readonly: true,
+      keychain_name: "ci",
+      keychain_password: ENV["KEYCHAIN_PASSWORD"]
+    )
+    cocoapods("podfile": "ios/")
+    increment_build_number(build_number: number_of_commits, xcodeproj: "ios/mobile.xcodeproj")
+  end
+
+  lane :develop do
+    copy_constants("stage": "develop")
+    build_app(
+      workspace: "ios/mobile.xcworkspace",
+      scheme: "Develop",
+      suppress_xcode_output: true,
+      clean: true
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  lane :staging do
+    copy_constants("stage": "staging")
+    build_app(
+      workspace: "ios/mobile.xcworkspace", 
+      scheme: "Staging",
+      suppress_xcode_output: true,
+      clean: true
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  lane :production do
+    copy_constants("stage": "master")
+    build_app(
+      workspace: "ios/mobile.xcworkspace", 
+      scheme: "Production",
+      suppress_xcode_output: true,
+      clean: true
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+end
+
+platform :android do
+  before_all do |lane, options|
+    prepare
+    ensure_env_vars(
+      env_vars: [
+        "SENTRY_PROPERTIES", 
+        "ANDROID_RELEASE_STORE_FILE",
+        "ANDROID_RELEASE_STORE_PASSWORD", 
+        "ANDROID_RELEASE_KEY_ALIAS", 
+        "ANDROID_RELEASE_KEY_PASSWORD" 
+      ]  
+    )
+    sh("cp", ENV["SENTRY_PROPERTIES"], "../android/sentry.properties")
+
+    increment_version_code(app_folder_name: "android/app", version_code: number_of_commits)
+  end
+
+  lane :develop do
+    # I don't know why, but it is necessary to do to populate ENV from Appfile
+    puts ENV
+    ensure_env_vars(
+      env_vars: ["FIREBASE_TOKEN"]
+    )
+
+    copy_constants("stage": "develop")
+    gradle(
+      "project_dir": "android",
+      "task": "clean assemble",
+      "flavor": "develop",
+      "build_type": "Release",
+      "properties": {
+        "android.injected.signing.store.file" => ENV["ANDROID_RELEASE_STORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_RELEASE_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_RELEASE_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_RELEASE_KEY_PASSWORD"]
+      })
+    copy_artifacts(
+      artifacts: [lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]],
+      target_path: './'
+    )
+
+    firebase_app_distribution(
+      "groups": "team"
+    )
+  end
+  
+  lane :staging do
+    # I don't know why, but it is necessary to do to populate ENV from Appfile
+    puts ENV
+    ensure_env_vars(
+      env_vars: ["FIREBASE_TOKEN"]
+    )
+
+    copy_constants("stage": "staging")
+    gradle(
+      "project_dir": "android",
+      "task": "clean assemble",
+      "flavor": "staging",
+      "build_type": "Release",
+      "properties": {
+        "android.injected.signing.store.file" => ENV["ANDROID_RELEASE_STORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_RELEASE_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_RELEASE_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_RELEASE_KEY_PASSWORD"]
+      })
+    copy_artifacts(
+      artifacts: [lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]],
+      target_path: './'
+    )
+    
+    firebase_app_distribution(
+      "groups": "team,internal"
+    )
+  end
+  
+  lane :production do
+    ensure_env_vars(
+      env_vars: ["SUPPLY_JSON_KEY"]
+    )
+
+    copy_constants("stage": "master")
+    gradle(
+      "project_dir": "android",
+      "task": "clean bundle",
+      "flavor": "production",
+      "build_type": "Release",
+      "properties": {
+        "android.injected.signing.store.file" => ENV["ANDROID_RELEASE_STORE_FILE"],
+        "android.injected.signing.store.password" => ENV["ANDROID_RELEASE_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_RELEASE_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_RELEASE_KEY_PASSWORD"]
+      })
+    upload_to_play_store(track: "internal")
+  end
+end
+

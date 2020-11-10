@@ -1,0 +1,12 @@
+node_modules
+shared/lib
+*.log
+coverage
+.DS_Store
+.idea
+htmlcov
+
+# Project-specific files
+*/src/services/initialize.ts
+sentry.properties
+.env.test.local
