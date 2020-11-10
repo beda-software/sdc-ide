@@ -2,35 +2,21 @@ import React from 'react';
 import { Route, Switch, Router, Redirect } from 'react-router-dom';
 import { Token } from 'aidbox-react/lib/services/token';
 
-import { getWelcomeString } from 'shared/lib/utils/misc';
-
 import { history } from 'src/services/history';
-import { Button } from 'src/components/Button';
 
-import logo from './images/logo.svg';
-import s from './App.module.scss';
+import { DemoPage } from 'src/containers/DemoPage';
 
 export function App() {
     const [appToken] = React.useState<Token | undefined>();
 
     const renderAnonymousRoutes = () => (
         <Switch>
-            <Route path="/signin" exact>
-                <div className={s.container}>
-                    <header className={s.header}>
-                        <img src={logo} className={s.logo} alt="logo" />
-                        <p>{getWelcomeString('World')}</p>
-                        <Button variant="primary" style={{ marginTop: 15 }}>
-                            Sign in
-                        </Button>
-                    </header>
-                </div>
+            <Route path="/" exact>
+                <DemoPage />
             </Route>
-            <Route path="/reset-password" exact render={() => <div>Reset password</div>} />
-            <Route path="/set-password/:code" exact render={() => <div>Set password</div>} />
             <Redirect
                 to={{
-                    pathname: '/signin',
+                    pathname: '/',
                     state: { referrer: history.location.pathname },
                 }}
             />

@@ -1,0 +1,33 @@
+.container {
+  text-align: center;
+  display: flex;
+}
+
+.patientFHIRResourceBox {
+  background-color: #DABFFF;
+  min-height: 300px;
+}
+
+.questFHIRResourceBox {
+  background-color: #907AD6;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.patientBatchRequestBox {
+  background-color: #4F518C;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.patientFormBox {
+  background-color: #2C2A4A;
+  min-height: 300px;
+  min-width: 300px;
+}
+
+.patientMapperBox {
+  background-color: #7FDEFF;
+  min-height: 300px;
+  min-width: 300px;
+}
