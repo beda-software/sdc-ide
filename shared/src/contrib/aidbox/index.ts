@@ -34836,3 +34836,5 @@ export interface VisionPrescriptionLensSpecificationPrism {
      */
     base: code;
 }
+
+export interface Mapping extends AidboxResource {}

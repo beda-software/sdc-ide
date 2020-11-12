@@ -1,31 +1,34 @@
 import React from 'react';
 import s from './DemoPage.module.scss';
 
-import { Button } from 'src/components/Button';
 import { Logo } from 'src/components/Logo';
+import { MappingBox } from 'src/containers/DemoPage/MappingBox';
+import { PatientResourceBox } from 'src/containers/DemoPage/PatientResourceBox';
+import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
+import { PatientBatchRequestBox } from 'src/containers/DemoPage/PatientBatchRequestBox';
+import { QuestionnaireResourceBox } from 'src/containers/DemoPage/QuestionnaireResourceBox';
 
 export function DemoPage() {
     return (
         <div className={s.mainContainer}>
             <div className={s.upperRowContainer}>
                 <div className={s.patientFHIRResourceBox}>
-                    <h2>Patient FHIR Resource</h2>
+                    <PatientResourceBox />
                 </div>
                 <div className={s.questFHIRResourceBox}>
-                    <h2>Questionanire FHIR Resource</h2>
+                    <QuestionnaireResourceBox />
                 </div>
                 <div className={s.patientFormBox}>
-                    <h2>Patient Form</h2>
-                    <Button variant="primary">Save</Button>
+                    <PatientFormBox />
                 </div>
                 <div className={s.patientBatchRequestBox}>
-                    <h2>Patient batch request</h2>
+                    <PatientBatchRequestBox />
                 </div>
             </div>
 
             <div className={s.lowerRowContainer}>
                 <div className={s.patientMapperBox}>
-                    <h2>Patient JUTE Mapping</h2>
+                    <MappingBox />
                 </div>
             </div>
             <Logo />

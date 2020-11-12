@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// import "src/services/initialize.develop";
+import 'src/services/initialize.develop';
 
 import { App } from 'src/containers/App';
 import 'src/styles/index.scss';
 
 import * as serviceWorker from './serviceWorker';
+import { axiosInstance } from 'aidbox-react/lib/services/instance';
+
+axiosInstance.defaults.auth = {
+    username: 'root',
+    password: 'secret',
+};
 
 ReactDOM.render(
     <React.StrictMode>
