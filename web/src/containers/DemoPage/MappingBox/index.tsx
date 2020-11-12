@@ -6,6 +6,8 @@ import { Mapping } from 'shared/lib/contrib/aidbox';
 
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
+import './styles.css';
+
 require('codemirror/mode/javascript/javascript');
 // require('codemirror/mode/yaml/yaml');
 
@@ -31,7 +33,7 @@ export function MappingBox() {
                         <CodeMirror
                             value={JSON.stringify(mapping, undefined, 2)}
                             options={{
-                                lineNumbers: true,
+                                lineNumbers: false,
                                 mode: 'javascript',
                             }}
                             onChange={(editor, data, value) => {
