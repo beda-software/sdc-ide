@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { Patient } from 'shared/lib/contrib/aidbox';
+import { CodeEditor } from 'src/components/CodeEditor';
+
+import s from './PatientResourceBox.module.scss';
 
 interface PatientResourceBoxProps {
     patientResponse: RemoteData<Patient>;
@@ -15,15 +17,14 @@ export function PatientResourceBox({ patientResponse }: PatientResourceBoxProps)
             <h2>Patient FHIR Resource</h2>
             <RenderRemoteData remoteData={patientResponse}>
                 {(patient) => (
-                    <>
-                        <CodeMirror
-                            value={JSON.stringify(patient, undefined, 2)}
+                    <div className={s.wrapper}>
+                        <CodeEditor
+                            valueObject={patient}
                             options={{
-                                lineNumbers: false,
-                                mode: 'javascript',
+                                readOnly: true,
                             }}
                         />
-                    </>
+                    </div>
                 )}
             </RenderRemoteData>
         </>

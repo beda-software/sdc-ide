@@ -6,6 +6,8 @@ import { service } from 'aidbox-react/lib/services/service';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
+import s from './PatientFormBox.module.scss';
+
 interface PatientFormBoxProps {
     questionnaire: Questionnaire;
     patient: Patient;
@@ -35,7 +37,7 @@ export function PatientFormBox(props: PatientFormBoxProps) {
     return (
         <RenderRemoteData remoteData={questionnaireResponse}>
             {(questionnaireResponse) => (
-                <div style={{ height: '40vh', overflowY: 'auto' }}>
+                <div className={s.wrapper}>
                     <QuestionnaireResponseForm
                         questionnaire={questionnaire}
                         resource={questionnaireResponse}

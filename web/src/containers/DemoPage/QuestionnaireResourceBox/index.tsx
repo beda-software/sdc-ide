@@ -1,11 +1,13 @@
 import React from 'react';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { Mapping, Questionnaire } from 'shared/lib/contrib/aidbox';
 
-import './styles.css';
+import { CodeEditor } from 'src/components/CodeEditor';
+import { displayToObject } from 'src/utils/yaml';
+
+import s from './QuestionnaireResourceBox.module.scss'
 
 export function QuestionnaireResourceBox() {
     const [questionnaireRemoteData] = useService(() =>
@@ -25,20 +27,16 @@ export function QuestionnaireResourceBox() {
             <h2>Questionanire FHIR Resource</h2>
             <RenderRemoteData remoteData={questionnaireRemoteData}>
                 {(questionnaire) => (
-                    <>
-                        <CodeMirror
-                            value={JSON.stringify(questionnaire, undefined, 2)}
-                            options={{
-                                lineNumbers: false,
-                                mode: 'javascript',
-                            }}
+                    <div className={s.wrapper}>
+                        <CodeEditor
+                            valueObject={questionnaire}
                             onChange={(editor, data, value) => {
                                 setTimeout(() => {
-                                    saveQuestionnaire(JSON.parse(value));
+                                    saveQuestionnaire(displayToObject(value));
                                 }, 2000);
                             }}
                         />
-                    </>
+                    </div>
                 )}
             </RenderRemoteData>
         </>

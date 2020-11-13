@@ -1,0 +1,13 @@
+@import "src/styles/colors";
+
+.wrapper {
+
+}
+
+.toggleArrow {
+  margin-right: 5px;
+}
+
+.toggleArrow:hover {
+  color: $primary-color;
+}
