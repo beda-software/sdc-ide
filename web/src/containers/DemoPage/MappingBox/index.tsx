@@ -26,7 +26,7 @@ export function MappingBox({ mappingId }: MappingBoxProps) {
 
     const saveMapping = async (resource: Mapping) => {
         const resp = await saveFHIRResource(resource);
-        console.log(resp);
+        console.log('saveMapping', resp);
     };
 
     return (

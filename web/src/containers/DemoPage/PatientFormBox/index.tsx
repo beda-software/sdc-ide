@@ -4,6 +4,7 @@ import { Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'share
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { service } from 'aidbox-react/lib/services/service';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 interface PatientFormBoxProps {
     questionnaire: Questionnaire;
@@ -34,20 +35,23 @@ export function PatientFormBox(props: PatientFormBoxProps) {
     return (
         <RenderRemoteData remoteData={questionnaireResponse}>
             {(questionnaireResponse) => (
-                <QuestionnaireResponseForm
-                    questionnaire={questionnaire}
-                    resource={questionnaireResponse}
-                    onSave={async (resource) => {
-                        const response = await service({
-                            method: 'POST',
-                            url: `/Mapping/${mappingId}/$debug`,
-                            data: resource,
-                        });
-                        console.log(response);
-                        setBatchRequest(response);
-                        setQuestionnaireResponse(resource);
-                    }}
-                />
+                <div style={{ height: '40vh', overflowY: 'auto' }}>
+                    <QuestionnaireResponseForm
+                        questionnaire={questionnaire}
+                        resource={questionnaireResponse}
+                        onSave={async (resource) => {
+                            const debugResponse = await service({
+                                method: 'POST',
+                                url: `/Mapping/${mappingId}/$debug`,
+                                data: resource,
+                            });
+                            if (isSuccess(debugResponse)) {
+                                setBatchRequest(debugResponse.data);
+                            }
+                            setQuestionnaireResponse(resource);
+                        }}
+                    />
+                </div>
             )}
         </RenderRemoteData>
     );

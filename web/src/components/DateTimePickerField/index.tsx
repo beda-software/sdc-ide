@@ -12,7 +12,6 @@ interface InputFieldProps {
 }
 
 export function DateTimePickerField({ input, meta, label, placeholder }: InputFieldProps) {
-    console.log(input);
     return (
         <div className={s.wrapper}>
             <label className={s.label}>{label}</label>

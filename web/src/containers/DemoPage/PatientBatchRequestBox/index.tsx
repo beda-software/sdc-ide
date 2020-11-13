@@ -25,14 +25,16 @@ export function PatientBatchRequestBox(props: PatientBatchRequestBoxProps) {
     return (
         <>
             <h2>Patient batch request</h2>
-            <CodeMirror
-                value={JSON.stringify(batchRequest, undefined, 2)}
-                options={{
-                    lineNumbers: false,
-                    mode: 'javascript',
-                    readOnly: true,
-                }}
-            />
+            <div style={{ maxHeight: '37vh', overflowY: 'auto' }}>
+                <CodeMirror
+                    value={JSON.stringify(batchRequest, undefined, 2)}
+                    options={{
+                        lineNumbers: false,
+                        mode: 'javascript',
+                        readOnly: true,
+                    }}
+                />
+            </div>
             <Button
                 onClick={async () => {
                     if (questionnaireResponse) {

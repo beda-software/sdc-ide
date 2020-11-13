@@ -5,6 +5,8 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { Mapping, Questionnaire } from 'shared/lib/contrib/aidbox';
 
+import './styles.css';
+
 export function QuestionnaireResourceBox() {
     const [questionnaireRemoteData] = useService(() =>
         getFHIRResource<Mapping>({
