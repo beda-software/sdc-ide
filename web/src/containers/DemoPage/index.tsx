@@ -40,13 +40,16 @@ export function DemoPage() {
                     <QuestionnaireResourceBox />
                 </div>
                 <div className={s.patientFormBox}>
-                    {isSuccess(questionnaireRemoteData) && isSuccess(patientResponse) && (
-                        <PatientFormBox
-                            questionnaire={questionnaireRemoteData.data}
-                            patient={patientResponse.data}
-                            setBatchRequest={setBatchRequest}
-                        />
-                    )}
+                    <>
+                        <h2>Patient Form</h2>
+                        {isSuccess(questionnaireRemoteData) && isSuccess(patientResponse) && (
+                            <PatientFormBox
+                                questionnaire={questionnaireRemoteData.data}
+                                patient={patientResponse.data}
+                                setBatchRequest={setBatchRequest}
+                            />
+                        )}
+                    </>
                 </div>
                 <div className={s.patientBatchRequestBox}>
                     <PatientBatchRequestBox batchRequest={batchRequest} />

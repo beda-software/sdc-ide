@@ -14,7 +14,6 @@
         "@types/react-dom": "^16.9.0",
         "@types/react-router-dom": "^5.1.6",
         "aidbox-react": "git+https://github.com/beda-software/aidbox-react.git",
-        "antd": "^4.8.2",
         "classnames": "^2.2.6",
         "codemirror": "^5.58.2",
         "final-form": "^4.20.1",

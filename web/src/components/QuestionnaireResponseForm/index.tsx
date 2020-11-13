@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import * as React from 'react';
-import { Button, Form } from 'antd';
 import { Field, Form as FinalForm, FormRenderProps } from 'react-final-form';
 
 import {
@@ -11,6 +10,8 @@ import {
     mapResponseToForm,
 } from 'src/utils/questionnaire';
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
+import { Button } from 'src/components/Button';
+import { InputField } from 'src/components/InputField';
 
 interface Props {
     resource: QuestionnaireResponse;
@@ -142,13 +143,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             <>
                 <Field name={[...fieldPath, 'value', 'string'].join('.')}>
                     {({ input, meta }) => {
-                        return (
-                            <div>
-                                <label>{text}</label>
-                                <input type="text" {...input} placeholder="Phone" />
-                                {meta.touched && meta.error && <span>{meta.error}</span>}
-                            </div>
-                        );
+                        return <InputField input={input} meta={meta} label={text} />;
                     }}
                 </Field>
                 {item ? this.renderQuestions(item, [...fieldPath, 'items'], formParams) : null}
@@ -195,28 +190,19 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     public renderForm = (items: QuestionnaireItem[], formParams: FormRenderProps) => {
         const { readOnly } = this.props;
         const { handleSubmit, submitting } = formParams;
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 2 },
-                sm: { span: 6 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 16 },
-            },
-        };
+
         return (
             <>
-                <Form onFinish={handleSubmit} {...formItemLayout}>
+                <form>
                     {this.renderQuestions(items, [], formParams)}
                     {!readOnly && (
                         <div className="questionnaire-form-actions">
-                            <Button htmlType="submit" disabled={submitting} loading={submitting}>
+                            <Button onClick={handleSubmit} disabled={submitting}>
                                 Save
                             </Button>
                         </div>
                     )}
-                </Form>
+                </form>
             </>
         );
     };

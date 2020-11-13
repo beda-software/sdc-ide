@@ -21,25 +21,24 @@ export function PatientBatchRequestBox({ batchRequest }: PatientBatchRequestBoxP
     return (
         <>
             <h2>Patient batch request</h2>
-            {batchRequest && (
-                <>
-                    <CodeMirror
-                        value={JSON.stringify(batchRequest, undefined, 2)}
-                        options={{
-                            lineNumbers: false,
-                            mode: 'javascript',
-                            readOnly: true,
-                        }}
-                    />
-                    <Button
-                        onClick={async () => {
-                            await applyBundle(batchRequest);
-                        }}
-                    >
-                        Apply
-                    </Button>
-                </>
-            )}
+            <CodeMirror
+                value={JSON.stringify(batchRequest, undefined, 2)}
+                options={{
+                    lineNumbers: false,
+                    mode: 'javascript',
+                    readOnly: true,
+                }}
+            />
+            <Button
+                onClick={async () => {
+                    if (batchRequest) {
+                        await applyBundle(batchRequest);
+                    }
+                }}
+                disabled={!batchRequest}
+            >
+                Apply
+            </Button>
         </>
     );
 }

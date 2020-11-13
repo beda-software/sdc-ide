@@ -1,9 +1,9 @@
 import React from 'react';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { service } from 'aidbox-react/lib/services/service';
+import { RenderRemoteData } from 'src/components/RenderRemoteData';
 
 interface PatientFormBoxProps {
     questionnaire: Questionnaire;
@@ -30,12 +30,11 @@ export function PatientFormBox({ questionnaire, patient, setBatchRequest }: Pati
         return populatedResp;
     }, [questionnaire]);
     return (
-        <>
-            <h2>Patient Form</h2>
-            {isSuccess(questionnaireResponse) && (
+        <RenderRemoteData remoteData={questionnaireResponse}>
+            {(questionnaireResponse) => (
                 <QuestionnaireResponseForm
                     questionnaire={questionnaire}
-                    resource={questionnaireResponse.data}
+                    resource={questionnaireResponse}
                     onSave={async (resource) => {
                         const response = await service({
                             method: 'POST',
@@ -47,6 +46,6 @@ export function PatientFormBox({ questionnaire, patient, setBatchRequest }: Pati
                     }}
                 />
             )}
-        </>
+        </RenderRemoteData>
     );
 }
