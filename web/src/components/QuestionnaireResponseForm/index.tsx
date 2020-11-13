@@ -12,6 +12,7 @@ import {
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { Button } from 'src/components/Button';
 import { InputField } from 'src/components/InputField';
+import { DateTimePickerField } from 'src/components/DateTimePickerField';
 
 interface Props {
     resource: QuestionnaireResponse;
@@ -151,6 +152,28 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
+    public renderAnswerDateTime(
+        questionItem: QuestionnaireItem,
+        parentPath: string[],
+        formParams: FormRenderProps,
+        index = 0,
+    ) {
+        const { linkId, text, item } = questionItem;
+        const fieldPath = [...parentPath, linkId, _.toString(index)];
+
+        return (
+            <>
+                <Field name={[...fieldPath, 'value', 'date'].join('.')}>
+                    {({ input, meta }) => {
+                        return <DateTimePickerField input={input} meta={meta} label={text} />;
+                    }}
+                </Field>
+
+                {item ? this.renderQuestions(item, [...fieldPath, 'items'], formParams) : null}
+            </>
+        );
+    }
+
     public renderAnswer(rawQuestionItem: QuestionnaireItem, parentPath: string[], formParams: FormRenderProps): any {
         const questionItem = {
             ...rawQuestionItem,
@@ -160,6 +183,10 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
 
         if (type === 'string' || type === 'text') {
             return this.renderRepeatsAnswer(this.renderAnswerText, questionItem, parentPath, formParams);
+        }
+
+        if (type === 'date' || type === 'dateTime') {
+            return this.renderRepeatsAnswer(this.renderAnswerDateTime, questionItem, parentPath, formParams);
         }
 
         if (type === 'display') {
@@ -193,7 +220,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
 
         return (
             <>
-                <form>
+                <form autoComplete="off">
                     {this.renderQuestions(items, [], formParams)}
                     {!readOnly && (
                         <div className="questionnaire-form-actions">

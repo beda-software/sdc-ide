@@ -8,27 +8,32 @@ import { PatientBatchRequestBox } from 'src/containers/DemoPage/PatientBatchRequ
 import { QuestionnaireResourceBox } from 'src/containers/DemoPage/QuestionnaireResourceBox';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { Questionnaire, Patient, Bundle } from 'shared/lib/contrib/aidbox';
+import { Questionnaire, Patient, Bundle, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
 
 export function DemoPage() {
+    const patientId = 'demo-patient';
+    const mappingId = 'patient-extract';
+    const questionnaireId = 'patient-information';
+
+    const [batchRequest, setBatchRequest] = React.useState<Bundle<any> | undefined>();
+    const [questionnaireResponse, setQuestionnaireResponse] = React.useState<QuestionnaireResponse | undefined>();
+
     const [questionnaireRemoteData] = useService(async () => {
         return getFHIRResource<Questionnaire>({
             resourceType: 'Questionnaire',
-            id: 'patient-information',
+            id: questionnaireId,
         });
     });
 
     const [patientResponse] = useService(() =>
         getFHIRResource<Patient>({
             resourceType: 'Patient',
-            id: 'demo-patient',
+            id: patientId,
         }),
     );
-
-    const [batchRequest, setBatchRequest] = React.useState<Bundle<any> | undefined>();
 
     return (
         <div className={s.mainContainer}>
@@ -47,18 +52,24 @@ export function DemoPage() {
                                 questionnaire={questionnaireRemoteData.data}
                                 patient={patientResponse.data}
                                 setBatchRequest={setBatchRequest}
+                                mappingId={mappingId}
+                                setQuestionnaireResponse={setQuestionnaireResponse}
                             />
                         )}
                     </>
                 </div>
                 <div className={s.patientBatchRequestBox}>
-                    <PatientBatchRequestBox batchRequest={batchRequest} />
+                    <PatientBatchRequestBox
+                        batchRequest={batchRequest}
+                        questionnaireResponse={questionnaireResponse}
+                        mappingId={mappingId}
+                    />
                 </div>
             </div>
 
             <div className={s.lowerRowContainer}>
                 <div className={s.patientMapperBox}>
-                    <MappingBox />
+                    <MappingBox mappingId={mappingId} />
                 </div>
             </div>
             <Logo />

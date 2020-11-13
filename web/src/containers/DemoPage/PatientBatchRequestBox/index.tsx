@@ -1,21 +1,25 @@
 import React from 'react';
 import { Button } from 'src/components/Button';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
-import { Bundle } from 'shared/lib/contrib/aidbox';
+import { Bundle, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { service } from 'aidbox-react/lib/services/service';
 
 interface PatientBatchRequestBoxProps {
     batchRequest?: Bundle<any>;
+    mappingId: string;
+    questionnaireResponse?: QuestionnaireResponse;
 }
 
-export function PatientBatchRequestBox({ batchRequest }: PatientBatchRequestBoxProps) {
-    const applyBundle = async (batchRequest: Bundle<any>) => {
-        const bundleResponse = await service({
+export function PatientBatchRequestBox(props: PatientBatchRequestBoxProps) {
+    const { batchRequest, mappingId, questionnaireResponse } = props;
+
+    const applyMapping = async (mappingId: string, questionnaireResponse: QuestionnaireResponse) => {
+        const response = await service({
             method: 'POST',
-            url: '/',
-            data: batchRequest,
+            url: `/Mapping/${mappingId}/$apply`,
+            data: questionnaireResponse,
         });
-        console.log(bundleResponse);
+        console.log('applyMapping response', response);
     };
 
     return (
@@ -31,8 +35,9 @@ export function PatientBatchRequestBox({ batchRequest }: PatientBatchRequestBoxP
             />
             <Button
                 onClick={async () => {
-                    if (batchRequest) {
-                        await applyBundle(batchRequest);
+                    if (questionnaireResponse) {
+                        await applyMapping(mappingId, questionnaireResponse);
+                        window.location.reload();
                     }
                 }}
                 disabled={!batchRequest}

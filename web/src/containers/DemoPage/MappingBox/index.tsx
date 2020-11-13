@@ -9,17 +9,22 @@ import 'codemirror/lib/codemirror.css';
 import './styles.css';
 
 require('codemirror/mode/javascript/javascript');
+
 // require('codemirror/mode/yaml/yaml');
 
-export function MappingBox() {
+interface MappingBoxProps {
+    mappingId: string;
+}
+
+export function MappingBox({ mappingId }: MappingBoxProps) {
     const [mappingResponse] = useService(() =>
         getFHIRResource<Mapping>({
             resourceType: 'Mapping',
-            id: 'patient-extract',
+            id: mappingId,
         }),
     );
 
-    const saveMapping = async (resource: any) => {
+    const saveMapping = async (resource: Mapping) => {
         const resp = await saveFHIRResource(resource);
         console.log(resp);
     };

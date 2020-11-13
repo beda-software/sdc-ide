@@ -9,9 +9,12 @@ interface PatientFormBoxProps {
     questionnaire: Questionnaire;
     patient: Patient;
     setBatchRequest: React.Dispatch<any>;
+    mappingId: string;
+    setQuestionnaireResponse: React.Dispatch<QuestionnaireResponse>;
 }
 
-export function PatientFormBox({ questionnaire, patient, setBatchRequest }: PatientFormBoxProps) {
+export function PatientFormBox(props: PatientFormBoxProps) {
+    const { questionnaire, patient, setBatchRequest, mappingId, setQuestionnaireResponse } = props;
     const [questionnaireResponse] = useService(async () => {
         const params: Parameters = {
             resourceType: 'Parameters',
@@ -26,7 +29,6 @@ export function PatientFormBox({ questionnaire, patient, setBatchRequest }: Pati
             url: '/Questionnaire/$populate',
             data: params,
         });
-        console.log('populatedResp', populatedResp);
         return populatedResp;
     }, [questionnaire]);
     return (
@@ -38,11 +40,12 @@ export function PatientFormBox({ questionnaire, patient, setBatchRequest }: Pati
                     onSave={async (resource) => {
                         const response = await service({
                             method: 'POST',
-                            url: '/Mapping/patient-extract/$debug',
+                            url: `/Mapping/${mappingId}/$debug`,
                             data: resource,
                         });
                         console.log(response);
                         setBatchRequest(response);
+                        setQuestionnaireResponse(resource);
                     }}
                 />
             )}
