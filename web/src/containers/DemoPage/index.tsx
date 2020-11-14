@@ -21,7 +21,7 @@ export function DemoPage() {
     const [batchRequest, setBatchRequest] = React.useState<Bundle<any> | undefined>();
     const [questionnaireResponse, setQuestionnaireResponse] = React.useState<QuestionnaireResponse | undefined>();
 
-    const [questionnaireRemoteData] = useService(async () => {
+    const [questionnaireRemoteData, questionnaireManager] = useService(async () => {
         return getFHIRResource<Questionnaire>({
             resourceType: 'Questionnaire',
             id: questionnaireId,
@@ -42,7 +42,10 @@ export function DemoPage() {
                     <PatientResourceBox patientResponse={patientResponse} />
                 </div>
                 <div className={s.questFHIRResourceBox}>
-                    <QuestionnaireResourceBox />
+                    <QuestionnaireResourceBox
+                        questionanire={questionnaireRemoteData}
+                        onQuestionnaireUdpate={questionnaireManager.set}
+                    />
                 </div>
                 <div className={s.patientFormBox}>
                     <>
