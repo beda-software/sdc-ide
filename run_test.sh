@@ -32,7 +32,7 @@ docker-compose -f docker-compose.tests.yaml pull
 docker-compose -f docker-compose.tests.yaml up --exit-code-from dockerize dockerize || exit 1
 
 if [ -z "$CI" ]; then
-    yarn test $@ --runInBand
+    yarn test $@ --runInBand --passWithNoTests
 else
     docker-compose -f docker-compose.tests.yaml -f docker-compose.ci.yaml up --exit-code-from frontend frontend
 fi

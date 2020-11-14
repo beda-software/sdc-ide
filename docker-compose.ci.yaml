@@ -2,7 +2,7 @@ version: '3.1'
 services:
   frontend:
     image: $BUILD_IMAGE
-    command: ["wait-for-it.sh", "backend:8081", "--strict", "--timeout=0", "--", "yarn", "test", "--runInBand", "--coverage"]
+    command: ["wait-for-it.sh", "backend:8081", "--strict", "--timeout=0", "--", "yarn", "test", "--runInBand", "--passWithNoTests", "--coverage"]
     depends_on:
       - backend
     links:

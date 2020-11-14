@@ -8,5 +8,5 @@ module.exports = {
     coverageDirectory: './htmlcov',
     coverageReporters: ['text', 'text-summary', 'html'],
     testMatch: ['**/__tests__/**/*.+(ts|tsx|js)'],
-    transformIgnorePatterns: ['node_modules/'],
+    transformIgnorePatterns: ['node_modules/(?!axios)$'],
 };
