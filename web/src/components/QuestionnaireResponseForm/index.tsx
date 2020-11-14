@@ -241,8 +241,10 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             ({ values }) => {
                 const { onChange } = this.props;
                 if (onChange) {
-                    const updatedResource = this.fromFormValues(values);
-                    onChange(updatedResource);
+                    if (!_.isEqual(values, this.toFormValues())) {
+                        const updatedResource = this.fromFormValues(values);
+                        onChange(updatedResource);
+                    }
                 }
             },
             { values: true },
