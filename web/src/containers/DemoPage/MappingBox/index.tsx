@@ -7,6 +7,7 @@ import { CodeEditor } from 'src/components/CodeEditor';
 import { useShowMapping } from 'src/containers/DemoPage/MappingBox/hooks';
 
 import s from './MappingBox.module.scss';
+import {displayToObject} from "src/utils/yaml";
 
 interface MappingBoxProps {
     mappingId: string;
@@ -40,7 +41,7 @@ export function MappingBox({ mappingId }: MappingBoxProps) {
                             valueObject={mapping}
                             onChange={(editor, data, value) => {
                                 setTimeout(() => {
-                                    saveMapping(JSON.parse(value));
+                                    saveMapping(displayToObject(value));
                                 }, 2000);
                             }}
                         />
