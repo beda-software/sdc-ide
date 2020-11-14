@@ -26,7 +26,7 @@ export function QuestionnaireResourceBox(props: QuestionnaireResourceBoxProps) {
         [props],
     );
 
-    const onChange = useCallback(_.debounce(saveQuestionnaire, 2000), [saveQuestionnaire]);
+    const onChange = useCallback(_.debounce(saveQuestionnaire, 1000), [saveQuestionnaire]);
 
     return (
         <>

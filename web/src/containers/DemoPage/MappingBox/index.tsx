@@ -9,27 +9,32 @@ import { useShowMapping } from 'src/containers/DemoPage/MappingBox/hooks';
 
 import s from './MappingBox.module.scss';
 import { displayToObject } from 'src/utils/yaml';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 interface MappingBoxProps {
     mappingId: string;
+    reload: () => void;
 }
 
-async function saveMapping(resource: Mapping) {
-    const resp = await saveFHIRResource(resource);
-    console.log('saveMapping', resp);
-}
-
-export function MappingBox({ mappingId }: MappingBoxProps) {
+export function MappingBox({ mappingId, reload }: MappingBoxProps) {
     const [mappingResponse] = useService(() =>
         getFHIRResource<Mapping>({
             resourceType: 'Mapping',
             id: mappingId,
         }),
     );
-
+    const saveMapping = useCallback(
+        async (resource: Mapping) => {
+            const resp = await saveFHIRResource(resource);
+            if (isSuccess(resp)) {
+                reload();
+            }
+        },
+        [reload],
+    );
     const { toggleShowMapping, wrapperStyle, symbol } = useShowMapping();
 
-    const onChange = useCallback(_.debounce(saveMapping, 2000), [saveMapping]);
+    const onChange = useCallback(_.debounce(saveMapping, 1000), [saveMapping]);
 
     return (
         <>

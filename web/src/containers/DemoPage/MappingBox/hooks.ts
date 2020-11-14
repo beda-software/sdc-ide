@@ -10,7 +10,7 @@ export function useShowMapping() {
 
     const wrapperStyle = { display: showMapping ? 'flex' : 'none' };
 
-    const symbol = showMapping ? arrowUp : arrowDown;
+    const symbol = showMapping ? arrowDown : arrowUp;
 
     return { toggleShowMapping, wrapperStyle, symbol };
 }

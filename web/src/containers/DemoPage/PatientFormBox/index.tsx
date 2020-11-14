@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import _ from 'lodash';
 import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseForm';
 import { Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { service } from 'aidbox-react/lib/services/service';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 import s from './PatientFormBox.module.scss';
 
@@ -17,7 +17,7 @@ interface PatientFormBoxProps {
 }
 
 export function PatientFormBox(props: PatientFormBoxProps) {
-    const { questionnaire, patient, setBatchRequest, mappingId, setQuestionnaireResponse } = props;
+    const { questionnaire, patient, setQuestionnaireResponse } = props;
     const [questionnaireResponse] = useService(async () => {
         const params: Parameters = {
             resourceType: 'Parameters',
@@ -34,24 +34,19 @@ export function PatientFormBox(props: PatientFormBoxProps) {
         });
         return populatedResp;
     }, [questionnaire]);
+    const onChange = useCallback(_.debounce(setQuestionnaireResponse, 1000), [setQuestionnaireResponse]);
     return (
         <RenderRemoteData remoteData={questionnaireResponse}>
             {(questionnaireResponse) => (
                 <div className={s.wrapper}>
                     <QuestionnaireResponseForm
+                        readOnly
                         questionnaire={questionnaire}
                         resource={questionnaireResponse}
                         onSave={async (resource) => {
-                            const debugResponse = await service({
-                                method: 'POST',
-                                url: `/Mapping/${mappingId}/$debug`,
-                                data: resource,
-                            });
-                            if (isSuccess(debugResponse)) {
-                                setBatchRequest(debugResponse.data);
-                            }
                             setQuestionnaireResponse(resource);
                         }}
+                        onChange={onChange}
                     />
                 </div>
             )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import s from './DemoPage.module.scss';
 
 import { Logo } from 'src/components/Logo';
@@ -12,6 +12,7 @@ import { Questionnaire, Patient, Bundle, QuestionnaireResponse } from 'shared/li
 
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
+import { service } from 'aidbox-react/lib/services/service';
 
 export function DemoPage() {
     const patientId = 'demo-patient';
@@ -34,6 +35,22 @@ export function DemoPage() {
             id: patientId,
         }),
     );
+
+    const [reloadCounter, setReloadCounter] = useState(0);
+    const reload = useCallback(() => setReloadCounter((c) => c + 1), [setReloadCounter]);
+
+    useEffect(() => {
+        (async function () {
+            const response = await service({
+                method: 'POST',
+                url: `/Mapping/${mappingId}/$debug`,
+                data: questionnaireResponse,
+            });
+            if (isSuccess(response)) {
+                setBatchRequest(response.data);
+            }
+        })();
+    }, [questionnaireResponse, reloadCounter]);
 
     return (
         <div className={s.mainContainer}>
@@ -72,7 +89,7 @@ export function DemoPage() {
 
             <div className={s.lowerRowContainer}>
                 <div className={s.patientMapperBox}>
-                    <MappingBox mappingId={mappingId} />
+                    <MappingBox mappingId={mappingId} reload={reload} />
                 </div>
             </div>
             <Logo />

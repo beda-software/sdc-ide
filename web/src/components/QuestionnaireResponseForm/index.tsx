@@ -13,11 +13,13 @@ import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/
 import { Button } from 'src/components/Button';
 import { InputField } from 'src/components/InputField';
 import { DateTimePickerField } from 'src/components/DateTimePickerField';
+import { FormApi, Unsubscribe } from 'final-form';
 
 interface Props {
     resource: QuestionnaireResponse;
     questionnaire: Questionnaire;
     onSave: (resource: QuestionnaireResponse) => Promise<any> | void;
+    onChange?: (resource: QuestionnaireResponse) => void;
     customWidgets?: {
         [linkId: string]: (
             questionItem: QuestionnaireItem,
@@ -234,6 +236,23 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     };
 
+    protected onFormChange = (form: FormApi<FormValues>): Unsubscribe => {
+        const unsubscribe = form.subscribe(
+            ({ values }) => {
+                const { onChange } = this.props;
+                if (onChange) {
+                    const updatedResource = this.fromFormValues(values);
+                    onChange(updatedResource);
+                }
+            },
+            { values: true },
+        );
+
+        return () => {
+            unsubscribe();
+        };
+    };
+
     public render() {
         const { questionnaire } = this.props;
 
@@ -242,6 +261,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 onSubmit={this.onSave}
                 initialValues={this.toFormValues()}
                 initialValuesEqual={_.isEqual}
+                decorators={[this.onFormChange]}
             >
                 {(params) => {
                     const items = getEnabledQuestions(questionnaire.item!, [], params.values);
