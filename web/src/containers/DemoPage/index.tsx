@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import _ from 'lodash';
 import s from './DemoPage.module.scss';
 
 import { Logo } from 'src/components/Logo';
@@ -20,7 +21,19 @@ export function DemoPage() {
     const questionnaireId = 'patient-information';
 
     const [batchRequest, setBatchRequest] = React.useState<Bundle<any> | undefined>();
-    const [questionnaireResponse, setQuestionnaireResponse] = React.useState<QuestionnaireResponse | undefined>();
+    const [questionnaireResponse, setQuestionnaireResponseInternal] = React.useState<
+        QuestionnaireResponse | undefined
+    >();
+
+    const setQuestionnaireResponse = useCallback(
+        (q: QuestionnaireResponse) => {
+            if (!_.isEqual(q, questionnaireResponse)) {
+                console.log('SET');
+                setQuestionnaireResponseInternal(q);
+            }
+        },
+        [questionnaireResponse],
+    );
 
     const [questionnaireRemoteData, questionnaireManager] = useService(async () => {
         return getFHIRResource<Questionnaire>({
