@@ -2,7 +2,8 @@ import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codem
 import { objectToDisplay } from 'src/utils/yaml';
 import React from 'react';
 
-import 'codemirror/lib/codemirror.css';
+// import 'codemirror/lib/codemirror.css';
+import './styles.css';
 
 require('codemirror/mode/yaml/yaml');
 
