@@ -1,6 +1,6 @@
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
 import { objectToDisplay } from 'src/utils/yaml';
-import React from 'react';
+import React, { useRef } from 'react';
 
 // import 'codemirror/lib/codemirror.css';
 import './styles.css';
@@ -14,9 +14,11 @@ interface CodeEditorProps extends IUnControlledCodeMirror {
 export function CodeEditor(props: CodeEditorProps) {
     const { valueObject = {}, options, onChange } = props;
 
+    const cache = useRef(valueObject);
+
     return (
         <CodeMirror
-            value={objectToDisplay(valueObject)}
+            value={objectToDisplay(options?.readOnly ? valueObject : cache.current)}
             options={{
                 lineNumbers: false,
                 mode: 'yaml',
