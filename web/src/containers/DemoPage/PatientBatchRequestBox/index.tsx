@@ -25,18 +25,18 @@ export function PatientBatchRequestBox(props: PatientBatchRequestBoxProps) {
                         readOnly: true,
                     }}
                 />
+                <Button
+                    onClick={async () => {
+                        if (questionnaireResponse) {
+                            await applyMapping(mappingId, questionnaireResponse);
+                            window.location.reload();
+                        }
+                    }}
+                    disabled={!batchRequest}
+                >
+                    Apply
+                </Button>
             </div>
-            <Button
-                onClick={async () => {
-                    if (questionnaireResponse) {
-                        await applyMapping(mappingId, questionnaireResponse);
-                        window.location.reload();
-                    }
-                }}
-                disabled={!batchRequest}
-            >
-                Apply
-            </Button>
         </>
     );
 }

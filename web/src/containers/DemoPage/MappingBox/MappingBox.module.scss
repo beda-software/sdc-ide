@@ -1,7 +1,9 @@
 @import "src/styles/colors";
 
 .wrapper {
-  margin-top: 20px;
+  margin-top: 10px;
+  max-height: 90%;
+  overflow-y: scroll;
 }
 
 .toggleArrow {

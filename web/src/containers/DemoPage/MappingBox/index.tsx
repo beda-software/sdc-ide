@@ -4,9 +4,9 @@ import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhi
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { Mapping } from 'shared/lib/contrib/aidbox';
 import { CodeEditor } from 'src/components/CodeEditor';
+import { useShowMapping } from 'src/containers/DemoPage/MappingBox/hooks';
 
 import s from './MappingBox.module.scss';
-import { useShowMapping } from 'src/containers/DemoPage/MappingBox/hooks';
 
 interface MappingBoxProps {
     mappingId: string;

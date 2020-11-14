@@ -8,7 +8,7 @@ export function useShowMapping() {
         setShowMapping(!showMapping);
     };
 
-    const wrapperStyle = { display: showMapping ? 'inline' : 'none' };
+    const wrapperStyle = { display: showMapping ? 'flex' : 'none' };
 
     const symbol = showMapping ? arrowUp : arrowDown;
 

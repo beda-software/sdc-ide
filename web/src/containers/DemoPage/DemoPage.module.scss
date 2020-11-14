@@ -21,6 +21,7 @@
 
 .lowerRowContainer {
   @extend %rowContainer;
+  min-height: 60px;
 }
 
 .patientFHIRResourceBox {

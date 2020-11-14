@@ -1,5 +1,4 @@
 /* BASICS */
-
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@500&display=swap');
 
 .CodeMirror {
@@ -10,7 +9,7 @@
     font-size: 12px;
     line-height: 16px;
     height: 100%;
-    color: black;
+    color: #032f62;
     direction: ltr;
 }
 
