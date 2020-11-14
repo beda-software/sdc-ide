@@ -25,7 +25,7 @@ else
         exit 1
     fi
 
-    export BACKEND_IMAGE="${BACKEND_IMAGE_REPOSITORY}:${TIER}"
+    export BACKEND_IMAGE="${BACKEND_IMAGE_REPOSITORY}:master"
 fi
 
 docker-compose -f docker-compose.tests.yaml pull
