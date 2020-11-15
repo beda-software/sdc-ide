@@ -4,8 +4,6 @@ import { Bundle, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { applyMapping } from 'src/utils/mapping';
 import { CodeEditor } from 'src/components/CodeEditor';
 
-import s from './PatientBatchRequestBox.module.scss';
-
 interface PatientBatchRequestBoxProps {
     batchRequest?: Bundle<any>;
     mappingId: string;
@@ -16,7 +14,7 @@ export function PatientBatchRequestBox(props: PatientBatchRequestBoxProps) {
     const { batchRequest, mappingId, questionnaireResponse } = props;
 
     return (
-        <div className={s.wrapper}>
+        <div>
             <CodeEditor
                 valueObject={batchRequest}
                 options={{

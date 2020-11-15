@@ -6,7 +6,6 @@ import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { Mapping } from 'shared/lib/contrib/aidbox';
 import { CodeEditor } from 'src/components/CodeEditor';
 
-import s from './MappingBox.module.scss';
 import { displayToObject } from 'src/utils/yaml';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
@@ -37,12 +36,10 @@ export function MappingBox({ mappingId, reload }: MappingBoxProps) {
     return (
         <RenderRemoteData remoteData={mappingResponse}>
             {(mapping) => (
-                <div className={s.wrapper}>
-                    <CodeEditor
-                        valueObject={mapping}
-                        onChange={(_editor, _data, value) => onChange(displayToObject(value))}
-                    />
-                </div>
+                <CodeEditor
+                    valueObject={mapping}
+                    onChange={(_editor, _data, value) => onChange(displayToObject(value))}
+                />
             )}
         </RenderRemoteData>
     );

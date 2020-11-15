@@ -6,7 +6,6 @@ import { Questionnaire } from 'shared/lib/contrib/aidbox';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { displayToObject } from 'src/utils/yaml';
 
-import s from './QuestionnaireResourceBox.module.scss';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { service } from 'aidbox-react/lib/services/service';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -43,12 +42,10 @@ export function QuestionnaireResourceBox(props: QuestionnaireResourceBoxProps) {
     return (
         <RenderRemoteData remoteData={questionnaire}>
             {(questionnaire) => (
-                <div className={s.wrapper}>
-                    <CodeEditor
-                        valueObject={questionnaire}
-                        onChange={(_editor, _data, value) => onChange(displayToObject(value))}
-                    />
-                </div>
+                <CodeEditor
+                    valueObject={questionnaire}
+                    onChange={(_editor, _data, value) => onChange(displayToObject(value))}
+                />
             )}
         </RenderRemoteData>
     );
