@@ -15,7 +15,7 @@ export function DateTimePickerField({ input, meta, label, placeholder }: InputFi
     return (
         <div className={s.wrapper}>
             <label className={s.label}>{label}</label>
-            <input className={s.input} type="text" {...input} placeholder={placeholder} />
+            <input className={s.input} type="date" {...input} placeholder={placeholder} />
             {meta.touched && meta.error && <span>{meta.error}</span>}
         </div>
     );

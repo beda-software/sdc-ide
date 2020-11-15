@@ -26724,6 +26724,7 @@ export interface QuestionnaireItem {
      *  of SDC
      */
     initialExpression?: Expression;
+    hidden?: boolean;
 }
 
 /**

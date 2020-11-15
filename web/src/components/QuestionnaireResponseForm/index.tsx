@@ -139,18 +139,22 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         index = 0,
     ) {
-        const { linkId, text, item } = questionItem;
+        const { linkId, text, item, hidden } = questionItem;
         const fieldPath = [...parentPath, linkId, _.toString(index)];
 
         return (
-            <>
+            <div style={hidden ? { opacity: '0.3' } : {}}>
                 <Field name={[...fieldPath, 'value', 'string'].join('.')}>
                     {({ input, meta }) => {
-                        return <InputField input={input} meta={meta} label={text} />;
+                        const inputProps = {
+                            ...input,
+                            ...(hidden ? { disabled: true } : {}),
+                        };
+                        return <InputField input={inputProps} meta={meta} label={text} />;
                     }}
                 </Field>
                 {item ? this.renderQuestions(item, [...fieldPath, 'items'], formParams) : null}
-            </>
+            </div>
         );
     }
 
