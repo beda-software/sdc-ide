@@ -4,26 +4,28 @@ import s from './DemoPage.module.scss';
 
 import { Logo } from 'src/components/Logo';
 import { MappingBox } from 'src/containers/DemoPage/MappingBox';
-import { PatientResourceBox } from 'src/containers/DemoPage/PatientResourceBox';
+import { ResourceDisplayBox } from 'src/containers/DemoPage/ResourceDisplayBox';
 import { PatientBatchRequestBox } from 'src/containers/DemoPage/PatientBatchRequestBox';
 import { QuestionnaireResourceBox } from 'src/containers/DemoPage/QuestionnaireResourceBox';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { Questionnaire, Patient, Bundle, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
+import { RenderRemoteData } from 'src/components/RenderRemoteData';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
-import { service } from 'aidbox-react/lib/services/service';
+import { service, sequenceMap } from 'aidbox-react/lib/services/service';
 
 export function DemoPage() {
     const patientId = 'demo-patient';
     const mappingId = 'patient-extract';
     const questionnaireId = 'patient-information';
 
-    const [batchRequest, setBatchRequest] = React.useState<Bundle<any> | undefined>();
-    const [questionnaireResponse, setQuestionnaireResponseInternal] = React.useState<
-        QuestionnaireResponse | undefined
-    >();
+    const [batchRequest, setBatchRequest] = React.useState<Bundle<any>>({ resourceType: 'Bundle', type: 'searchset' });
+    const [questionnaireResponse, setQuestionnaireResponseInternal] = React.useState<QuestionnaireResponse>({
+        resourceType: 'QuestionnaireResponse',
+        status: 'draft',
+    });
 
     const setQuestionnaireResponse = useCallback(
         (q: QuestionnaireResponse) => {
@@ -66,46 +68,68 @@ export function DemoPage() {
     }, [questionnaireResponse, reloadCounter]);
 
     return (
-        <div className={s.mainContainer}>
-            <div className={s.upperRowContainer}>
-                <div className={s.patientFHIRResourceBox}>
-                    <PatientResourceBox patientResponse={patientResponse} />
+        <>
+            <div className={s.mainContainer}>
+                <div className={s.upperRowContainer}>
+                    <ExpandableElement title="Patient FHIR resource" cssClass={s.patientFHIRResourceBox}>
+                        <ResourceDisplayBox resourceResponse={patientResponse} />
+                    </ExpandableElement>
+                    <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
+                        <QuestionnaireResourceBox
+                            id={questionnaireId}
+                            onQuestionnaireUdpate={questionnaireManager.reload}
+                        />
+                    </ExpandableElement>
+                    <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
+                        <RenderRemoteData remoteData={sequenceMap({ questionnaireRemoteData, patientResponse })}>
+                            {({ questionnaireRemoteData, patientResponse }) => (
+                                <PatientFormBox
+                                    questionnaire={questionnaireRemoteData}
+                                    patient={patientResponse}
+                                    setBatchRequest={setBatchRequest}
+                                    mappingId={mappingId}
+                                    setQuestionnaireResponse={setQuestionnaireResponse}
+                                />
+                            )}
+                        </RenderRemoteData>
+                    </ExpandableElement>
                 </div>
-                <div className={s.questFHIRResourceBox}>
-                    <QuestionnaireResourceBox
-                        questionanire={questionnaireRemoteData}
-                        onQuestionnaireUdpate={questionnaireManager.set}
-                    />
-                </div>
-                <div className={s.patientFormBox}>
-                    <>
-                        <h2>Patient Form</h2>
-                        {isSuccess(questionnaireRemoteData) && isSuccess(patientResponse) && (
-                            <PatientFormBox
-                                questionnaire={questionnaireRemoteData.data}
-                                patient={patientResponse.data}
-                                setBatchRequest={setBatchRequest}
-                                mappingId={mappingId}
-                                setQuestionnaireResponse={setQuestionnaireResponse}
-                            />
-                        )}
-                    </>
-                </div>
-                <div className={s.patientBatchRequestBox}>
-                    <PatientBatchRequestBox
-                        batchRequest={batchRequest}
-                        questionnaireResponse={questionnaireResponse}
-                        mappingId={mappingId}
-                    />
-                </div>
-            </div>
-
-            <div className={s.lowerRowContainer}>
-                <div className={s.patientMapperBox}>
-                    <MappingBox mappingId={mappingId} reload={reload} />
+                <div className={s.lowerRowContainer}>
+                    <ExpandableElement
+                        title="QuestionnaireResonse FHIR resource"
+                        cssClass={s.questionnaireResponseFHIRResourceBox}
+                    >
+                        <ResourceDisplayBox resourceResponse={success(questionnaireResponse)} />
+                    </ExpandableElement>
+                    <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
+                        <MappingBox mappingId={mappingId} reload={reload} />
+                    </ExpandableElement>
+                    <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
+                        <PatientBatchRequestBox
+                            batchRequest={batchRequest}
+                            questionnaireResponse={questionnaireResponse}
+                            mappingId={mappingId}
+                        />
+                    </ExpandableElement>
                 </div>
             </div>
             <Logo />
+        </>
+    );
+}
+
+interface ExpandableElementProps {
+    cssClass: string;
+    title: string;
+    children: React.ReactElement;
+}
+
+function ExpandableElement(props: ExpandableElementProps) {
+    const [expanded, setExpanded] = useState(false);
+    return (
+        <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
+            <h2 onClick={() => setExpanded((f) => !f)}>{props.title}</h2>
+            {props.children}
         </div>
     );
 }
