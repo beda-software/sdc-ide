@@ -1,11 +1,14 @@
 import _ from 'lodash';
 import * as React from 'react';
 import { Field, Form as FinalForm, FormRenderProps } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
 
 import {
+    FormAnswerItems,
     FormItems,
     getEnabledQuestions,
     interpolateAnswers,
+    isValueEqual,
     mapFormToResponse,
     mapResponseToForm,
 } from 'src/utils/questionnaire';
@@ -14,6 +17,9 @@ import { Button } from 'src/components/Button';
 import { InputField } from 'src/components/InputField';
 import { DateTimePickerField } from 'src/components/DateTimePickerField';
 import { FormApi, Unsubscribe } from 'final-form';
+import { ChoiceField } from 'src/components/ChoiceField';
+
+import s from './QuestionnaireResponseForm.module.scss';
 
 interface Props {
     resource: QuestionnaireResponse;
@@ -180,12 +186,136 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
+    public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
+        const { linkId, text, answerOption, repeats, required } = questionItem;
+        const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0']), 'value', 'string'];
+        const fieldName = fieldPath.join('.');
+
+        return (
+            <ChoiceField<FormAnswerItems>
+                name={fieldName}
+                label={text}
+                options={_.map(answerOption, (opt) => ({
+                    value: opt.value.string!,
+                    label: opt.value.string!,
+                }))}
+                initialValue={{
+                    value: 'mobile',
+                }}
+                fieldProps={{
+                    validate: required
+                        ? (inputValue: any) => {
+                              if (repeats) {
+                                  if (!inputValue.length) {
+                                      return 'Choose at least one option';
+                                  }
+                              } else {
+                                  if (!inputValue) {
+                                      return 'Required';
+                                  }
+                              }
+
+                              return undefined;
+                          }
+                        : undefined,
+                }}
+                isEqual={(value1: any, value2: any) => isValueEqual(value1.value, value2.value)}
+            />
+        );
+    }
+
+    public renderGroup(
+        questionItem: QuestionnaireItem,
+        parentPath: string[],
+        formParams: FormRenderProps,
+        // fieldsRenderConfig: FieldsRenderConfig,
+    ) {
+        const { linkId, item, text, repeats } = questionItem;
+
+        if (item) {
+            const baseFieldPath = [...parentPath, linkId];
+
+            if (repeats) {
+                return (
+                    <Field name={baseFieldPath.join('.')}>
+                        {({ input }) => {
+                            return (
+                                <div>
+                                    <p className={s.questLabel}>{text}</p>
+                                    <div className={s.repeatsGroupItemsContainer}>
+                                        {_.map(
+                                            input.value.items && input.value.items.length ? input.value.items : [{}],
+                                            (_elem, index: number) => {
+                                                if (index > 0 && !input.value.items[index]) {
+                                                    return null;
+                                                }
+                                                return (
+                                                    <div key={index} className={s.repeatsGroupItemTitle}>
+                                                        <div className={s.repeatsGroupItemHeader}>
+                                                            <span className={s.repeatsGroupItemTitle}>{`${
+                                                                questionItem.text
+                                                            } #${index + 1}`}</span>
+                                                            <div
+                                                                onClick={() => {
+                                                                    const filteredArray = _.filter(
+                                                                        input.value.items,
+                                                                        (_val, valIndex: number) => valIndex !== index,
+                                                                    );
+                                                                    input.onChange({ items: [...filteredArray] });
+                                                                }}
+                                                                className={s.repeatsGroupRemoveItemButton}
+                                                            >
+                                                                <span className={s.repeatsGroupRemoveItemButtonTitle}>
+                                                                    Remove
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className={s.repeatsGroupItemBody}>
+                                                            {this.renderQuestions(
+                                                                item,
+                                                                [...parentPath, linkId, 'items', index.toString()],
+                                                                formParams,
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            },
+                                        )}
+                                    </div>
+                                    <div
+                                        className={s.repeatsGroupAddItemButton}
+                                        onClick={() => {
+                                            const existingItems = input.value.items || [];
+                                            const updatedInput = { items: [...existingItems, {}] };
+                                            input.onChange(updatedInput);
+                                        }}
+                                    >
+                                        <p className={s.repeatsGroupAddItemButtonTitle}>{`+ Add another ${text}`}</p>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    </Field>
+                );
+            }
+
+            return (
+                <div style={{ paddingBottom: 10 }}>
+                    <p className={s.questLabel}>{text}</p>
+                    {this.renderQuestions(item, [...parentPath, linkId, 'items'], formParams)}
+                </div>
+            );
+        }
+        return null;
+    }
+
     public renderAnswer(rawQuestionItem: QuestionnaireItem, parentPath: string[], formParams: FormRenderProps): any {
         const questionItem = {
             ...rawQuestionItem,
             text: interpolateAnswers(rawQuestionItem.text!, parentPath, formParams.values),
         };
-        const { linkId, type, item, text } = questionItem;
+        // const { linkId, type, item, text } = questionItem;
+        const { type } = questionItem;
 
         if (type === 'string' || type === 'text') {
             return this.renderRepeatsAnswer(this.renderAnswerText, questionItem, parentPath, formParams);
@@ -195,18 +325,16 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             return this.renderRepeatsAnswer(this.renderAnswerDateTime, questionItem, parentPath, formParams);
         }
 
+        if (type === 'choice') {
+            return this.renderAnswerChoice(questionItem, parentPath, formParams);
+        }
+
         if (type === 'display') {
             return <div>{questionItem.text}</div>;
         }
+
         if (type === 'group') {
-            if (item) {
-                return (
-                    <>
-                        <div>{text}</div>
-                        {this.renderQuestions(item, [...parentPath, linkId, 'items'], formParams)}
-                    </>
-                );
-            }
+            return this.renderGroup(questionItem, parentPath, formParams);
         }
 
         console.error(`TODO: Unsupported item type ${type}`);
@@ -268,6 +396,8 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 initialValues={this.toFormValues()}
                 initialValuesEqual={_.isEqual}
                 decorators={[this.onFormChange]}
+                mutators={{ ...arrayMutators }}
+                // debug={console.log}
             >
                 {(params) => {
                     const items = getEnabledQuestions(questionnaire.item!, [], params.values);

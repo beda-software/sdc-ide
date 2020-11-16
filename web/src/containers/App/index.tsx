@@ -14,7 +14,7 @@ export function App() {
                 </Route>
                 <Redirect
                     to={{
-                        pathname: '/',
+                        pathname: '/demo-1',
                         state: { referrer: history.location.pathname },
                     }}
                 />
