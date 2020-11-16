@@ -43,9 +43,9 @@ export function DemoPage() {
     );
 
     const [questionnaireRemoteData, questionnaireManager] = useService(async () => {
-        return getFHIRResource<Questionnaire>({
-            resourceType: 'Questionnaire',
-            id: questionnaireId,
+        return service<Questionnaire>({
+            method: 'GET',
+            url: `Questionnaire/${questionnaireId}/$assemble`,
         });
     }, [questionnaireId]);
 
