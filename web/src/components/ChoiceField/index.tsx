@@ -9,23 +9,26 @@ interface ChooseFieldOption {
     label: string;
 }
 
-interface ChoiceFieldProps<T> {
+interface ChoiceFieldProps {
     options: Array<ChooseFieldOption>;
 }
 
-export function ChoiceField<T = any>({ fieldProps, label, name, options }: FieldProps<T, any> & ChoiceFieldProps<T>) {
+export function ChoiceField<T = any>({ fieldProps, label, name, options }: FieldProps<T, any> & ChoiceFieldProps) {
     return (
         <Field name={name} {...fieldProps}>
-            {({ input, meta }) => {
+            {({ input }) => {
                 return (
                     <div className={s.wrapper}>
                         <label className={s.groupLabel}>{label}:</label>
                         <select onChange={input.onChange}>
-                            {_.map(options, (option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
+                            {_.map(options, (option) => {
+                                const selected = input.value === option.value ? { selected: true } : {};
+                                return (
+                                    <option key={option.value} value={option.value} {...selected}>
+                                        {option.label}
+                                    </option>
+                                );
+                            })}
                         </select>
                     </div>
                 );
