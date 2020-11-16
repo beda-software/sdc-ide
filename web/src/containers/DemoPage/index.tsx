@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 import s from './DemoPage.module.scss';
 
@@ -15,12 +16,15 @@ import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
 import { service, sequenceMap } from 'aidbox-react/lib/services/service';
-import { arrowDown, arrowUp } from 'src/images';
+
+import { Menu } from 'src/components/Menu';
+import { arrowDown, arrowUp } from 'src/components/Icon';
 
 export function DemoPage() {
-    const patientId = 'demo-patient';
-    const mappingId = 'patient-extract';
-    const questionnaireId = 'patient-information';
+    const { id } = useParams<{ id: string }>();
+    const patientId = id;
+    const mappingId = id;
+    const questionnaireId = id;
 
     const [batchRequest, setBatchRequest] = React.useState<Bundle<any>>({ resourceType: 'Bundle', type: 'searchset' });
     const [questionnaireResponse, setQuestionnaireResponseInternal] = React.useState<QuestionnaireResponse>({
@@ -43,13 +47,15 @@ export function DemoPage() {
             resourceType: 'Questionnaire',
             id: questionnaireId,
         });
-    });
+    }, [questionnaireId]);
 
-    const [patientResponse] = useService(() =>
-        getFHIRResource<Patient>({
-            resourceType: 'Patient',
-            id: patientId,
-        }),
+    const [patientResponse] = useService(
+        () =>
+            getFHIRResource<Patient>({
+                resourceType: 'Patient',
+                id: patientId,
+            }),
+        [patientId],
     );
 
     const [reloadCounter, setReloadCounter] = useState(0);
@@ -66,7 +72,7 @@ export function DemoPage() {
                 setBatchRequest(response.data);
             }
         })();
-    }, [questionnaireResponse, reloadCounter]);
+    }, [questionnaireResponse, reloadCounter, mappingId]);
 
     return (
         <>
@@ -114,6 +120,7 @@ export function DemoPage() {
                     </ExpandableElement>
                 </ExpandableRow>
             </div>
+            <Menu />
             <Logo />
         </>
     );
@@ -142,7 +149,7 @@ interface ExpandableRowProps {
 
 function ExpandableRow(props: ExpandableRowProps) {
     const [expanded, setExpanded] = useState(false);
-    const symbol = expanded ? arrowDown : arrowUp;
+    const symbol = expanded ? arrowDown('#597EF7') : arrowUp('#597EF7');
     return (
         <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
             <h2 style={{ position: 'absolute' }} onClick={() => setExpanded((f) => !f)}>

@@ -9,7 +9,7 @@ export function App() {
     return (
         <Router history={history}>
             <Switch>
-                <Route path="/" exact>
+                <Route path="/:id" exact>
                     <DemoPage />
                 </Route>
                 <Redirect

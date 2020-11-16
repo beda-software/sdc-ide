@@ -15,11 +15,13 @@ interface MappingBoxProps {
 }
 
 export function MappingBox({ mappingId, reload }: MappingBoxProps) {
-    const [mappingResponse] = useService(() =>
-        getFHIRResource<Mapping>({
-            resourceType: 'Mapping',
-            id: mappingId,
-        }),
+    const [mappingResponse] = useService(
+        () =>
+            getFHIRResource<Mapping>({
+                resourceType: 'Mapping',
+                id: mappingId,
+            }),
+        [mappingId],
     );
     const saveMapping = useCallback(
         async (resource: Mapping) => {

@@ -30,11 +30,13 @@ export function QuestionnaireResourceBox(props: QuestionnaireResourceBoxProps) {
         [props],
     );
 
-    const [questionnaire] = useService(() =>
-        service({
-            method: 'GET',
-            url: `/fhir/Questionnaire/${props.id}`,
-        }),
+    const [questionnaire] = useService(
+        () =>
+            service({
+                method: 'GET',
+                url: `/fhir/Questionnaire/${props.id}`,
+            }),
+        [props.id],
     );
 
     const onChange = useCallback(_.debounce(saveQuestionnaire, 1000), [saveQuestionnaire]);
