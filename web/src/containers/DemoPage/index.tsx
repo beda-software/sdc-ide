@@ -59,7 +59,7 @@ export function DemoPage() {
                 setMappingId(firstMappingId);
             }
         }
-    }, [questionnaireRemoteData]);
+    }, [mappingId, questionnaireRemoteData]);
 
     const [patientResponse] = useService(
         () =>
@@ -126,12 +126,12 @@ export function DemoPage() {
                             {(questionnaire) => {
                                 return (
                                     <>
-                                        {mappingId && <MappingBox mappingId={mappingId} reload={reload} />}
                                         <MappingChoice
                                             mappingIdList={_.map(questionnaire.mapping, ({ id }) => id!)}
                                             mappingId={mappingId}
                                             setMappingId={setMappingId}
                                         />
+                                        {mappingId && <MappingBox mappingId={mappingId} reload={reload} />}
                                     </>
                                 );
                             }}
