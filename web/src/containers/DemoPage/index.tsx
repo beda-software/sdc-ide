@@ -112,11 +112,16 @@ export function DemoPage() {
                         <MappingBox mappingId={mappingId} reload={reload} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
-                        <PatientBatchRequestBox
-                            batchRequest={batchRequest}
-                            questionnaireResponse={questionnaireResponse}
-                            mappingId={mappingId}
-                        />
+                        <RenderRemoteData remoteData={questionnaireRemoteData}>
+                            {(questionnaire) => (
+                                <PatientBatchRequestBox
+                                    batchRequest={batchRequest}
+                                    questionnaireResponse={questionnaireResponse}
+                                    questionnaire={questionnaire}
+                                    mappingArray={[mappingId]}
+                                />
+                            )}
+                        </RenderRemoteData>
                     </ExpandableElement>
                 </ExpandableRow>
             </div>
