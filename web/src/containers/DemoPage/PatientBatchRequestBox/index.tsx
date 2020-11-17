@@ -6,7 +6,6 @@ import { service } from 'aidbox-react/lib/services/service';
 
 interface PatientBatchRequestBoxProps {
     batchRequest?: Bundle<any>;
-    mappingArray: string[];
     questionnaireResponse?: QuestionnaireResponse;
     questionnaire?: Questionnaire;
 }

@@ -10,7 +10,6 @@ interface PatientFormBoxProps {
     questionnaire: Questionnaire;
     patient: Patient;
     setBatchRequest: React.Dispatch<any>;
-    mappingId: string;
     setQuestionnaireResponse: React.Dispatch<QuestionnaireResponse>;
 }
 

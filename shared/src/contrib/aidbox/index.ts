@@ -26638,6 +26638,10 @@ export interface Questionnaire {
      * A particular question, question grouping or display text that is part of the questionnaire.
      */
     item?: QuestionnaireItem[];
+    /**
+     * SDC
+     */
+    mapping?: Array<Mapping>;
 }
 
 /**

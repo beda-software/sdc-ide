@@ -19,12 +19,13 @@ import { service, sequenceMap } from 'aidbox-react/lib/services/service';
 
 import { Menu } from 'src/components/Menu';
 import { arrowDown, arrowUp } from 'src/components/Icon';
+import { MappingChoice } from 'src/containers/DemoPage/MappingChoice';
 
 export function DemoPage() {
     const { id } = useParams<{ id: string }>();
     const patientId = id;
-    const mappingId = id;
     const questionnaireId = id;
+    const [mappingId, setMappingId] = React.useState<string | undefined>();
 
     const [batchRequest, setBatchRequest] = React.useState<Bundle<any>>({ resourceType: 'Bundle', type: 'searchset' });
     const [questionnaireResponse, setQuestionnaireResponseInternal] = React.useState<QuestionnaireResponse>({
@@ -43,11 +44,22 @@ export function DemoPage() {
     );
 
     const [questionnaireRemoteData, questionnaireManager] = useService(async () => {
-        return service<Questionnaire>({
+        const response = await service<Questionnaire>({
             method: 'GET',
             url: `Questionnaire/${questionnaireId}/$assemble`,
         });
+
+        return response;
     }, [questionnaireId]);
+
+    useEffect(() => {
+        if (isSuccess(questionnaireRemoteData)) {
+            const firstMappingId = questionnaireRemoteData.data.mapping?.[0].id;
+            if (firstMappingId && !mappingId) {
+                setMappingId(firstMappingId);
+            }
+        }
+    }, [questionnaireRemoteData]);
 
     const [patientResponse] = useService(
         () =>
@@ -63,13 +75,15 @@ export function DemoPage() {
 
     useEffect(() => {
         (async function () {
-            const response = await service({
-                method: 'POST',
-                url: `/Mapping/${mappingId}/$debug`,
-                data: questionnaireResponse,
-            });
-            if (isSuccess(response)) {
-                setBatchRequest(response.data);
+            if (mappingId) {
+                const response = await service({
+                    method: 'POST',
+                    url: `/Mapping/${mappingId}/$debug`,
+                    data: questionnaireResponse,
+                });
+                if (isSuccess(response)) {
+                    setBatchRequest(response.data);
+                }
             }
         })();
     }, [questionnaireResponse, reloadCounter, mappingId]);
@@ -94,7 +108,6 @@ export function DemoPage() {
                                     questionnaire={questionnaireRemoteData}
                                     patient={patientResponse}
                                     setBatchRequest={setBatchRequest}
-                                    mappingId={mappingId}
                                     setQuestionnaireResponse={setQuestionnaireResponse}
                                 />
                             )}
@@ -109,7 +122,20 @@ export function DemoPage() {
                         <ResourceDisplayBox resourceResponse={success(questionnaireResponse)} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
-                        <MappingBox mappingId={mappingId} reload={reload} />
+                        <RenderRemoteData remoteData={questionnaireRemoteData}>
+                            {(questionnaire) => {
+                                return (
+                                    <>
+                                        {mappingId && <MappingBox mappingId={mappingId} reload={reload} />}
+                                        <MappingChoice
+                                            mappingIdList={_.map(questionnaire.mapping, ({ id }) => id!)}
+                                            mappingId={mappingId}
+                                            setMappingId={setMappingId}
+                                        />
+                                    </>
+                                );
+                            }}
+                        </RenderRemoteData>
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
                         <RenderRemoteData remoteData={questionnaireRemoteData}>
@@ -118,7 +144,6 @@ export function DemoPage() {
                                     batchRequest={batchRequest}
                                     questionnaireResponse={questionnaireResponse}
                                     questionnaire={questionnaire}
-                                    mappingArray={[mappingId]}
                                 />
                             )}
                         </RenderRemoteData>
