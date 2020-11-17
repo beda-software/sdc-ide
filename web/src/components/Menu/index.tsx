@@ -18,7 +18,7 @@ function useMenu() {
     const getMenuStyle = showMenu ? { display: 'block' } : { display: 'none' };
 
     const [patientsIdList] = useService<string[]>(async () => {
-        const response = await getFHIRResources('Patient', {});
+        const response = await getFHIRResources('Questionnaire', {});
         return mapSuccess(response, (data) => {
             return _.map(data.entry, (item) => item.resource.id);
         });

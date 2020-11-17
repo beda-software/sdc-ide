@@ -23,7 +23,7 @@ import { MappingChoice } from 'src/containers/DemoPage/MappingChoice';
 
 export function DemoPage() {
     const { id } = useParams<{ id: string }>();
-    const patientId = id;
+    const patientId = 'patient';
     const questionnaireId = id;
     const [mappingId, setMappingId] = React.useState<string | undefined>();
 
