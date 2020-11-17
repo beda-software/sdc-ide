@@ -23,3 +23,19 @@
   line-height: 18px;
   color: $base-dark-color;
 }
+
+.select {
+  font-family: Poppins, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: $base-dark-color;
+  padding: 6px 5px 6px;
+  border: none;
+  border-bottom: 2px solid $base-surface-color;
+}
+
+.select:focus {
+  border-bottom: 2px solid $primary-color;
+}

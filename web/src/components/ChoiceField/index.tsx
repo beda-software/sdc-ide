@@ -20,11 +20,11 @@ export function ChoiceField<T = any>({ fieldProps, label, name, options }: Field
                 return (
                     <div className={s.wrapper}>
                         <label className={s.groupLabel}>{label}:</label>
-                        <select onChange={input.onChange}>
+                        <select onChange={input.onChange} className={s.select}>
                             {_.map(options, (option) => {
                                 const selected = input.value === option.value ? { selected: true } : {};
                                 return (
-                                    <option key={option.value} value={option.value} {...selected}>
+                                    <option key={option.value} value={option.value} {...selected} className={s.option}>
                                         {option.label}
                                     </option>
                                 );
