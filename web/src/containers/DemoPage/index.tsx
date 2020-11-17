@@ -49,17 +49,14 @@ export function DemoPage() {
             url: `Questionnaire/${questionnaireId}/$assemble`,
         });
 
-        return response;
-    }, [questionnaireId]);
-
-    useEffect(() => {
-        if (isSuccess(questionnaireRemoteData)) {
-            const firstMappingId = questionnaireRemoteData.data.mapping?.[0].id;
-            if (firstMappingId && !mappingId) {
+        if (isSuccess(response)) {
+            const firstMappingId = response.data.mapping?.[0].id;
+            if (firstMappingId) {
                 setMappingId(firstMappingId);
             }
         }
-    }, [mappingId, questionnaireRemoteData]);
+        return response;
+    }, [questionnaireId]);
 
     const [patientResponse] = useService(
         () =>
