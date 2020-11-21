@@ -79,7 +79,7 @@ test('Check onQuestionnaireUpdate', async () => {
     await waitToResolve(result, waitForNextUpdate, 'questionnaireFHIRRD');
 
     if (isSuccess(result.current.questionnaireFHIRRD)) {
-        const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
+        // const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
         // draw(questionnaire, 'questionnaire');
     }
 
@@ -107,14 +107,14 @@ test('Check onQuestionnaireUpdate', async () => {
     // Call onQuestionnaireUpdate(questionnaireExpected)
     // Trigger second slide
     act(async () => {
-        await result.current.onQuestionnaireUpdate(newQuestionnaire);
+        await result.current.saveQuestionnaireFHIR(newQuestionnaire);
     });
 
     draw(result.current.questionnaireFHIRRD, 'questionnaireFHIRRD');
     expect(1).toEqual(1);
 
     if (isSuccess(result.current.questionnaireFHIRRD)) {
-        const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
+        // const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
         // draw(questionnaire, 'questionnaire');
     }
 
