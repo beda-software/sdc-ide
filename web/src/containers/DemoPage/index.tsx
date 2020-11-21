@@ -18,8 +18,9 @@ import { PatientFormBox } from 'src/containers/DemoPage/PatientFormBox';
 import { service, sequenceMap } from 'aidbox-react/lib/services/service';
 
 import { Menu } from 'src/components/Menu';
-import { arrowDown, arrowUp } from 'src/components/Icon';
 import { MappingChoice } from 'src/containers/DemoPage/MappingChoice';
+import { ExpandableRow } from 'src/components/ExpandableRow';
+import { ExpandableElement } from 'src/components/ExpandableElement';
 
 export function DemoPage() {
     const { id } = useParams<{ id: string }>();
@@ -104,7 +105,6 @@ export function DemoPage() {
                                 <PatientFormBox
                                     questionnaire={questionnaireRemoteData}
                                     patient={patientResponse}
-                                    setBatchRequest={setBatchRequest}
                                     setQuestionnaireResponse={setQuestionnaireResponse}
                                 />
                             )}
@@ -113,7 +113,7 @@ export function DemoPage() {
                 </ExpandableRow>
                 <ExpandableRow cssClass={s.lowerRowContainer}>
                     <ExpandableElement
-                        title="QuestionnaireResonse FHIR resource"
+                        title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
                         <ResourceDisplayBox resourceResponse={success(questionnaireResponse)} />
@@ -150,39 +150,5 @@ export function DemoPage() {
             <Menu />
             <Logo />
         </>
-    );
-}
-
-interface ExpandableElementProps {
-    cssClass: string;
-    title: string;
-    children: React.ReactElement;
-}
-
-function ExpandableElement(props: ExpandableElementProps) {
-    const [expanded, setExpanded] = useState(false);
-    return (
-        <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
-            <h2 onClick={() => setExpanded((f) => !f)}>{props.title}</h2>
-            {props.children}
-        </div>
-    );
-}
-
-interface ExpandableRowProps {
-    cssClass: string;
-    children: Array<React.ReactElement>;
-}
-
-function ExpandableRow(props: ExpandableRowProps) {
-    const [expanded, setExpanded] = useState(false);
-    const symbol = expanded ? arrowDown('#597EF7') : arrowUp('#597EF7');
-    return (
-        <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
-            <h2 style={{ position: 'absolute' }} onClick={() => setExpanded((f) => !f)}>
-                {symbol}
-            </h2>
-            {props.children}
-        </div>
     );
 }
