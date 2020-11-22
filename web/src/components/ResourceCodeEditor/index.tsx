@@ -4,21 +4,21 @@ import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { displayToObject } from 'src/utils/yaml';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { Mapping } from 'shared/lib/contrib/aidbox';
+import { AidboxResource } from 'shared/lib/contrib/aidbox';
 
-interface MappingEditorProps {
-    mappingRD: RemoteData<Mapping>;
-    saveMapping: (mapping: Mapping) => void;
+interface ResourceCodeEditorProps<R> {
+    resourceRD: RemoteData<R>;
+    onSave: (resource: R) => void;
 }
 
-export function MappingEditor({ mappingRD, saveMapping }: MappingEditorProps) {
-    const onChange = _.debounce(saveMapping, 1000);
+export function ResourceCodeEditor<R extends AidboxResource>({ resourceRD, onSave }: ResourceCodeEditorProps<R>) {
+    const onChange = _.debounce(onSave, 1000);
 
     return (
-        <RenderRemoteData remoteData={mappingRD}>
-            {(mapping) => (
+        <RenderRemoteData remoteData={resourceRD}>
+            {(resource) => (
                 <CodeEditor
-                    valueObject={mapping}
+                    valueObject={resource}
                     onChange={(_editor, _data, value) => onChange(displayToObject(value))}
                 />
             )}
