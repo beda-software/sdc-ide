@@ -21,6 +21,7 @@ export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId
             {_.map(mappingList, ({ id }) => (
                 <a
                     type={'button'}
+                    href="/#"
                     key={id}
                     onClick={() => {
                         setActiveMappingId(id);

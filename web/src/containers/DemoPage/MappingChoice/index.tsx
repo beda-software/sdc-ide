@@ -19,6 +19,7 @@ export function MappingChoice({ mappingIdList, mappingId, setMappingId }: Mappin
             {_.map(mappingIdList, (id) => (
                 <a
                     type={'button'}
+                    href="/#"
                     key={id}
                     onClick={() => {
                         setMappingId(id);
