@@ -19,10 +19,6 @@ export function useMain(questionnaireId: string) {
         [patientId],
     );
 
-    const onPatientReload = async () => {
-        await patientManager.reload;
-    };
-
     // Questionnaire
     const [questionnaireRD, questionnaireManager] = useService(async () => {
         const response = await service<Questionnaire>({
@@ -32,7 +28,7 @@ export function useMain(questionnaireId: string) {
 
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
-            setMappingList(mappings);
+            setMappingList(_.sortBy(mappings, 'id'));
             const firstMapping = mappings.length ? mappings[0] : undefined;
             setActiveMappingId(firstMapping?.id);
         }
@@ -43,7 +39,7 @@ export function useMain(questionnaireId: string) {
     // Questionnaire in FHIR format
     const [questionnaireFHIRRD] = useService(
         () =>
-            service({
+            service<Questionnaire>({
                 method: 'GET',
                 url: `/fhir/Questionnaire/${questionnaireId}`,
             }),
@@ -51,6 +47,7 @@ export function useMain(questionnaireId: string) {
     );
 
     const saveQuestionnaireFHIR = async (resource: Questionnaire) => {
+        console.log('-------- saveQuestionnaireFHIR');
         const response = await service({
             method: 'PUT',
             data: resource,
@@ -58,6 +55,8 @@ export function useMain(questionnaireId: string) {
         });
         if (isSuccess(response)) {
             questionnaireManager.reload();
+        } else {
+            console.error('Could not save Questionnaire:', response.error.toString());
         }
     };
 
@@ -181,9 +180,7 @@ export function useMain(questionnaireId: string) {
     };
 
     return {
-        questionnaireId,
         patientRD,
-        onPatientReload,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,

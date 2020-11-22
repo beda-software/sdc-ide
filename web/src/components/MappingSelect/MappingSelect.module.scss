@@ -1,0 +1,40 @@
+@import "src/styles/colors";
+
+.wrapper {
+  display: flex;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.item {
+  font-family: Poppins, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: $base-dark-color;
+  flex: 1;
+  padding: 2px 2px 2px;
+  text-align: center;
+}
+
+.item:hover {
+  background-color: $base-surface-color;
+}
+
+.checked {
+  font-family: Poppins, serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: $base-dark-color;
+  border-bottom: $primary-color solid 2px;
+  flex: 1;
+  padding: 2px 2px 2px;
+  text-align: center;
+}
+
+.checked:hover {
+  background-color: $base-surface-color;
+}
