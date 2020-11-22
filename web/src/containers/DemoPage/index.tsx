@@ -5,7 +5,7 @@ import s from './DemoPage.module.scss';
 
 import { Logo } from 'src/components/Logo';
 import { MappingBox } from 'src/containers/DemoPage/MappingBox';
-import { ResourceDisplayBox } from 'ResourceCodeDisplay';
+
 import { PatientBatchRequestBox } from 'src/containers/DemoPage/PatientBatchRequestBox';
 import { QuestionnaireResourceBox } from 'src/containers/DemoPage/QuestionnaireResourceBox';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -21,6 +21,7 @@ import { Menu } from 'src/components/Menu';
 import { MappingChoice } from 'src/containers/DemoPage/MappingChoice';
 import { ExpandableRow } from 'src/components/ExpandableRow';
 import { ExpandableElement } from 'src/components/ExpandableElement';
+import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 
 export function DemoPage() {
     const { id } = useParams<{ id: string }>();
@@ -91,7 +92,7 @@ export function DemoPage() {
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Patient FHIR resource" cssClass={s.patientFHIRResourceBox}>
-                        <ResourceDisplayBox resourceResponse={patientResponse} />
+                        <ResourceCodeDisplay resourceResponse={patientResponse} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <QuestionnaireResourceBox
@@ -116,7 +117,7 @@ export function DemoPage() {
                         title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
-                        <ResourceDisplayBox resourceResponse={success(questionnaireResponse)} />
+                        <ResourceCodeDisplay resourceResponse={success(questionnaireResponse)} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
                         <RenderRemoteData remoteData={questionnaireRemoteData}>
