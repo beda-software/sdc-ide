@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useMain } from 'src/containers/Main/hooks';
-import s from 'src/containers/DemoPage/DemoPage.module.scss';
 import { Menu } from 'src/components/Menu';
 import { Logo } from 'src/components/Logo';
 import { ExpandableRow } from 'src/components/ExpandableRow';
@@ -12,6 +11,8 @@ import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
+
+import s from './Main.module.scss';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
@@ -68,6 +69,7 @@ export function Main() {
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
                         <div>
                             <ResourceCodeDisplay resourceResponse={batchRequestRD} />
+                            {/*todo: disable or hide button if we can not apply*/}
                             <Button onClick={applyMappings}>Apply</Button>
                         </div>
                     </ExpandableElement>
