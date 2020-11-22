@@ -9,8 +9,8 @@ interface ResourceDisplayBoxProps {
     resourceResponse: RemoteData<AidboxResource>;
 }
 
-function ResourceDisplayBoxRaw({ resourceResponse }: ResourceDisplayBoxProps) {
-    console.log('render ResourceDisplayBox with', resourceResponse);
+function ResourceCodeDisplayRaw({ resourceResponse }: ResourceDisplayBoxProps) {
+    console.log('render ResourceCodeDisplay with', resourceResponse);
     return (
         <RenderRemoteData remoteData={resourceResponse}>
             {(resource) => (
@@ -25,4 +25,4 @@ function ResourceDisplayBoxRaw({ resourceResponse }: ResourceDisplayBoxProps) {
     );
 }
 
-export const ResourceDisplayBox = React.memo(ResourceDisplayBoxRaw);
+export const ResourceCodeDisplay = React.memo(ResourceCodeDisplayRaw);

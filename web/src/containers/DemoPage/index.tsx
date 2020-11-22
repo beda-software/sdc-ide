@@ -5,7 +5,7 @@ import s from './DemoPage.module.scss';
 
 import { Logo } from 'src/components/Logo';
 import { MappingBox } from 'src/containers/DemoPage/MappingBox';
-import { ResourceDisplayBox } from 'src/containers/DemoPage/ResourceDisplayBox';
+import { ResourceDisplayBox } from 'ResourceCodeDisplay';
 import { PatientBatchRequestBox } from 'src/containers/DemoPage/PatientBatchRequestBox';
 import { QuestionnaireResourceBox } from 'src/containers/DemoPage/QuestionnaireResourceBox';
 import { useService } from 'aidbox-react/lib/hooks/service';

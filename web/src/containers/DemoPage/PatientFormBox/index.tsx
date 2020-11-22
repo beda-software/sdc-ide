@@ -9,7 +9,6 @@ import { RenderRemoteData } from 'src/components/RenderRemoteData';
 interface PatientFormBoxProps {
     questionnaire: Questionnaire;
     patient: Patient;
-    setBatchRequest: React.Dispatch<any>;
     setQuestionnaireResponse: React.Dispatch<QuestionnaireResponse>;
 }
 
@@ -31,6 +30,8 @@ export function PatientFormBox(props: PatientFormBoxProps) {
         });
         return populatedResp;
     }, [questionnaire]);
+
+    // moved
     const onChange = useCallback(_.debounce(setQuestionnaireResponse, 1000), [setQuestionnaireResponse]);
     return (
         <RenderRemoteData remoteData={questionnaireResponse}>
@@ -39,9 +40,7 @@ export function PatientFormBox(props: PatientFormBoxProps) {
                     readOnly
                     questionnaire={questionnaire}
                     resource={questionnaireResponse}
-                    onSave={async (resource) => {
-                        setQuestionnaireResponse(resource);
-                    }}
+                    onSave={async () => {}}
                     onChange={onChange}
                 />
             )}

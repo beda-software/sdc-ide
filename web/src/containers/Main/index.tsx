@@ -6,7 +6,7 @@ import { Menu } from 'src/components/Menu';
 import { Logo } from 'src/components/Logo';
 import { ExpandableRow } from 'src/components/ExpandableRow';
 import { ExpandableElement } from 'src/components/ExpandableElement';
-import { ResourceDisplayBox } from 'src/components/ResourceDisplayBox';
+import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { success } from 'aidbox-react/lib/libs/remoteData';
 import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
@@ -35,7 +35,7 @@ export function Main() {
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Patient FHIR resource" cssClass={s.patientFHIRResourceBox}>
-                        <ResourceDisplayBox resourceResponse={patientRD} />
+                        <ResourceCodeDisplay resourceResponse={patientRD} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
@@ -53,7 +53,7 @@ export function Main() {
                         title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
-                        <ResourceDisplayBox resourceResponse={success(questionnaireResponse)} />
+                        <ResourceCodeDisplay resourceResponse={success(questionnaireResponse)} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
                         <div>
@@ -67,7 +67,7 @@ export function Main() {
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
                         <div>
-                            <ResourceDisplayBox resourceResponse={batchRequestRD} />
+                            <ResourceCodeDisplay resourceResponse={batchRequestRD} />
                             <Button onClick={applyMappings}>Apply</Button>
                         </div>
                     </ExpandableElement>
