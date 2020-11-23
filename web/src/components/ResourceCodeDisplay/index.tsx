@@ -10,7 +10,6 @@ interface ResourceDisplayBoxProps {
 }
 
 function ResourceCodeDisplayRaw({ resourceResponse }: ResourceDisplayBoxProps) {
-    console.log('render ResourceCodeDisplay with', resourceResponse);
     return (
         <RenderRemoteData remoteData={resourceResponse}>
             {(resource) => (
