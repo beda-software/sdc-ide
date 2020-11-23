@@ -1,6 +1,5 @@
 @import "src/styles/colors";
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import 'src/styles/fonts';
 
 .wrapper {
   margin-top: 10px;
@@ -11,18 +10,11 @@
 }
 
 .label {
-  font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+  @include base-text-12-bold;
 }
 
 .input {
   font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: normal;
   font-size: 12px;
   line-height: 18px;
   color: $base-dark-color;

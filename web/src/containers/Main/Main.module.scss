@@ -1,7 +1,5 @@
 @import "src/styles/colors";
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-
 .mainContainer {
   height: 100vh;
   display: flex;
@@ -65,7 +63,6 @@
 
 h2 {
   color: $base-dark-color;
-  font-family: 'Poppins', sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 14px;

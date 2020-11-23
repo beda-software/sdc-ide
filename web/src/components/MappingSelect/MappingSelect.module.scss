@@ -1,4 +1,5 @@
 @import "src/styles/colors";
+@import 'src/styles/fonts';
 
 .wrapper {
   display: flex;
@@ -6,16 +7,16 @@
   margin-right: -20px;
 }
 
-.item {
-  font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+@mixin item-base {
   flex: 1;
   padding: 2px 2px 2px;
   text-align: center;
+}
+
+.item {
+  @include base-text-12-bold;
+  font-weight: 400;
+  @include item-base;
 }
 
 .item:hover {
@@ -23,16 +24,10 @@
 }
 
 .checked {
-  font-family: Poppins, serif;
-  font-style: normal;
+  @include base-text-12-bold;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+  @include item-base;
   border-bottom: $primary-color solid 2px;
-  flex: 1;
-  padding: 2px 2px 2px;
-  text-align: center;
 }
 
 .checked:hover {
