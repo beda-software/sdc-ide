@@ -24,8 +24,6 @@ export function PatientBatchRequestBox(props: PatientBatchRequestBoxProps) {
             <Button
                 onClick={async () => {
                     if (questionnaireResponse && questionnaire) {
-                        console.log('questionnaire', questionnaire);
-                        console.log('questionnaireResponse', questionnaireResponse);
                         await service({
                             method: 'POST',
                             url: '/Questionnaire/$extract',
