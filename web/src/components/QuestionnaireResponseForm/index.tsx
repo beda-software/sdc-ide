@@ -64,7 +64,9 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     public toFormValues(): FormValues {
         const { resource, questionnaire } = this.props;
 
-        return mapResponseToForm(resource, questionnaire);
+        const initial = mapResponseToForm(resource, questionnaire);
+        console.log('initial', initial);
+        return initial;
     }
 
     public renderRepeatsAnswer(

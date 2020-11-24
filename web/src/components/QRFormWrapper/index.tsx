@@ -17,10 +17,12 @@ export function QRFormWrapper({
     saveQuestionnaireResponse,
 }: QRFormWrapperProps) {
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [saveQuestionnaireResponse]);
+
     return (
         <RenderRemoteData remoteData={questionnaireRD}>
             {(questionnaire) => (
                 <QuestionnaireResponseForm
+                    key={questionnaire.id}
                     readOnly
                     questionnaire={questionnaire}
                     resource={questionnaireResponse}

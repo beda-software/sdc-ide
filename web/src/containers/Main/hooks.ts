@@ -10,13 +10,13 @@ export function useMain(questionnaireId: string) {
     // Patient
     const patientId = 'patient'; // One patient across all questionnaires
 
-    const [patientRD, patientManager] = useService(
+    const [patientRD] = useService(
         () =>
             getFHIRResource<Patient>({
                 resourceType: 'Patient',
                 id: patientId,
             }),
-        [patientId],
+        [patientId, questionnaireId],
     );
 
     // Questionnaire
@@ -47,7 +47,7 @@ export function useMain(questionnaireId: string) {
     );
 
     const saveQuestionnaireFHIR = async (resource: Questionnaire) => {
-        console.log('-------- saveQuestionnaireFHIR');
+        // todo: use callback
         const response = await service({
             method: 'PUT',
             data: resource,
@@ -83,6 +83,7 @@ export function useMain(questionnaireId: string) {
                 data: params,
             });
             if (isSuccess(response)) {
+                console.log('set QR after populate');
                 setQuestionnaireResponse(response.data);
             }
         }
@@ -90,7 +91,7 @@ export function useMain(questionnaireId: string) {
 
     const saveQuestionnaireResponse = (resource: QuestionnaireResponse) => {
         if (!_.isEqual(resource, questionnaireResponse)) {
-            console.log('saveQuestionnaireResponse');
+            console.log('set QR saveQR');
             setQuestionnaireResponse(resource);
         }
     };
@@ -98,7 +99,6 @@ export function useMain(questionnaireId: string) {
     useEffect(() => {
         (async () => {
             if (isSuccess(patientRD) && isSuccess(questionnaireRD)) {
-                console.log('effect: getQuestionnaireResponse');
                 await loadQuestionnaireResponse();
             }
         })();
@@ -124,7 +124,6 @@ export function useMain(questionnaireId: string) {
     useEffect(() => {
         (async () => {
             if (activeMappingId) {
-                console.log('useEffect activeMappingId', activeMappingId);
                 await loadMapping();
             }
         })();
@@ -133,7 +132,6 @@ export function useMain(questionnaireId: string) {
     const saveMapping = async (mapping: Mapping) => {
         if (isSuccess(mappingRD)) {
             if (!_.isEqual(mapping, mappingRD.data)) {
-                console.log('saveMapping');
                 const response = await saveFHIRResource(mapping);
                 if (isSuccess(response)) {
                     await loadMapping();
@@ -160,7 +158,6 @@ export function useMain(questionnaireId: string) {
 
     // Mapping apply
     const applyMappings = async () => {
-        console.log('apply');
         if (isSuccess(questionnaireRD)) {
             const response = await service({
                 method: 'POST',
@@ -174,7 +171,7 @@ export function useMain(questionnaireId: string) {
                 },
             });
             if (isSuccess(response)) {
-                patientManager.reload();
+                window.location.reload();
             }
         }
     };

@@ -1,5 +1,5 @@
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
-import { objectToDisplay } from 'src/utils/yaml';
+import { objectToDisplay, displayToObject } from 'src/utils/yaml';
 import React, { useRef } from 'react';
 
 // import 'codemirror/lib/codemirror.css';
@@ -9,6 +9,7 @@ require('codemirror/mode/yaml/yaml');
 
 interface CodeEditorProps extends IUnControlledCodeMirror {
     valueObject?: object;
+    onChange?: (object: any) => void;
 }
 
 export function CodeEditor(props: CodeEditorProps) {
@@ -24,7 +25,7 @@ export function CodeEditor(props: CodeEditorProps) {
                 mode: 'yaml',
                 ...options,
             }}
-            onChange={onChange}
+            onChange={(_editor, _change, value) => onChange && onChange(displayToObject(value))}
         />
     );
 }
