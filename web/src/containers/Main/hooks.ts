@@ -1,8 +1,8 @@
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
-import { service } from 'aidbox-react/lib/services/service';
-import { isSuccess, notAsked, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { service, sequenceMap } from 'aidbox-react/lib/services/service';
+import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/lib/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 
@@ -60,13 +60,7 @@ export function useMain(questionnaireId: string) {
         }
     };
 
-    // QuestionnaireResponse
-    const initialQR: QuestionnaireResponse = {
-        resourceType: 'QuestionnaireResponse',
-        status: 'draft',
-    };
-
-    const [questionnaireResponse, setQuestionnaireResponse] = useState<QuestionnaireResponse>(initialQR);
+    const [questionnaireResponse, setQuestionnaireResponse] = useState<RemoteData<QuestionnaireResponse>>(loading);
 
     const loadQuestionnaireResponse = useCallback(async () => {
         if (isSuccess(patientRD) && isSuccess(questionnaireRD)) {
@@ -84,7 +78,7 @@ export function useMain(questionnaireId: string) {
             });
             if (isSuccess(response)) {
                 console.log('set QR after populate');
-                setQuestionnaireResponse(response.data);
+                setQuestionnaireResponse(response);
             }
         }
     }, [patientRD, questionnaireRD]);
@@ -92,14 +86,17 @@ export function useMain(questionnaireId: string) {
     const saveQuestionnaireResponse = (resource: QuestionnaireResponse) => {
         if (!_.isEqual(resource, questionnaireResponse)) {
             console.log('set QR saveQR');
-            setQuestionnaireResponse(resource);
+            setQuestionnaireResponse(success(resource));
         }
     };
 
     useEffect(() => {
         (async () => {
-            if (isSuccess(patientRD) && isSuccess(questionnaireRD)) {
+            const loadingStatus = sequenceMap({ patientRD, questionnaireRD });
+            if (isSuccess(loadingStatus)) {
                 await loadQuestionnaireResponse();
+            } else {
+                setQuestionnaireResponse(loadingStatus);
             }
         })();
     }, [patientRD, questionnaireRD, loadQuestionnaireResponse]);

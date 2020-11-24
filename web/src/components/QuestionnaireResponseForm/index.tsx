@@ -355,18 +355,16 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         const { handleSubmit, submitting } = formParams;
 
         return (
-            <>
-                <form autoComplete="off">
-                    {this.renderQuestions(items, [], formParams)}
-                    {!readOnly && (
-                        <div className="questionnaire-form-actions">
-                            <Button onClick={handleSubmit} disabled={submitting}>
-                                Save
-                            </Button>
-                        </div>
-                    )}
-                </form>
-            </>
+            <form autoComplete="off">
+                {this.renderQuestions(items, [], formParams)}
+                {!readOnly && (
+                    <div className="questionnaire-form-actions">
+                        <Button onClick={handleSubmit} disabled={submitting}>
+                            Save
+                        </Button>
+                    </div>
+                )}
+            </form>
         );
     };
 

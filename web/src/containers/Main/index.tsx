@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useMain } from 'src/containers/Main/hooks';
 import { Menu } from 'src/components/Menu';
 import { Logo } from 'src/components/Logo';
+import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { ExpandableRow } from 'src/components/ExpandableRow';
 import { ExpandableElement } from 'src/components/ExpandableElement';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { success } from 'aidbox-react/lib/libs/remoteData';
 import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
@@ -42,11 +42,15 @@ export function Main() {
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
-                        <QRFormWrapper
-                            questionnaireRD={questionnaireRD}
-                            questionnaireResponse={questionnaireResponse}
-                            saveQuestionnaireResponse={saveQuestionnaireResponse}
-                        />
+                        <RenderRemoteData remoteData={questionnaireResponse}>
+                            {(qr) => (
+                                <QRFormWrapper
+                                    questionnaireRD={questionnaireRD}
+                                    questionnaireResponse={qr}
+                                    saveQuestionnaireResponse={saveQuestionnaireResponse}
+                                />
+                            )}
+                        </RenderRemoteData>
                     </ExpandableElement>
                 </ExpandableRow>
                 <ExpandableRow cssClass={s.lowerRowContainer}>
@@ -54,7 +58,7 @@ export function Main() {
                         title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
-                        <ResourceCodeDisplay resourceResponse={success(questionnaireResponse)} />
+                        <ResourceCodeDisplay resourceResponse={questionnaireResponse} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
                         <div>
@@ -69,7 +73,6 @@ export function Main() {
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
                         <div>
                             <ResourceCodeDisplay resourceResponse={batchRequestRD} />
-                            {/*todo: disable or hide button if we can not apply*/}
                             <Button onClick={applyMappings}>Apply</Button>
                         </div>
                     </ExpandableElement>
