@@ -5,12 +5,20 @@
   display: flex;
   margin-left: -20px;
   margin-right: -20px;
+  margin-bottom: 8px;
 }
 
 @mixin item-base {
   flex: 1;
   padding: 2px 2px 2px;
   text-align: center;
+}
+
+button {
+  background-color: $base-light-color;
+  border: 0;
+  outline: none;
+  font: 12px "Poppins";
 }
 
 .item {

@@ -19,9 +19,9 @@ export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId
     return (
         <div className={s.wrapper}>
             {_.map(mappingList, ({ id }) => (
-                <a
+                <button
                     type={'button'}
-                    href="/#"
+                    // href="/#"
                     key={id}
                     onClick={() => {
                         setActiveMappingId(id);
@@ -29,7 +29,7 @@ export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId
                     className={id === activeMappingId ? s.checked : s.item}
                 >
                     {id}
-                </a>
+                </button>
             ))}
         </div>
     );

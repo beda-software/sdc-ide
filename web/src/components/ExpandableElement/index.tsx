@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import s from './ExpandableElement.module.scss';
+
 interface ExpandableElementProps {
     cssClass: string;
     title: string;
@@ -9,9 +11,10 @@ interface ExpandableElementProps {
 export function ExpandableElement(props: ExpandableElementProps) {
     const [expanded, setExpanded] = useState(false);
     return (
-        // todo: move hardcoded styles to scss file?
         <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
-            <h2 onClick={() => setExpanded((f) => !f)}>{props.title}</h2>
+            <h2 className={s.title} onClick={() => setExpanded((f) => !f)}>
+                {props.title}
+            </h2>
             {props.children}
         </div>
     );
