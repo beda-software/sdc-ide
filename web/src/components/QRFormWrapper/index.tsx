@@ -4,28 +4,29 @@ import { QuestionnaireResponseForm } from 'src/components/QuestionnaireResponseF
 import { Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import _ from 'lodash';
+import { sequenceMap } from 'aidbox-react/lib/services/service';
 
 interface QRFormWrapperProps {
     questionnaireRD: RemoteData<Questionnaire>;
-    questionnaireResponse: QuestionnaireResponse;
+    questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     saveQuestionnaireResponse: (resource: QuestionnaireResponse) => void;
 }
 
 export function QRFormWrapper({
     questionnaireRD,
-    questionnaireResponse,
+    questionnaireResponseRD,
     saveQuestionnaireResponse,
 }: QRFormWrapperProps) {
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [saveQuestionnaireResponse]);
-
+    const remoteDataResult = sequenceMap({ questionnaireRD, questionnaireResponseRD });
     return (
-        <RenderRemoteData remoteData={questionnaireRD}>
-            {(questionnaire) => (
+        <RenderRemoteData remoteData={remoteDataResult}>
+            {(data) => (
                 <QuestionnaireResponseForm
-                    key={questionnaire.id}
+                    key={data.questionnaireRD.id}
                     readOnly
-                    questionnaire={questionnaire}
-                    resource={questionnaireResponse}
+                    questionnaire={data.questionnaireRD}
+                    resource={data.questionnaireResponseRD}
                     onSave={async () => {}}
                     onChange={onChange}
                 />

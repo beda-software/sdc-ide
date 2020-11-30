@@ -65,7 +65,6 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         const { resource, questionnaire } = this.props;
 
         const initial = mapResponseToForm(resource, questionnaire);
-        console.log('initial', initial);
         return initial;
     }
 

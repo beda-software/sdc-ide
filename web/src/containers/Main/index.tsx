@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useMain } from 'src/containers/Main/hooks';
 import { Menu } from 'src/components/Menu';
 import { Logo } from 'src/components/Logo';
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { ExpandableRow } from 'src/components/ExpandableRow';
 import { ExpandableElement } from 'src/components/ExpandableElement';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
@@ -21,7 +20,7 @@ export function Main() {
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,
-        questionnaireResponse,
+        questionnaireResponseRD,
         saveQuestionnaireResponse,
         mappingList,
         activeMappingId,
@@ -42,15 +41,11 @@ export function Main() {
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
-                        <RenderRemoteData remoteData={questionnaireResponse}>
-                            {(qr) => (
-                                <QRFormWrapper
-                                    questionnaireRD={questionnaireRD}
-                                    questionnaireResponse={qr}
-                                    saveQuestionnaireResponse={saveQuestionnaireResponse}
-                                />
-                            )}
-                        </RenderRemoteData>
+                        <QRFormWrapper
+                            questionnaireRD={questionnaireRD}
+                            questionnaireResponseRD={questionnaireResponseRD}
+                            saveQuestionnaireResponse={saveQuestionnaireResponse}
+                        />
                     </ExpandableElement>
                 </ExpandableRow>
                 <ExpandableRow cssClass={s.lowerRowContainer}>
@@ -58,7 +53,7 @@ export function Main() {
                         title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
-                        <ResourceCodeDisplay resourceResponse={questionnaireResponse} />
+                        <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
                         <div>

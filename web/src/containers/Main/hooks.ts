@@ -46,21 +46,25 @@ export function useMain(questionnaireId: string) {
         [questionnaireId],
     );
 
-    const saveQuestionnaireFHIR = async (resource: Questionnaire) => {
-        // todo: use callback
-        const response = await service({
-            method: 'PUT',
-            data: resource,
-            url: `/fhir/Questionnaire/${resource.id}`,
-        });
-        if (isSuccess(response)) {
-            questionnaireManager.reload();
-        } else {
-            console.error('Could not save Questionnaire:', response.error.toString());
-        }
-    };
+    const saveQuestionnaireFHIR = useCallback(
+        async (resource: Questionnaire) => {
+            // todo: use callback
+            const response = await service({
+                method: 'PUT',
+                data: resource,
+                url: `/fhir/Questionnaire/${resource.id}`,
+            });
+            if (isSuccess(response)) {
+                questionnaireManager.reload();
+            } else {
+                console.error('Could not save Questionnaire:', response.error.toString());
+            }
+        },
+        [questionnaireManager],
+    );
 
-    const [questionnaireResponse, setQuestionnaireResponse] = useState<RemoteData<QuestionnaireResponse>>(loading);
+    // QuestionnaireResponse
+    const [questionnaireResponseRD, setQuestionnaireResponseRD] = useState<RemoteData<QuestionnaireResponse>>(loading);
 
     const loadQuestionnaireResponse = useCallback(async () => {
         if (isSuccess(patientRD) && isSuccess(questionnaireRD)) {
@@ -77,18 +81,21 @@ export function useMain(questionnaireId: string) {
                 data: params,
             });
             if (isSuccess(response)) {
-                console.log('set QR after populate');
-                setQuestionnaireResponse(response);
+                setQuestionnaireResponseRD(response);
             }
         }
     }, [patientRD, questionnaireRD]);
 
-    const saveQuestionnaireResponse = (resource: QuestionnaireResponse) => {
-        if (!_.isEqual(resource, questionnaireResponse)) {
-            console.log('set QR saveQR');
-            setQuestionnaireResponse(success(resource));
-        }
-    };
+    const saveQuestionnaireResponse = useCallback(
+        (resource: QuestionnaireResponse) => {
+            if (isSuccess(questionnaireResponseRD)) {
+                if (!_.isEqual(resource, questionnaireResponseRD.data)) {
+                    setQuestionnaireResponseRD(success(resource));
+                }
+            }
+        },
+        [questionnaireResponseRD],
+    );
 
     useEffect(() => {
         (async () => {
@@ -96,7 +103,7 @@ export function useMain(questionnaireId: string) {
             if (isSuccess(loadingStatus)) {
                 await loadQuestionnaireResponse();
             } else {
-                setQuestionnaireResponse(loadingStatus);
+                setQuestionnaireResponseRD(loadingStatus);
             }
         })();
     }, [patientRD, questionnaireRD, loadQuestionnaireResponse]);
@@ -126,44 +133,51 @@ export function useMain(questionnaireId: string) {
         })();
     }, [activeMappingId, loadMapping]);
 
-    const saveMapping = async (mapping: Mapping) => {
-        if (isSuccess(mappingRD)) {
-            if (!_.isEqual(mapping, mappingRD.data)) {
-                const response = await saveFHIRResource(mapping);
-                if (isSuccess(response)) {
-                    await loadMapping();
+    const saveMapping = useCallback(
+        async (mapping: Mapping) => {
+            if (isSuccess(mappingRD)) {
+                if (!_.isEqual(mapping, mappingRD.data)) {
+                    const response = await saveFHIRResource(mapping);
+                    if (isSuccess(response)) {
+                        await loadMapping();
+                    }
                 }
             }
-        }
-    };
+        },
+        [loadMapping, mappingRD],
+    );
 
     // BatchRequest
     const [batchRequestRD, setBatchRequestRD] = React.useState<RemoteData<Bundle<any>>>(notAsked);
 
     useEffect(() => {
         (async function () {
-            if (activeMappingId) {
+            if (activeMappingId && isSuccess(questionnaireResponseRD)) {
                 const response = await service({
                     method: 'POST',
                     url: `/Mapping/${activeMappingId}/$debug`,
-                    data: questionnaireResponse,
+                    data: questionnaireResponseRD.data,
                 });
                 setBatchRequestRD(response);
             }
         })();
-    }, [questionnaireResponse, activeMappingId]);
+    }, [questionnaireResponseRD, activeMappingId]);
 
     // Mapping apply
-    const applyMappings = async () => {
-        if (isSuccess(questionnaireRD)) {
+    const applyMappings = useCallback(async () => {
+        const resourcesRD = sequenceMap({
+            questionnaireRD,
+            questionnaireResponseRD,
+        });
+        if (isSuccess(resourcesRD)) {
             const response = await service({
                 method: 'POST',
                 url: '/Questionnaire/$extract',
                 data: {
                     resourceType: 'Parameters',
                     parameter: [
-                        { name: 'questionnaire_response', resource: questionnaireResponse },
-                        { name: 'questionnaire', resource: questionnaireRD.data },
+                        { name: 'questionnaire_response', resource: resourcesRD.data.questionnaireResponseRD },
+                        { name: 'questionnaire', resource: resourcesRD.data.questionnaireRD },
                     ],
                 },
             });
@@ -171,14 +185,14 @@ export function useMain(questionnaireId: string) {
                 window.location.reload();
             }
         }
-    };
+    }, [questionnaireRD, questionnaireResponseRD]);
 
     return {
         patientRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,
-        questionnaireResponse,
+        questionnaireResponseRD,
         saveQuestionnaireResponse,
         mappingList,
         activeMappingId,
