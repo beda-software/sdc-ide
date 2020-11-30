@@ -3,7 +3,7 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess } from 'aidbox-react/lib/services/service';
 import _ from 'lodash';
-import { arrowDown, arrowUp } from 'src/components/Icon';
+import { ArrowDirections } from 'src/components/Icon/Arrow';
 
 export function useMenu() {
     const [showMenu, setShowMenu] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export function useMenu() {
         });
     });
 
-    const symbol = showMenu ? arrowUp('white') : arrowDown('white');
+    const direction: ArrowDirections = showMenu ? 'up' : 'down';
 
-    return { questionnaireIdList, toggleMenu, getMenuStyle, symbol };
+    return { questionnaireIdList, toggleMenu, getMenuStyle, direction };
 }
