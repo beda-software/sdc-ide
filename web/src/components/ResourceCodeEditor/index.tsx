@@ -15,7 +15,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({ resourceRD, onSav
 
     return (
         <RenderRemoteData remoteData={resourceRD}>
-            {(resource) => <CodeEditor valueObject={resource} onChange={onChange} />}
+            {(resource) => <CodeEditor key={resource.id} valueObject={resource} onChange={onChange} />}
         </RenderRemoteData>
     );
 }
