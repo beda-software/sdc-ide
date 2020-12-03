@@ -14,20 +14,6 @@ if [ -z "${AIDBOX_LICENSE_ID_TESTS}" ]; then
     exit 1
 fi
 
-if [ -z "$CI" ]; then
-    if [ -z "${BACKEND_IMAGE}" ]; then
-        echo "BACKEND_IMAGE is required to run tests"
-        exit 1
-    fi
-else
-    if [ -z "${BACKEND_IMAGE_REPOSITORY}" ]; then
-        echo "BACKEND_IMAGE_REPOSITORY is required to run tests"
-        exit 1
-    fi
-
-    export BACKEND_IMAGE="${BACKEND_IMAGE_REPOSITORY}:master"
-fi
-
 docker-compose -f docker-compose.tests.yaml pull
 docker-compose -f docker-compose.tests.yaml up --exit-code-from dockerize dockerize || exit 1
 
