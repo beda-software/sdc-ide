@@ -1,6 +1,6 @@
 import { Questionnaire } from 'shared/lib/contrib/aidbox';
 
-export const questionnaireFHIRExpected: Questionnaire = {
+export const questionnaireFHIR: Questionnaire = {
     id: 'demo-1',
     resourceType: 'Questionnaire',
     status: 'active',
@@ -105,4 +105,26 @@ export const questionnaireFHIRExpected: Questionnaire = {
             ],
         },
     ],
+};
+
+
+
+export const newQuestionnaireFHIRItem = {
+    text: 'Updated',
+    type: 'string',
+    linkId: 'updated',
+    extension: [
+        {
+            url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
+            valueExpression: {
+                language: 'text/fhirpath',
+                expression: '%LaunchPatient.name.given.first()',
+            },
+        },
+    ],
+};
+
+export const newQuestionnaireFHIR: Questionnaire = {
+    ...questionnaireFHIR,
+    item: [newQuestionnaireFHIRItem],
 };

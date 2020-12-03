@@ -1,138 +1,204 @@
 import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
-import { useMain } from 'src/containers/Main/hooks';
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
-import { draw, waitToResolve } from 'src/containers/Main/__test__/utils';
-import { patientExpected } from './resources/patient';
-import { questionnaireExpected } from 'src/containers/Main/__test__/resources/questionnaire';
 import { Questionnaire } from 'shared/lib/contrib/aidbox';
-import { questionnaireFHIRExpected } from 'src/containers/Main/__test__/resources/questionnaireFHIRExpected';
+import { ensure, withRootAccess } from 'aidbox-react/lib/utils/tests';
+
+import { useMain } from 'src/containers/Main/hooks';
 import { act } from 'react-dom/test-utils';
+
+import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 
 const questionnaireIdInitial = 'demo-1';
 
-beforeEach(() => {
-    axiosInstance.defaults.auth = {
-        username: 'root',
-        password: 'secret',
-    };
-});
-
 test('patient is loaded', async () => {
-    expect.assertions(1);
-    const { result, waitForNextUpdate } = renderHook(() => useMain(questionnaireIdInitial));
+    await withRootAccess(async () => {
+        const { result, waitFor } = renderHook(() => useMain(questionnaireIdInitial));
 
-    await waitToResolve(result, waitForNextUpdate, 'patientRD');
-
-    if (isSuccess(result.current.patientRD)) {
-        const patient = _.omit(result.current.patientRD.data, 'meta');
-        // draw(patient, 'patient');
-        expect(patient.id).toBe(patientExpected.id);
-    }
+        await waitFor(() => {
+            const patient = ensure(result.current.patientRD);
+            expect(patient.id).toBe(EXPECTED_RESOURCES.patient.id);
+        });
+    });
 });
 
 test('questionnaire is loaded', async () => {
-    expect.assertions(2);
-    const { result, waitForNextUpdate } = await renderHook(() => useMain(questionnaireIdInitial));
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 
-    await waitToResolve(result, waitForNextUpdate, 'questionnaireRD');
-
-    if (isSuccess(result.current.questionnaireRD)) {
-        const questionnaire = _.omit(result.current.questionnaireRD.data, 'meta');
-        expect(questionnaire.id).toBe(questionnaireIdInitial);
-        expect(questionnaire.mapping![0]).toEqual(questionnaireExpected.mapping![0]);
-    }
+        await waitFor(() => {
+            const questionnaire = ensure(result.current.questionnaireRD);
+            expect(questionnaire.id).toBe(questionnaireIdInitial);
+            expect(questionnaire.mapping![0]).toEqual(EXPECTED_RESOURCES.questionnaire.mapping![0]);
+        });
+    });
 });
 
 test('questionnaire in FHIR format is loaded', async () => {
-    expect.assertions(3);
-    const { result, waitForNextUpdate } = await renderHook(() => useMain(questionnaireIdInitial));
+    const getMappingExtexnsion = (q: Partial<Questionnaire> | any) =>
+        _.find(q.extension, {
+            url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
+        });
 
-    await waitToResolve(result, waitForNextUpdate, 'questionnaireFHIRRD');
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 
-    if (isSuccess(result.current.questionnaireFHIRRD)) {
-        const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
-        // draw(questionnaire, 'questionnaire');
-        expect(questionnaire.id).toBe(questionnaireIdInitial);
+        await waitFor(() => {
+            // console.log('--- result --- ', JSON.stringify(result, undefined, 2));
+            const questionnaireFHIR = ensure(result.current.questionnaireFHIRRD);
 
-        const getMappingExtexnsion = (q: Partial<Questionnaire> | any) =>
-            _.find(q.extension, {
-                url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
-            });
-
-        const mappingFromQuestionnaire = getMappingExtexnsion(questionnaire);
-        const mappingFromQuestionnaireFHIRExpected = getMappingExtexnsion(questionnaireFHIRExpected);
-        expect(mappingFromQuestionnaire.valueReference.reference).toBeDefined();
-        expect(mappingFromQuestionnaire.valueReference.reference).toEqual(
-            mappingFromQuestionnaireFHIRExpected.valueReference.reference,
-        );
-    }
-});
-
-test('Check onQuestionnaireUpdate', async () => {
-    expect.assertions(1);
-    const { result, waitForNextUpdate } = await renderHook(() => useMain(questionnaireIdInitial));
-
-    // Get initial questionnaire in FHIR format
-    await waitToResolve(result, waitForNextUpdate, 'questionnaireFHIRRD');
-
-    if (isSuccess(result.current.questionnaireFHIRRD)) {
-        // const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
-        // draw(questionnaire, 'questionnaire');
-    }
-
-    const newItem = {
-        text: 'First Name',
-        type: 'string',
-        linkId: 'first-name',
-        extension: [
-            {
-                url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
-                valueExpression: {
-                    language: 'text/fhirpath',
-                    expression: '%LaunchPatient.name.given.first()',
-                },
-            },
-        ],
-    };
-    const newQuestionnaire: Questionnaire = {
-        ...questionnaireFHIRExpected,
-        item: [newItem],
-    };
-
-    draw(newQuestionnaire, 'questionnaire to save');
-
-    // Call onQuestionnaireUpdate(questionnaireExpected)
-    // Trigger second slide
-    act(async () => {
-        await result.current.saveQuestionnaireFHIR(newQuestionnaire);
+            expect(questionnaireFHIR.id).toBe(questionnaireIdInitial);
+            const mappingFromQuestionnaire = getMappingExtexnsion(questionnaireFHIR);
+            const mappingFromQuestionnaireFHIRExpected = getMappingExtexnsion(EXPECTED_RESOURCES.questionnaireFHIR);
+            expect(mappingFromQuestionnaire.valueReference.reference).toBeDefined();
+            expect(mappingFromQuestionnaire.valueReference.reference).toEqual(
+                mappingFromQuestionnaireFHIRExpected.valueReference.reference,
+            );
+        });
     });
-
-    draw(result.current.questionnaireFHIRRD, 'questionnaireFHIRRD');
-    expect(1).toEqual(1);
-
-    if (isSuccess(result.current.questionnaireFHIRRD)) {
-        // const questionnaire = _.omit(result.current.questionnaireFHIRRD.data, 'meta');
-        // draw(questionnaire, 'questionnaire');
-    }
-
-    // Await and check questionnaire is equal to questionnaireExpected
-    //    Check if dependent resources were re-fetched
 });
 
-// test('test onQuestionnaireResponseFormChange', async () => {
-// Check that a questionnaireResponse is loaded without any callback actions
-// get expected qR
-// call onQuestionnaireResponseFormChange with qR
-//    check if qR is updated
+// test.skip('saveQuestionnaireFHIR', async () => {
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+//
+//         // Call onQuestionnaireUpdate(questionnaireExpected)
+//         await act(async () => {
+//             await result.current.saveQuestionnaireFHIR(newQuestionnaire);
+//         });
+//
+//         // Check if the questionnaire have been updated
+//         await waitFor(() => {
+//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
+//             expect(questFHIRUpdated.item?.[0]).toEqual(newItem);
+//         });
+//
+//         // Check if dependent resources were re-fetched
+//         await waitFor(() => {
+//             const questUpdated = ensure(result.current.questionnaireRD);
+//             console.log('questUpdated.item.0', questUpdated.item);
+//             expect(questUpdated.item?.[0].linkId).toBe('updated');
+//         });
+//     });
 // });
 
-// test('test onMappingChange', async () => {
-//     expect(1).toBe(1);
+test('questionnaireResponseRD', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+
+        await waitFor(() => {
+            const questionnaireResponse = ensure(result.current.questionnaireResponseRD);
+            // console.log('-- questionnaireResponse -', JSON.stringify(questionnaireResponse));
+            expect(questionnaireResponse).toEqual(EXPECTED_RESOURCES.questRespPopulated);
+        });
+    });
+});
+
+// test.skip('saveQuestionnaireResponse', async () => {
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+//
+//         await waitFor(() => {
+//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
+//             expect({}).toEqual({});
+//         });
+//     });
 // });
+
+test('mappingList demo-1', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+
+        await waitFor(() => {
+            const mappingList = result.current.mappingList;
+            expect(mappingList).toEqual(EXPECTED_RESOURCES.mappingListDemo1);
+        });
+    });
+});
+
+test('mappingList demo-3', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain('demo-3'));
+
+        await waitFor(() => {
+            const mappingList = result.current.mappingList;
+            expect(mappingList).toEqual(EXPECTED_RESOURCES.mappingListDemo3);
+        });
+    });
+});
+
+test('activeMappingId', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain('demo-3'));
+
+        await waitFor(() => {
+            const activeMappingId = result.current.activeMappingId;
+            // console.log('-- activeMappingId -', JSON.stringify(activeMappingId));
+            expect(activeMappingId).toBe('demo-1');
+        });
+    });
+});
+
+test('setActiveMappingId', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+
+        await waitFor(() => {
+            ensure(result.current.questionnaireRD);
+            expect(result.current.activeMappingId).toBe('demo-1');
+        });
+
+        act(() => {
+            result.current.setActiveMappingId('demo-2');
+        });
+
+        expect(result.current.activeMappingId).toBe('demo-2');
+    });
+});
+
+test('mappingRD', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+
+        await waitFor(() => {
+            const mapping = ensure(result.current.mappingRD);
+            expect(_.omit(mapping, 'meta')).toEqual(EXPECTED_RESOURCES.mappingDemo1);
+        });
+    });
+});
+
+// test.only('saveMapping', async () => {
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 //
-// test('test onMappingIdChange', async () => {});
+//         await waitFor(() => {
+//             const mapping = ensure(result.current.mappingRD);
+//             console.log('-- mapping -', JSON.stringify(mapping));
+//             expect(_.omit(mapping, 'meta')).toEqual(EXPECTED_RESOURCES.mappingDemo1);
+//         });
+//     });
+// });
+
+test.skip('batchRequestRD', async () => {
+    // TODO: fix problem with debug
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+
+        await waitFor(() => {
+            console.log('0909090 activeMappingId', result.current.batchRequestRD);
+            const batchRequest = ensure(result.current.batchRequestRD);
+            expect(batchRequest).toEqual({});
+        });
+    });
+});
+
+// test.skip('applyMappings', async () => {
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 //
-// test('test onMappingsApply', async () => {});
+//         await waitFor(() => {
+//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
+//             expect({}).toEqual({});
+//         });
+//     });
+// });
