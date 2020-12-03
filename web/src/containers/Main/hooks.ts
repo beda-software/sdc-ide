@@ -28,8 +28,9 @@ export function useMain(questionnaireId: string) {
 
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
-            setMappingList(_.sortBy(mappings, 'id'));
-            const firstMapping = mappings.length ? mappings[0] : undefined;
+            const sortedMappings = _.sortBy(mappings, 'id');
+            setMappingList(sortedMappings);
+            const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
             setActiveMappingId(firstMapping?.id);
         }
 
