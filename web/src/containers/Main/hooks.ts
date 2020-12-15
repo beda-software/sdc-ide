@@ -82,6 +82,7 @@ export function useMain(questionnaireId: string) {
             });
             if (isSuccess(response)) {
                 setQuestionnaireResponseRD(response);
+                // console.log('<-1-2*', JSON.stringify(response.data));
             }
         }
     }, [patientRD, questionnaireRD]);

@@ -35506,7 +35506,9 @@ export interface VisionPrescriptionLensSpecificationPrism {
     base: code;
 }
 
-export interface Mapping extends AidboxResource {}
+export interface Mapping extends AidboxResource {
+    body?: Bundle<any>;
+}
 
 export interface ParametersParameter {
     name: string;

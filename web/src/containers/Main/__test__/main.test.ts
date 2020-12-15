@@ -132,16 +132,6 @@ test('mappingRD', async () => {
     });
 });
 
-// test.skip('saveQuestionnaireResponse', async () => {
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         await waitFor(() => {
-//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
-//             expect({}).toEqual({});
-//         });
-//     });
-// });
 
 // test.only('saveMapping', async () => {
 //     await withRootAccess(async () => {
