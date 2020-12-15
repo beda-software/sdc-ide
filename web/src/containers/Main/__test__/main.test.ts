@@ -132,39 +132,26 @@ test('mappingRD', async () => {
     });
 });
 
+test.skip('batchRequestRD', async () => {
+    // TODO: fix problem with debug
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 
-// test.only('saveMapping', async () => {
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         await waitFor(() => {
-//             const mapping = ensure(result.current.mappingRD);
-//             console.log('-- mapping -', JSON.stringify(mapping));
-//             expect(_.omit(mapping, 'meta')).toEqual(EXPECTED_RESOURCES.mappingDemo1);
-//         });
-//     });
-// });
+        await waitFor(() => {
+            const batchRequest = ensure(result.current.batchRequestRD);
+            expect(batchRequest.entry?.[0].resource.birthDate).toEqual('1980-01-01');
+        });
+    });
+});
 
-// test.skip('batchRequestRD', async () => {
-//     // TODO: fix problem with debug
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         await waitFor(() => {
-//             console.log('0909090 activeMappingId', result.current.batchRequestRD);
-//             const batchRequest = ensure(result.current.batchRequestRD);
-//             expect(batchRequest).toEqual({});
-//         });
-//     });
-// });
+test.skip('applyMappings', async () => {
+    await withRootAccess(async () => {
+        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
 
-// test.skip('applyMappings', async () => {
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         await waitFor(() => {
-//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
-//             expect({}).toEqual({});
-//         });
-//     });
-// });
+        await waitFor(() => {
+            const batchRequest = ensure(result.current.batchRequestRD);
+            expect(batchRequest.entry?.[0].resource.birthDate).toEqual('1980-01-01');
+        });
+        // TODO: finish this test
+    });
+});
