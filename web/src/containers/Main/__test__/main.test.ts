@@ -1,11 +1,11 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
+// import { act } from 'react-dom/test-utils';
 import _ from 'lodash';
 
 import { Questionnaire } from 'shared/lib/contrib/aidbox';
 import { ensure, withRootAccess } from 'aidbox-react/lib/utils/tests';
 
 import { useMain } from 'src/containers/Main/hooks';
-import { act } from 'react-dom/test-utils';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 
@@ -58,30 +58,6 @@ test('questionnaire in FHIR format is loaded', async () => {
     });
 });
 
-// test.skip('saveQuestionnaireFHIR', async () => {
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         // Call onQuestionnaireUpdate(questionnaireExpected)
-//         await act(async () => {
-//             await result.current.saveQuestionnaireFHIR(newQuestionnaire);
-//         });
-//
-//         // Check if the questionnaire have been updated
-//         await waitFor(() => {
-//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
-//             expect(questFHIRUpdated.item?.[0]).toEqual(newItem);
-//         });
-//
-//         // Check if dependent resources were re-fetched
-//         await waitFor(() => {
-//             const questUpdated = ensure(result.current.questionnaireRD);
-//             console.log('questUpdated.item.0', questUpdated.item);
-//             expect(questUpdated.item?.[0].linkId).toBe('updated');
-//         });
-//     });
-// });
-
 test('questionnaireResponseRD', async () => {
     await withRootAccess(async () => {
         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
@@ -93,17 +69,6 @@ test('questionnaireResponseRD', async () => {
         });
     });
 });
-
-// test.skip('saveQuestionnaireResponse', async () => {
-//     await withRootAccess(async () => {
-//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-//
-//         await waitFor(() => {
-//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
-//             expect({}).toEqual({});
-//         });
-//     });
-// });
 
 test('mappingList demo-1', async () => {
     await withRootAccess(async () => {
@@ -167,6 +132,17 @@ test('mappingRD', async () => {
     });
 });
 
+// test.skip('saveQuestionnaireResponse', async () => {
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+//
+//         await waitFor(() => {
+//             const questFHIRUpdated = ensure(result.current.questionnaireFHIRRD);
+//             expect({}).toEqual({});
+//         });
+//     });
+// });
+
 // test.only('saveMapping', async () => {
 //     await withRootAccess(async () => {
 //         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
@@ -179,18 +155,18 @@ test('mappingRD', async () => {
 //     });
 // });
 
-test.skip('batchRequestRD', async () => {
-    // TODO: fix problem with debug
-    await withRootAccess(async () => {
-        const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
-
-        await waitFor(() => {
-            console.log('0909090 activeMappingId', result.current.batchRequestRD);
-            const batchRequest = ensure(result.current.batchRequestRD);
-            expect(batchRequest).toEqual({});
-        });
-    });
-});
+// test.skip('batchRequestRD', async () => {
+//     // TODO: fix problem with debug
+//     await withRootAccess(async () => {
+//         const { result, waitFor } = await renderHook(() => useMain(questionnaireIdInitial));
+//
+//         await waitFor(() => {
+//             console.log('0909090 activeMappingId', result.current.batchRequestRD);
+//             const batchRequest = ensure(result.current.batchRequestRD);
+//             expect(batchRequest).toEqual({});
+//         });
+//     });
+// });
 
 // test.skip('applyMappings', async () => {
 //     await withRootAccess(async () => {

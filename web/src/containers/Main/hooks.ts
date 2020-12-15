@@ -49,7 +49,6 @@ export function useMain(questionnaireId: string) {
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            // todo: use callback
             const response = await service({
                 method: 'PUT',
                 data: resource,
