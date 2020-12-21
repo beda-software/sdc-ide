@@ -1,21 +1,30 @@
 @import "src/styles/colors";
+@import 'src/styles/fonts';
 
 .wrapper {
   display: flex;
   margin-left: -20px;
   margin-right: -20px;
+  margin-bottom: 8px;
 }
 
-.item {
-  font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+@mixin item-base {
   flex: 1;
   padding: 2px 2px 2px;
   text-align: center;
+}
+
+button {
+  background-color: $base-light-color;
+  border: 0;
+  outline: none;
+  font: 12px "Poppins";
+}
+
+.item {
+  @include base-text-12-bold;
+  font-weight: 400;
+  @include item-base;
 }
 
 .item:hover {
@@ -23,16 +32,10 @@
 }
 
 .checked {
-  font-family: Poppins, serif;
-  font-style: normal;
+  @include base-text-12-bold;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+  @include item-base;
   border-bottom: $primary-color solid 2px;
-  flex: 1;
-  padding: 2px 2px 2px;
-  text-align: center;
 }
 
 .checked:hover {

@@ -1,4 +1,5 @@
 @import "src/styles/colors";
+@import 'src/styles/fonts';
 
 .wrapper {
   margin-top: 10px;
@@ -7,30 +8,12 @@
 }
 
 .groupLabel {
-  font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
-}
-
-.optionText {
-  font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
+  @include base-text-12-bold;
 }
 
 .select {
+  @include base-text-12-normal;
   font-family: Poppins, serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
   padding: 6px 5px 6px;
   border: none;
   border-bottom: 2px solid $base-surface-color;

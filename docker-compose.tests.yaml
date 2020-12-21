@@ -8,7 +8,7 @@ services:
     links:
       - backend
   backend:
-    image: $BACKEND_IMAGE
+    image: "bedasoftware/devdays2020-sdc-demo-backend:latest"
     command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081"]
     env_file:
     - env_tests

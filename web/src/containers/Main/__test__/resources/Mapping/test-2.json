@@ -1,0 +1,28 @@
+{
+  "body": {
+    "type": "transaction",
+    "entry": [
+      {
+        "request": {
+          "url": "$ \"/Patient/\" + fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.children().string\").0",
+          "method": "PATCH"
+        },
+        "resource": {
+          "telecom": {
+            "$as": "item",
+            "$map": "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='phone-group').answer\")",
+            "$body": {
+              "use": "$ fhirpath(\"%context.item.where(linkId='phone-type').answer.value.string\",item).0",
+              "value": "$ fhirpath(\"%context.item.where(linkId='phone-number').answer.value.string\",item).0",
+              "system": "phone"
+            }
+          },
+          "resourceType": "Patient"
+        }
+      }
+    ],
+    "resourceType": "Bundle"
+  },
+  "id": "test-2",
+  "resourceType": "Mapping"
+}
