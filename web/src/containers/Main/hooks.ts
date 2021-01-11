@@ -1,14 +1,16 @@
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { getAllFHIRResources, getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
 import { service, sequenceMap } from 'aidbox-react/lib/services/service';
 import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/lib/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 
+const defaultPatientId = 'patient-1';
+
 export function useMain(questionnaireId: string) {
     // Patient
-    const patientId = 'patient'; // One patient across all questionnaires
+    const [patientId, setPatientId] = useState<string>(defaultPatientId);
 
     const [patientRD] = useService(
         () =>
@@ -18,6 +20,8 @@ export function useMain(questionnaireId: string) {
             }),
         [patientId, questionnaireId],
     );
+
+    const [patientsRD] = useService(() => getAllFHIRResources('Patient', {}), []);
 
     // Questionnaire
     const [questionnaireRD, questionnaireManager] = useService(async () => {
@@ -189,7 +193,10 @@ export function useMain(questionnaireId: string) {
     }, [questionnaireRD, questionnaireResponseRD]);
 
     return {
+        setPatientId,
+        patientId,
         patientRD,
+        patientsRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,

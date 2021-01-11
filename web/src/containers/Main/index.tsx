@@ -10,13 +10,17 @@ import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
+import { ResourceSelect } from 'src/components/ResourceSelect';
 
 import s from './Main.module.scss';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const {
+        setPatientId,
+        patientId,
         patientRD,
+        patientsRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,
@@ -35,7 +39,10 @@ export function Main() {
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Patient FHIR resource" cssClass={s.patientFHIRResourceBox}>
-                        <ResourceCodeDisplay resourceResponse={patientRD} />
+                        <>
+                            <ResourceSelect value={patientId} bundleResponse={patientsRD} onChange={setPatientId} />
+                            <ResourceCodeDisplay resourceResponse={patientRD} />
+                        </>
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
