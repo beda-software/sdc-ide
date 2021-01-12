@@ -37,6 +37,10 @@
   background-color: $base-surface-color;
 }
 
+.resourceSelect {
+  margin-left: 10px;
+}
+
 .questFHIRResourceBox {
   @extend %element;
   background-color: $base-light-color;
