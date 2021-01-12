@@ -1,7 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { RenderRemoteData } from 'src/components/RenderRemoteData';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
+
 import { AidboxResource, Bundle } from 'shared/lib/contrib/aidbox';
 
 import s from './ResourceSelect.module.scss';
@@ -21,23 +23,21 @@ export function ResourceSelect<R extends AidboxResource>({
     onChange,
     display,
 }: ResourceSelectProps<R>) {
-    if (!isSuccess(bundleResponse)) {
-        return null;
-    }
-
-    const entries = bundleResponse.data.entry || [];
-
     return (
-        <select
-            className={classNames(s.resourceSelect, cssClass)}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-        >
-            {entries.map((entry, key) => (
-                <option key={key} value={entry.resource!.id}>
-                    {display ? display(entry.resource!) : entry.resource!.id}
-                </option>
-            ))}
-        </select>
+        <RenderRemoteData<Bundle<R>> remoteData={bundleResponse}>
+            {(resource) => (
+                <select
+                    className={classNames(s.resourceSelect, cssClass)}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                >
+                    {resource.entry!.map((entry, key) => (
+                        <option key={key} value={entry.resource!.id}>
+                            {display ? display(entry.resource!) : entry.resource!.id}
+                        </option>
+                    ))}
+                </select>
+            )}
+        </RenderRemoteData>
     );
 }
