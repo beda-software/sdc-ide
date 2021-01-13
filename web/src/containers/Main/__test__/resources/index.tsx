@@ -2,8 +2,8 @@ import { Patient } from 'shared/lib/contrib/aidbox';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
-    questionnaireFHIR
-} from "src/containers/Main/__test__/resources/questionnaireFHIRExpected";
+    questionnaireFHIR,
+} from 'src/containers/Main/__test__/resources/questionnaireFHIRExpected';
 
 const patient: Patient = {
     name: [
@@ -26,7 +26,7 @@ const patient: Patient = {
         },
     ],
     birthDate: '1980-01-01',
-    id: 'patient',
+    id: 'patient-1',
     resourceType: 'Patient',
 };
 
