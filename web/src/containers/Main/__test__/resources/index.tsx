@@ -121,7 +121,7 @@ const questRespPopulated = {
             text: 'Date of Birth',
             answer: [{ value: { date: '1980-01-01' } }],
         },
-        { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient' } }] },
+        { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient-1' } }] },
     ],
 };
 
