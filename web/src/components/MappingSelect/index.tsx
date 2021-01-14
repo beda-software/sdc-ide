@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 
-import { Mapping } from 'shared/lib/contrib/aidbox';
+import { Mapping } from 'shared/src/contrib/aidbox';
 
 import s from './MappingSelect.module.scss';
 
@@ -13,7 +13,7 @@ interface MappingSelectProps {
 
 export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId }: MappingSelectProps) {
     if (mappingList.length === 1) {
-        return <div></div>;
+        return <div />;
     }
 
     return (

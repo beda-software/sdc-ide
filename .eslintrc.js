@@ -11,6 +11,6 @@ module.exports = {
     plugins: ['@typescript-eslint', 'jest'],
     rules: {
         'react-native/no-inline-styles': 0,
-        'no-restricted-imports': ['error', { patterns: ['shared/src', 'aidbox-react/src'] }],
+        'no-restricted-imports': ['error', { patterns: ['aidbox-react/lib'] }],
     },
 };

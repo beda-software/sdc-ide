@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@sentry/react-native": "^1.9.0",
-    "aidbox-react": "git+https://github.com/beda-software/aidbox-react.git",
+    "aidbox-react": "git+https://github.com/beda-software/aidbox-react.git#753b85286b51a62bfd36cd129f3c6ecbffd24094",
     "lodash": "^4.17.20",
     "react": "16.13.1",
     "react-native": "0.63.3",

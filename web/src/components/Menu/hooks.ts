@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { useService } from 'aidbox-react/src/hooks/service';
+import { getFHIRResources } from 'aidbox-react/src/services/fhir';
+import { mapSuccess } from 'aidbox-react/src/services/service';
 import _ from 'lodash';
 import { ArrowDirections } from 'src/components/Icon/Arrow';
 
@@ -17,7 +17,7 @@ export function useMenu() {
     const [questionnaireIdList] = useService<string[]>(async () => {
         const response = await getFHIRResources('Questionnaire', { _sort: 'id' });
         return mapSuccess(response, (data) => {
-            return _.map(data.entry, (item) => item.resource.id);
+            return _.map(data.entry, (item) => item.resource!.id!);
         });
     });
 

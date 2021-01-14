@@ -23,9 +23,9 @@ yarn prepare
 -   Add `src/services/initialize.ts` file to mobile and web projects
 
 ```javascript
-import { baseURL } from 'shared/lib/constants.develop';
+import { baseURL } from 'shared/src/constants.develop';
 
-import { setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
+import { setInstanceBaseURL } from 'aidbox-react/src/services/instance';
 
 setInstanceBaseURL(baseURL!);
 

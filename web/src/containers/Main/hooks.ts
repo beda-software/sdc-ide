@@ -1,8 +1,8 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { getAllFHIRResources, getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
-import { service, sequenceMap } from 'aidbox-react/lib/services/service';
-import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/lib/libs/remoteData';
+import { useService } from 'aidbox-react/src/hooks/service';
+import { getAllFHIRResources, getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { service, sequenceMap } from 'aidbox-react/src/services/service';
+import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 
@@ -125,7 +125,7 @@ export function useMain(questionnaireId: string) {
     const loadMapping = useCallback(async () => {
         const response = await getFHIRResource<Mapping>({
             resourceType: 'Mapping',
-            id: activeMappingId,
+            id: activeMappingId!,
         });
         setMappingRD(response);
     }, [activeMappingId]);

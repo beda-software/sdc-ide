@@ -1,11 +1,11 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { ensure, withRootAccess } from 'aidbox-react/lib/utils/tests';
+import { ensure, withRootAccess } from 'aidbox-react/src/utils/tests';
 
-import { service } from 'aidbox-react/lib/services/service';
+import { service } from 'aidbox-react/src/services/service';
 
 import { useMain } from 'src/containers/Main/hooks';
 
-import { Mapping, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
+import { Mapping, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import patientTest1 from './resources/Patient/test-1.json';
 import mappingTest1 from './resources/Mapping/test-1.json';

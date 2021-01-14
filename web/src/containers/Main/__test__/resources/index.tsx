@@ -1,4 +1,4 @@
-import { Patient } from 'shared/lib/contrib/aidbox';
+import { Patient } from 'shared/src/contrib/aidbox';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,

@@ -1,10 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
+import { RemoteData } from 'aidbox-react/src/libs/remoteData';
 
-import { AidboxResource, Bundle } from 'shared/lib/contrib/aidbox';
+import { AidboxResource, Bundle } from 'shared/src/contrib/aidbox';
 
 import s from './ResourceSelect.module.scss';
 

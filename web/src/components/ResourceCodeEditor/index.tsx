@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 import _ from 'lodash';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { CodeEditor } from 'src/components/CodeEditor';
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { AidboxResource } from 'shared/lib/contrib/aidbox';
+import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { AidboxResource } from 'shared/src/contrib/aidbox';
 
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;

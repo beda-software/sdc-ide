@@ -2,8 +2,8 @@ import { renderHook, act } from '@testing-library/react-hooks';
 // import { act } from 'react-dom/test-utils';
 import _ from 'lodash';
 
-import { Questionnaire } from 'shared/lib/contrib/aidbox';
-import { ensure, withRootAccess } from 'aidbox-react/lib/utils/tests';
+import { Questionnaire } from 'shared/src/contrib/aidbox';
+import { ensure, withRootAccess } from 'aidbox-react/src/utils/tests';
 
 import { useMain } from 'src/containers/Main/hooks';
 

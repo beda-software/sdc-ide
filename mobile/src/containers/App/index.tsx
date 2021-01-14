@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import { getWelcomeString } from 'shared/lib/utils/misc';
+import { getWelcomeString } from 'shared/src/utils/misc';
 
 import { SafeAreaView } from 'src/components/SafeAreaView';
 
