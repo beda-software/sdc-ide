@@ -21,7 +21,10 @@ export function useMain(questionnaireId: string) {
         [patientId, questionnaireId],
     );
 
-    const [patientsRD] = useService(() => getAllFHIRResources<Patient>('Patient', {}), []);
+    const [patientsRD] = useService(
+        () => getAllFHIRResources<Patient>('Patient', { _elements: 'id,name.given,name.family' }),
+        [],
+    );
 
     // Questionnaire
     const [questionnaireRD, questionnaireManager] = useService(async () => {
