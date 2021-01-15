@@ -1,0 +1,16 @@
+@import "../../styles/colors.scss";
+
+.resourceSelect {
+    font-family: "Poppins", sans-serif;
+    height: 32px;
+    caret-color: $primary-color;
+    color: $base-dark-color;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 6px 5px 6px;
+    border: none;
+    border-bottom: 2px solid $base-surface-color;
+    &:focus {
+        border-bottom: 2px solid $primary-color;
+    }
+}

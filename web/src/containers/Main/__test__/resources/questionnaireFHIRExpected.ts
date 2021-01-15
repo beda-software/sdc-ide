@@ -1,6 +1,8 @@
-import { Questionnaire } from 'shared/lib/contrib/aidbox';
+// Questionnaire in FHIR format.
+// There are types only for Aidbox format,
+// so we use any type here instead of Questionnaire
 
-export const questionnaireFHIR: Questionnaire = {
+export const questionnaireFHIR: any = {
     id: 'demo-1',
     resourceType: 'Questionnaire',
     status: 'active',
@@ -107,8 +109,6 @@ export const questionnaireFHIR: Questionnaire = {
     ],
 };
 
-
-
 export const newQuestionnaireFHIRItem = {
     text: 'Updated',
     type: 'string',
@@ -124,7 +124,7 @@ export const newQuestionnaireFHIRItem = {
     ],
 };
 
-export const newQuestionnaireFHIR: Questionnaire = {
+export const newQuestionnaireFHIR: any = {
     ...questionnaireFHIR,
     item: [newQuestionnaireFHIRItem],
 };

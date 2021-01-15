@@ -1,14 +1,16 @@
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
-import { service, sequenceMap } from 'aidbox-react/lib/services/service';
-import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/lib/libs/remoteData';
+import { useService } from 'aidbox-react/src/hooks/service';
+import { getAllFHIRResources, getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { Bundle, Mapping, Parameters, Patient, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { service, sequenceMap } from 'aidbox-react/src/services/service';
+import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 
+const defaultPatientId = 'patient-1';
+
 export function useMain(questionnaireId: string) {
     // Patient
-    const patientId = 'patient'; // One patient across all questionnaires
+    const [patientId, setPatientId] = useState<string>(defaultPatientId);
 
     const [patientRD] = useService(
         () =>
@@ -17,6 +19,11 @@ export function useMain(questionnaireId: string) {
                 id: patientId,
             }),
         [patientId, questionnaireId],
+    );
+
+    const [patientsRD] = useService(
+        () => getAllFHIRResources<Patient>('Patient', { _elements: 'id,name.given,name.family' }),
+        [],
     );
 
     // Questionnaire
@@ -121,7 +128,7 @@ export function useMain(questionnaireId: string) {
     const loadMapping = useCallback(async () => {
         const response = await getFHIRResource<Mapping>({
             resourceType: 'Mapping',
-            id: activeMappingId,
+            id: activeMappingId!,
         });
         setMappingRD(response);
     }, [activeMappingId]);
@@ -189,7 +196,10 @@ export function useMain(questionnaireId: string) {
     }, [questionnaireRD, questionnaireResponseRD]);
 
     return {
+        setPatientId,
+        patientId,
         patientRD,
+        patientsRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,

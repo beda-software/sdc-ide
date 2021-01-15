@@ -12,7 +12,7 @@ import {
     mapFormToResponse,
     mapResponseToForm,
 } from 'src/utils/questionnaire';
-import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/lib/contrib/aidbox';
+import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { Button } from 'src/components/Button';
 import { InputField } from 'src/components/InputField';
 import { DateTimePickerField } from 'src/components/DateTimePickerField';

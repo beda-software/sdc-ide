@@ -4,4 +4,4 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
-import 'shared/lib/setupTests';
+import 'shared/src/setupTests';

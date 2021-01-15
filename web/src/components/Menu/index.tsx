@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { isSuccess } from 'aidbox-react/src/libs/remoteData';
 import { Link } from 'react-router-dom';
 
 import { useMenu } from 'src/components/Menu/hooks';

@@ -10,7 +10,7 @@ import {
     QuestionnaireResponse,
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
-} from 'shared/lib/contrib/aidbox';
+} from 'shared/src/contrib/aidbox';
 
 // TODO: Write own type
 type AnswerValue = Required<QuestionnaireResponseItemAnswer>['value'] & Required<Observation>['value'];
@@ -227,44 +227,44 @@ function mapFormToResponseRecursive(
         answersItems,
         (acc, answers, linkId) => {
             if (!linkId) {
-                console.warn('The answer item has no linkId')
-                return acc
+                console.warn('The answer item has no linkId');
+                return acc;
             }
 
-            const path = getPathForLinkId(questionnaire, linkId)
+            const path = getPathForLinkId(questionnaire, linkId);
 
             if (!path) {
-                return acc
+                return acc;
             }
 
-            const answerPath = preparePathForAnswers(path, [])
-            const questionPath = preparePathForQuestion(path)
-            const question: QuestionnaireItem = getByPath(questionnaire, questionPath)
+            const answerPath = preparePathForAnswers(path, []);
+            const questionPath = preparePathForQuestion(path);
+            const question: QuestionnaireItem = getByPath(questionnaire, questionPath);
 
             if (!checkQuestionEnabled(question)) {
-                return acc
+                return acc;
             }
 
             if (isFormGroupItems(question, answers) && question.repeats) {
                 return _.reduce(
                     answers.items,
                     (newAcc, answer, index) => {
-                        const value = mapFormToResponseRecursive(answer as any, question, checkQuestionEnabled)
-                        return setByPath(newAcc, [...answerPath, 'answer', index], value)
+                        const value = mapFormToResponseRecursive(answer as any, question, checkQuestionEnabled);
+                        return setByPath(newAcc, [...answerPath, 'answer', index], value);
                     },
                     acc,
-                )
+                );
             } else if (isFormGroupItems(question, answers)) {
                 return setByPath(acc, answerPath, {
                     linkId,
                     ...mapFormToResponseRecursive(answers.items, question, checkQuestionEnabled),
-                })
+                });
             } else {
                 return _.reduce(
                     answers,
                     (newAcc, answer, index) => {
                         if (!answer.value) {
-                            return newAcc
+                            return newAcc;
                         }
 
                         return setByPath(newAcc, [...answerPath, index], {
@@ -272,59 +272,59 @@ function mapFormToResponseRecursive(
                             ...(hasSubAnswerItems(answer.items)
                                 ? mapFormToResponseRecursive(answer.items, question, checkQuestionEnabled)
                                 : {}),
-                        })
+                        });
                     },
                     acc,
-                )
+                );
             }
         },
         {},
-    )
+    );
 }
 
 export function mapFormToResponse(answersItems: FormItems, questionnaire: QuestionnaireItems): ResponseItems {
     const checkQuestionEnabled = (question: QuestionnaireItem) =>
-        question.enableWhen ? isQuestionEnabled(question.enableWhen, question.enableBehavior, [], answersItems) : true
+        question.enableWhen ? isQuestionEnabled(question.enableWhen, question.enableBehavior, [], answersItems) : true;
 
-    return mapFormToResponseRecursive(answersItems, questionnaire, checkQuestionEnabled)
+    return mapFormToResponseRecursive(answersItems, questionnaire, checkQuestionEnabled);
 }
 
 export function mapResponseToForm(resource: ResponseItems, questionnaire: QuestionnaireItems): FormItems {
     return _.reduce(
         questionnaire.item,
         (acc, item) => {
-            const { linkId, initial } = item
+            const { linkId, initial } = item;
             if (!linkId) {
-                console.warn('The question has no linkId')
-                return acc
+                console.warn('The question has no linkId');
+                return acc;
             }
-            const path = getPathForLinkId(questionnaire, linkId)
-            const answerPath = preparePathForAnswers(path, [])
-            const questionPath = preparePathForQuestion(path)
-            const question = getByPath(questionnaire, questionPath)
+            const path = getPathForLinkId(questionnaire, linkId);
+            const answerPath = preparePathForAnswers(path, []);
+            const questionPath = preparePathForQuestion(path);
+            const question = getByPath(questionnaire, questionPath);
             const answers: QuestionnaireResponseItemAnswer | QuestionnaireResponseItemAnswer[] = getByPath(
                 resource,
                 answerPath,
-            )
+            );
 
             if (typeof answers === 'undefined') {
                 if (initial) {
-                    return { ...acc, [linkId]: initial }
+                    return { ...acc, [linkId]: initial };
                 }
-                return acc
+                return acc;
             }
 
             if (isResponseGroupItems(question, answers) && question.repeats) {
-                const answerItem: QuestionnaireResponseItem = answers as any
+                const answerItem: QuestionnaireResponseItem = answers as any;
                 return {
                     ...acc,
                     [linkId]: {
                         question: question.text,
                         items: _.map(answerItem.answer, (answer) => {
-                            return mapResponseToForm(answer, question)
+                            return mapResponseToForm(answer, question);
                         }),
                     },
-                }
+                };
             } else if (isResponseGroupItems(question, answers)) {
                 return {
                     ...acc,
@@ -332,7 +332,7 @@ export function mapResponseToForm(resource: ResponseItems, questionnaire: Questi
                         question: question.text,
                         items: mapResponseToForm(answers, question),
                     },
-                }
+                };
             } else {
                 return {
                     ...acc,
@@ -341,11 +341,11 @@ export function mapResponseToForm(resource: ResponseItems, questionnaire: Questi
                         value: answer.value,
                         items: mapResponseToForm(answer, question),
                     })),
-                }
+                };
             }
         },
         {},
-    )
+    );
 }
 
 export function findAnswersForQuestionsRecursive(linkId: string, values?: FormItems): any | null {

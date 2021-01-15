@@ -1,9 +1,9 @@
-import { Patient } from 'shared/lib/contrib/aidbox';
+import { Patient } from 'shared/src/contrib/aidbox';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
-    questionnaireFHIR
-} from "src/containers/Main/__test__/resources/questionnaireFHIRExpected";
+    questionnaireFHIR,
+} from 'src/containers/Main/__test__/resources/questionnaireFHIRExpected';
 
 const patient: Patient = {
     name: [
@@ -26,7 +26,7 @@ const patient: Patient = {
         },
     ],
     birthDate: '1980-01-01',
-    id: 'patient',
+    id: 'patient-1',
     resourceType: 'Patient',
 };
 
@@ -121,7 +121,7 @@ const questRespPopulated = {
             text: 'Date of Birth',
             answer: [{ value: { date: '1980-01-01' } }],
         },
-        { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient' } }] },
+        { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient-1' } }] },
     ],
 };
 
