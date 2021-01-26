@@ -18,12 +18,14 @@ import s from './Main.module.scss';
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const {
+        resourceFormat,
+        setResourceFormat,
         setPatientId,
         patientId,
         patientRD,
         patientsRD,
         questionnaireRD,
-        questionnaireFHIRRD,
+        questionnaireResourceRD,
         saveQuestionnaireFHIR,
         questionnaireResponseRD,
         saveQuestionnaireResponse,
@@ -42,7 +44,7 @@ export function Main() {
                     <ExpandableElement
                         title={
                             <>
-                                Patient FHIR resource
+                                {`Patient ${resourceFormat} resource`}
                                 <ResourceSelect
                                     cssClass={s.resourceSelect}
                                     value={patientId}
@@ -56,8 +58,11 @@ export function Main() {
                     >
                         <ResourceCodeDisplay resourceResponse={patientRD} />
                     </ExpandableElement>
-                    <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
-                        <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
+                    <ExpandableElement
+                        title={`Questionnaire ${resourceFormat} Resource`}
+                        cssClass={s.questFHIRResourceBox}
+                    >
+                        <ResourceCodeEditor resourceRD={questionnaireResourceRD} onSave={saveQuestionnaireFHIR} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
                         <QRFormWrapper
@@ -92,7 +97,7 @@ export function Main() {
                     </ExpandableElement>
                 </ExpandableRow>
             </div>
-            <Menu />
+            <Menu resourceFormat={resourceFormat} setResourceFormat={setResourceFormat} />
             <Logo />
         </>
     );

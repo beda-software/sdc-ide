@@ -8,17 +8,25 @@ import _ from 'lodash';
 
 const defaultPatientId = 'patient-1';
 
+export enum ResourceFormat {
+    aidbox = 'Aidbox',
+    fhir = 'FHIR',
+}
+
 export function useMain(questionnaireId: string) {
+    const [resourceFormat, setResourceFormat] = useState<ResourceFormat>(ResourceFormat.fhir);
+    const formatPrefix = resourceFormat === ResourceFormat.fhir ? '/fhir' : '';
+
     // Patient
     const [patientId, setPatientId] = useState<string>(defaultPatientId);
 
     const [patientRD] = useService(
         () =>
-            getFHIRResource<Patient>({
-                resourceType: 'Patient',
-                id: patientId,
+            service({
+                method: 'GET',
+                url: `${formatPrefix}/Patient/${patientId}`,
             }),
-        [patientId, questionnaireId],
+        [patientId, formatPrefix],
     );
 
     const [patientsRD] = useService(
@@ -44,14 +52,14 @@ export function useMain(questionnaireId: string) {
         return response;
     }, [questionnaireId]);
 
-    // Questionnaire in FHIR format
-    const [questionnaireFHIRRD] = useService(
+    // Questionnaire in specified format
+    const [questionnaireResourceRD] = useService(
         () =>
             service<Questionnaire>({
                 method: 'GET',
-                url: `/fhir/Questionnaire/${questionnaireId}`,
+                url: `${formatPrefix}/Questionnaire/${questionnaireId}`,
             }),
-        [questionnaireId],
+        [questionnaireId, formatPrefix],
     );
 
     const saveQuestionnaireFHIR = useCallback(
@@ -59,7 +67,7 @@ export function useMain(questionnaireId: string) {
             const response = await service({
                 method: 'PUT',
                 data: resource,
-                url: `/fhir/Questionnaire/${resource.id}`,
+                url: `${formatPrefix}/Questionnaire/${resource.id}`,
             });
             if (isSuccess(response)) {
                 questionnaireManager.reload();
@@ -67,7 +75,7 @@ export function useMain(questionnaireId: string) {
                 console.error('Could not save Questionnaire:', response.error.toString());
             }
         },
-        [questionnaireManager],
+        [questionnaireManager, formatPrefix],
     );
 
     // QuestionnaireResponse
@@ -196,12 +204,14 @@ export function useMain(questionnaireId: string) {
     }, [questionnaireRD, questionnaireResponseRD]);
 
     return {
+        resourceFormat,
+        setResourceFormat,
         setPatientId,
         patientId,
         patientRD,
         patientsRD,
         questionnaireRD,
-        questionnaireFHIRRD,
+        questionnaireResourceRD,
         saveQuestionnaireFHIR,
         questionnaireResponseRD,
         saveQuestionnaireResponse,
