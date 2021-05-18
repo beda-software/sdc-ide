@@ -9,7 +9,7 @@ import { AidboxResource, Bundle } from 'shared/src/contrib/aidbox';
 import s from './ResourceSelect.module.scss';
 
 interface ResourceSelectProps<R> {
-    cssClass: string;
+    cssClass?: string;
     value: string;
     bundleResponse: RemoteData<Bundle<R>>;
     onChange: (resourceId: string) => void;

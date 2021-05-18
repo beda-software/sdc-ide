@@ -9,10 +9,14 @@ import 'src/styles/index.scss';
 import * as serviceWorker from './serviceWorker';
 import { axiosInstance } from 'aidbox-react/src/services/instance';
 
+const { username, password, baseUrl } = window.localStorage;
+
 axiosInstance.defaults.auth = {
-    username: 'root',
-    password: 'secret',
+    username,
+    password,
 };
+
+axiosInstance.defaults.baseURL = baseUrl;
 
 ReactDOM.render(
     <React.StrictMode>

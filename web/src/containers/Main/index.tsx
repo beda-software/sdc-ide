@@ -10,8 +10,6 @@ import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
-import { ResourceSelect } from 'src/components/ResourceSelect';
-import { getPatientFullName } from 'src/utils/resource';
 
 import s from './Main.module.scss';
 
@@ -39,21 +37,7 @@ export function Main() {
         <>
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
-                    <ExpandableElement
-                        title={
-                            <>
-                                Patient FHIR resource
-                                <ResourceSelect
-                                    cssClass={s.resourceSelect}
-                                    value={patientId}
-                                    bundleResponse={patientsRD}
-                                    onChange={setPatientId}
-                                    display={getPatientFullName}
-                                />
-                            </>
-                        }
-                        cssClass={s.patientFHIRResourceBox}
-                    >
+                    <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
                         <ResourceCodeDisplay resourceResponse={patientRD} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
@@ -92,7 +76,12 @@ export function Main() {
                     </ExpandableElement>
                 </ExpandableRow>
             </div>
-            <Menu />
+            <Menu
+                patientId={patientId}
+                setPatientId={setPatientId}
+                patientsRD={patientsRD}
+                questionnaireId={questionnaireId}
+            />
             <Logo />
         </>
     );

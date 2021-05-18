@@ -22,13 +22,22 @@
 }
 
 .box {
-  width: 100px;
+  width: 35%;
   position: absolute;
   top: 0;
   right: 20px;
   background-color: #597EF7;
   z-index: 400;
   padding: 24px 10px 10px;
+  display: grid;
+  grid-template-columns: 25% 60%;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+}
+
+.menuItem input{
+  width: 100%;
+  height: 24px;
 }
 
 .link {
