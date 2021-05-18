@@ -32,7 +32,7 @@ export function Menu({ patientId, setPatientId, patientsRD, questionnaireId }: M
                         value={questionnaireId}
                         bundleResponse={questionnairesRD}
                         onChange={(id) => {
-                            window.location.replace(id);
+                            window.location.hash = id;
                         }}
                         display={({ id }) => id!}
                     />
