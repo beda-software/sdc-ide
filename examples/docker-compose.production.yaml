@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  frontend:
+    image: bedasoftware/sdc-ide:latest
+    ports:
+    - 5000:5000
+  backend:
+    image: bedasoftware/aidbox-sdc:latest
+    command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081", "--reload"]
+    depends_on:
+      - devbox
+    links:
+      - devbox
+    env_file:
+      - .env.base
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config:/var/config:cached
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
+    # Colored logs
+    tty: true
+  devbox:
+    image: healthsamurai/devbox:edge
+    depends_on:
+      - devbox-db
+    links:
+      - devbox-db:database
+    env_file:
+      - .env.base
+      - .env
+    volumes:
+      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
+      - ./config:/var/config:cached
+  devbox-db:
+    image: healthsamurai/aidboxdb:13.2
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       devbox

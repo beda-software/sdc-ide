@@ -1,36 +1,10 @@
-## Installation
+## SDC IDE
 
--   To create project from web template
+To check the app please go to [examples](examples/README.md) folder and follow readme.  
+Mobile questionnaire tester app is WIP.
+Exteranl plugable rendering is WIP.
 
-```sh
-npx create-react-app web --template file:template-web
-```
-
--   To create project from mobile template. For `--template` parameter use absolute path to the template
-
-```sh
-npx react-native init MobileAppName --template file://${FullPathToProjectDir}/template-mobile --directory mobile
-```
-
--   Add `shared` workspace to projects dependencies
-
-```sh
-yarn workspace web add shared@0.0.1
-yarn workspace mobile add shared@0.0.1
-yarn prepare
-```
-
--   Add `src/services/initialize.ts` file to mobile and web projects
-
-```javascript
-import { baseURL } from 'shared/src/constants.develop';
-
-import { setInstanceBaseURL } from 'aidbox-react/src/services/instance';
-
-setInstanceBaseURL(baseURL!);
-
-export { baseURL };
-```
+## Development mode
 
 ### yarn start
 
