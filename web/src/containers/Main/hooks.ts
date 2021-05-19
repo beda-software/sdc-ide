@@ -186,6 +186,7 @@ export function useMain(questionnaireId: string) {
                     parameter: [
                         { name: 'questionnaire_response', resource: resourcesRD.data.questionnaireResponseRD },
                         { name: 'questionnaire', resource: resourcesRD.data.questionnaireRD },
+                        { name: 'LaunchPatient', resource: isSuccess(patientRD) ? patientRD.data : {} },
                     ],
                 },
             });
@@ -193,7 +194,7 @@ export function useMain(questionnaireId: string) {
                 window.location.reload();
             }
         }
-    }, [questionnaireRD, questionnaireResponseRD]);
+    }, [patientRD, questionnaireRD, questionnaireResponseRD]);
 
     return {
         setPatientId,
