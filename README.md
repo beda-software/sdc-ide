@@ -1,6 +1,6 @@
 ## SDC IDE
 
-To check the app please go to [examples](examples/README.md) folder and follow readme.  
+To check the app please go to [examples](examples) folder and follow readme.  
 Mobile questionnaire tester app is WIP.
 Exteranl plugable rendering is WIP.
 
