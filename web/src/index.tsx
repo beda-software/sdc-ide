@@ -8,8 +8,9 @@ import 'src/styles/index.scss';
 
 import * as serviceWorker from './serviceWorker';
 import { axiosInstance } from 'aidbox-react/src/services/instance';
+import { getConfig } from 'src/utils/config';
 
-const { username, password, baseUrl } = window.localStorage;
+const { username, password, baseUrl } = getConfig();
 
 axiosInstance.defaults.auth = {
     username,

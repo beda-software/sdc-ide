@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { getFHIRResources } from 'aidbox-react/src/services/fhir';
 import { ArrowDirections } from 'src/components/Icon/Arrow';
+import { getConfig } from 'src/utils/config';
 
 function useConfigForm() {
     const [baseUrl, setBaseUrl] = useState('');
@@ -15,7 +16,7 @@ function useConfigForm() {
     }, [baseUrl, username, password]);
 
     useEffect(() => {
-        const { username, password, baseUrl } = window.localStorage;
+        const { username, password, baseUrl } = getConfig();
         setUsername(username);
         setPassword(password);
         setBaseUrl(baseUrl);
