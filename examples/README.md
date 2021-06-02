@@ -28,3 +28,9 @@ docker-compose -f docker-compose.dev.yaml up
 ```
 docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.m1.yaml up
 ```
+
+### Load demo data
+
+```
+curl -u root:secret 'http://localhost:8080/$load'  -H 'content-type: application/json' --request POST --data '{"source":"https://sdc.beda.software/demo-data.ndjson.gz"}'
+```
