@@ -18,6 +18,7 @@ import { InputField } from 'src/components/InputField';
 import { DateTimePickerField } from 'src/components/DateTimePickerField';
 import { FormApi, Unsubscribe } from 'final-form';
 import { ChoiceField } from 'src/components/ChoiceField';
+import { BooleanField } from 'src/components/BooleanField';
 
 import s from './QuestionnaireResponseForm.module.scss';
 
@@ -225,6 +226,14 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
+    public renderBoolean(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
+        const { linkId, text, repeats } = questionItem;
+        const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0']), 'value', 'boolean'];
+        const fieldName = fieldPath.join('.');
+
+        return <BooleanField name={fieldName} label={text!} />;
+    }
+
     public renderGroup(
         questionItem: QuestionnaireItem,
         parentPath: string[],
@@ -328,6 +337,10 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
 
         if (type === 'choice') {
             return this.renderAnswerChoice(questionItem, parentPath, formParams);
+        }
+
+        if (type === 'boolean') {
+            return this.renderBoolean(questionItem, parentPath, formParams);
         }
 
         if (type === 'display') {
