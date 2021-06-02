@@ -13,6 +13,7 @@
         "@types/react": "^16.9.0",
         "@types/react-dom": "^16.9.0",
         "@types/react-router-dom": "^5.1.6",
+        "@types/react-select": "^3.0.26",
         "aidbox-react": "git+https://github.com/beda-software/aidbox-react.git#753b85286b51a62bfd36cd129f3c6ecbffd24094",
         "classnames": "^2.2.6",
         "customize-cra": "^1.0.0",
@@ -32,7 +33,8 @@
         "react-scripts": "3.4.0",
         "shared": "0.0.1",
         "ts-jest": "^26.4.3",
-        "typescript": "^4.0.5"
+        "typescript": "^4.0.5",
+        "react-select": "^3.1.1"
     },
     "scripts": {
         "start": "react-app-rewired start",

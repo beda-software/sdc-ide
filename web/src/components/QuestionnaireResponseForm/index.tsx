@@ -19,6 +19,7 @@ import { DateTimePickerField } from 'src/components/DateTimePickerField';
 import { FormApi, Unsubscribe } from 'final-form';
 import { ChoiceField } from 'src/components/ChoiceField';
 import { BooleanField } from 'src/components/BooleanField';
+import { TerminologyField } from 'src/components/TerminologyField';
 
 import s from './QuestionnaireResponseForm.module.scss';
 
@@ -189,7 +190,13 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     }
 
     public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
-        const { linkId, text, answerOption, repeats, required } = questionItem;
+        const { linkId, text, answerOption, repeats, required, answerValueSet } = questionItem;
+        if (answerValueSet) {
+            const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0'])];
+            const fieldName = fieldPath.join('.');
+            return <TerminologyField repeats={repeats} name={fieldName} label={text!} valueSetId={answerValueSet} />;
+        }
+
         const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0']), 'value', 'string'];
         const fieldName = fieldPath.join('.');
 
