@@ -14,3 +14,17 @@
 -   Run `docker-compose -f docker-compose.production.yaml up`
 -   It may take a few minutes for the environment to warm up, please wait untile docker-compose stops firing logs
 -   Open http://localhost:5000 in the browser
+
+## Development
+
+### amd64
+
+```
+docker-compose -f docker-compose.dev.yaml up
+```
+
+### amr64 (MAC m1)
+
+```
+docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.m1.yaml up
+```
