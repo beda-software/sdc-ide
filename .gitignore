@@ -5,6 +5,7 @@ coverage
 .DS_Store
 .idea
 htmlcov
+examples/.env
 
 # Project-specific files
 */src/services/initialize.ts
