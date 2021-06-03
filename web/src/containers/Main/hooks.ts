@@ -169,7 +169,7 @@ export function useMain(questionnaireId: string) {
                 setBatchRequestRD(response);
             }
         })();
-    }, [questionnaireResponseRD, activeMappingId]);
+    }, [questionnaireResponseRD, activeMappingId, mappingRD]);
 
     // Mapping apply
     const applyMappings = useCallback(async () => {
