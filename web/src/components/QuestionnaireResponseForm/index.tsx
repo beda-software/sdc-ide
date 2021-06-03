@@ -190,7 +190,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     }
 
     public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
-        const { linkId, text, answerOption, repeats, required, answerValueSet } = questionItem;
+        const { linkId, text, answerOption, repeats, required, answerValueSet, hidden } = questionItem;
         if (answerValueSet) {
             const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0'])];
             const fieldName = fieldPath.join('.');
@@ -202,6 +202,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
 
         return (
             <ChoiceField<FormAnswerItems>
+                disabled={hidden}
                 name={fieldName}
                 label={text}
                 options={_.map(answerOption, (opt) => ({
