@@ -14,7 +14,7 @@ export function BooleanField({ label, name }: BooleanFieldProps) {
             {({ input }) => (
                 <label className={s.groupLabel}>
                     {label}
-                    <input type="checkbox" {...input} />
+                    <input type="checkbox" checked={input.value} onChange={input.onChange} />
                 </label>
             )}
         </Field>
