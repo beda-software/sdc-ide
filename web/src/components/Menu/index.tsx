@@ -14,9 +14,11 @@ interface MenuProps {
     setPatientId: (id: string) => void;
     patientsRD: RemoteData<Bundle<Patient>>;
     questionnaireId: string;
+    fhirMode: boolean;
+    setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({ patientId, setPatientId, patientsRD, questionnaireId }: MenuProps) {
+export function Menu({ patientId, setPatientId, patientsRD, questionnaireId, fhirMode, setFhirMode }: MenuProps) {
     const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
     return (
         <>
@@ -45,6 +47,17 @@ export function Menu({ patientId, setPatientId, patientsRD, questionnaireId }: M
                         bundleResponse={patientsRD}
                         onChange={setPatientId}
                         display={getPatientFullName}
+                    />
+                </div>
+                <div className={s.menuItem}>
+                    <label htmlFor="fhir-mode">FhirMode</label>
+                </div>
+                <div className={s.menuItem}>
+                    <input
+                        name="fhir-mode"
+                        type="checkbox"
+                        checked={fhirMode}
+                        onChange={() => setFhirMode((v) => !v)}
                     />
                 </div>
                 <div className={s.menuItem} />

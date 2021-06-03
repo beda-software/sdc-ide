@@ -39,6 +39,11 @@
   width: 100%;
   height: 24px;
 }
+.menuItem input[type="checkbox"]{
+    width: 24px;
+}
+
+
 
 .link {
   @include base-text-12-bold;

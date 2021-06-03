@@ -11,6 +11,7 @@ const defaultPatientId = 'patient-1';
 export function useMain(questionnaireId: string) {
     // Patient
     const [patientId, setPatientId] = useState<string>(defaultPatientId);
+    const [fhirMode, setFhirMode] = useState<boolean>(false);
 
     const [patientRD] = useService(
         () =>
@@ -49,9 +50,9 @@ export function useMain(questionnaireId: string) {
         () =>
             service<Questionnaire>({
                 method: 'GET',
-                url: `/fhir/Questionnaire/${questionnaireId}`,
+                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
             }),
-        [questionnaireId],
+        [questionnaireId, fhirMode],
     );
 
     const saveQuestionnaireFHIR = useCallback(
@@ -59,7 +60,7 @@ export function useMain(questionnaireId: string) {
             const response = await service({
                 method: 'PUT',
                 data: resource,
-                url: `/fhir/Questionnaire/${resource.id}`,
+                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
             });
             if (isSuccess(response)) {
                 questionnaireManager.reload();
@@ -67,7 +68,7 @@ export function useMain(questionnaireId: string) {
                 console.error('Could not save Questionnaire:', response.error.toString());
             }
         },
-        [questionnaireManager],
+        [questionnaireManager, fhirMode],
     );
 
     // QuestionnaireResponse
@@ -213,5 +214,7 @@ export function useMain(questionnaireId: string) {
         saveMapping,
         batchRequestRD,
         applyMappings,
+        setFhirMode,
+        fhirMode,
     };
 }

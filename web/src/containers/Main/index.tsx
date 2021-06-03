@@ -16,6 +16,8 @@ import s from './Main.module.scss';
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const {
+        fhirMode,
+        setFhirMode,
         setPatientId,
         patientId,
         patientRD,
@@ -81,6 +83,8 @@ export function Main() {
                 setPatientId={setPatientId}
                 patientsRD={patientsRD}
                 questionnaireId={questionnaireId}
+                fhirMode={fhirMode}
+                setFhirMode={setFhirMode}
             />
             <Logo />
         </>
