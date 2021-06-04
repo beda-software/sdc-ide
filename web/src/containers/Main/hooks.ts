@@ -51,7 +51,7 @@ export function useMain(questionnaireId: string) {
             const sortedMappings = _.sortBy(mappings, 'id');
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
-            if (prevActiveMappingId && _.filter(sortedMappings, { id: prevActiveMappingId })) {
+            if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
                 setActiveMappingId(prevActiveMappingId);
             } else {
                 window.localStorage.prevActiveMappingId = undefined;
