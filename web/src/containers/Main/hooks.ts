@@ -8,6 +8,7 @@ import _ from 'lodash';
 
 const startPatientId: string = window.localStorage.startPatientId ?? 'patient-1';
 const startFhirMode: boolean = window.localStorage.fhirMode === 'true';
+const prevActiveMappingId: string | undefined = window.localStorage.prevActiveMappingId as string | undefined;
 
 export function useMain(questionnaireId: string) {
     // Patient
@@ -50,7 +51,12 @@ export function useMain(questionnaireId: string) {
             const sortedMappings = _.sortBy(mappings, 'id');
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
-            setActiveMappingId(firstMapping?.id);
+            if (prevActiveMappingId && _.filter(sortedMappings, { id: prevActiveMappingId })) {
+                setActiveMappingId(prevActiveMappingId);
+            } else {
+                window.localStorage.prevActiveMappingId = undefined;
+                setActiveMappingId(firstMapping?.id);
+            }
         }
 
         return response;
@@ -132,7 +138,11 @@ export function useMain(questionnaireId: string) {
     const [mappingList, setMappingList] = useState<Mapping[]>([]);
 
     // Active mapping id
-    const [activeMappingId, setActiveMappingId] = useState<string | undefined>();
+    const [activeMappingId, setActiveMappingId_] = useState<string | undefined>();
+    const setActiveMappingId = useCallback((id: string) => {
+        setActiveMappingId_(id);
+        window.localStorage.prevActiveMappingId = id;
+    }, []);
 
     // Mapping
     const [mappingRD, setMappingRD] = useState<RemoteData<Mapping>>(notAsked);
