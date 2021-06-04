@@ -1,5 +1,8 @@
 #!/bin/bash
-echo "" > demo-data.ndjson
+
+touch demo-data.ndjson
+rm demo-data.ndjson
+touch demo-data.ndjson
 
 curl -H 'accept: application/json' -u root:secret 'http://localhost:9000/Patient/$dump' >> demo-data.ndjson
 curl -H 'accept: application/json' -u root:secret 'http://localhost:9000/Questionnaire/$dump' >> demo-data.ndjson
