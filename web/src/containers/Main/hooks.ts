@@ -139,7 +139,7 @@ export function useMain(questionnaireId: string) {
 
     // Active mapping id
     const [activeMappingId, setActiveMappingId_] = useState<string | undefined>();
-    const setActiveMappingId = useCallback((id: string) => {
+    const setActiveMappingId = useCallback((id: string | undefined) => {
         setActiveMappingId_(id);
         window.localStorage.prevActiveMappingId = id;
     }, []);
