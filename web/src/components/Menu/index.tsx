@@ -57,7 +57,7 @@ export function Menu({ patientId, setPatientId, patientsRD, questionnaireId, fhi
                         name="fhir-mode"
                         type="checkbox"
                         checked={fhirMode}
-                        onChange={() => setFhirMode((v) => !v)}
+                        onChange={() => setFhirMode(!fhirMode)}
                     />
                 </div>
                 <div className={s.menuItem} />

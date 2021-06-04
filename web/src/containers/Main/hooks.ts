@@ -6,12 +6,23 @@ import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 
-const defaultPatientId = 'patient-1';
+const startPatientId: string = window.localStorage.startPatientId ?? 'patient-1';
+const startFhirMode: boolean = window.localStorage.fhirMode === 'true';
 
 export function useMain(questionnaireId: string) {
     // Patient
-    const [patientId, setPatientId] = useState<string>(defaultPatientId);
-    const [fhirMode, setFhirMode] = useState<boolean>(false);
+    const [patientId, setPatientId_] = useState<string>(startPatientId);
+    const [fhirMode, setFhirMode_] = useState<boolean>(startFhirMode);
+
+    const setPatientId = useCallback((id: string) => {
+        setPatientId_(id);
+        window.localStorage.startPatientId = id;
+    }, []);
+
+    const setFhirMode = useCallback((fhirMode: boolean) => {
+        setFhirMode_(fhirMode);
+        window.localStorage.fhirMode = fhirMode;
+    }, []);
 
     const [patientRD] = useService(
         () =>
