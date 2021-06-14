@@ -7,18 +7,28 @@ import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
 import { getPatientFullName } from 'src/utils/resource';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { Bundle, Patient } from 'shared/src/contrib/aidbox';
+import { Bundle, Patient, Questionnaire, QuestionnaireLaunchContext } from 'shared/src/contrib/aidbox';
+import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
 
 interface MenuProps {
     patientId: string;
     setPatientId: (id: string) => void;
     patientsRD: RemoteData<Bundle<Patient>>;
     questionnaireId: string;
+    questionnaireRD: RemoteData<Questionnaire>;
     fhirMode: boolean;
     setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({ patientId, setPatientId, patientsRD, questionnaireId, fhirMode, setFhirMode }: MenuProps) {
+export function Menu({
+    patientId,
+    setPatientId,
+    patientsRD,
+    questionnaireId,
+    fhirMode,
+    setFhirMode,
+    questionnaireRD,
+}: MenuProps) {
     const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
     return (
         <>
@@ -49,6 +59,9 @@ export function Menu({ patientId, setPatientId, patientsRD, questionnaireId, fhi
                         display={getPatientFullName}
                     />
                 </div>
+                <RenderRemoteData remoteData={questionnaireRD}>
+                    {(questionnaire) => <EditLaunchContext launchContext={questionnaire.launchContext ?? []} />}
+                </RenderRemoteData>
                 <div className={s.menuItem}>
                     <label htmlFor="fhir-mode">FhirMode</label>
                 </div>
@@ -89,6 +102,38 @@ export function Menu({ patientId, setPatientId, patientsRD, questionnaireId, fhi
                     <button onClick={configForm.applyConfig}>Apply config</button>
                 </div>
             </div>
+        </>
+    );
+}
+
+interface LaunchContextProps {
+    launchContext: QuestionnaireLaunchContext[];
+}
+
+function EditLaunchContext({ launchContext }: LaunchContextProps) {
+    return (
+        <>
+            {launchContext.map((l) => (
+                <LaunchContextElement launchContext={l} />
+            ))}
+        </>
+    );
+}
+
+interface LaunchContextElementProps {
+    launchContext: QuestionnaireLaunchContext;
+}
+
+function LaunchContextElement({ launchContext }: LaunchContextElementProps) {
+    console.log(launchContext);
+    return (
+        <>
+            <div className={s.menuItem}>
+                {launchContext.name}
+                <br />
+                <span>{launchContext.description}</span>
+            </div>
+            <div className={s.menuItem}>{launchContext.type}</div>
         </>
     );
 }

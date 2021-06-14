@@ -85,6 +85,7 @@ export function Main() {
                 questionnaireId={questionnaireId}
                 fhirMode={fhirMode}
                 setFhirMode={setFhirMode}
+                questionnaireRD={questionnaireRD}
             />
             <Logo />
         </>
