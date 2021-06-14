@@ -214,9 +214,9 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 }}
                 fieldProps={{
                     validate: required
-                        ? (inputValue: any) => {
+                        ? (inputValue?: Array<any>) => {
                               if (repeats) {
-                                  if (!inputValue.length) {
+                                  if (!inputValue?.length) {
                                       return 'Choose at least one option';
                                   }
                               } else {
