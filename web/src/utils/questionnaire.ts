@@ -464,7 +464,10 @@ export function getEnabledQuestions(items: QuestionnaireItem[], parentPath: stri
     });
 }
 
-export function interpolateAnswers(text: string, parentPath: string[], values: FormItems) {
+export function interpolateAnswers(text: string | undefined, parentPath: string[], values: FormItems) {
+    if (typeof text === 'undefined') {
+        return text;
+    }
     const matches = text.match(/<[^>]+>/g);
     if (matches) {
         return _.reduce(
