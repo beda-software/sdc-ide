@@ -8,7 +8,7 @@ import s from './MappingSelect.module.scss';
 interface MappingSelectProps {
     mappingList: Mapping[];
     activeMappingId: string | undefined;
-    setActiveMappingId: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setActiveMappingId: (mappingId: string | undefined) => void;
 }
 
 export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId }: MappingSelectProps) {
