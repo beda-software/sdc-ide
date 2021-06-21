@@ -105,7 +105,6 @@ interface LaunchContextElementProps {
 }
 
 function LaunchContextElement({ launchContext }: LaunchContextElementProps) {
-    console.log(launchContext);
     return (
         <>
             <div className={s.menuItem}>
