@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { Parameters as ParametersBase, QuestionnaireLaunchContext, Resource } from 'shared/src/contrib/aidbox';
+import { Parameters as ParametersBase, Questionnaire, Resource } from 'shared/src/contrib/aidbox';
 
 type Parameters = ParametersBase & Required<Pick<ParametersBase, 'parameter'>>;
 
@@ -25,18 +25,18 @@ type Init = 'Init';
 
 interface InitAction {
     type: Init;
-    launchContext: QuestionnaireLaunchContext[];
+    questionnaire: Questionnaire;
 }
 
-export function init(launchContext: QuestionnaireLaunchContext[]): InitAction {
+export function init(questionnaire: Questionnaire): InitAction {
     return {
         type: 'Init',
-        launchContext,
+        questionnaire,
     };
 }
 // Init action
 
-type Action = SetResourceAction | InitAction;
+export type Action = SetResourceAction | InitAction;
 
 function reducer(state: Parameters, action: Action) {
     if (action.type == 'SetResource') {
@@ -47,13 +47,17 @@ function reducer(state: Parameters, action: Action) {
     } else if (action.type == 'Init') {
         return {
             ...state,
-            parameter: action.launchContext.map(({ name }) => {
+            parameter: [
+                {name: 'Questionnaire',
+                 resource: action.questionnaire,
+                },
+                ...(action.questionnaire.launchContext ?? []).map(({ name }) => {
                 if (name) {
                     return { name };
                 } else {
                     throw new Error('Name is missing in launchContext');
                 }
-            }),
+            })],
         };
     } else {
         const _action: never = action;
@@ -62,6 +66,6 @@ function reducer(state: Parameters, action: Action) {
     return state;
 }
 
-export function useLaunchContext(): [Parameters, any] {
+export function useLaunchContext() {
     return useReducer(reducer, { resourceType: 'Parameters', parameter: [] });
 }

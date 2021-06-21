@@ -1,24 +1,26 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
+import _ from 'lodash'
 
-import { ResourceSelect } from 'src/components/ResourceSelect';
+import { ResourceSelect, RemoteResourceSelect } from 'src/components/ResourceSelect';
 import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { Questionnaire, QuestionnaireLaunchContext, Parameters } from 'shared/src/contrib/aidbox';
+import { Questionnaire, QuestionnaireLaunchContext, Parameters, Resource } from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
+import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
 
 interface MenuProps {
     launchContext: Parameters;
-    dispatch: any;
+    dispatch: Dispatch<Action>
     questionnaireId: string;
     questionnaireRD: RemoteData<Questionnaire>;
     fhirMode: boolean;
     setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD }: MenuProps) {
+export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
     const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
     return (
         <>
@@ -40,7 +42,12 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD }
                     />
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
-                    {(questionnaire) => <EditLaunchContext launchContext={questionnaire.launchContext ?? []} />}
+                    {(questionnaire) =>
+                        <EditLaunchContext
+                            parameters={launchContext}
+                            launchContext={questionnaire.launchContext ?? []}
+                            dispatch={dispatch}
+                        />}
                 </RenderRemoteData>
                 <div className={s.menuItem}>
                     <label htmlFor="fhir-mode">FhirMode</label>
@@ -88,23 +95,33 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD }
 
 interface LaunchContextProps {
     launchContext: QuestionnaireLaunchContext[];
+    parameters: Parameters;
+    dispatch: Dispatch<Action>
 }
 
-function EditLaunchContext({ launchContext }: LaunchContextProps) {
+function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContextProps) {
     return (
         <>
-            {launchContext.map((l) => (
-                <LaunchContextElement launchContext={l} />
-            ))}
+            {launchContext.map((l) => {
+                return (
+                    <LaunchContextElement
+                        launchContext={l}
+                        value={_.find(parameters.parameter, {name: l.name})?.resource}
+                        onChange={(resource) => dispatch(setResource({name: l.name!, resource: resource! }))}
+                    />
+                );
+            })}
         </>
     );
 }
 
 interface LaunchContextElementProps {
     launchContext: QuestionnaireLaunchContext;
+    value: Resource | null | undefined
+    onChange: (r: Resource | null | undefined) => void
 }
 
-function LaunchContextElement({ launchContext }: LaunchContextElementProps) {
+function LaunchContextElement({ launchContext, value, onChange }: LaunchContextElementProps) {
     return (
         <>
             <div className={s.menuItem}>
@@ -112,7 +129,13 @@ function LaunchContextElement({ launchContext }: LaunchContextElementProps) {
                 <br />
                 <span>{launchContext.description}</span>
             </div>
-            <div className={s.menuItem}>{launchContext.type}</div>
+            <div className={s.menuItem}>
+                <RemoteResourceSelect
+                    resourceType={launchContext.type as any}
+                    value={value}
+                    onChange={onChange}
+                />
+            </div>
         </>
     );
 }

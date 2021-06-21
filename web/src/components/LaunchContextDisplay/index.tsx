@@ -11,7 +11,7 @@ interface LaunchContextDisplayProps {
 }
 
 export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) {
-    const params = parameters.parameter || [];
+    const params = parameters.parameter?.filter((p) => p.name !== 'Questionnaire') || [];
     const defaultName = params[0]?.name;
     const [activeTabName, setActiveTabName] = useState(defaultName);
 

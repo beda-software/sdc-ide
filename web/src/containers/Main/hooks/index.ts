@@ -37,9 +37,8 @@ export function useMain(questionnaireId: string) {
                 setActiveMappingId(firstMapping?.id);
             }
 
-            const launchContext = response.data.launchContext;
             if (launchContext) {
-                dispatch(init(launchContext));
+                dispatch(init(response.data));
             }
         }
 
