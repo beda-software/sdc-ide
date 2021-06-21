@@ -77,10 +77,7 @@ export function useMain(questionnaireId: string) {
                 url: '/Questionnaire/$populate',
                 data: launchContext,
             });
-            if (isSuccess(response)) {
-                setQuestionnaireResponseRD(response);
-                // console.log('<-1-2*', JSON.stringify(response.data));
-            }
+            setQuestionnaireResponseRD(response);
         }
     }, [launchContext, questionnaireRD]);
 
