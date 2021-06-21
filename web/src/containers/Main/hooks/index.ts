@@ -5,7 +5,7 @@ import { service, sequenceMap } from 'aidbox-react/src/services/service';
 import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
-import { useLaunchContext } from './launchContextHook';
+import { init, useLaunchContext } from './launchContextHook';
 
 const startFhirMode: boolean = window.localStorage.fhirMode === 'true';
 const prevActiveMappingId: string | undefined = window.localStorage.prevActiveMappingId as string | undefined;
@@ -36,10 +36,15 @@ export function useMain(questionnaireId: string) {
                 window.localStorage.prevActiveMappingId = undefined;
                 setActiveMappingId(firstMapping?.id);
             }
+
+            const launchContext = response.data.launchContext;
+            if (launchContext) {
+                dispatch(init(launchContext));
+            }
         }
 
         return response;
-    }, [questionnaireId]);
+    }, [questionnaireId, dispatch]);
 
     // Questionnaire in FHIR format
     const [questionnaireFHIRRD] = useService(

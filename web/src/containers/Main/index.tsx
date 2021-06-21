@@ -6,13 +6,13 @@ import { Logo } from 'src/components/Logo';
 import { ExpandableRow } from 'src/components/ExpandableRow';
 import { ExpandableElement } from 'src/components/ExpandableElement';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
+import { LaunchContextDisplay } from 'src/components/LaunchContextDisplay';
 import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 
 import s from './Main.module.scss';
-import { success } from 'aidbox-react/src/libs/remoteData';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
@@ -39,7 +39,7 @@ export function Main() {
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
-                        <ResourceCodeDisplay resourceResponse={success(launchContext)} />
+                        <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
