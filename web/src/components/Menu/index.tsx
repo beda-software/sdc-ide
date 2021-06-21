@@ -5,30 +5,20 @@ import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
-import { getPatientFullName } from 'src/utils/resource';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { Bundle, Patient, Questionnaire, QuestionnaireLaunchContext } from 'shared/src/contrib/aidbox';
+import { Questionnaire, QuestionnaireLaunchContext, Parameters } from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
 
 interface MenuProps {
-    patientId: string;
-    setPatientId: (id: string) => void;
-    patientsRD: RemoteData<Bundle<Patient>>;
+    launchContext: Parameters;
+    dispatch: any;
     questionnaireId: string;
     questionnaireRD: RemoteData<Questionnaire>;
     fhirMode: boolean;
     setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({
-    patientId,
-    setPatientId,
-    patientsRD,
-    questionnaireId,
-    fhirMode,
-    setFhirMode,
-    questionnaireRD,
-}: MenuProps) {
+export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD }: MenuProps) {
     const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
     return (
         <>
@@ -47,16 +37,6 @@ export function Menu({
                             window.location.hash = id;
                         }}
                         display={({ id }) => id!}
-                    />
-                </div>
-                <div className={s.menuItem}>Patient</div>
-                <div className={s.menuItem}>
-                    <ResourceSelect
-                        cssClass={s.resourceSelect}
-                        value={patientId}
-                        bundleResponse={patientsRD}
-                        onChange={setPatientId}
-                        display={getPatientFullName}
                     />
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
@@ -137,3 +117,14 @@ function LaunchContextElement({ launchContext }: LaunchContextElementProps) {
         </>
     );
 }
+
+/* <div className={s.menuItem}>Patient</div>
+ * <div className={s.menuItem}>
+ * <ResourceSelect
+ * cssClass={s.resourceSelect}
+ * value={patientId}
+ * bundleResponse={patientsRD}
+ * onChange={setPatientId}
+ * display={getPatientFullName}
+ * />
+ * </div> */

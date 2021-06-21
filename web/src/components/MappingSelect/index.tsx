@@ -1,12 +1,12 @@
 import React from 'react';
 import _ from 'lodash';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
+import { Mapping, Reference } from 'shared/src/contrib/aidbox';
 
 import s from './MappingSelect.module.scss';
 
 interface MappingSelectProps {
-    mappingList: Mapping[];
+    mappingList: Reference<Mapping>[];
     activeMappingId: string | undefined;
     setActiveMappingId: (mappingId: string | undefined) => void;
 }

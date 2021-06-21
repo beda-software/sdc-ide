@@ -12,16 +12,15 @@ import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 
 import s from './Main.module.scss';
+import { success } from 'aidbox-react/src/libs/remoteData';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const {
+        launchContext,
+        dispatch,
         fhirMode,
         setFhirMode,
-        setPatientId,
-        patientId,
-        patientRD,
-        patientsRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,
@@ -40,7 +39,7 @@ export function Main() {
             <div className={s.mainContainer}>
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
-                        <ResourceCodeDisplay resourceResponse={patientRD} />
+                        <ResourceCodeDisplay resourceResponse={success(launchContext)} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
@@ -79,9 +78,8 @@ export function Main() {
                 </ExpandableRow>
             </div>
             <Menu
-                patientId={patientId}
-                setPatientId={setPatientId}
-                patientsRD={patientsRD}
+                launchContext={launchContext}
+                dispatch={dispatch}
                 questionnaireId={questionnaireId}
                 fhirMode={fhirMode}
                 setFhirMode={setFhirMode}

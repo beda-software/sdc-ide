@@ -1,52 +1,23 @@
 import { useService } from 'aidbox-react/src/hooks/service';
-import { getAllFHIRResources, getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
-import {
-    Bundle,
-    Mapping,
-    Parameters,
-    Patient,
-    Questionnaire,
-    QuestionnaireResponse,
-    Reference,
-} from 'shared/src/contrib/aidbox';
+import { getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { Bundle, Mapping, Questionnaire, QuestionnaireResponse, Reference } from 'shared/src/contrib/aidbox';
 import { service, sequenceMap } from 'aidbox-react/src/services/service';
 import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
+import { useLaunchContext } from './launchContextHook';
 
-const startPatientId: string = window.localStorage.startPatientId ?? 'patient-1';
 const startFhirMode: boolean = window.localStorage.fhirMode === 'true';
 const prevActiveMappingId: string | undefined = window.localStorage.prevActiveMappingId as string | undefined;
 
 export function useMain(questionnaireId: string) {
-    // Patient
-    const [patientId, setPatientId_] = useState<string>(startPatientId);
     const [fhirMode, setFhirMode_] = useState<boolean>(startFhirMode);
-
-    const setPatientId = useCallback((id: string) => {
-        setPatientId_(id);
-        window.localStorage.startPatientId = id;
-    }, []);
 
     const setFhirMode = useCallback((fhirMode: boolean) => {
         setFhirMode_(fhirMode);
         window.localStorage.fhirMode = fhirMode;
     }, []);
-
-    const [patientRD] = useService(
-        () =>
-            getFHIRResource<Patient>({
-                resourceType: 'Patient',
-                id: patientId,
-            }),
-        [patientId, questionnaireId],
-    );
-
-    const [patientsRD] = useService(
-        () => getAllFHIRResources<Patient>('Patient', { _elements: 'id,name.given,name.family' }),
-        [],
-    );
-
+    const [launchContext, dispatch] = useLaunchContext();
     // Questionnaire
     const [questionnaireRD, questionnaireManager] = useService(async () => {
         const response = await service<Questionnaire>({
@@ -100,25 +71,18 @@ export function useMain(questionnaireId: string) {
     const [questionnaireResponseRD, setQuestionnaireResponseRD] = useState<RemoteData<QuestionnaireResponse>>(loading);
 
     const loadQuestionnaireResponse = useCallback(async () => {
-        if (isSuccess(patientRD) && isSuccess(questionnaireRD)) {
-            const params: Parameters = {
-                resourceType: 'Parameters',
-                parameter: [
-                    { name: 'LaunchPatient', resource: patientRD.data },
-                    { name: 'questionnaire', resource: questionnaireRD.data },
-                ],
-            };
+        if (isSuccess(questionnaireRD)) {
             const response = await service<QuestionnaireResponse>({
                 method: 'POST',
                 url: '/Questionnaire/$populate',
-                data: params,
+                data: launchContext,
             });
             if (isSuccess(response)) {
                 setQuestionnaireResponseRD(response);
                 // console.log('<-1-2*', JSON.stringify(response.data));
             }
         }
-    }, [patientRD, questionnaireRD]);
+    }, [launchContext, questionnaireRD]);
 
     const saveQuestionnaireResponse = useCallback(
         (resource: QuestionnaireResponse) => {
@@ -133,17 +97,16 @@ export function useMain(questionnaireId: string) {
 
     useEffect(() => {
         (async () => {
-            const loadingStatus = sequenceMap({ patientRD, questionnaireRD });
-            if (isSuccess(loadingStatus)) {
+            if (isSuccess(questionnaireRD)) {
                 await loadQuestionnaireResponse();
             } else {
-                setQuestionnaireResponseRD(loadingStatus);
+                setQuestionnaireResponseRD(questionnaireRD);
             }
         })();
-    }, [patientRD, questionnaireRD, loadQuestionnaireResponse]);
+    }, [questionnaireRD, loadQuestionnaireResponse]);
 
     // MappingList
-    const [mappingList, setMappingList] = useState<Reference<Mapping>[]>([]);
+    const [mappingList, setMappingList] = useState<Array<Reference<Mapping>>>([]);
 
     // Active mapping id
     const [activeMappingId, setActiveMappingId_] = useState<string | undefined>();
@@ -211,26 +174,15 @@ export function useMain(questionnaireId: string) {
             const response = await service({
                 method: 'POST',
                 url: '/Questionnaire/$extract',
-                data: {
-                    resourceType: 'Parameters',
-                    parameter: [
-                        { name: 'questionnaire_response', resource: resourcesRD.data.questionnaireResponseRD },
-                        { name: 'questionnaire', resource: resourcesRD.data.questionnaireRD },
-                        { name: 'LaunchPatient', resource: isSuccess(patientRD) ? patientRD.data : {} },
-                    ],
-                },
+                data: launchContext,
             });
             if (isSuccess(response)) {
                 window.location.reload();
             }
         }
-    }, [patientRD, questionnaireRD, questionnaireResponseRD]);
+    }, [launchContext, questionnaireRD, questionnaireResponseRD]);
 
     return {
-        setPatientId,
-        patientId,
-        patientRD,
-        patientsRD,
         questionnaireRD,
         questionnaireFHIRRD,
         saveQuestionnaireFHIR,
@@ -245,5 +197,7 @@ export function useMain(questionnaireId: string) {
         applyMappings,
         setFhirMode,
         fhirMode,
+        launchContext,
+        dispatch,
     };
 }
