@@ -176,10 +176,22 @@ export function useMain(questionnaireId: string) {
             const response = await service({
                 method: 'POST',
                 url: '/Questionnaire/$extract',
-                data: launchContext,
+                data: {
+                    ...launchContext,
+                    parameter: [
+                        {
+                            name: 'QuestionnaireResponse',
+                            resource: resourcesRD.data,
+                        },
+                        ...launchContext.parameter,
+                    ],
+                },
             });
             if (isSuccess(response)) {
                 window.location.reload();
+            } else {
+                alert('Extraction error, please check console for more details');
+                console.log(JSON.stringify(response.error, undefined, 4));
             }
         }
     }, [launchContext, questionnaireRD, questionnaireResponseRD]);
