@@ -16,10 +16,10 @@ export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) 
     const [activeTabName, setActiveTabName] = useState(defaultName);
 
     useEffect(() => {
-        if (typeof activeTabName === 'undefined') {
+        if (typeof activeTabName === 'undefined' || !_.find(params, { name: activeTabName })) {
             setActiveTabName(defaultName);
         }
-    }, [defaultName, activeTabName]);
+    }, [defaultName, activeTabName, params]);
     const active = _.find(params, { name: activeTabName })?.resource;
     return (
         <>
