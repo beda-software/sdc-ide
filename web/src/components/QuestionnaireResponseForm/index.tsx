@@ -335,7 +335,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         // const { linkId, type, item, text } = questionItem;
         const { type } = questionItem;
 
-        if (type === 'string' || type === 'text') {
+        if (type === 'string' || type === 'text' || type === 'email' || type === 'phone' || type === 'password') {
             return this.renderRepeatsAnswer(this.renderAnswerText, questionItem, parentPath, formParams);
         }
 
@@ -359,9 +359,13 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             return this.renderGroup(questionItem, parentPath, formParams);
         }
 
-        console.error(`TODO: Unsupported item type ${type}`);
-
-        return null;
+        return (
+            <div>
+                <label>{questionItem.text}</label>
+                <br />
+                <p>{`TODO: Unsupported item type ${type}`}</p>
+            </div>
+        );
     }
 
     public renderQuestions(items: QuestionnaireItem[], parentPath: string[], formParams: FormRenderProps) {
