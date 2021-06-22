@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react';
-import _ from 'lodash'
+import _ from 'lodash';
 
 import { ResourceSelect, RemoteResourceSelect } from 'src/components/ResourceSelect';
 import { useMenu } from 'src/components/Menu/hooks';
@@ -13,7 +13,7 @@ import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook
 
 interface MenuProps {
     launchContext: Parameters;
-    dispatch: Dispatch<Action>
+    dispatch: Dispatch<Action>;
     questionnaireId: string;
     questionnaireRD: RemoteData<Questionnaire>;
     fhirMode: boolean;
@@ -42,12 +42,13 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, 
                     />
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
-                    {(questionnaire) =>
+                    {(questionnaire) => (
                         <EditLaunchContext
                             parameters={launchContext}
                             launchContext={questionnaire.launchContext ?? []}
                             dispatch={dispatch}
-                        />}
+                        />
+                    )}
                 </RenderRemoteData>
                 <div className={s.menuItem}>
                     <label htmlFor="fhir-mode">FhirMode</label>
@@ -96,7 +97,7 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, 
 interface LaunchContextProps {
     launchContext: QuestionnaireLaunchContext[];
     parameters: Parameters;
-    dispatch: Dispatch<Action>
+    dispatch: Dispatch<Action>;
 }
 
 function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContextProps) {
@@ -106,8 +107,8 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
                 return (
                     <LaunchContextElement
                         launchContext={l}
-                        value={_.find(parameters.parameter, {name: l.name})?.resource}
-                        onChange={(resource) => dispatch(setResource({name: l.name!, resource: resource! }))}
+                        value={_.find(parameters.parameter, { name: l.name })?.resource}
+                        onChange={(resource) => dispatch(setResource({ name: l.name!, resource: resource! }))}
                     />
                 );
             })}
@@ -117,8 +118,8 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
 
 interface LaunchContextElementProps {
     launchContext: QuestionnaireLaunchContext;
-    value: Resource | null | undefined
-    onChange: (r: Resource | null | undefined) => void
+    value: Resource | null | undefined;
+    onChange: (r: Resource | null | undefined) => void;
 }
 
 function LaunchContextElement({ launchContext, value, onChange }: LaunchContextElementProps) {
@@ -130,23 +131,20 @@ function LaunchContextElement({ launchContext, value, onChange }: LaunchContextE
                 <span>{launchContext.description}</span>
             </div>
             <div className={s.menuItem}>
-                <RemoteResourceSelect
-                    resourceType={launchContext.type as any}
-                    value={value}
-                    onChange={onChange}
-                />
+                <LaunchContextElementWidget launchContext={launchContext} value={value} onChange={onChange} />
             </div>
         </>
     );
 }
 
-/* <div className={s.menuItem}>Patient</div>
- * <div className={s.menuItem}>
- * <ResourceSelect
- * cssClass={s.resourceSelect}
- * value={patientId}
- * bundleResponse={patientsRD}
- * onChange={setPatientId}
- * display={getPatientFullName}
- * />
- * </div> */
+function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchContextElementProps) {
+    if (launchContext.type === 'string') {
+        return (
+            <input
+                value={(value as any)?.string}
+                onChange={(e) => onChange({ value: { string: e.target.value } } as any)}
+            />
+        );
+    }
+    return <RemoteResourceSelect resourceType={launchContext.type as any} value={value} onChange={onChange} />;
+}

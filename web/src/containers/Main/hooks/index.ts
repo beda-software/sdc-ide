@@ -188,7 +188,7 @@ export function useMain(questionnaireId: string) {
                 },
             });
             if (isSuccess(response)) {
-                window.location.reload();
+                // window.location.reload();
             } else {
                 alert('Extraction error, please check console for more details');
                 console.log(JSON.stringify(response.error, undefined, 4));
