@@ -75,6 +75,7 @@ export function useMain(questionnaireId: string) {
     const [questionnaireResponseRD, setQuestionnaireResponseRD] = useState<RemoteData<QuestionnaireResponse>>(loading);
 
     const loadQuestionnaireResponse = useCallback(async () => {
+        setQuestionnaireResponseRD(notAsked);
         if (isSuccess(questionnaireRD)) {
             const response = await service<QuestionnaireResponse>({
                 method: 'POST',
