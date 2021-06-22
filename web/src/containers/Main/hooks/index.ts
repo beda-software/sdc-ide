@@ -6,16 +6,16 @@ import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
+import { getData, setData } from 'src/services/localStorage';
 
-const startFhirMode: boolean = window.localStorage.fhirMode === 'true';
-const prevActiveMappingId: string | undefined = window.localStorage.prevActiveMappingId as string | undefined;
+const prevActiveMappingId = getData('prevActiveMappingId');
 
 export function useMain(questionnaireId: string) {
-    const [fhirMode, setFhirMode_] = useState<boolean>(startFhirMode);
+    const [fhirMode, setFhirMode_] = useState<boolean>(getData('fhirMode'));
 
     const setFhirMode = useCallback((fhirMode: boolean) => {
         setFhirMode_(fhirMode);
-        window.localStorage.fhirMode = fhirMode;
+        setData('fhirMode', fhirMode);
     }, []);
     const [launchContext, dispatch] = useLaunchContext();
     // Questionnaire
@@ -33,7 +33,7 @@ export function useMain(questionnaireId: string) {
             if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
                 setActiveMappingId(prevActiveMappingId);
             } else {
-                window.localStorage.prevActiveMappingId = undefined;
+                setData('prevActiveMappingId', null);
                 setActiveMappingId(firstMapping?.id);
             }
 
@@ -114,7 +114,7 @@ export function useMain(questionnaireId: string) {
     const [activeMappingId, setActiveMappingId_] = useState<string | undefined>();
     const setActiveMappingId = useCallback((id: string | undefined) => {
         setActiveMappingId_(id);
-        window.localStorage.prevActiveMappingId = id;
+        setData('prevActiveMappingId', id ?? null);
     }, []);
 
     // Mapping

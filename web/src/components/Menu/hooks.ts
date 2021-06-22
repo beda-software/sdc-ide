@@ -2,23 +2,25 @@ import { useCallback, useEffect, useState } from 'react';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { getFHIRResources } from 'aidbox-react/src/services/fhir';
 import { ArrowDirections } from 'src/components/Icon/Arrow';
-import { getConfig } from 'src/utils/config';
+import { getData, setData } from 'src/services/localStorage';
 
 function useConfigForm() {
     const [baseUrl, setBaseUrl] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const applyConfig = useCallback(() => {
-        window.localStorage.username = username;
-        window.localStorage.password = password;
-        window.localStorage.baseUrl = baseUrl;
+        setData('connection', {
+            client: username,
+            secret: password,
+            baseUrl,
+        });
         window.location.reload();
     }, [baseUrl, username, password]);
 
     useEffect(() => {
-        const { username, password, baseUrl } = getConfig();
-        setUsername(username);
-        setPassword(password);
+        const { client, secret, baseUrl } = getData('connection');
+        setUsername(client);
+        setPassword(secret);
         setBaseUrl(baseUrl);
     }, []);
 

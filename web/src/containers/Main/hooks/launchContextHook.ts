@@ -1,5 +1,6 @@
 import { useReducer } from 'react';
 import { Parameters as ParametersBase, Questionnaire, Resource } from 'shared/src/contrib/aidbox';
+import { getData, setData } from 'src/services/localStorage';
 
 type Parameters = ParametersBase & Required<Pick<ParametersBase, 'parameter'>>;
 
@@ -40,6 +41,11 @@ export type Action = SetResourceAction | InitAction;
 
 function reducer(state: Parameters, action: Action) {
     if (action.type == 'SetResource') {
+        const saved = getData('launchContextParameters');
+        setData('launchContextParameters', {
+            [action.name]: action.resource,
+            ...saved,
+        });
         return {
             ...state,
             parameter: state.parameter.map((p) => (p.name == action.name ? { ...p, resource: action.resource } : p)),
@@ -48,16 +54,19 @@ function reducer(state: Parameters, action: Action) {
         return {
             ...state,
             parameter: [
-                {name: 'Questionnaire',
-                 resource: action.questionnaire,
-                },
+                { name: 'Questionnaire', resource: action.questionnaire },
                 ...(action.questionnaire.launchContext ?? []).map(({ name }) => {
-                if (name) {
-                    return { name };
-                } else {
-                    throw new Error('Name is missing in launchContext');
-                }
-            })],
+                    if (name) {
+                        const saved = getData('launchContextParameters')[name];
+                        return {
+                            name,
+                            ...(saved ? { resource: saved } : {}),
+                        };
+                    } else {
+                        throw new Error('Name is missing in launchContext');
+                    }
+                }),
+            ],
         };
     } else {
         const _action: never = action;
