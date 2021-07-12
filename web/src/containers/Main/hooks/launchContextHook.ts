@@ -46,9 +46,11 @@ function reducer(state: Parameters, action: Action) {
             [action.name]: action.resource,
             ...saved,
         });
+        const isResource = Object.keys(action.resource).length > 1;
+        const data = isResource ? { resource: action.resource } : action.resource;
         return {
             ...state,
-            parameter: state.parameter.map((p) => (p.name == action.name ? { ...p, resource: action.resource } : p)),
+            parameter: state.parameter.map((p) => (p.name == action.name ? { ...p, ...data } : p)),
         };
     } else if (action.type == 'Init') {
         return {
@@ -58,9 +60,11 @@ function reducer(state: Parameters, action: Action) {
                 ...(action.questionnaire.launchContext ?? []).map(({ name }) => {
                     if (name) {
                         const saved = getData('launchContextParameters')[name];
+                        const isResource = Object.keys(saved).length > 1;
+                        const data = isResource ? { resource: saved } : saved;
                         return {
                             name,
-                            ...(saved ? { resource: saved } : {}),
+                            ...(saved ? data : {}),
                         };
                     } else {
                         throw new Error('Name is missing in launchContext');
