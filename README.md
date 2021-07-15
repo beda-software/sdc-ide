@@ -1,6 +1,6 @@
 ## SDC IDE
 
-Reactive IDE for [SDC](http://hl7.org/fhir/uv/sdc/2019May/)
+Reactive IDE for [SDC](https://build.fhir.org/ig/HL7/sdc/)
 
 Live demo http://sdc.beda.software/.  
 Devdays speach about SDC and SDC IDE https://www.youtube.com/watch?v=6zzpfb7az_c.  
