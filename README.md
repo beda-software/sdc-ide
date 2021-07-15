@@ -1,6 +1,7 @@
 ## SDC IDE
 
 Live demo http://sdc.beda.software/.  
+Devdays speach about SDC and sdc ide https://www.youtube.com/watch?v=6zzpfb7az_c.  
 To check the app please go to [examples](examples) folder and follow readme.  
 Mobile questionnaire tester app is WIP.
 Exteranl plugable rendering is WIP.
