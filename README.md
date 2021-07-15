@@ -1,10 +1,14 @@
 ## SDC IDE
 
+Reactive IDE for [SDC](http://hl7.org/fhir/uv/sdc/2019May/)
+
 Live demo http://sdc.beda.software/.  
-Devdays speach about SDC and sdc ide https://www.youtube.com/watch?v=6zzpfb7az_c.  
+Devdays speach about SDC and SDC IDE https://www.youtube.com/watch?v=6zzpfb7az_c.  
+
+### local launch
 To check the app please go to [examples](examples) folder and follow readme.  
-Mobile questionnaire tester app is WIP.
-Exteranl plugable rendering is WIP.
+Mobile questionnaire tester app is WIP.   
+Exteranl plugable rendering is WIP.   
 
 ## Development mode
 
