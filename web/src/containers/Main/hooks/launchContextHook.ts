@@ -60,7 +60,7 @@ function reducer(state: Parameters, action: Action) {
                 ...(action.questionnaire.launchContext ?? []).map(({ name }) => {
                     if (name) {
                         const saved = getData('launchContextParameters')[name];
-                        const isResource = Object.keys(saved).length > 1;
+                        const isResource = Object.keys(saved ?? {}).length > 1;
                         const data = isResource ? { resource: saved } : saved;
                         return {
                             name,

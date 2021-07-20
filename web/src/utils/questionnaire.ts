@@ -338,7 +338,7 @@ export function mapResponseToForm(resource: ResponseItems, questionnaire: Questi
                     ...acc,
                     [linkId]: _.map(answers && answers.length > 0 ? answers : question.initial, (answer) => ({
                         question: question.text,
-                        value: answer.value,
+                        value: answer?.value ?? '',
                         items: mapResponseToForm(answer, question),
                     })),
                 };
