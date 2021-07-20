@@ -181,14 +181,14 @@ export function useMain(questionnaireId: string) {
                     parameter: [
                         {
                             name: 'QuestionnaireResponse',
-                            resource: resourcesRD.data,
+                            resource: resourcesRD.data.questionnaireResponseRD,
                         },
                         ...launchContext.parameter,
                     ],
                 },
             });
             if (isSuccess(response)) {
-                // window.location.reload();
+                window.location.reload();
             } else {
                 alert('Extraction error, please check console for more details');
                 console.log(JSON.stringify(response.error, undefined, 4));
