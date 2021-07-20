@@ -1,4 +1,4 @@
-import { Resource } from 'shared/src/contrib/aidbox';
+import { ParametersParameter } from 'shared/src/contrib/aidbox';
 import _ from 'lodash';
 
 interface StorageData {
@@ -9,7 +9,7 @@ interface StorageData {
     };
     fhirMode: boolean;
     prevActiveMappingId: string | null;
-    launchContextParameters: Record<string, Resource>;
+    launchContextParameters: Record<string, ParametersParameter | null | undefined>;
 }
 
 function loadStorageData(): StorageData {

@@ -7,7 +7,7 @@ import { useMenu } from 'src/components/Menu/hooks';
 import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { Questionnaire, QuestionnaireLaunchContext, Parameters, Resource } from 'shared/src/contrib/aidbox';
+import { Questionnaire, QuestionnaireLaunchContext, Parameters, ParametersParameter } from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
 import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
 
@@ -107,8 +107,8 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
                 return (
                     <LaunchContextElement
                         launchContext={l}
-                        value={_.find(parameters.parameter, { name: l.name })?.resource}
-                        onChange={(resource) => dispatch(setResource({ name: l.name!, resource: resource! }))}
+                        value={_.find(parameters.parameter, { name: l.name })}
+                        onChange={(parameter) => dispatch(setResource({ name: l.name!, parameter: parameter! }))}
                     />
                 );
             })}
@@ -118,8 +118,8 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
 
 interface LaunchContextElementProps {
     launchContext: QuestionnaireLaunchContext;
-    value: Resource | null | undefined;
-    onChange: (r: Resource | null | undefined) => void;
+    value: ParametersParameter | null | undefined;
+    onChange: (r: ParametersParameter | null | undefined) => void;
 }
 
 function LaunchContextElement({ launchContext, value, onChange }: LaunchContextElementProps) {
@@ -141,10 +141,16 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
     if (launchContext.type === 'string') {
         return (
             <input
-                value={(value as any)?.string}
-                onChange={(e) => onChange({ value: { string: e.target.value } } as any)}
+                value={(value as any)?.value.string}
+                onChange={(e) => onChange({ value: { string: e.target.value }, name: launchContext.name! })}
             />
         );
     }
-    return <RemoteResourceSelect resourceType={launchContext.type as any} value={value} onChange={onChange} />;
+    return (
+        <RemoteResourceSelect
+            resourceType={launchContext.type as any}
+            value={value?.resource}
+            onChange={(resource) => onChange({ resource: resource!, name: launchContext.name! })}
+        />
+    );
 }

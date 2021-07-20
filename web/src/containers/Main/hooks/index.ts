@@ -38,7 +38,7 @@ export function useMain(questionnaireId: string) {
             }
 
             if (launchContext) {
-                dispatch(init(response.data));
+                dispatch(await init(response.data));
             }
         }
 
