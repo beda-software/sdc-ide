@@ -1,12 +1,5 @@
 version: '3.1'
 services:
-  dockerize:
-    image: jwilder/dockerize
-    command: dockerize -wait http://devbox:8080/healthcheck -timeout 300s
-    depends_on:
-      - backend
-    links:
-      - backend
   backend:
     image: "bedasoftware/devdays2020-sdc-demo-backend:latest"
     command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081"]
@@ -19,7 +12,7 @@ services:
     volumes:
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
   devbox:
-    image: healthsamurai/devbox:0.4.9
+    image: healthsamurai/devbox:edge
     command: ["wait-for-it.sh", "database:5432", "--strict", "--timeout=0", "--", "java", "-jar", "/aidbox.jar", "-m", "devbox.core"]
     depends_on:
       - devbox-db
@@ -35,7 +28,7 @@ services:
     ports:
       - 8181:8080
   devbox-db:
-    image: aidbox/db:11.4.0.2
+    image: healthsamurai/aidboxdb:13.2
     environment:
       POSTGRES_USER:     postgres
       POSTGRES_PASSWORD: postgres

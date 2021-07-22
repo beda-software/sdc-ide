@@ -99,29 +99,41 @@ const questionnaire = {
 
 const questRespPopulated = {
     resourceType: 'QuestionnaireResponse',
-    questionnaire: 'demo-1',
+    questionnaire: null,
     item: [
         {
-            linkId: 'first-name',
-            text: 'First Name',
-            answer: [{ value: { string: 'Jane' } }],
+            linkId: 'Demographics',
+            text: 'Demographics',
+            item: [
+                {
+                    linkId: 'first-name',
+                    text: 'First Name',
+                    answer: [{ value: { string: 'Jane' } }],
+                },
+                {
+                    linkId: 'middle-name',
+                    text: 'Middle Name',
+                    answer: [{ value: { string: 'Jr.' } }],
+                },
+                {
+                    linkId: 'last-name',
+                    text: 'Last Name',
+                    answer: [{ value: { string: 'Smith' } }],
+                },
+                {
+                    linkId: 'date-of-birth',
+                    text: 'Date of Birth',
+                    answer: [{ value: { date: '1980-01-01' } }],
+                },
+                {
+                    linkId: 'gender',
+                    text: 'Gender',
+                    answer: [{ value: { string: 'Female' } }],
+                },
+
+                { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient-1' } }] },
+            ],
         },
-        {
-            linkId: 'middle-name',
-            text: 'Middle Name',
-            answer: [{ value: { string: 'Jr.' } }],
-        },
-        {
-            linkId: 'last-name',
-            text: 'Last Name',
-            answer: [{ value: { string: 'Smith' } }],
-        },
-        {
-            linkId: 'date-of-birth',
-            text: 'Date of Birth',
-            answer: [{ value: { date: '1980-01-01' } }],
-        },
-        { linkId: 'patientId', text: 'ID', answer: [{ value: { string: 'patient-1' } }] },
     ],
 };
 
@@ -155,6 +167,8 @@ const mappingDemo1 = {
                     ],
                     birthDate:
                         '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'date-of-birth\').answer.value.date").0',
+                    gender:
+                        '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'gender\').answer.value.string").0',
                     resourceType: 'Patient',
                 },
             },
