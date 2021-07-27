@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { useMain } from 'src/containers/Main/hooks';
 import { Menu } from 'src/components/Menu';
 import { Logo } from 'src/components/Logo';
@@ -12,6 +13,7 @@ import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 
+import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
 export function Main() {
@@ -37,6 +39,7 @@ export function Main() {
     return (
         <>
             <div className={s.mainContainer}>
+                <ToastContainer />
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
                         <LaunchContextDisplay parameters={launchContext} />

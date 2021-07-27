@@ -1,12 +1,21 @@
 import { useService } from 'aidbox-react/src/hooks/service';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
-import { Bundle, Mapping, Questionnaire, QuestionnaireResponse, Reference } from 'shared/src/contrib/aidbox';
+import {
+    Bundle,
+    Mapping,
+    OperationOutcome,
+    Questionnaire,
+    QuestionnaireResponse,
+    Reference,
+} from 'shared/src/contrib/aidbox';
 import { service, sequenceMap } from 'aidbox-react/src/services/service';
 import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
 import { getData, setData } from 'src/services/localStorage';
+import { toast } from 'react-toastify';
+import { formatError } from 'aidbox-react/src/utils/error';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
@@ -55,20 +64,63 @@ export function useMain(questionnaireId: string) {
         [questionnaireId, fhirMode],
     );
 
+    const showModal = (response: any, type: string) => {
+        if (type === 'success') {
+            toast.success('New mapper created');
+        } else {
+            toast.error(
+                formatError(response.error, {
+                    mapping: { conflict: 'Please reload page' },
+                    format: (errorCode, errorDescription) =>
+                        `An error occurred: ${errorDescription} (${errorCode}). Please reach tech support`,
+                }),
+            );
+        }
+    };
+
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            const response = await service({
+            const response = await service<unknown, OperationOutcome>({
                 method: 'PUT',
                 data: resource,
                 url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
             });
+
             if (isSuccess(response)) {
                 questionnaireManager.reload();
             } else {
-                console.error('Could not save Questionnaire:', response.error.toString());
+                if (
+                    response.error.issue[0] &&
+                    response.error.issue[0].expression &&
+                    response.error.issue[0].expression[0].slice(0, 21) === 'Questionnaire.mapping' &&
+                    response.error.issue[0].code === 'invalid' &&
+                    response.error.resourceType === 'OperationOutcome'
+                ) {
+                    const mappingId =
+                        response.error.issue[0].diagnostics &&
+                        response.error.issue[0].diagnostics.split(' ')[2].slice(8);
+                    const result = await saveFHIRResource({ resourceType: 'Mapping', id: mappingId, body: {} });
+                    if (isSuccess(result)) {
+                        const res = await service<unknown, OperationOutcome>({
+                            method: 'PUT',
+                            data: resource,
+                            url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
+                        });
+                        if (isSuccess(res)) {
+                            questionnaireManager.reload();
+                            showModal({}, 'success');
+                        } else {
+                            showModal(res, 'error');
+                        }
+                    } else {
+                        showModal(result, 'error');
+                    }
+                } else {
+                    showModal(response, 'error');
+                }
             }
         },
-        [questionnaireManager, fhirMode],
+        [fhirMode, questionnaireManager],
     );
 
     // QuestionnaireResponse
