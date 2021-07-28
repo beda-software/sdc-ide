@@ -235,6 +235,11 @@ const idExtractionResponse = {
         resourceType: 'OperationOutcome',
     },
 };
+const idExtractionResponseUndefined = {
+    error: {
+        resourceType: undefined,
+    },
+};
 
 export const EXPECTED_RESOURCES = {
     patient,
@@ -252,4 +257,5 @@ export const EXPECTED_RESOURCES = {
     idExtractionResource,
     idExtractionResourceUndefined,
     idExtractionResponse,
+    idExtractionResponseUndefined,
 };

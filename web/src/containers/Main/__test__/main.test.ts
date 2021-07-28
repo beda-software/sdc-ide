@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Extension } from 'shared/src/contrib/aidbox';
 import { ensure } from 'aidbox-react/src/utils/tests';
 
-import { useMain } from 'src/containers/Main/hooks';
+import { idExtraction, useMain } from 'src/containers/Main/hooks';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/src/libs/remoteData';
@@ -138,4 +138,28 @@ test.skip('applyMappings', async () => {
         expect(batchRequest.entry?.[0].resource.birthDate).toEqual('1980-01-01');
     });
     // TODO: finish this test
+});
+
+test('idExtraction', () => {
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResource,
+            EXPECTED_RESOURCES.idExtractionResponse,
+        ),
+    ).toBe('foobar');
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResourceUndefined,
+            EXPECTED_RESOURCES.idExtractionResponse,
+        ),
+    ).toBe(undefined);
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResource,
+            EXPECTED_RESOURCES.idExtractionResponseUndefined,
+        ),
+    ).toBe(undefined);
 });

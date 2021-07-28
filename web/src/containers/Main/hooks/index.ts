@@ -10,7 +10,7 @@ import {
     Reference,
 } from 'shared/src/contrib/aidbox';
 import { service, sequenceMap } from 'aidbox-react/src/services/service';
-import { isSuccess, notAsked, RemoteData, loading, success } from 'aidbox-react/src/libs/remoteData';
+import { isSuccess, notAsked, RemoteData, loading, success, isFailure } from 'aidbox-react/src/libs/remoteData';
 import { formatError } from 'aidbox-react/src/utils/error';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
@@ -19,6 +19,20 @@ import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
+
+export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnaire, response: any) => {
+    if (
+        issue.expression?.[0].slice(0, 21) === 'Questionnaire.mapping' &&
+        issue.code === 'invalid' &&
+        response.error.resourceType === 'OperationOutcome'
+    ) {
+        const index = +issue.expression[0].slice(22);
+        if (resource.mapping?.[index] === undefined || resource.mapping?.[index]?.resourceType !== 'Mapping') {
+            return;
+        }
+        return resource.mapping?.[index].id;
+    }
+};
 
 export function useMain(questionnaireId: string) {
     const [fhirMode, setFhirMode_] = useState<boolean>(getData('fhirMode'));
@@ -65,7 +79,7 @@ export function useMain(questionnaireId: string) {
         [questionnaireId, fhirMode],
     );
 
-    const showModal = (response: any, type: string) => {
+    const showModal = (response: any, type: string, index?: number) => {
         if (type === 'success') {
             toast.success('New mapper created');
         } else {
@@ -73,32 +87,13 @@ export function useMain(questionnaireId: string) {
                 formatError(response.error, {
                     mapping: { conflict: 'Please reload page' },
                     format: (errorCode, errorDescription) =>
-                        `An error occurred: ${errorDescription} (${errorCode}). Please reach tech support`,
+                        `An error occurred: ${
+                            response.error.issue[index as number]?.diagnostics || errorDescription
+                        } (${errorCode}). Please reach tech support`,
                 }),
             );
         }
     };
-
-    const idExtraction = useCallback((issue: OperationOutcomeIssue, resource: Questionnaire, response: any) => {
-        if (
-            issue.expression &&
-            issue.expression[0].slice(0, 21) === 'Questionnaire.mapping' &&
-            issue.code === 'invalid' &&
-            response.error.resourceType === 'OperationOutcome'
-        ) {
-            const index = +issue.expression[0].slice(22);
-            if (
-                (resource.mapping && resource.mapping[index] === undefined) ||
-                (resource.mapping && resource.mapping[index] && resource.mapping[index].resourceType !== 'Mapping')
-            ) {
-                showModal(response, 'error');
-                return;
-            }
-            return resource.mapping && resource.mapping[index].id;
-        } else {
-            showModal(response, 'error');
-        }
-    }, []);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
@@ -111,29 +106,39 @@ export function useMain(questionnaireId: string) {
                 questionnaireManager.reload();
                 return;
             }
-            if (response.error.issue && response.error.issue.length > 0) {
-                response.error.issue.map(async (issue) => {
+            if (response.error.issue?.length > 0) {
+                response.error.issue.map(async (issue, index) => {
                     const mappingId = idExtraction(issue, resource, response);
-                    if (mappingId) {
-                        try {
-                            await saveFHIRResource({ resourceType: 'Mapping', id: mappingId, body: {} });
-                            await service<unknown, OperationOutcome>({
-                                method: 'PUT',
-                                data: resource,
-                                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
-                            });
-                            showModal({}, 'success');
-                            questionnaireManager.reload();
-                        } catch (error) {
-                            showModal(error, 'error');
-                        }
+                    if (!mappingId) {
+                        showModal(response, 'error', index);
+                        return;
                     }
+                    const saveFHIRResourceResponse = await saveFHIRResource({
+                        resourceType: 'Mapping',
+                        id: mappingId,
+                        body: {},
+                    });
+                    if (isFailure(saveFHIRResourceResponse)) {
+                        showModal(saveFHIRResourceResponse, 'error', index);
+                        return;
+                    }
+                    const serviceResponse = await service<unknown, OperationOutcome>({
+                        method: 'PUT',
+                        data: resource,
+                        url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
+                    });
+                    if (isFailure(serviceResponse)) {
+                        showModal(serviceResponse, 'error', index);
+                        return;
+                    }
+                    showModal({}, 'success');
+                    questionnaireManager.reload();
                 });
             } else {
                 showModal(response, 'error');
             }
         },
-        [fhirMode, questionnaireManager, idExtraction],
+        [fhirMode, questionnaireManager],
     );
 
     // QuestionnaireResponse
@@ -264,7 +269,6 @@ export function useMain(questionnaireId: string) {
     return {
         questionnaireRD,
         questionnaireFHIRRD,
-        idExtraction,
         saveQuestionnaireFHIR,
         questionnaireResponseRD,
         saveQuestionnaireResponse,
