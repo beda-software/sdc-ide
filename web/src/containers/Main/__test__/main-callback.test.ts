@@ -87,3 +87,15 @@ test('saveMapping', async () => {
         expect(mapping.body.entry[0].request.method).toBe('PUT');
     });
 });
+
+test('idExtraction', () => {
+    const { result } = renderHook(() => useMain('demo-1'));
+
+    expect(
+        result.current.idExtraction(
+            EXPECTED_RESOURCES.idExtractionItem,
+            EXPECTED_RESOURCES.idExtractionResource,
+            EXPECTED_RESOURCES.idExtractionResponse,
+        ),
+    ).toBe('foobar');
+});
