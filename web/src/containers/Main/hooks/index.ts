@@ -79,14 +79,14 @@ export function useMain(questionnaireId: string) {
         }
     };
 
-    const idExtraction = useCallback((item: OperationOutcomeIssue, resource: Questionnaire, response: any) => {
+    const idExtraction = useCallback((issue: OperationOutcomeIssue, resource: Questionnaire, response: any) => {
         if (
-            item.expression &&
-            item.expression[0].slice(0, 21) === 'Questionnaire.mapping' &&
-            item.code === 'invalid' &&
+            issue.expression &&
+            issue.expression[0].slice(0, 21) === 'Questionnaire.mapping' &&
+            issue.code === 'invalid' &&
             response.error.resourceType === 'OperationOutcome'
         ) {
-            const index = +item.expression[0].slice(22);
+            const index = +issue.expression[0].slice(22);
             if (
                 (resource.mapping && resource.mapping[index] === undefined) ||
                 (resource.mapping && resource.mapping[index] && resource.mapping[index].resourceType !== 'Mapping')
@@ -112,8 +112,8 @@ export function useMain(questionnaireId: string) {
                 return;
             }
             if (response.error.issue && response.error.issue.length > 0) {
-                response.error.issue.map(async (item) => {
-                    const mappingId = idExtraction(item, resource, response);
+                response.error.issue.map(async (issue) => {
+                    const mappingId = idExtraction(issue, resource, response);
                     if (mappingId) {
                         try {
                             await saveFHIRResource({ resourceType: 'Mapping', id: mappingId, body: {} });

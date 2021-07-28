@@ -215,13 +215,18 @@ const batchRequestDemo1 = {
     resourceType: 'Bundle',
 };
 
-const idExtractionItem = { expression: ['Questionnaire.mapping.2'], code: 'invalid', severity: 'fatal' };
+const idExtractionIssue = { expression: ['Questionnaire.mapping.2'], code: 'invalid', severity: 'fatal' };
 const idExtractionResource = {
     mapping: [
         { id: 'demo-1', resourceType: 'Mapping' },
         { id: 'demo-2', resourceType: 'Mapping' },
         { id: 'foobar', resourceType: 'Mapping' },
     ],
+    resourceType: 'Questionnaire',
+    status: 'active',
+};
+const idExtractionResourceUndefined = {
+    mapping: [],
     resourceType: 'Questionnaire',
     status: 'active',
 };
@@ -243,7 +248,8 @@ export const EXPECTED_RESOURCES = {
     mappingDemo1,
     mappingDemo1New,
     batchRequestDemo1,
-    idExtractionItem,
+    idExtractionIssue,
     idExtractionResource,
+    idExtractionResourceUndefined,
     idExtractionResponse,
 };

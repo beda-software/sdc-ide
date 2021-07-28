@@ -90,12 +90,18 @@ test('saveMapping', async () => {
 
 test('idExtraction', () => {
     const { result } = renderHook(() => useMain('demo-1'));
-
     expect(
         result.current.idExtraction(
-            EXPECTED_RESOURCES.idExtractionItem,
+            EXPECTED_RESOURCES.idExtractionIssue,
             EXPECTED_RESOURCES.idExtractionResource,
             EXPECTED_RESOURCES.idExtractionResponse,
         ),
     ).toBe('foobar');
+    expect(
+        result.current.idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResourceUndefined,
+            EXPECTED_RESOURCES.idExtractionResponse,
+        ),
+    ).toBe(undefined);
 });
