@@ -12,6 +12,7 @@ const prevActiveMappingId = getData('prevActiveMappingId');
 
 export function useMain(questionnaireId: string) {
     const [fhirMode, setFhirMode_] = useState<boolean>(getData('fhirMode'));
+    const [error, setError] = useState<boolean>(false);
 
     const setFhirMode = useCallback((fhirMode: boolean) => {
         setFhirMode_(fhirMode);
@@ -65,6 +66,7 @@ export function useMain(questionnaireId: string) {
             if (isSuccess(response)) {
                 questionnaireManager.reload();
             } else {
+                setError(true);
                 console.error('Could not save Questionnaire:', response.error.toString());
             }
         },
@@ -213,5 +215,7 @@ export function useMain(questionnaireId: string) {
         fhirMode,
         launchContext,
         dispatch,
+        error,
+        setError,
     };
 }

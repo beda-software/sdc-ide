@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { useParams } from 'react-router-dom';
 import { useMain } from 'src/containers/Main/hooks';
 import { Menu } from 'src/components/Menu';
@@ -13,6 +14,7 @@ import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 
 import s from './Main.module.scss';
+import ModalWindow from 'src/components/ModalWindow';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
@@ -33,7 +35,10 @@ export function Main() {
         saveMapping,
         batchRequestRD,
         applyMappings,
+        error,
+        setError,
     } = useMain(questionnaireId);
+    let modalEl = document.getElementById('modal');
     return (
         <>
             <div className={s.mainContainer}>
@@ -42,7 +47,12 @@ export function Main() {
                         <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
-                        <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
+                        <div>
+                            {error &&
+                                modalEl &&
+                                ReactDOM.createPortal(<ModalWindow setError={setError} error={error} />, modalEl)}
+                            <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
+                        </div>
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
                         <QRFormWrapper
