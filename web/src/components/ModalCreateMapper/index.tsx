@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Questionnaire } from 'shared/src/contrib/aidbox';
 import { Button } from '../Button';
 import { InputField } from '../InputField';
 
@@ -7,7 +8,7 @@ import s from './ModalCreateMapper.module.scss';
 interface ModalCreateMapperProps {
     saveMapper: (arg0: string) => void;
     cancelCreateMapper: () => void;
-    mapperInfo: any;
+    mapperInfo: [string, Questionnaire, number, number];
 }
 
 export function ModalCreateMapper({ saveMapper, cancelCreateMapper, mapperInfo }: ModalCreateMapperProps) {

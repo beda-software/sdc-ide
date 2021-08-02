@@ -102,8 +102,8 @@ export function useMain(questionnaireId: string) {
         }
     };
 
-    const [mapperInfo, setMapperInfo] = useState<any>();
-    const [showModal, setShowModal] = React.useState(false);
+    const [mapperInfo, setMapperInfo] = useState<[string, Questionnaire, number, number]>([]);
+    const [showModal, setShowModal] = useState(false);
 
     const saveMapper = async (mappingId: string) => {
         if (!mappingId) {
