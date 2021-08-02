@@ -12,6 +12,7 @@ import { MappingSelect } from 'src/components/MappingSelect';
 import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
+import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
 
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
@@ -35,9 +36,20 @@ export function Main() {
         saveMapping,
         batchRequestRD,
         applyMappings,
+        showModal,
+        saveMapper,
+        cancelCreateMapper,
+        mapperInfo,
     } = useMain(questionnaireId);
     return (
         <>
+            {showModal ? (
+                <ModalCreateMapper
+                    saveMapper={saveMapper}
+                    cancelCreateMapper={cancelCreateMapper}
+                    mapperInfo={mapperInfo}
+                />
+            ) : null}
             <div className={s.mainContainer}>
                 <ToastContainer />
                 <ExpandableRow cssClass={s.upperRowContainer}>

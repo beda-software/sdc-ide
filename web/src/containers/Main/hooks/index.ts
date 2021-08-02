@@ -34,6 +34,14 @@ export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnai
     }
 };
 
+const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) => {
+    return service<unknown, OperationOutcome>({
+        method: 'PUT',
+        data: resource,
+        url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
+    });
+};
+
 export function useMain(questionnaireId: string) {
     const [fhirMode, setFhirMode_] = useState<boolean>(getData('fhirMode'));
 
@@ -48,7 +56,6 @@ export function useMain(questionnaireId: string) {
             method: 'GET',
             url: `Questionnaire/${questionnaireId}/$assemble`,
         });
-
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
             const sortedMappings = _.sortBy(mappings, 'id');
@@ -79,7 +86,7 @@ export function useMain(questionnaireId: string) {
         [questionnaireId, fhirMode],
     );
 
-    const showModal = (response: any, type: string, index?: number) => {
+    const showToast = (response: any, type: string, index?: number) => {
         if (type === 'success') {
             toast.success('New mapper created');
         } else {
@@ -95,47 +102,70 @@ export function useMain(questionnaireId: string) {
         }
     };
 
+    const [mapperInfo, setMapperInfo] = useState<any>();
+    const [showModal, setShowModal] = React.useState(false);
+
+    const saveMapper = async (mappingId: string) => {
+        if (!mappingId) {
+            cancelCreateMapper();
+            return;
+        }
+        let resource = mapperInfo[1];
+        let index = mapperInfo[2];
+        let indexOfMapper = mapperInfo[3];
+        if (mappingId && resource.mapping) {
+            resource.mapping[indexOfMapper].id = mappingId;
+            await updateQuestionnaire(resource, fhirMode);
+        }
+        const saveFHIRResourceResponse = await saveFHIRResource({
+            resourceType: 'Mapping',
+            id: mappingId,
+            body: {},
+        });
+        if (isFailure(saveFHIRResourceResponse)) {
+            showToast(saveFHIRResourceResponse, 'error', index);
+            return;
+        }
+        const serviceResponse = await updateQuestionnaire(resource, fhirMode);
+        if (isFailure(serviceResponse)) {
+            showToast(serviceResponse, 'error', index);
+            return;
+        }
+        showToast({}, 'success');
+        questionnaireManager.reload();
+        setShowModal(false);
+    };
+
+    const cancelCreateMapper = async () => {
+        let resource = mapperInfo[1];
+        let indexOfMapper = mapperInfo[3];
+        resource.mapping?.splice(indexOfMapper, 1);
+        await updateQuestionnaire(resource, fhirMode);
+        setShowModal(false);
+        return;
+    };
+
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            const response = await service<unknown, OperationOutcome>({
-                method: 'PUT',
-                data: resource,
-                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
-            });
+            const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
                 questionnaireManager.reload();
                 return;
             }
             if (response.error.issue?.length > 0) {
                 response.error.issue.map(async (issue, index) => {
-                    const mappingId = idExtraction(issue, resource, response);
+                    let mappingId: string | null | undefined = idExtraction(issue, resource, response);
+                    let indexOfMapper = Number(issue.expression?.[0].slice(22));
                     if (!mappingId) {
-                        showModal(response, 'error', index);
+                        showToast(response, 'error', index);
+                        await updateQuestionnaire(resource, fhirMode);
                         return;
                     }
-                    const saveFHIRResourceResponse = await saveFHIRResource({
-                        resourceType: 'Mapping',
-                        id: mappingId,
-                        body: {},
-                    });
-                    if (isFailure(saveFHIRResourceResponse)) {
-                        showModal(saveFHIRResourceResponse, 'error', index);
-                        return;
-                    }
-                    const serviceResponse = await service<unknown, OperationOutcome>({
-                        method: 'PUT',
-                        data: resource,
-                        url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
-                    });
-                    if (isFailure(serviceResponse)) {
-                        showModal(serviceResponse, 'error', index);
-                        return;
-                    }
-                    showModal({}, 'success');
-                    questionnaireManager.reload();
+                    setMapperInfo([mappingId, resource, index, indexOfMapper]);
+                    setShowModal(true);
                 });
             } else {
-                showModal(response, 'error');
+                showToast(response, 'error');
             }
         },
         [fhirMode, questionnaireManager],
@@ -283,5 +313,10 @@ export function useMain(questionnaireId: string) {
         fhirMode,
         launchContext,
         dispatch,
+        showModal,
+        setShowModal,
+        saveMapper,
+        cancelCreateMapper,
+        mapperInfo,
     };
 }
