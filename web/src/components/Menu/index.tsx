@@ -51,7 +51,15 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                                     value={
                                         _.find(launchContext.parameter, { name: questionnaire.resourceType })?.resource
                                     }
-                                    onChange={(resource) => console.log(resource)}
+                                    onChange={(resource) =>
+                                        dispatch(
+                                            setResource({
+                                                name: questionnaire.resourceType,
+                                                parameter: { resource: resource!, name: questionnaire.resourceType },
+                                            }),
+                                        )
+                                    }
+                                    // display={resource.id!}
                                 />
                             );
                         }}
