@@ -10,8 +10,8 @@
 }
 
 .window {
-    width: 50%;
-    height: 50%;
+    width: 280px;
+    height: auto;
     z-index: 2;
     background-color: #ffffff;
     display: flex;
@@ -19,8 +19,7 @@
     padding: 20px 20px 0px 20px;
 }
 
-@media (max-width: 768px) {
-    .window {
-        width: 75%;
-    }
+.button {
+    width: 280px;
+    padding-bottom: 20px;
 }

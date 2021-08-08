@@ -17,10 +17,11 @@ import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
 import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
+import { MapperInfo, Response } from 'src/components/ModalCreateMapper/types';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
-export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnaire, response: any) => {
+export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnaire, response: Response) => {
     if (
         issue.expression?.[0].slice(0, 21) === 'Questionnaire.mapping' &&
         issue.code === 'invalid' &&
@@ -40,6 +41,51 @@ const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) => {
         data: resource,
         url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${resource.id}`,
     });
+};
+
+const saveMapper = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
+    mapperInfoList.map(async (info, index) => {
+        if (!mappingIdList[index]) {
+            return;
+        }
+        const indexMapperInfo = info.index;
+        const indexOfMapper = info.indexOfMapper;
+        let resource = info.resource;
+        if (mappingIdList[index] && resource.mapping) {
+            resource.mapping[indexOfMapper].id = mappingIdList[index];
+        }
+        const saveFHIRResourceResponse = await saveFHIRResource({
+            resourceType: 'Mapping',
+            id: mappingIdList[index],
+            body: {},
+        });
+        if (isFailure(saveFHIRResourceResponse)) {
+            showToast('error', saveFHIRResourceResponse, indexMapperInfo);
+            return;
+        }
+        const serviceResponse = await updateQuestionnaire(resource, false); // TODO use right fhirMode
+        if (isFailure(serviceResponse)) {
+            showToast('error', serviceResponse, indexMapperInfo);
+            return;
+        }
+        showToast('success');
+    });
+};
+
+const showToast = (type: string, response?: Response, index?: number) => {
+    if (type === 'success') {
+        toast.success('New mapper created');
+    } else {
+        toast.error(
+            formatError(response?.error, {
+                mapping: { conflict: 'Please reload page' },
+                format: (errorCode, errorDescription) =>
+                    `An error occurred: ${
+                        response?.error.issue[index as number]?.diagnostics || errorDescription
+                    } (${errorCode}). Please reach tech support`,
+            }),
+        );
+    }
 };
 
 export function useMain(questionnaireId: string) {
@@ -86,64 +132,21 @@ export function useMain(questionnaireId: string) {
         [questionnaireId, fhirMode],
     );
 
-    const showToast = (response: any, type: string, index?: number) => {
-        if (type === 'success') {
-            toast.success('New mapper created');
-        } else {
-            toast.error(
-                formatError(response.error, {
-                    mapping: { conflict: 'Please reload page' },
-                    format: (errorCode, errorDescription) =>
-                        `An error occurred: ${
-                            response.error.issue[index as number]?.diagnostics || errorDescription
-                        } (${errorCode}). Please reach tech support`,
-                }),
-            );
-        }
-    };
-
-    const [mapperInfo, setMapperInfo] = useState<[string, Questionnaire, number, number]>([]);
+    const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
     const [showModal, setShowModal] = useState(false);
 
-    const saveMapper = async (mappingId: string) => {
-        if (!mappingId) {
-            cancelCreateMapper();
-            return;
+    useEffect(() => {
+        if (!showModal && mapperInfoList.length > 0) {
+            setMapperInfoList([]);
+            questionnaireManager.reload();
         }
-        let resource = mapperInfo[1];
-        let index = mapperInfo[2];
-        let indexOfMapper = mapperInfo[3];
-        if (mappingId && resource.mapping) {
-            resource.mapping[indexOfMapper].id = mappingId;
-            await updateQuestionnaire(resource, fhirMode);
-        }
-        const saveFHIRResourceResponse = await saveFHIRResource({
-            resourceType: 'Mapping',
-            id: mappingId,
-            body: {},
-        });
-        if (isFailure(saveFHIRResourceResponse)) {
-            showToast(saveFHIRResourceResponse, 'error', index);
-            return;
-        }
-        const serviceResponse = await updateQuestionnaire(resource, fhirMode);
-        if (isFailure(serviceResponse)) {
-            showToast(serviceResponse, 'error', index);
-            return;
-        }
-        showToast({}, 'success');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showModal]);
+
+    const closeModal = useCallback(() => {
         questionnaireManager.reload();
         setShowModal(false);
-    };
-
-    const cancelCreateMapper = async () => {
-        let resource = mapperInfo[1];
-        let indexOfMapper = mapperInfo[3];
-        resource.mapping?.splice(indexOfMapper, 1);
-        await updateQuestionnaire(resource, fhirMode);
-        setShowModal(false);
-        return;
-    };
+    }, [questionnaireManager]);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
@@ -153,19 +156,23 @@ export function useMain(questionnaireId: string) {
                 return;
             }
             if (response.error.issue?.length > 0) {
-                response.error.issue.map(async (issue, index) => {
-                    let mappingId: string | null | undefined = idExtraction(issue, resource, response);
-                    let indexOfMapper = Number(issue.expression?.[0].slice(22));
+                const mappingInfoList: MapperInfo[] = [];
+                response.error.issue.map((issue, index) => {
+                    const mappingId: string | null | undefined = idExtraction(issue, resource, response);
+                    const indexOfMapper = Number(issue.expression?.[0].slice(22));
                     if (!mappingId) {
-                        showToast(response, 'error', index);
-                        await updateQuestionnaire(resource, fhirMode);
+                        showToast('error', response, index);
                         return;
                     }
-                    setMapperInfo([mappingId, resource, index, indexOfMapper]);
-                    setShowModal(true);
+                    const mapperInfo: MapperInfo = { mappingId, resource, index, indexOfMapper };
+                    mappingInfoList.push(mapperInfo);
                 });
+                if (mappingInfoList.length > 0) {
+                    setMapperInfoList(mappingInfoList);
+                    setShowModal(true);
+                }
             } else {
-                showToast(response, 'error');
+                showToast('error', response);
             }
         },
         [fhirMode, questionnaireManager],
@@ -316,7 +323,7 @@ export function useMain(questionnaireId: string) {
         showModal,
         setShowModal,
         saveMapper,
-        cancelCreateMapper,
-        mapperInfo,
+        closeModal,
+        mapperInfoList,
     };
 }

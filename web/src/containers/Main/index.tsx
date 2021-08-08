@@ -38,17 +38,13 @@ export function Main() {
         applyMappings,
         showModal,
         saveMapper,
-        cancelCreateMapper,
-        mapperInfo,
+        closeModal,
+        mapperInfoList,
     } = useMain(questionnaireId);
     return (
         <>
-            {showModal ? (
-                <ModalCreateMapper
-                    saveMapper={saveMapper}
-                    cancelCreateMapper={cancelCreateMapper}
-                    mapperInfo={mapperInfo}
-                />
+            {showModal && mapperInfoList ? (
+                <ModalCreateMapper saveMapper={saveMapper} closeModal={closeModal} mapperInfoList={mapperInfoList} />
             ) : null}
             <div className={s.mainContainer}>
                 <ToastContainer />
