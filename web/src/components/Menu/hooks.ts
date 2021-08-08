@@ -38,6 +38,8 @@ function useConfigForm() {
 export function useMenu() {
     const configForm = useConfigForm();
     const [showMenu, setShowMenu] = useState<boolean>(false);
+    const [showIdModal, setShowIdModal] = useState<boolean>(false);
+    const [newQuestionnaireId, setNewQuestionnaireId] = useState('');
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -49,5 +51,27 @@ export function useMenu() {
 
     const direction: ArrowDirections = showMenu ? 'up' : 'down';
 
-    return { questionnairesRD, toggleMenu, getMenuStyle, direction, configForm };
+    const openIdModal = () => {
+        setShowIdModal(true);
+    };
+
+    const closeIdModal = () => {
+        setShowIdModal(false);
+    };
+
+    const getIdModalStyle = showIdModal ? { display: 'grid' } : { display: 'none' };
+
+    return {
+        questionnairesRD,
+        toggleMenu,
+        getMenuStyle,
+        direction,
+        configForm,
+        showIdModal,
+        openIdModal,
+        closeIdModal,
+        getIdModalStyle,
+        newQuestionnaireId,
+        setNewQuestionnaireId,
+    };
 }

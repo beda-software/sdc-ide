@@ -21,7 +21,17 @@ interface MenuProps {
 }
 
 export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
-    const { toggleMenu, getMenuStyle, direction, configForm } = useMenu();
+    const {
+        toggleMenu,
+        getMenuStyle,
+        direction,
+        configForm,
+        openIdModal,
+        closeIdModal,
+        getIdModalStyle,
+        newQuestionnaireId,
+        setNewQuestionnaireId,
+    } = useMenu();
     return (
         <>
             <div className={s.control} onClick={toggleMenu}>
@@ -51,19 +61,21 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                                     value={
                                         _.find(launchContext.parameter, { name: questionnaire.resourceType })?.resource
                                     }
-                                    onChange={(resource) =>
+                                    onChange={(resource) => {
                                         dispatch(
                                             setResource({
                                                 name: questionnaire.resourceType,
                                                 parameter: { resource: resource!, name: questionnaire.resourceType },
                                             }),
-                                        )
-                                    }
-                                    // display={resource.id!}
+                                        );
+                                        setNewQuestionnaireId(resource?.id!);
+                                    }}
+                                    display={({ id }) => id!}
                                 />
                             );
                         }}
                     </RenderRemoteData>
+                    <button onClick={openIdModal}>New questionnaire</button>
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
                     {(questionnaire) => {
@@ -117,6 +129,22 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                 <div className={s.menuItem} />
                 <div className={s.menuItem}>
                     <button onClick={configForm.applyConfig}>Apply config</button>
+                </div>
+            </div>
+
+            <div className={s.box} style={getIdModalStyle}>
+                <div className={s.menuItem}>Create new questionnaire with id {newQuestionnaireId}?</div>
+                <div className={s.menuItem}>
+                    <button
+                        onClick={() => {
+                            window.location.hash = newQuestionnaireId;
+                        }}
+                    >
+                        Create
+                    </button>
+                </div>
+                <div className={s.menuItem}>
+                    <button onClick={closeIdModal}>Cancel</button>
                 </div>
             </div>
         </>
