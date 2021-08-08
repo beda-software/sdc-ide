@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import _ from 'lodash';
 
-import { ResourceSelect, RemoteResourceSelect } from 'src/components/ResourceSelect';
+import { RemoteResourceSelect } from 'src/components/ResourceSelect';
 import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
@@ -20,8 +20,8 @@ interface MenuProps {
     setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
-    const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
+export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
+    const { toggleMenu, getMenuStyle, direction, configForm } = useMenu();
     return (
         <>
             <div className={s.control} onClick={toggleMenu}>
@@ -32,23 +32,44 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, 
             <div className={s.box} style={getMenuStyle}>
                 <div className={s.menuItem}>Questionnaire</div>
                 <div className={s.menuItem}>
-                    <ResourceSelect
+                    {/* <ResourceSelect
                         value={questionnaireId}
                         bundleResponse={questionnairesRD}
                         onChange={(id) => {
                             window.location.hash = id;
                         }}
                         display={({ id }) => id!}
-                    />
+                    /> */}
+                    <RenderRemoteData remoteData={questionnaireRD}>
+                        {(questionnaire) => {
+                            console.log(questionnaire);
+                            console.log(launchContext);
+                            console.log(questionnaire.launchContext);
+                            return (
+                                <RemoteResourceSelect
+                                    resourceType={questionnaire.resourceType as any}
+                                    value={
+                                        _.find(launchContext.parameter, { name: questionnaire.resourceType })?.resource
+                                    }
+                                    onChange={(resource) => console.log(resource)}
+                                />
+                            );
+                        }}
+                    </RenderRemoteData>
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
-                    {(questionnaire) => (
-                        <EditLaunchContext
-                            parameters={launchContext}
-                            launchContext={questionnaire.launchContext ?? []}
-                            dispatch={dispatch}
-                        />
-                    )}
+                    {(questionnaire) => {
+                        console.log(questionnaire);
+                        console.log(launchContext);
+                        console.log(questionnaire.launchContext);
+                        return (
+                            <EditLaunchContext
+                                parameters={launchContext}
+                                launchContext={questionnaire.launchContext ?? []}
+                                dispatch={dispatch}
+                            />
+                        );
+                    }}
                 </RenderRemoteData>
                 <div className={s.menuItem}>
                     <label htmlFor="fhir-mode">FhirMode</label>
@@ -104,6 +125,8 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
     return (
         <>
             {launchContext.map((l) => {
+                console.log(parameters.parameter);
+                console.log(l.name);
                 return (
                     <LaunchContextElement
                         launchContext={l}
@@ -146,6 +169,8 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
             />
         );
     }
+    console.log(value);
+    console.log(value.resource);
     return (
         <RemoteResourceSelect
             resourceType={launchContext.type as any}
