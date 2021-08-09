@@ -137,16 +137,13 @@ export function useMain(questionnaireId: string) {
 
     useEffect(() => {
         if (!showModal && mapperInfoList.length > 0) {
-            setMapperInfoList([]);
             questionnaireManager.reload();
+            setMapperInfoList([]);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [showModal]);
 
-    const closeModal = useCallback(() => {
-        questionnaireManager.reload();
-        setShowModal(false);
-    }, [questionnaireManager]);
+    const closeModal = () => setShowModal(false);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
@@ -321,7 +318,6 @@ export function useMain(questionnaireId: string) {
         launchContext,
         dispatch,
         showModal,
-        setShowModal,
         saveMapper,
         closeModal,
         mapperInfoList,
