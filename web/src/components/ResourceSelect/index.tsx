@@ -27,10 +27,6 @@ export function ResourceSelect<R extends AidboxResource>({
     onChange,
     display,
 }: ResourceSelectProps<R>) {
-    // eslint-disable-next-line no-lone-blocks
-    {
-        console.log(bundleResponse);
-    }
     return (
         <RenderRemoteData<Bundle<R>> remoteData={bundleResponse}>
             {(resource) => {

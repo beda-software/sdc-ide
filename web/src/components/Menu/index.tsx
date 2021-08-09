@@ -22,6 +22,7 @@ interface MenuProps {
 
 export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
     const {
+        questionnairesRD,
         toggleMenu,
         getMenuStyle,
         direction,
@@ -42,33 +43,15 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
             <div className={s.box} style={getMenuStyle}>
                 <div className={s.menuItem}>Questionnaire</div>
                 <div className={s.menuItem}>
-                    {/* <ResourceSelect
-                        value={questionnaireId}
-                        bundleResponse={questionnairesRD}
-                        onChange={(id) => {
-                            window.location.hash = id;
-                        }}
-                        display={({ id }) => id!}
-                    /> */}
-                    <RenderRemoteData remoteData={questionnaireRD}>
-                        {(questionnaire) => {
-                            console.log(questionnaire);
-                            console.log(launchContext);
-                            console.log(questionnaire.launchContext);
+                    <RenderRemoteData remoteData={questionnairesRD}>
+                        {(resource) => {
+                            const selectValue = _.find(resource.entry, { resource: { id: newQuestionnaireId } });
                             return (
                                 <RemoteResourceSelect
-                                    resourceType={questionnaire.resourceType as any}
-                                    value={
-                                        _.find(launchContext.parameter, { name: questionnaire.resourceType })?.resource
-                                    }
-                                    onChange={(resource) => {
-                                        dispatch(
-                                            setResource({
-                                                name: questionnaire.resourceType,
-                                                parameter: { resource: resource!, name: questionnaire.resourceType },
-                                            }),
-                                        );
-                                        setNewQuestionnaireId(resource?.id!);
+                                    resourceType={'Questionnaire' as string}
+                                    value={(selectValue as any)?.resource}
+                                    onChange={(r) => {
+                                        setNewQuestionnaireId(r?.id!);
                                     }}
                                     display={({ id }) => id!}
                                 />
@@ -79,9 +62,6 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
                     {(questionnaire) => {
-                        console.log(questionnaire);
-                        console.log(launchContext);
-                        console.log(questionnaire.launchContext);
                         return (
                             <EditLaunchContext
                                 parameters={launchContext}
@@ -133,6 +113,9 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
             </div>
 
             <div className={s.modal} style={getIdModalStyle}>
+                <div className={s.menuItem}>
+                    <a className={s.closeButton} onClick={closeIdModal} />
+                </div>
                 <div className={s.menuItem}>Create new questionnaire with id "{newQuestionnaireId}"?</div>
                 <div className={s.buttonsContainer}>
                     <div className={s.menuItem}>
@@ -140,6 +123,7 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                             className={s.modalButton}
                             onClick={() => {
                                 window.location.hash = newQuestionnaireId;
+                                closeIdModal();
                             }}
                         >
                             Create
@@ -166,8 +150,6 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
     return (
         <>
             {launchContext.map((l) => {
-                console.log(parameters.parameter);
-                console.log(l.name);
                 return (
                     <LaunchContextElement
                         launchContext={l}
@@ -210,8 +192,6 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
             />
         );
     }
-    console.log(value);
-    console.log(value.resource);
     return (
         <RemoteResourceSelect
             resourceType={launchContext.type as any}
