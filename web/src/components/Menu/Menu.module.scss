@@ -61,3 +61,26 @@
   color: $base-light-color;
 }
 
+.modal {
+  width: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #597EF7;
+  z-index: 500;
+  padding: 24px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.modalButton {
+  margin-right: 20px;
+}

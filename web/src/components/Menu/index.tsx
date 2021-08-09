@@ -132,19 +132,24 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                 </div>
             </div>
 
-            <div className={s.box} style={getIdModalStyle}>
-                <div className={s.menuItem}>Create new questionnaire with id {newQuestionnaireId}?</div>
-                <div className={s.menuItem}>
-                    <button
-                        onClick={() => {
-                            window.location.hash = newQuestionnaireId;
-                        }}
-                    >
-                        Create
-                    </button>
-                </div>
-                <div className={s.menuItem}>
-                    <button onClick={closeIdModal}>Cancel</button>
+            <div className={s.modal} style={getIdModalStyle}>
+                <div className={s.menuItem}>Create new questionnaire with id "{newQuestionnaireId}"?</div>
+                <div className={s.buttonsContainer}>
+                    <div className={s.menuItem}>
+                        <button
+                            className={s.modalButton}
+                            onClick={() => {
+                                window.location.hash = newQuestionnaireId;
+                            }}
+                        >
+                            Create
+                        </button>
+                    </div>
+                    <div className={s.menuItem}>
+                        <button className={s.modalButton} onClick={closeIdModal}>
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

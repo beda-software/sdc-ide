@@ -59,7 +59,7 @@ export function useMenu() {
         setShowIdModal(false);
     };
 
-    const getIdModalStyle = showIdModal ? { display: 'grid' } : { display: 'none' };
+    const getIdModalStyle = showIdModal ? { display: 'flex' } : { display: 'none' };
 
     return {
         questionnairesRD,

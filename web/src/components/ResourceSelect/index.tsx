@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
-import _ from 'lodash'
+import _ from 'lodash';
 import classNames from 'classnames';
 
 import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
@@ -20,7 +20,6 @@ interface ResourceSelectProps<R extends AidboxResource> {
     bundleResponse: RemoteData<Bundle<R>>;
 }
 
-
 export function ResourceSelect<R extends AidboxResource>({
     cssClass,
     value,
@@ -28,21 +27,28 @@ export function ResourceSelect<R extends AidboxResource>({
     onChange,
     display,
 }: ResourceSelectProps<R>) {
+    // eslint-disable-next-line no-lone-blocks
+    {
+        console.log(bundleResponse);
+    }
     return (
         <RenderRemoteData<Bundle<R>> remoteData={bundleResponse}>
-            {(resource) => (
-                <select
-                    className={classNames(s.resourceSelect, cssClass)}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                >
-                    {resource.entry!.map((entry, key) => (
-                        <option key={key} value={entry.resource!.id}>
-                            {display ? display(entry.resource!) : entry.resource!.id}
-                        </option>
-                    ))}
-                </select>
-            )}
+            {(resource) => {
+                console.log(resource);
+                return (
+                    <select
+                        className={classNames(s.resourceSelect, cssClass)}
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                    >
+                        {resource.entry!.map((entry, key) => (
+                            <option key={key} value={entry.resource!.id}>
+                                {display ? display(entry.resource!) : entry.resource!.id}
+                            </option>
+                        ))}
+                    </select>
+                );
+            }}
         </RenderRemoteData>
     );
 }
@@ -51,7 +57,7 @@ interface RemoteResourceSelectProps<R extends AidboxResource> {
     value: R | null | undefined;
     onChange: (resource: R | null | undefined) => void;
     display?: (resource: R) => string;
-    resourceType: R['resourceType'],
+    resourceType: R['resourceType'];
 }
 
 export function RemoteResourceSelect<R extends AidboxResource>({
@@ -59,19 +65,18 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     resourceType,
     onChange,
     display,
-}: RemoteResourceSelectProps<R>){
+}: RemoteResourceSelectProps<R>) {
     const loadOptions = React.useCallback(
         async (searchText: string) => {
-            const response = await getFHIRResources<R>(resourceType, {_ilike: `%${searchText}%`})
-            const prepared = mapSuccess(
-                response,
-                (bundle) => (bundle.entry ?? []).map(e=>e.resource!))
-            if(isSuccess(prepared)){
-                return prepared.data
+            const response = await getFHIRResources<R>(resourceType, { _ilike: `%${searchText}%` });
+            const prepared = mapSuccess(response, (bundle) => (bundle.entry ?? []).map((e) => e.resource!));
+            if (isSuccess(prepared)) {
+                return prepared.data;
             }
-            return []
+            return [];
         },
-        [resourceType]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [resourceType],
     );
 
     const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: R[]) => void) => {
@@ -90,4 +95,4 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     );
 }
 
-const getId = (r:Resource | undefined | null) => r?.id ?? 'undefined'
+const getId = (r: Resource | undefined | null) => r?.id ?? 'undefined';
