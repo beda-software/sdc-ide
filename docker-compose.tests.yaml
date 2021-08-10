@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   backend:
-    image: "bedasoftware/devdays2020-sdc-demo-backend:latest"
+    image: "bedasoftware/aidbox-sdc:latest"
     command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081"]
     env_file:
     - env_tests
@@ -12,7 +12,7 @@ services:
     volumes:
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh
   devbox:
-    image: healthsamurai/devbox:edge
+    image: healthsamurai/devbox:stable
     command: ["wait-for-it.sh", "database:5432", "--strict", "--timeout=0", "--", "java", "-jar", "/aidbox.jar", "-m", "devbox.core"]
     depends_on:
       - devbox-db
