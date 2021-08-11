@@ -13,19 +13,23 @@ interface ModalCreateMapperProps {
 
 export function ModalCreateMapper({ saveMapper, closeModal, mapperInfoList }: ModalCreateMapperProps) {
     const [mapperIdList, setMapperIdList] = useState<string[]>([]);
+
     if (mapperIdList.length === 0) {
         const mappingIdList: string[] = [];
         mapperInfoList.map((mapperInfo) => mappingIdList.push(mapperInfo.mappingId));
         setMapperIdList(mappingIdList);
     }
+
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
                 <div>Do you want to add a new mapper?</div>
-                <div>
-                    {mapperIdList.map((mappingId) => {
+                <div className={s.input}>
+                    {mapperIdList.map((mappingId, index) => {
                         return (
                             <Input
+                                key={index}
+                                index={index}
                                 mappingId={mappingId}
                                 mapperIdList={mapperIdList}
                                 setMapperIdList={setMapperIdList}
@@ -60,12 +64,13 @@ export function ModalCreateMapper({ saveMapper, closeModal, mapperInfoList }: Mo
 }
 
 interface InputType {
+    index: number;
     mappingId: string;
     mapperIdList: string[];
     setMapperIdList: (newMapperIdList: string[]) => void;
 }
 
-const Input = ({ mappingId, mapperIdList, setMapperIdList }: InputType) => {
+const Input = ({ index, mappingId, mapperIdList, setMapperIdList }: InputType) => {
     const [inputValue, setInputValue] = useState(mappingId);
     return (
         <InputField
@@ -73,9 +78,8 @@ const Input = ({ mappingId, mapperIdList, setMapperIdList }: InputType) => {
                 name: 'mappingId',
                 value: inputValue,
                 onChange: (e) => {
-                    let newMapperIdList = mapperIdList;
-                    let mapperIdIndex = newMapperIdList.indexOf(inputValue);
-                    newMapperIdList[mapperIdIndex] = e.target.value;
+                    const newMapperIdList = [...mapperIdList];
+                    newMapperIdList[index] = e.target.value;
                     setMapperIdList(newMapperIdList);
                     setInputValue(e.target.value);
                 },
