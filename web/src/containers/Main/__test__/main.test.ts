@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Extension } from 'shared/src/contrib/aidbox';
 import { ensure } from 'aidbox-react/src/utils/tests';
 
-import { idExtraction, useMain } from 'src/containers/Main/hooks';
+import { idExtraction, saveMapper, showToast, useMain } from 'src/containers/Main/hooks';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/src/libs/remoteData';
@@ -145,21 +145,40 @@ test('idExtraction', () => {
         idExtraction(
             EXPECTED_RESOURCES.idExtractionIssue,
             EXPECTED_RESOURCES.idExtractionResource,
-            EXPECTED_RESOURCES.idExtractionResponse,
+            EXPECTED_RESOURCES.idExtractionError,
         ),
     ).toBe('foobar');
     expect(
         idExtraction(
             EXPECTED_RESOURCES.idExtractionIssue,
             EXPECTED_RESOURCES.idExtractionResourceUndefined,
-            EXPECTED_RESOURCES.idExtractionResponse,
+            EXPECTED_RESOURCES.idExtractionError,
         ),
-    ).toBe(undefined);
+    ).toBeUndefined();
     expect(
         idExtraction(
             EXPECTED_RESOURCES.idExtractionIssue,
             EXPECTED_RESOURCES.idExtractionResource,
-            EXPECTED_RESOURCES.idExtractionResponseUndefined,
+            EXPECTED_RESOURCES.idExtractionErrorUndefined,
         ),
-    ).toBe(undefined);
+    ).toBeUndefined();
+});
+
+test('saveMapper', () => {
+    expect(saveMapper(EXPECTED_RESOURCES.mappingIdList, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
+    expect(saveMapper(EXPECTED_RESOURCES.mappingIdListEmpty, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
+});
+
+test('showToast', () => {
+    if (EXPECTED_RESOURCES.showToastType === 'error') {
+        expect(
+            showToast(
+                EXPECTED_RESOURCES.showToastType,
+                EXPECTED_RESOURCES.showToastError,
+                EXPECTED_RESOURCES.showToastIndex,
+            ),
+        ).toBeTruthy();
+    } else {
+        expect(showToast('success')).toBeTruthy();
+    }
 });

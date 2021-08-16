@@ -43,14 +43,14 @@ const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) => {
     });
 };
 
-const saveMapper = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
+export const saveMapper = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
     mapperInfoList.map(async (info, index) => {
         if (!mappingIdList[index]) {
             return;
         }
         const indexMapperInfo = info.index;
         const indexOfMapper = info.indexOfMapper;
-        let resource = info.resource;
+        const resource = info.resource;
         if (mappingIdList[index] && resource.mapping) {
             resource.mapping[indexOfMapper].id = mappingIdList[index];
         }
@@ -72,7 +72,7 @@ const saveMapper = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
     });
 };
 
-const showToast = (type: string, error?: OperationOutcome, index?: number) => {
+export const showToast = (type: string, error?: OperationOutcome, index?: number) => {
     if (type === 'success') {
         toast.success('New mapper created');
     } else {
