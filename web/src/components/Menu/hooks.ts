@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useService } from 'aidbox-react/src/hooks/service';
-import { getFHIRResources } from 'aidbox-react/src/services/fhir';
+import { getFHIRResources, createFHIRResource } from 'aidbox-react/src/services/fhir';
 import { ArrowDirections } from 'src/components/Icon/Arrow';
 import { getData, setData } from 'src/services/localStorage';
 
@@ -40,6 +40,7 @@ export function useMenu() {
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [showIdModal, setShowIdModal] = useState<boolean>(false);
     const [newQuestionnaireId, setNewQuestionnaireId] = useState('');
+    const [newResource, setNewResource] = useState();
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -59,6 +60,35 @@ export function useMenu() {
         setShowIdModal(false);
     };
 
+    const createResource = async () => {
+        const response = await createFHIRResource({
+            id: newQuestionnaireId,
+            resourceType: 'Questionnaire',
+            item: [],
+            launchContext: [
+                {
+                    name: 'LaunchPatient',
+                    type: 'Patient',
+                },
+            ],
+            status: 'active',
+            meta: {
+                createdAt: new Date().toISOString(),
+            },
+        } as any);
+        console.log(response);
+        if (response.error.id === 'duplicate') {
+            console.log('Qiestinnaire with this id already exists');
+        }
+    };
+
+    const handleCreateButton = () => {
+        createResource();
+        window.location.hash = newQuestionnaireId;
+        closeIdModal();
+        console.log('success!');
+    };
+
     const getIdModalStyle = showIdModal ? { display: 'flex' } : { display: 'none' };
 
     return {
@@ -73,5 +103,8 @@ export function useMenu() {
         getIdModalStyle,
         newQuestionnaireId,
         setNewQuestionnaireId,
+        newResource,
+        setNewResource,
+        handleCreateButton,
     };
 }

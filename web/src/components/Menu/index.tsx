@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
 import _ from 'lodash';
 
-import { RemoteResourceSelect } from 'src/components/ResourceSelect';
+import { RemoteResourceSelect, CreatableRemoteResourceSelect } from 'src/components/ResourceSelect';
 import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
@@ -22,7 +22,6 @@ interface MenuProps {
 
 export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
     const {
-        questionnairesRD,
         toggleMenu,
         getMenuStyle,
         direction,
@@ -32,6 +31,9 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
         getIdModalStyle,
         newQuestionnaireId,
         setNewQuestionnaireId,
+        newResource,
+        setNewResource,
+        handleCreateButton,
     } = useMenu();
     return (
         <>
@@ -43,21 +45,14 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
             <div className={s.box} style={getMenuStyle}>
                 <div className={s.menuItem}>Questionnaire</div>
                 <div className={s.menuItem}>
-                    <RenderRemoteData remoteData={questionnairesRD}>
-                        {(resource) => {
-                            const selectValue = _.find(resource.entry, { resource: { id: newQuestionnaireId } });
-                            return (
-                                <RemoteResourceSelect
-                                    resourceType={'Questionnaire' as string}
-                                    value={(selectValue as any)?.resource}
-                                    onChange={(r) => {
-                                        setNewQuestionnaireId(r?.id!);
-                                    }}
-                                    display={({ id }) => id!}
-                                />
-                            );
+                    <CreatableRemoteResourceSelect
+                        resourceType={'Questionnaire' as string}
+                        value={newResource}
+                        onChange={(r) => {
+                            setNewResource(r!);
+                            setNewQuestionnaireId(r?.id! ?? r?.value!);
                         }}
-                    </RenderRemoteData>
+                    />
                     <button onClick={openIdModal}>New questionnaire</button>
                 </div>
                 <RenderRemoteData remoteData={questionnaireRD}>
@@ -122,8 +117,7 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                         <button
                             className={s.modalButton}
                             onClick={() => {
-                                window.location.hash = newQuestionnaireId;
-                                closeIdModal();
+                                handleCreateButton();
                             }}
                         >
                             Create

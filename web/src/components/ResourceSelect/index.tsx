@@ -1,5 +1,6 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
+import AsyncCreatableSelect from 'react-select/async-creatable';
 import _ from 'lodash';
 import classNames from 'classnames';
 
@@ -91,4 +92,49 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     );
 }
 
-const getId = (r: Resource | undefined | null) => r?.id ?? 'undefined';
+interface CreatableRemoteResourceSelectProps<R extends AidboxResource> {
+    value: R | null | undefined;
+    onChange: (resource: R | null | undefined) => void;
+    display?: (resource: R) => string;
+    resourceType: R['resourceType'];
+}
+
+export function CreatableRemoteResourceSelect<R extends AidboxResource>({
+    value,
+    resourceType,
+    onChange,
+    display,
+}: CreatableRemoteResourceSelectProps<R>) {
+    const loadOptions = React.useCallback(
+        async (searchText: string) => {
+            const response = await getFHIRResources<R>(resourceType, { _ilike: `%${searchText}%` });
+            const prepared = mapSuccess(response, (bundle) => (bundle.entry ?? []).map((e) => e.resource!));
+            if (isSuccess(prepared)) {
+                console.log(prepared.data);
+                const idArray = prepared.data.map((item) => item.id);
+                console.log(idArray);
+                return prepared.data;
+            }
+            return [];
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [resourceType],
+    );
+
+    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: R[]) => void) => {
+        (async () => callback(await loadOptions(searchText)))();
+    }, 500);
+
+    return (
+        <AsyncCreatableSelect<R, false>
+            loadOptions={debouncedLoadOptions}
+            defaultOptions
+            getOptionLabel={display ?? getId}
+            getOptionValue={_.identity}
+            onChange={onChange}
+            value={value}
+        />
+    );
+}
+
+const getId = (r: Resource | undefined | null) => r?.id ?? r?.value ?? 'undefined';
