@@ -39,8 +39,10 @@ export function useMenu() {
     const configForm = useConfigForm();
     const [showMenu, setShowMenu] = useState<boolean>(false);
     const [showIdModal, setShowIdModal] = useState<boolean>(false);
+    const [showResponseModal, setShowResponseModal] = useState<boolean>(false);
     const [newQuestionnaireId, setNewQuestionnaireId] = useState('');
     const [newResource, setNewResource] = useState();
+    const [responseMessage, setResponseMessage] = useState('');
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -60,6 +62,18 @@ export function useMenu() {
         setShowIdModal(false);
     };
 
+    const getIdModalStyle = showIdModal ? { display: 'flex' } : { display: 'none' };
+
+    const openResponseModal = () => {
+        setShowResponseModal(true);
+    };
+
+    const closeResponseModal = () => {
+        setShowResponseModal(false);
+    };
+
+    const getResponseModalStyle = showResponseModal ? { display: 'flex' } : { display: 'none' };
+
     const createResource = async () => {
         const response = await createFHIRResource({
             id: newQuestionnaireId,
@@ -77,9 +91,13 @@ export function useMenu() {
             },
         } as any);
         console.log(response);
-        if (response.error.id === 'duplicate') {
-            console.log('Qiestinnaire with this id already exists');
+        if (response.error) {
+            console.log('Qiestionnaire with this id already exists');
+            setResponseMessage('Qiestionnaire with this id already exists');
+        } else {
+            setResponseMessage(`Qiestionnaire with id ${newQuestionnaireId} created`);
         }
+        openResponseModal();
     };
 
     const handleCreateButton = () => {
@@ -88,8 +106,6 @@ export function useMenu() {
         closeIdModal();
         console.log('success!');
     };
-
-    const getIdModalStyle = showIdModal ? { display: 'flex' } : { display: 'none' };
 
     return {
         questionnairesRD,
@@ -106,5 +122,8 @@ export function useMenu() {
         newResource,
         setNewResource,
         handleCreateButton,
+        responseMessage,
+        closeResponseModal,
+        getResponseModalStyle,
     };
 }

@@ -34,6 +34,9 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
         newResource,
         setNewResource,
         handleCreateButton,
+        responseMessage,
+        closeResponseModal,
+        getResponseModalStyle,
     } = useMenu();
     return (
         <>
@@ -126,6 +129,20 @@ export function Menu({ fhirMode, setFhirMode, questionnaireRD, launchContext, di
                     <div className={s.menuItem}>
                         <button className={s.modalButton} onClick={closeIdModal}>
                             Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className={s.modal} style={getResponseModalStyle}>
+                <div className={s.menuItem}>
+                    <a className={s.closeButton} onClick={closeResponseModal} />
+                </div>
+                <div className={s.menuItem}>{responseMessage}</div>
+                <div className={s.buttonsContainer}>
+                    <div className={s.menuItem}>
+                        <button className={s.modalButton} onClick={closeResponseModal}>
+                            OK
                         </button>
                     </div>
                 </div>
