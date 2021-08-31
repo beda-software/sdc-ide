@@ -103,9 +103,10 @@ interface LaunchContextProps {
 function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContextProps) {
     return (
         <>
-            {launchContext.map((l) => {
+            {launchContext.map((l, index) => {
                 return (
                     <LaunchContextElement
+                        key={index}
                         launchContext={l}
                         value={_.find(parameters.parameter, { name: l.name })}
                         onChange={(parameter) => dispatch(setResource({ name: l.name!, parameter: parameter! }))}

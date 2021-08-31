@@ -1,0 +1,29 @@
+.wrapper {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 600;
+}
+
+.window {
+    width: 280px;
+    height: auto;
+    z-index: 2;
+    background-color: #ffffff;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px 20px 0px 20px;
+}
+
+.input {
+    padding: 10px 0px;
+}
+
+.button {
+    width: 280px;
+    padding-bottom: 20px;
+}

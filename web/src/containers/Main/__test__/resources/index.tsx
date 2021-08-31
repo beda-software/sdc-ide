@@ -1,4 +1,5 @@
-import { Patient } from 'shared/src/contrib/aidbox';
+import { OperationOutcome, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
+import { MapperInfo } from 'src/components/ModalCreateMapper/types';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
@@ -215,6 +216,155 @@ const batchRequestDemo1 = {
     resourceType: 'Bundle',
 };
 
+const idExtractionIssue = { expression: ['Questionnaire.mapping.2'], code: 'invalid', severity: 'fatal' };
+const idExtractionResource: Questionnaire = {
+    mapping: [
+        { id: 'demo-1', resourceType: 'Mapping' },
+        { id: 'demo-2', resourceType: 'Mapping' },
+        { id: 'foobar', resourceType: 'Mapping' },
+    ],
+    resourceType: 'Questionnaire',
+    status: 'active',
+};
+const idExtractionResourceUndefined: Questionnaire = {
+    mapping: [],
+    resourceType: 'Questionnaire',
+    status: 'active',
+};
+const idExtractionError: OperationOutcome = {
+    resourceType: 'OperationOutcome',
+    issue: [],
+};
+const idExtractionErrorUndefined: OperationOutcome = {
+    //@ts-ignore
+    resourceType: '',
+    issue: [],
+};
+
+const mappingIdList = ['foobar-101'];
+
+const mappingIdListEmpty: [] = [];
+
+const mappingInfoList: MapperInfo[] = [
+    {
+        mappingId: 'foobar-101',
+        resource: {
+            item: [
+                {
+                    item: [
+                        {
+                            text: 'First Name',
+                            type: 'string',
+                            linkId: 'first-name',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.name.given.first()',
+                            },
+                        },
+                        {
+                            text: 'Middle Name',
+                            type: 'string',
+                            linkId: 'middle-name',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.name.given[1]',
+                            },
+                        },
+                        {
+                            text: 'Last Name',
+                            type: 'string',
+                            linkId: 'last-name',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.name.family.first()',
+                            },
+                        },
+                        {
+                            text: 'Date of Birth',
+                            type: 'date',
+                            linkId: 'date-of-birth',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.birthDate',
+                            },
+                        },
+                        {
+                            text: 'Gender',
+                            type: 'string',
+                            linkId: 'gender',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.gender',
+                            },
+                        },
+                        {
+                            text: 'ID',
+                            type: 'string',
+                            hidden: true,
+                            linkId: 'patientId',
+                            initialExpression: {
+                                language: 'text/fhirpath',
+                                expression: '%LaunchPatient.id',
+                            },
+                        },
+                    ],
+                    text: 'Demographics',
+                    type: 'group',
+                    linkId: 'Demographics',
+                },
+            ],
+            status: 'active',
+            mapping: [
+                {
+                    id: 'demo-1',
+                    resourceType: 'Mapping',
+                },
+                {
+                    id: 'foobar-101',
+                    resourceType: 'Mapping',
+                },
+            ],
+            launchContext: [
+                {
+                    name: 'LaunchPatient',
+                    type: 'Patient',
+                    description: 'The patient that is to be used to pre-populate the form',
+                },
+            ],
+            id: 'demo-1',
+            resourceType: 'Questionnaire',
+        },
+        index: 0,
+        indexOfMapper: 1,
+    },
+];
+
+const showToastType = 'error';
+
+const showToastError: OperationOutcome = {
+    resourceType: 'OperationOutcome',
+    text: {
+        status: 'generated',
+        div: 'Invalid resource',
+    },
+    issue: [
+        {
+            severity: 'fatal',
+            code: 'invalid',
+            expression: ['Questionnaire.mapping.1.resourceType'],
+            diagnostics: 'expected one of Mapping',
+        },
+        {
+            severity: 'fatal',
+            code: 'invalid',
+            expression: ['Questionnaire.mapping.1'],
+            diagnostics: "Resource Type 'Mappin' does not exist",
+        },
+    ],
+};
+
+const showToastIndex = 1;
+
 export const EXPECTED_RESOURCES = {
     patient,
     questionnaire,
@@ -227,4 +377,15 @@ export const EXPECTED_RESOURCES = {
     mappingDemo1,
     mappingDemo1New,
     batchRequestDemo1,
+    idExtractionIssue,
+    idExtractionResource,
+    idExtractionResourceUndefined,
+    idExtractionError,
+    idExtractionErrorUndefined,
+    mappingIdList,
+    mappingInfoList,
+    mappingIdListEmpty,
+    showToastType,
+    showToastError,
+    showToastIndex,
 };

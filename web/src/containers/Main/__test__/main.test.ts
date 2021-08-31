@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Extension } from 'shared/src/contrib/aidbox';
 import { ensure } from 'aidbox-react/src/utils/tests';
 
-import { useMain } from 'src/containers/Main/hooks';
+import { idExtraction, saveMapper, showToast, useMain } from 'src/containers/Main/hooks';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/src/libs/remoteData';
@@ -138,4 +138,47 @@ test.skip('applyMappings', async () => {
         expect(batchRequest.entry?.[0].resource.birthDate).toEqual('1980-01-01');
     });
     // TODO: finish this test
+});
+
+test('idExtraction', () => {
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResource,
+            EXPECTED_RESOURCES.idExtractionError,
+        ),
+    ).toBe('foobar');
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResourceUndefined,
+            EXPECTED_RESOURCES.idExtractionError,
+        ),
+    ).toBeUndefined();
+    expect(
+        idExtraction(
+            EXPECTED_RESOURCES.idExtractionIssue,
+            EXPECTED_RESOURCES.idExtractionResource,
+            EXPECTED_RESOURCES.idExtractionErrorUndefined,
+        ),
+    ).toBeUndefined();
+});
+
+test('saveMapper', () => {
+    expect(saveMapper(EXPECTED_RESOURCES.mappingIdList, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
+    expect(saveMapper(EXPECTED_RESOURCES.mappingIdListEmpty, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
+});
+
+test('showToast', () => {
+    if (EXPECTED_RESOURCES.showToastType === 'error') {
+        expect(
+            showToast(
+                EXPECTED_RESOURCES.showToastType,
+                EXPECTED_RESOURCES.showToastError,
+                EXPECTED_RESOURCES.showToastIndex,
+            ),
+        ).toBeTruthy();
+    } else {
+        expect(showToast('success')).toBeTruthy();
+    }
 });
