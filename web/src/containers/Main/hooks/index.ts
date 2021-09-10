@@ -82,7 +82,7 @@ export const showToast = (type: string, error?: OperationOutcome, index?: number
                 format: (errorCode, errorDescription) =>
                     `An error occurred: ${
                         error?.issue[index as number]?.diagnostics || errorDescription
-                    } (${errorCode}). Please reach tech support`,
+                    } (${errorCode}).`,
             }),
         );
     }
@@ -137,7 +137,7 @@ export function useMain(questionnaireId: string) {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (!showModal && mapperInfoList.length > 0) {
+        if (!showModal) {
             questionnaireManager.reload();
             setMapperInfoList([]);
         }

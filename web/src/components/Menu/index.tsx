@@ -142,7 +142,7 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
     if (launchContext.type === 'string') {
         return (
             <input
-                value={(value as any)?.value.string}
+                value={(value as any)?.value?.string}
                 onChange={(e) => onChange({ value: { string: e.target.value }, name: launchContext.name! })}
             />
         );

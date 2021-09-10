@@ -50,6 +50,7 @@ export function ModalCreateMapper({ saveMapper, closeModal, mapperInfoList }: Mo
                     </div>
                     <div className={s.button}>
                         <Button
+                            variant="secondary"
                             onClick={() => {
                                 closeModal();
                             }}
