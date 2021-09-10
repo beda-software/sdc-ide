@@ -136,15 +136,11 @@ export function useMain(questionnaireId: string) {
     const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        if (!showModal) {
-            questionnaireManager.reload();
-            setMapperInfoList([]);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [showModal]);
-
-    const closeModal = () => setShowModal(false);
+    const closeModal = useCallback(() => {
+        setShowModal(false);
+        setMapperInfoList([]);
+        setTimeout(() => questionnaireManager.reload(), 1000); // TODO realod by dependences
+    }, [questionnaireManager]);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
