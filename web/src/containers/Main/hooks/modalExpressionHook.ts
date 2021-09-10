@@ -49,19 +49,25 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
         }
     }, [launchContext.parameter, modalType, questionnaireResponseRD, selectFhirData]);
 
+    const setExpressionInfo = (_editor: CodeMirror.Editor, choosenExpression: string) => {
+        CodeMirror.commands.goLineStartSmart(_editor);
+        setExpression(choosenExpression);
+        setShowModalExpression(true);
+        setDoc(_editor.getDoc());
+        setCursorPosition(_editor.getDoc().getCursor());
+    };
+
     const openExpressionModal = (_editor: CodeMirror.Editor, event: any, valueObject: ValueObject) => {
         if (hasOwnProperty(valueObject, 'resourceType')) {
             if (valueObject.resourceType === 'Questionnaire' && event.target.innerText.split('')[0] === "'") {
                 const choosenExpression = event.target.innerText.replaceAll("'", '');
-                CodeMirror.commands.goLineStartSmart(_editor);
                 setModalType('Launch Context');
-                setExpression(choosenExpression);
-                setShowModalExpression(true);
-                setDoc(_editor.getDoc());
-                setCursorPosition(_editor.getDoc().getCursor());
+                setExpressionInfo(_editor, choosenExpression);
             }
             if (valueObject.resourceType === 'Mapping' && event.target.innerText.split('')[0] === '"') {
-                console.log(event.target.innerText); // TODO mapping
+                const choosenExpression = event.target.innerText.replaceAll('"', '');
+                setModalType('QuestionnaireResponse FHIR resource');
+                setExpressionInfo(_editor, choosenExpression);
             }
         }
     };
@@ -80,7 +86,13 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
             const lineLength = doc.getLine(cursorPosition.line).length;
             const replacingFromPosition = { line: cursorPosition.line, ch: cursorPosition.ch };
             const replacingToPosition = { line: cursorPosition.line, ch: lineLength };
-            const newLine = `expression: '${expression}'`;
+            let newLine = '';
+            if (modalType === 'Launch Context') {
+                newLine = `expression: '${expression}'`;
+            }
+            if (modalType === 'QuestionnaireResponse FHIR resource') {
+                newLine = `fhirpath("${expression}")`;
+            }
             doc.replaceRange(newLine, replacingFromPosition, replacingToPosition);
         }
         setShowModalExpression(false);
