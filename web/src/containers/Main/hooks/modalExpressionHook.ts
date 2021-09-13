@@ -15,7 +15,7 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
     const [expressionResultOutput, setExpressionResultOutput] = useState('');
     const [indexOfContext, setIndexOfContext] = useState(0);
 
-    const selectFhirData = useCallback(() => {
+    const setContextData = useCallback(() => {
         if (modalType === 'Launch Context') {
             launchContext?.parameter?.map((parameter, index) => {
                 if (parameter.name === String(expression.split('.')[0]).slice(1)) {
@@ -37,17 +37,17 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
         const contextData: Record<string, any> = {};
         if (modalType === 'Launch Context') {
             launchContext.parameter?.map((parameter) => {
-                contextData[parameter.name] = selectFhirData();
+                contextData[parameter.name] = setContextData();
             });
             return contextData;
         }
         if (modalType === 'QuestionnaireResponse FHIR resource') {
             if (isSuccess(questionnaireResponseRD)) {
-                contextData[questionnaireResponseRD.data.resourceType] = selectFhirData();
+                contextData[questionnaireResponseRD.data.resourceType] = setContextData();
                 return contextData;
             }
         }
-    }, [launchContext.parameter, modalType, questionnaireResponseRD, selectFhirData]);
+    }, [launchContext.parameter, modalType, questionnaireResponseRD, setContextData]);
 
     const setExpressionInfo = (_editor: CodeMirror.Editor, choosenExpression: string) => {
         CodeMirror.commands.goLineStartSmart(_editor);
@@ -74,12 +74,12 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
 
     const tryEvaluate = useCallback(() => {
         try {
-            const evaluate = fhirpath.evaluate(selectFhirData(), expression, selectContext());
+            const evaluate = fhirpath.evaluate(setContextData(), expression, selectContext());
             setExpressionResultOutput(yaml.dump(JSON.parse(JSON.stringify(evaluate))));
         } catch (e) {
             setExpressionResultOutput(String(e));
         }
-    }, [expression, selectContext, selectFhirData, setExpressionResultOutput]);
+    }, [expression, selectContext, setContextData, setExpressionResultOutput]);
 
     const saveExpression = () => {
         if (doc && cursorPosition) {
@@ -111,7 +111,7 @@ export function useModalExpression(launchContext: Parameters, questionnaireRespo
         openExpressionModal,
         expressionResultOutput,
         saveExpression,
-        selectFhirData,
+        setContextData,
     };
 }
 

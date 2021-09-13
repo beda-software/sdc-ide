@@ -16,7 +16,7 @@ interface ModalExpressionProps {
     questionnaireResponseRD: RemoteData<AidboxResource>;
     setShowModalExpression: (show: boolean) => void;
     setExpression: (path: string) => void;
-    selectFhirData: () => ValueObject | undefined;
+    setContextData: () => ValueObject | undefined;
     saveExpression: () => void;
 }
 
@@ -29,11 +29,11 @@ export function ModalExpression(props: ModalExpressionProps) {
         questionnaireResponseRD,
         setShowModalExpression,
         setExpression,
-        selectFhirData,
+        setContextData,
         saveExpression,
     } = props;
 
-    const launchContextValue = selectFhirData(); // TODO data for Questionnaire FHIR Resource and Patient JUTE Mapping
+    const launchContextValue = setContextData(); // TODO data for Questionnaire FHIR Resource and Patient JUTE Mapping
 
     return (
         <div className={s.wrapper}>

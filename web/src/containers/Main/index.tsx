@@ -52,7 +52,7 @@ export function Main() {
         openExpressionModal,
         expressionResultOutput,
         saveExpression,
-        selectFhirData,
+        setContextData,
     } = useModalExpression(launchContext, questionnaireResponseRD);
 
     return (
@@ -70,7 +70,7 @@ export function Main() {
                     setExpression={setExpression}
                     expressionResultOutput={expressionResultOutput}
                     saveExpression={saveExpression}
-                    selectFhirData={selectFhirData}
+                    setContextData={setContextData}
                 />
             ) : null}
             <div className={s.mainContainer}>
