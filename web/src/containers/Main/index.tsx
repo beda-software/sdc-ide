@@ -38,41 +38,31 @@ export function Main() {
         batchRequestRD,
         applyMappings,
         showModal,
-        saveMapper,
+        saveNewMapping,
         closeModal,
         mapperInfoList,
     } = useMain(questionnaireId);
 
-    const {
-        showModalExpression,
-        modalType,
-        setShowModalExpression,
-        expression,
-        setExpression,
-        openExpressionModal,
-        expressionResultOutput,
-        saveExpression,
-        setContextData,
-    } = useModalExpression(launchContext, questionnaireResponseRD);
+    const { closeExpressionModal, openExpressionModal, modalInfo, setExpression } = useModalExpression();
 
     return (
         <>
-            {showModal && mapperInfoList ? (
-                <ModalCreateMapper saveMapper={saveMapper} closeModal={closeModal} mapperInfoList={mapperInfoList} />
-            ) : null}
-            {showModalExpression ? (
+            {showModal && mapperInfoList && (
+                <ModalCreateMapper
+                    saveNewMapping={saveNewMapping}
+                    closeModal={closeModal}
+                    mapperInfoList={mapperInfoList}
+                />
+            )}
+            {modalInfo !== null && (
                 <ModalExpression
-                    modalType={modalType}
+                    modalInfo={modalInfo}
                     launchContext={launchContext}
                     questionnaireResponseRD={questionnaireResponseRD}
-                    setShowModalExpression={setShowModalExpression}
-                    expression={expression}
+                    closeExpressionModal={closeExpressionModal}
                     setExpression={setExpression}
-                    expressionResultOutput={expressionResultOutput}
-                    saveExpression={saveExpression}
-                    setContextData={setContextData}
                 />
-            ) : null}
+            )}
             <div className={s.mainContainer}>
                 <ToastContainer />
                 <ExpandableRow cssClass={s.upperRowContainer}>

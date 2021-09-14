@@ -5,35 +5,26 @@ import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
-import { ValueObject } from 'src/containers/Main/types';
+import { ModalInfo, ValueObject } from 'src/containers/Main/types';
+import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
-    modalType: string;
-    expression: string;
-    expressionResultOutput: string;
     questionnaireResponseRD: RemoteData<AidboxResource>;
-    setShowModalExpression: (show: boolean) => void;
-    setExpression: (path: string) => void;
-    setContextData: () => ValueObject | undefined;
-    saveExpression: () => void;
+    modalInfo: ModalInfo;
+    closeExpressionModal: () => void;
+    setExpression: (expression: string) => void;
 }
 
 export function ModalExpression(props: ModalExpressionProps) {
-    const {
+    const { launchContext, questionnaireResponseRD, modalInfo, closeExpressionModal, setExpression } = props;
+    const { expressionResultOutput, saveExpression, launchContextValue } = useModal(
+        modalInfo,
         launchContext,
-        modalType,
-        expression,
-        expressionResultOutput,
         questionnaireResponseRD,
-        setShowModalExpression,
-        setExpression,
-        setContextData,
-        saveExpression,
-    } = props;
-
-    const launchContextValue = setContextData(); // TODO data for Questionnaire FHIR Resource and Patient JUTE Mapping
+        closeExpressionModal,
+    );
 
     return (
         <div className={s.wrapper}>
@@ -43,7 +34,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                         <InputField
                             input={{
                                 name: 'fhirpath expression',
-                                value: expression,
+                                value: modalInfo.expression,
                                 onChange: (e) => setExpression(e.target.value),
                                 onBlur: () => {},
                                 onFocus: () => {},
@@ -58,7 +49,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                     <div className={s.inputData}>
                         {launchContext || questionnaireResponseRD ? (
                             <InputData
-                                modalType={modalType}
+                                modalInfo={modalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 launchContextValue={launchContextValue}
                             />
@@ -72,12 +63,12 @@ export function ModalExpression(props: ModalExpressionProps) {
                 </div>
                 <div className={s.buttonContainer}>
                     <div className={s.button}>
-                        <Button variant="secondary" onClick={() => setShowModalExpression(false)}>
+                        <Button variant="secondary" onClick={closeExpressionModal}>
                             Close
                         </Button>
                     </div>
                     <div className={s.button}>
-                        <Button onClick={() => saveExpression()}>Save</Button>
+                        <Button onClick={saveExpression}>Save</Button>
                     </div>
                 </div>
             </div>
@@ -86,13 +77,13 @@ export function ModalExpression(props: ModalExpressionProps) {
 }
 
 interface InputDataProps {
-    modalType: string;
+    modalInfo: ModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
     launchContextValue?: ValueObject;
 }
 
-function InputData({ modalType, questionnaireResponseRD, launchContextValue }: InputDataProps) {
-    if (modalType === 'Launch Context') {
+function InputData({ modalInfo, questionnaireResponseRD, launchContextValue }: InputDataProps) {
+    if (modalInfo.type === 'LaunchContext') {
         return (
             <CodeEditor
                 valueObject={launchContextValue}
@@ -101,7 +92,7 @@ function InputData({ modalType, questionnaireResponseRD, launchContextValue }: I
                 }}
             />
         );
-    } else if (modalType === 'QuestionnaireResponse FHIR resource') {
+    } else if (modalInfo.type === 'QuestionnaireResponse') {
         return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
     } else return <div>Error: Invalid modal type</div>;
 }

@@ -94,7 +94,7 @@ export function useMain(questionnaireId: string) {
         return response;
     }, [questionnaireId, dispatch]);
 
-    const saveMapper = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
+    const saveNewMapping = (mappingIdList: string[], mapperInfoList: MapperInfo[]) => {
         mapperInfoList.map(async (info, index) => {
             if (!mappingIdList[index]) {
                 return;
@@ -315,7 +315,7 @@ export function useMain(questionnaireId: string) {
         launchContext,
         dispatch,
         showModal,
-        saveMapper,
+        saveNewMapping,
         closeModal,
         mapperInfoList,
     };

@@ -6,12 +6,12 @@ import s from './ModalCreateMapper.module.scss';
 import { MapperInfo } from './types';
 
 interface ModalCreateMapperProps {
-    saveMapper: (mapperIdList: string[], mapperInfoList: MapperInfo[]) => void;
+    saveNewMapping: (mapperIdList: string[], mapperInfoList: MapperInfo[]) => void;
     closeModal: () => void;
     mapperInfoList: MapperInfo[];
 }
 
-export function ModalCreateMapper({ saveMapper, closeModal, mapperInfoList }: ModalCreateMapperProps) {
+export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }: ModalCreateMapperProps) {
     const [mapperIdList, setMapperIdList] = useState<string[]>([]);
 
     if (mapperIdList.length === 0) {
@@ -41,7 +41,7 @@ export function ModalCreateMapper({ saveMapper, closeModal, mapperInfoList }: Mo
                     <div className={s.button}>
                         <Button
                             onClick={() => {
-                                saveMapper(mapperIdList, mapperInfoList);
+                                saveNewMapping(mapperIdList, mapperInfoList);
                                 closeModal();
                             }}
                         >
