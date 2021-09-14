@@ -1,5 +1,6 @@
 import React from 'react';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { CodeEditor } from 'src/components/CodeEditor';
@@ -67,7 +68,17 @@ export function ModalExpression(props: ModalExpressionProps) {
                         )}
                     </div>
                     <div className={s.outputData}>
-                        <div>{expressionResultOutput}</div>
+                        {expressionResultOutput?.type === 'success' && (
+                            <CodeMirror
+                                value={expressionResultOutput.result}
+                                options={{
+                                    readOnly: true,
+                                }}
+                            />
+                        )}
+                        {expressionResultOutput?.type === 'error' && (
+                            <div className={s.error}>{expressionResultOutput.result}</div>
+                        )}
                     </div>
                 </div>
             </div>
