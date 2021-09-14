@@ -3,7 +3,7 @@ import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { AidboxResource, Parameters, Resource } from 'shared/src/contrib/aidbox';
-import { ModalInfo } from 'src/containers/Main/types';
+import { ExpressionResultOutput, ModalInfo } from 'src/containers/Main/types';
 import { replaceLine } from 'src/utils/codemirror';
 
 export function useModal(
@@ -12,7 +12,7 @@ export function useModal(
     questionnaireResponseRD: RemoteData<AidboxResource>,
     closeExpressionModal: () => void,
 ) {
-    const [expressionResultOutput, setExpressionResultOutput] = useState('');
+    const [expressionResultOutput, setExpressionResultOutput] = useState<ExpressionResultOutput | null>(null);
     const [indexOfContext, setIndexOfContext] = useState(0);
     const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
 
@@ -64,9 +64,9 @@ export function useModal(
     useEffect(() => {
         try {
             const evaluate = fhirpath.evaluate(setContextData(), modalInfo.expression, selectContext());
-            setExpressionResultOutput(yaml.dump(JSON.parse(JSON.stringify(evaluate))));
+            setExpressionResultOutput({ type: 'success', result: yaml.dump(JSON.parse(JSON.stringify(evaluate))) });
         } catch (e) {
-            setExpressionResultOutput(String(e));
+            setExpressionResultOutput({ type: 'error', result: String(e) });
         }
     }, [modalInfo.expression, selectContext, setContextData]);
 
