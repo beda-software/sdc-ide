@@ -30,7 +30,7 @@ export function ModalExpression(props: ModalExpressionProps) {
         <div className={s.wrapper}>
             <div className={s.window}>
                 <div className={s.header}>
-                    <div className={s.inputPathContainer}>
+                    <div className={s.inputPath}>
                         <InputField
                             input={{
                                 name: 'fhirpath expression',
@@ -40,9 +40,18 @@ export function ModalExpression(props: ModalExpressionProps) {
                                 onFocus: () => {},
                             }}
                             meta="testmeta"
-                            label="FHIRpath expression"
                             placeholder="FHIRpath expr..."
                         />
+                    </div>
+                    <div className={s.save}>
+                        <Button className={s.newButton} onClick={saveExpression}>
+                            save
+                        </Button>
+                    </div>
+                    <div className={s.close}>
+                        <Button className={s.newButton} variant="secondary" onClick={closeExpressionModal}>
+                            close
+                        </Button>
                     </div>
                 </div>
                 <div className={s.data}>
@@ -59,16 +68,6 @@ export function ModalExpression(props: ModalExpressionProps) {
                     </div>
                     <div className={s.outputData}>
                         <div>{expressionResultOutput}</div>
-                    </div>
-                </div>
-                <div className={s.buttonContainer}>
-                    <div className={s.button}>
-                        <Button variant="secondary" onClick={closeExpressionModal}>
-                            Close
-                        </Button>
-                    </div>
-                    <div className={s.button}>
-                        <Button onClick={saveExpression}>Save</Button>
                     </div>
                 </div>
             </div>
