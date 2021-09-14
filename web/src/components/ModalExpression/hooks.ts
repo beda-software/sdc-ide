@@ -50,7 +50,14 @@ export function useModal(
     }, [launchContext.parameter, modalInfo.type, questionnaireResponseRD, setContextData]);
 
     const saveExpression = () => {
-        replaceLine(modalInfo.doc, modalInfo.cursorPosition, modalInfo.type, modalInfo.expression);
+        let newLine = '';
+        if (modalInfo.type === 'LaunchContext') {
+            newLine = `expression: '${modalInfo.expression}'`;
+        }
+        if (modalInfo.type === 'QuestionnaireResponse') {
+            newLine = `fhirpath("${modalInfo.expression}")`;
+        }
+        replaceLine(modalInfo.doc, modalInfo.cursorPosition, newLine);
         closeExpressionModal();
     };
 
