@@ -13,7 +13,8 @@ import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
-
+import { ModalExpression } from 'src/components/ModalExpression';
+import { useModalExpression } from 'src/containers/Main/hooks/modalExpressionHook';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -37,15 +38,31 @@ export function Main() {
         batchRequestRD,
         applyMappings,
         showModal,
-        saveMapper,
+        saveNewMapping,
         closeModal,
         mapperInfoList,
     } = useMain(questionnaireId);
+
+    const { closeExpressionModal, openExpressionModal, modalInfo, setExpression } = useModalExpression();
+
     return (
         <>
-            {showModal && mapperInfoList ? (
-                <ModalCreateMapper saveMapper={saveMapper} closeModal={closeModal} mapperInfoList={mapperInfoList} />
-            ) : null}
+            {showModal && mapperInfoList && (
+                <ModalCreateMapper
+                    saveNewMapping={saveNewMapping}
+                    closeModal={closeModal}
+                    mapperInfoList={mapperInfoList}
+                />
+            )}
+            {modalInfo !== null && (
+                <ModalExpression
+                    modalInfo={modalInfo}
+                    launchContext={launchContext}
+                    questionnaireResponseRD={questionnaireResponseRD}
+                    closeExpressionModal={closeExpressionModal}
+                    setExpression={setExpression}
+                />
+            )}
             <div className={s.mainContainer}>
                 <ToastContainer />
                 <ExpandableRow cssClass={s.upperRowContainer}>
@@ -53,7 +70,11 @@ export function Main() {
                         <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
-                        <ResourceCodeEditor resourceRD={questionnaireFHIRRD} onSave={saveQuestionnaireFHIR} />
+                        <ResourceCodeEditor
+                            resourceRD={questionnaireFHIRRD}
+                            onSave={saveQuestionnaireFHIR}
+                            openExpressionModal={openExpressionModal}
+                        />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
                         <QRFormWrapper
@@ -77,7 +98,11 @@ export function Main() {
                                 activeMappingId={activeMappingId}
                                 setActiveMappingId={setActiveMappingId}
                             />
-                            <ResourceCodeEditor resourceRD={mappingRD} onSave={saveMapping} />
+                            <ResourceCodeEditor
+                                resourceRD={mappingRD}
+                                onSave={saveMapping}
+                                openExpressionModal={openExpressionModal}
+                            />
                         </div>
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>

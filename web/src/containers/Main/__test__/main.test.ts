@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Extension } from 'shared/src/contrib/aidbox';
 import { ensure } from 'aidbox-react/src/utils/tests';
 
-import { idExtraction, saveMapper, showToast, useMain } from 'src/containers/Main/hooks';
+import { idExtraction, showToast, useMain } from 'src/containers/Main/hooks';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/src/libs/remoteData';
@@ -162,11 +162,6 @@ test('idExtraction', () => {
             EXPECTED_RESOURCES.idExtractionErrorUndefined,
         ),
     ).toBeUndefined();
-});
-
-test('saveMapper', () => {
-    expect(saveMapper(EXPECTED_RESOURCES.mappingIdList, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
-    expect(saveMapper(EXPECTED_RESOURCES.mappingIdListEmpty, EXPECTED_RESOURCES.mappingInfoList)).toBeUndefined();
 });
 
 test('showToast', () => {

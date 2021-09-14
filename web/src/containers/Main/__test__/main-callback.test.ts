@@ -17,6 +17,8 @@ import questionnaireResponseNew from './resources/QuestionnaireResponse/demo-1-n
 import { setData } from 'src/services/localStorage';
 import { EXPECTED_RESOURCES } from './resources';
 import { axiosInstance } from 'aidbox-react/src/services/instance';
+import { getFHIRResource } from 'aidbox-react/src/services/fhir';
+import { isSuccess } from 'aidbox-react/src/libs/remoteData';
 
 async function setup() {
     return service({
@@ -86,4 +88,42 @@ test('saveMapping', async () => {
         const mapping = ensure(result.current.mappingRD);
         expect(mapping.body.entry[0].request.method).toBe('PUT');
     });
+});
+
+test('saveNewMapping', async () => {
+    const notFoundMappingId = 'foobar-100';
+    const existingMappingId = 'foobar-101';
+
+    await setup();
+
+    const { result } = renderHook(() => useMain('test-1'));
+
+    expect(
+        result.current.saveNewMapping(EXPECTED_RESOURCES.mappingIdListEmpty, EXPECTED_RESOURCES.mappingInfoList),
+    ).toBeUndefined();
+
+    const responseBefore = await getFHIRResource<Mapping>({
+        resourceType: 'Mapping',
+        id: notFoundMappingId,
+    });
+
+    if (isSuccess(responseBefore)) {
+    } else {
+        expect(responseBefore.error.id).toBe('not-found');
+    }
+
+    await act(async () => {
+        result.current.saveNewMapping(EXPECTED_RESOURCES.mappingIdList, EXPECTED_RESOURCES.mappingInfoList);
+    });
+
+    const responseAfter = await getFHIRResource<Mapping>({
+        resourceType: 'Mapping',
+        id: existingMappingId,
+    });
+
+    if (isSuccess(responseAfter)) {
+        expect(responseAfter.data.id).toBe(existingMappingId);
+    } else {
+        expect(responseAfter.error.id).toBe('should be success');
+    }
 });
