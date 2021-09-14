@@ -45,12 +45,10 @@ export function ModalExpression(props: ModalExpressionProps) {
                         />
                     </div>
                     <div className={s.save}>
-                        <Button className={s.newButton} onClick={saveExpression}>
-                            save
-                        </Button>
+                        <Button onClick={saveExpression}>save</Button>
                     </div>
                     <div className={s.close}>
-                        <Button className={s.newButton} variant="secondary" onClick={closeExpressionModal}>
+                        <Button variant="secondary" onClick={closeExpressionModal}>
                             close
                         </Button>
                     </div>
