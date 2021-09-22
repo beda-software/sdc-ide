@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { ContextMenuInfo, ExpressionModalInfo } from 'src/containers/Main/types';
+import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'src/containers/Main/types';
 import { hasOwnProperty } from 'src/utils/common';
 
 export function useExpressionModal() {
     const [expressionModalInfo, setExpressionModalInfo] = useState<ExpressionModalInfo | null>(null);
 
     const openExpressionModal = (contextMenuInfo: ContextMenuInfo) => {
-        let modalType;
+        let modalType: ModalType | undefined;
         let choosenExpression;
         if (contextMenuInfo && hasOwnProperty(contextMenuInfo.valueObject, 'resourceType')) {
             if (
@@ -25,12 +25,14 @@ export function useExpressionModal() {
                 choosenExpression = contextMenuInfo.event.target.innerText.replaceAll('"', '');
             }
         }
-        setExpressionModalInfo({
-            type: modalType,
-            expression: choosenExpression,
-            doc: contextMenuInfo.editor.getDoc(),
-            cursorPosition: contextMenuInfo.cursorPosition,
-        });
+        if (modalType) {
+            setExpressionModalInfo({
+                type: modalType,
+                expression: choosenExpression,
+                doc: contextMenuInfo.editor.getDoc(),
+                cursorPosition: contextMenuInfo.cursorPosition,
+            });
+        }
     };
 
     const closeExpressionModal = () => {

@@ -27,6 +27,8 @@ export function ModalExpression(props: ModalExpressionProps) {
         closeExpressionModal,
     );
 
+    console.log('expressionModalInfo', expressionModalInfo);
+
     return (
         <div className={s.wrapper}>
             <div className={s.window}>

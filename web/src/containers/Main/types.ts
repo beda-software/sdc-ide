@@ -17,7 +17,7 @@ export interface ContextMenuPosition {
 
 export interface ContextMenu {
     close: () => void;
-    debugger: () => void;
+    debugger?: () => void;
     undo: () => void;
     redo: () => void;
     cut: () => void;
@@ -25,13 +25,6 @@ export interface ContextMenu {
     paste: () => void;
     selectAll: () => void;
 }
-
-// interface ExpressionStringInfo {
-//     _editor: Editor;
-//     cursorPosition: Position;
-//     choosenExpression: string;
-//     modalType: ModalType;
-// }
 
 export interface ContextMenuInfo {
     cursorPosition: Position;

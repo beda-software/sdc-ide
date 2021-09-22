@@ -2,19 +2,22 @@ import { useState } from 'react';
 import { commands, Editor } from 'codemirror';
 import { ContextMenu, ContextMenuInfo, ValueObject } from 'src/containers/Main/types';
 
-// interface Props {
-//     // openExpressionModal: (contextMenuInfo: ContextMenuInfo) => void;
-// }
+interface Props {
+    openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
+}
 
-export function useContextMenu() {
+export function useContextMenu({ openExpressionModal }: Props) {
     const [contextMenuInfo, setContextMenuInfo] = useState<ContextMenuInfo | null>(null);
 
     const contextMenu: ContextMenu = {
         close: () => closeContextMenu(),
-        debugger: () => {
-            // contextMenuInfo && openExpressionModal(contextMenuInfo);
-            closeContextMenu();
-        },
+        // TODO: show debug item only in case we clicked on expression, otherwise disable this item
+        debugger: openExpressionModal
+            ? () => {
+                  contextMenuInfo && openExpressionModal && openExpressionModal(contextMenuInfo);
+                  closeContextMenu();
+              }
+            : undefined,
         undo: () => {
             contextMenuInfo?.editor.undo();
             closeContextMenu();
@@ -23,6 +26,7 @@ export function useContextMenu() {
             contextMenuInfo?.editor.redo();
             closeContextMenu();
         },
+        // TODO: disable items if we use read-only mode
         cut: () => {
             const selectedText = copySelectedText();
             contextMenuInfo?.editor.replaceSelection('', selectedText);
@@ -56,6 +60,14 @@ export function useContextMenu() {
         event.preventDefault();
         const cursorCoordinates = { left: event.x, right: event.x, top: event.y, bottom: event.y };
         const cursorPosition = _editor.coordsChar(cursorCoordinates);
+        console.log('MCTX', {
+            cursorPosition,
+            menuPosition: cursorCoordinates,
+            editor: _editor,
+            showContextMenu: true,
+            event,
+            valueObject,
+        });
         setContextMenuInfo({
             cursorPosition,
             menuPosition: cursorCoordinates,

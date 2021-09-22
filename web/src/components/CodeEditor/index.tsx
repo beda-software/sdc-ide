@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
 import { displayToObject, objectToDisplay } from 'src/utils/yaml';
-import { OpenContextMenu, ValueObject } from 'src/containers/Main/types';
+import { ContextMenuInfo, ValueObject } from 'src/containers/Main/types';
 
 // import 'codemirror/lib/codemirror.css';
 import './styles.css';
@@ -13,14 +13,13 @@ require('codemirror/mode/yaml/yaml');
 interface CodeEditorProps extends IUnControlledCodeMirror {
     valueObject?: ValueObject;
     onChange?: (object: any) => void; // TODO check for more strict type
-    openContextMenu?: OpenContextMenu;
+    openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
 }
 
 export function CodeEditor(props: CodeEditorProps) {
-    const { valueObject = {}, options, onChange } = props;
+    const { valueObject = {}, options, onChange, openExpressionModal } = props;
 
-    const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu();
-    // { openExpressionModal }
+    const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({ openExpressionModal });
 
     const cache = useRef(valueObject);
 
