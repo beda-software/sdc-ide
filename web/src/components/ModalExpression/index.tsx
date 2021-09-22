@@ -2,13 +2,13 @@ import React from 'react';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { CodeEditor } from 'src/components/CodeEditor';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
 import { ExpressionModalInfo, ValueObject } from 'src/containers/Main/types';
 import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
+import { CodeEditor } from 'src/components/CodeEditor';
+import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -26,8 +26,6 @@ export function ModalExpression(props: ModalExpressionProps) {
         questionnaireResponseRD,
         closeExpressionModal,
     );
-
-    console.log('expressionModalInfo', expressionModalInfo);
 
     return (
         <div className={s.wrapper}>
@@ -57,6 +55,11 @@ export function ModalExpression(props: ModalExpressionProps) {
                 </div>
                 <div className={s.data}>
                     <div className={s.inputData}>
+                        <div>
+                            {launchContext.parameter?.map((item) => (
+                                <p key={item.name}>{item.name}</p>
+                            ))}
+                        </div>
                         {launchContext || questionnaireResponseRD ? (
                             <InputData
                                 expressionModalInfo={expressionModalInfo}
@@ -93,6 +96,7 @@ interface InputDataProps {
 }
 
 function InputData({ expressionModalInfo, questionnaireResponseRD, launchContextValue }: InputDataProps) {
+    console.log('LCV', launchContextValue);
     if (expressionModalInfo.type === 'LaunchContext') {
         return (
             <CodeEditor

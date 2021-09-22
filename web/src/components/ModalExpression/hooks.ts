@@ -3,8 +3,9 @@ import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { AidboxResource, Parameters, Resource } from 'shared/src/contrib/aidbox';
-import { ExpressionResultOutput, ExpressionModalInfo } from 'src/containers/Main/types';
+import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
 import { replaceLine } from 'src/utils/codemirror';
+import { extractParameterName } from './utils';
 
 export function useModal(
     expressionModalInfo: ExpressionModalInfo,
@@ -16,10 +17,13 @@ export function useModal(
     const [indexOfContext, setIndexOfContext] = useState(0);
     const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
 
+    console.log('expressionModalInfo.expression', expressionModalInfo.expression);
+    console.log('parsed', extractParameterName(expressionModalInfo.expression));
+
     const setContextData = useCallback(() => {
         if (expressionModalInfo.type === 'LaunchContext') {
             launchContext?.parameter?.map((parameter, index) => {
-                if (parameter.name === String(expressionModalInfo.expression.split('.')[0]).slice(1)) {
+                if (parameter.name === extractParameterName(expressionModalInfo.expression)) {
                     setIndexOfContext(index);
                 }
             });
@@ -31,6 +35,7 @@ export function useModal(
                 return questionnaireResponseRD.data;
             }
         }
+        return launchContext.parameter?.map((item) => item.name);
     }, [
         indexOfContext,
         launchContext.parameter,

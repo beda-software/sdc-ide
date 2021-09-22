@@ -60,14 +60,6 @@ export function useContextMenu({ openExpressionModal }: Props) {
         event.preventDefault();
         const cursorCoordinates = { left: event.x, right: event.x, top: event.y, bottom: event.y };
         const cursorPosition = _editor.coordsChar(cursorCoordinates);
-        console.log('MCTX', {
-            cursorPosition,
-            menuPosition: cursorCoordinates,
-            editor: _editor,
-            showContextMenu: true,
-            event,
-            valueObject,
-        });
         setContextMenuInfo({
             cursorPosition,
             menuPosition: cursorCoordinates,
