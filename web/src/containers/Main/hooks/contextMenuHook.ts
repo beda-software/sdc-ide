@@ -1,52 +1,18 @@
 import { useState } from 'react';
 import { commands, Editor } from 'codemirror';
-import { ContextMenu, ContextMenuInfo, ExpressionModalInfo, ValueObject } from 'src/containers/Main/types';
+import { ContextMenu, ContextMenuInfo, ValueObject } from 'src/containers/Main/types';
+
+// interface Props {
+//     // openExpressionModal: (contextMenuInfo: ContextMenuInfo) => void;
+// }
 
 export function useContextMenu() {
-    const [expressionModalInfo, setExpressionModalInfo] = useState<ExpressionModalInfo | null>(null);
     const [contextMenuInfo, setContextMenuInfo] = useState<ContextMenuInfo | null>(null);
-
-    const copySelectedText = () => {
-        const selectedText = contextMenuInfo?.editor.getSelection();
-        selectedText && navigator.clipboard.writeText(selectedText);
-        return selectedText;
-    };
-
-    const closeContextMenu = () =>
-        setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
-
-    const openExpressionModal = (contextMenuInfo: ContextMenuInfo) => {
-        let modalType;
-        let choosenExpression;
-        if (contextMenuInfo && hasOwnProperty(contextMenuInfo.valueObject, 'resourceType')) {
-            if (
-                contextMenuInfo.valueObject.resourceType === 'Questionnaire' &&
-                contextMenuInfo.event.target.innerText.split('')[0] === "'"
-            ) {
-                modalType = 'LaunchContext';
-                choosenExpression = contextMenuInfo.event.target.innerText.replaceAll("'", '');
-            }
-
-            if (
-                contextMenuInfo.valueObject.resourceType === 'Mapping' &&
-                contextMenuInfo.event.target.innerText.split('')[0] === '"'
-            ) {
-                modalType = 'QuestionnaireResponse';
-                choosenExpression = contextMenuInfo.event.target.innerText.replaceAll('"', '');
-            }
-        }
-        setExpressionModalInfo({
-            type: modalType,
-            expression: choosenExpression,
-            doc: contextMenuInfo.editor.getDoc(),
-            cursorPosition: contextMenuInfo.cursorPosition,
-        });
-    };
 
     const contextMenu: ContextMenu = {
         close: () => closeContextMenu(),
         debugger: () => {
-            contextMenuInfo && openExpressionModal(contextMenuInfo);
+            // contextMenuInfo && openExpressionModal(contextMenuInfo);
             closeContextMenu();
         },
         undo: () => {
@@ -80,7 +46,7 @@ export function useContextMenu() {
             closeContextMenu();
         },
         selectAll: () => {
-            contextMenuInfo && commands.selectAll(contextMenuInfo?.editor);
+            contextMenuInfo && commands.selectAll(contextMenuInfo.editor);
             contextMenuInfo?.editor.focus();
             closeContextMenu();
         },
@@ -100,24 +66,18 @@ export function useContextMenu() {
         });
     };
 
-    const closeExpressionModal = () => {
-        setExpressionModalInfo(null);
-    };
+    const closeContextMenu = () =>
+        setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
 
-    const setExpression = (expression: string) => {
-        setExpressionModalInfo((modalInfo) => modalInfo && { ...modalInfo, expression });
+    const copySelectedText = () => {
+        const selectedText = contextMenuInfo?.editor.getSelection();
+        selectedText && navigator.clipboard.writeText(selectedText);
+        return selectedText;
     };
 
     return {
         openContextMenu,
-        expressionModalInfo,
-        closeExpressionModal,
-        setExpression,
         contextMenuInfo,
         contextMenu,
     };
-}
-
-function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
-    return obj.hasOwnProperty(prop);
 }
