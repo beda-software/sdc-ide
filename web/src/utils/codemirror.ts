@@ -1,10 +1,16 @@
 import CodeMirror, { Position } from 'codemirror';
 
-export const replaceLine = (doc: CodeMirror.Doc | undefined, cursorPosition: Position | undefined, newLine: string) => {
+export const replaceLine = (
+    doc: CodeMirror.Doc | undefined,
+    cursorPosition: Position | undefined,
+    newLine: string | undefined,
+) => {
     if (doc && cursorPosition) {
         const lineLength = doc.getLine(cursorPosition.line).length;
-        const replacingFromPosition = { line: cursorPosition.line, ch: cursorPosition.ch };
+        const replacingFromPosition = { line: cursorPosition.line, ch: 0 };
         const replacingToPosition = { line: cursorPosition.line, ch: lineLength };
-        doc.replaceRange(newLine, replacingFromPosition, replacingToPosition);
+        if (typeof newLine === 'string') {
+            doc.replaceRange(newLine, replacingFromPosition, replacingToPosition);
+        }
     }
 };

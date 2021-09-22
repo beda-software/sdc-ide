@@ -10,13 +10,13 @@ import { ValueObject } from 'src/containers/Main/types';
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;
     onSave: (resource: R) => void;
-    openExpressionModal: (_editor: CodeMirror.Editor, event: any, valueObject: ValueObject) => void;
+    openContextMenu: (_editor: CodeMirror.Editor, event: any, valueObject: ValueObject) => void;
 }
 
 export function ResourceCodeEditor<R extends AidboxResource>({
     resourceRD,
     onSave,
-    openExpressionModal,
+    openContextMenu,
 }: ResourceCodeEditorProps<R>) {
     const onChange = useCallback(_.debounce(onSave, 1000), [onSave]);
 
@@ -27,7 +27,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                     key={resource.id}
                     valueObject={resource}
                     onChange={onChange}
-                    openExpressionModal={openExpressionModal}
+                    openContextMenu={openContextMenu}
                 />
             )}
         </RenderRemoteData>

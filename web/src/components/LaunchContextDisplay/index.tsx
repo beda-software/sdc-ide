@@ -3,14 +3,16 @@ import _ from 'lodash';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { Parameters } from 'shared/src/contrib/aidbox';
 import { success } from 'aidbox-react/src/libs/remoteData';
+import { OpenContextMenu } from 'src/containers/Main/types';
 
 import s from './LaunchContextDisplay.module.scss';
 
 interface LaunchContextDisplayProps {
     parameters: Parameters;
+    openContextMenu: OpenContextMenu;
 }
 
-export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) {
+export function LaunchContextDisplay({ parameters, openContextMenu }: LaunchContextDisplayProps) {
     const params = parameters.parameter?.filter((p) => p.name !== 'Questionnaire') || [];
     const defaultName = params[0]?.name;
     const [activeTabName, setActiveTabName] = useState(defaultName);
@@ -26,7 +28,7 @@ export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) 
             {params.length > 0 && (
                 <Tab params={params} activeTabName={activeTabName} setActiveTabName={setActiveTabName} />
             )}
-            <ResourceCodeDisplay resourceResponse={success(active!)} />
+            <ResourceCodeDisplay resourceResponse={success(active!)} openContextMenu={openContextMenu} />
         </>
     );
 }
