@@ -1,0 +1,21 @@
+.wrapper {
+    background-color: #ffffff;
+    width: 95;
+    height: 145;
+    position: absolute;
+    z-index: 599;
+    padding: 10px;
+    border: 1px solid #597ef7;
+    font-family: Fira Code;
+    font-size: 0.75em;
+    color: #aa1111;
+}
+
+.button:hover {
+    cursor: pointer;
+    background-color: #597ef74b;
+}
+
+.separater {
+    cursor: default;
+}

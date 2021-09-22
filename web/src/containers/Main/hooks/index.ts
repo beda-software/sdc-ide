@@ -67,6 +67,31 @@ export function useMain(questionnaireId: string) {
         setData('fhirMode', fhirMode);
     }, []);
     const [launchContext, dispatch] = useLaunchContext();
+
+    // Closing create mapping modal
+    const createMappingDefault = {
+        status: false,
+        renamed: false,
+    };
+
+    const [closingCreateMapper, setClosingCreateMapper] = useState(createMappingDefault);
+    const [questionnaireUpdateToggle, setQuestionnaireUpdateToggle] = useState(false);
+
+    const closeModal = (status: 'save' | 'cancel', isRenamedMappingId?: boolean) => {
+        if (status === 'save' && isRenamedMappingId !== undefined) {
+            const createMapping = {
+                status: true,
+                renamed: isRenamedMappingId,
+            };
+            setClosingCreateMapper(createMapping);
+        }
+        if (status === 'cancel') {
+            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+        }
+        setShowModal(false);
+        setMapperInfoList([]);
+    };
+
     // Questionnaire
     const [questionnaireRD, questionnaireManager] = useService(async () => {
         const response = await service<Questionnaire>({
@@ -90,7 +115,10 @@ export function useMain(questionnaireId: string) {
                 dispatch(event);
             }
         }
-
+        if (closingCreateMapper.status && closingCreateMapper.renamed) {
+            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+            setClosingCreateMapper(createMappingDefault);
+        }
         return response;
     }, [questionnaireId, dispatch]);
 
@@ -131,16 +159,11 @@ export function useMain(questionnaireId: string) {
                 method: 'GET',
                 url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
             }),
-        [questionnaireId, fhirMode],
+        [questionnaireId, fhirMode, questionnaireUpdateToggle],
     );
 
     const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
     const [showModal, setShowModal] = useState(false);
-
-    const closeModal = () => {
-        setShowModal(false);
-        setMapperInfoList([]);
-    };
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {

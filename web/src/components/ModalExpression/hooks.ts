@@ -3,11 +3,11 @@ import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { AidboxResource, Parameters, Resource } from 'shared/src/contrib/aidbox';
-import { ExpressionResultOutput, ModalInfo } from 'src/containers/Main/types';
+import { ExpressionResultOutput, ExpressionModalInfo } from 'src/containers/Main/types';
 import { replaceLine } from 'src/utils/codemirror';
 
 export function useModal(
-    modalInfo: ModalInfo,
+    expressionModalInfo: ExpressionModalInfo,
     launchContext: Parameters,
     questionnaireResponseRD: RemoteData<AidboxResource>,
     closeExpressionModal: () => void,
@@ -17,58 +17,69 @@ export function useModal(
     const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
 
     const setContextData = useCallback(() => {
-        if (modalInfo.type === 'LaunchContext') {
+        if (expressionModalInfo.type === 'LaunchContext') {
             launchContext?.parameter?.map((parameter, index) => {
-                if (parameter.name === String(modalInfo.expression.split('.')[0]).slice(1)) {
+                if (parameter.name === String(expressionModalInfo.expression.split('.')[0]).slice(1)) {
                     setIndexOfContext(index);
                 }
             });
             setLaunchContextValue(launchContext?.parameter?.[indexOfContext]?.resource);
             return launchContext?.parameter?.[indexOfContext]?.resource;
         }
-        if (modalInfo.type === 'QuestionnaireResponse') {
+        if (expressionModalInfo.type === 'QuestionnaireResponse') {
             if (isSuccess(questionnaireResponseRD)) {
                 return questionnaireResponseRD.data;
             }
         }
-    }, [indexOfContext, launchContext.parameter, modalInfo.expression, modalInfo.type, questionnaireResponseRD]);
+    }, [
+        indexOfContext,
+        launchContext.parameter,
+        expressionModalInfo.expression,
+        expressionModalInfo.type,
+        questionnaireResponseRD,
+    ]);
 
     const selectContext = useCallback(() => {
         const contextData: Record<string, any> = {};
-        if (modalInfo.type === 'LaunchContext') {
+        if (expressionModalInfo.type === 'LaunchContext') {
             launchContext.parameter?.map((parameter) => {
                 contextData[parameter.name] = setContextData();
             });
             return contextData;
         }
-        if (modalInfo.type === 'QuestionnaireResponse') {
+        if (expressionModalInfo.type === 'QuestionnaireResponse') {
             if (isSuccess(questionnaireResponseRD)) {
                 contextData[questionnaireResponseRD.data.resourceType] = setContextData();
                 return contextData;
             }
         }
-    }, [launchContext.parameter, modalInfo.type, questionnaireResponseRD, setContextData]);
+    }, [launchContext.parameter, expressionModalInfo.type, questionnaireResponseRD, setContextData]);
 
     const saveExpression = () => {
-        let newLine = '';
-        if (modalInfo.type === 'LaunchContext') {
-            newLine = `expression: '${modalInfo.expression}'`;
+        let newLine;
+        const lineBefore = expressionModalInfo.doc.getLine(expressionModalInfo.cursorPosition.line);
+        if (expressionModalInfo.type === 'LaunchContext') {
+            const array = lineBefore.split("'");
+            array[1] = expressionModalInfo.expression;
+            newLine = array.join("'");
         }
-        if (modalInfo.type === 'QuestionnaireResponse') {
-            newLine = `fhirpath("${modalInfo.expression}")`;
+        if (expressionModalInfo.type === 'QuestionnaireResponse') {
+            const array = lineBefore.split('"');
+            array[1] = expressionModalInfo.expression;
+            newLine = array.join('"');
         }
-        replaceLine(modalInfo.doc, modalInfo.cursorPosition, newLine);
+        replaceLine(expressionModalInfo.doc, expressionModalInfo.cursorPosition, newLine);
         closeExpressionModal();
     };
 
     useEffect(() => {
         try {
-            const evaluate = fhirpath.evaluate(setContextData(), modalInfo.expression, selectContext());
+            const evaluate = fhirpath.evaluate(setContextData(), expressionModalInfo.expression, selectContext());
             setExpressionResultOutput({ type: 'success', result: yaml.dump(JSON.parse(JSON.stringify(evaluate))) });
         } catch (e) {
             setExpressionResultOutput({ type: 'error', result: String(e) });
         }
-    }, [modalInfo.expression, selectContext, setContextData]);
+    }, [expressionModalInfo.expression, selectContext, setContextData]);
 
     return {
         expressionResultOutput,

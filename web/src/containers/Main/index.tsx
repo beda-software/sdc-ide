@@ -13,8 +13,6 @@ import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
-import { ModalExpression } from 'src/components/ModalExpression';
-import { useModalExpression } from 'src/containers/Main/hooks/modalExpressionHook';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -43,8 +41,6 @@ export function Main() {
         mapperInfoList,
     } = useMain(questionnaireId);
 
-    const { closeExpressionModal, openExpressionModal, modalInfo, setExpression } = useModalExpression();
-
     return (
         <>
             {showModal && mapperInfoList && (
@@ -52,15 +48,6 @@ export function Main() {
                     saveNewMapping={saveNewMapping}
                     closeModal={closeModal}
                     mapperInfoList={mapperInfoList}
-                />
-            )}
-            {modalInfo !== null && (
-                <ModalExpression
-                    modalInfo={modalInfo}
-                    launchContext={launchContext}
-                    questionnaireResponseRD={questionnaireResponseRD}
-                    closeExpressionModal={closeExpressionModal}
-                    setExpression={setExpression}
                 />
             )}
             <div className={s.mainContainer}>
@@ -73,7 +60,8 @@ export function Main() {
                         <ResourceCodeEditor
                             resourceRD={questionnaireFHIRRD}
                             onSave={saveQuestionnaireFHIR}
-                            openExpressionModal={openExpressionModal}
+                            launchContext={launchContext}
+                            questionnaireResponseRD={questionnaireResponseRD}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
@@ -101,7 +89,8 @@ export function Main() {
                             <ResourceCodeEditor
                                 resourceRD={mappingRD}
                                 onSave={saveMapping}
-                                openExpressionModal={openExpressionModal}
+                                launchContext={launchContext}
+                                questionnaireResponseRD={questionnaireResponseRD}
                             />
                         </div>
                     </ExpandableElement>
