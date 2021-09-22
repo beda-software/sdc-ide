@@ -6,22 +6,30 @@ import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
-import { ModalInfo, ValueObject } from 'src/containers/Main/types';
+import { ExpressionModalInfo, OpenContextMenu, ValueObject } from 'src/containers/Main/types';
 import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<AidboxResource>;
-    modalInfo: ModalInfo;
+    expressionModalInfo: ExpressionModalInfo;
     closeExpressionModal: () => void;
     setExpression: (expression: string) => void;
+    openContextMenu: OpenContextMenu;
 }
 
 export function ModalExpression(props: ModalExpressionProps) {
-    const { launchContext, questionnaireResponseRD, modalInfo, closeExpressionModal, setExpression } = props;
+    const {
+        launchContext,
+        questionnaireResponseRD,
+        expressionModalInfo,
+        closeExpressionModal,
+        setExpression,
+        openContextMenu,
+    } = props;
     const { expressionResultOutput, saveExpression, launchContextValue } = useModal(
-        modalInfo,
+        expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
         closeExpressionModal,
@@ -35,7 +43,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                         <InputField
                             input={{
                                 name: 'fhirpath expression',
-                                value: modalInfo.expression,
+                                value: expressionModalInfo.expression,
                                 onChange: (e) => setExpression(e.target.value),
                                 onBlur: () => {},
                                 onFocus: () => {},
@@ -57,9 +65,10 @@ export function ModalExpression(props: ModalExpressionProps) {
                     <div className={s.inputData}>
                         {launchContext || questionnaireResponseRD ? (
                             <InputData
-                                modalInfo={modalInfo}
+                                expressionModalInfo={expressionModalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 launchContextValue={launchContextValue}
+                                openContextMenu={openContextMenu}
                             />
                         ) : (
                             <div>Error: no data</div>
@@ -85,22 +94,29 @@ export function ModalExpression(props: ModalExpressionProps) {
 }
 
 interface InputDataProps {
-    modalInfo: ModalInfo;
+    expressionModalInfo: ExpressionModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
     launchContextValue?: ValueObject;
+    openContextMenu: OpenContextMenu;
 }
 
-function InputData({ modalInfo, questionnaireResponseRD, launchContextValue }: InputDataProps) {
-    if (modalInfo.type === 'LaunchContext') {
+function InputData({
+    expressionModalInfo,
+    questionnaireResponseRD,
+    openContextMenu,
+    launchContextValue,
+}: InputDataProps) {
+    if (expressionModalInfo.type === 'LaunchContext') {
         return (
             <CodeEditor
                 valueObject={launchContextValue}
                 options={{
                     readOnly: true,
                 }}
+                openContextMenu={openContextMenu}
             />
         );
-    } else if (modalInfo.type === 'QuestionnaireResponse') {
-        return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
+    } else if (expressionModalInfo.type === 'QuestionnaireResponse') {
+        return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} openContextMenu={openContextMenu} />;
     } else return <div>Error: Invalid modal type</div>;
 }
