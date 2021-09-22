@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FieldInputProps, FieldMetaState } from 'react-final-form';
 
-import s from './InputField.module.scss'
+import s from './InputField.module.scss';
 
 interface InputFieldProps {
     input: FieldInputProps<string>;

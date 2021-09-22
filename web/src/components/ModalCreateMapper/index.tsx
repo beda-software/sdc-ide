@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Button } from '../Button';
-import { InputField } from '../InputField';
+import { Button } from 'src/components/Button';
+import { InputField } from 'src/components/InputField';
+import { MapperInfo } from 'src/components/ModalCreateMapper/types';
 
 import s from './ModalCreateMapper.module.scss';
-import { MapperInfo } from './types';
 
 interface ModalCreateMapperProps {
     saveNewMapping: (mapperIdList: string[], mapperInfoList: MapperInfo[]) => void;
-    closeModal: () => void;
+    closeModal: (status: 'save' | 'cancel', isRenamedMappingId?: boolean) => void;
     mapperInfoList: MapperInfo[];
 }
 
 export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }: ModalCreateMapperProps) {
     const [mapperIdList, setMapperIdList] = useState<string[]>([]);
+    const [isRenamedMappingId, setIsRenamedMappingId] = useState(false);
 
     if (mapperIdList.length === 0) {
         const mappingIdList: string[] = [];
@@ -33,6 +34,7 @@ export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }
                                 mappingId={mappingId}
                                 mapperIdList={mapperIdList}
                                 setMapperIdList={setMapperIdList}
+                                setIsRenamedMappingId={setIsRenamedMappingId}
                             />
                         );
                     })}
@@ -42,7 +44,7 @@ export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }
                         <Button
                             onClick={() => {
                                 saveNewMapping(mapperIdList, mapperInfoList);
-                                closeModal();
+                                closeModal('save', isRenamedMappingId);
                             }}
                         >
                             Save
@@ -52,7 +54,7 @@ export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }
                         <Button
                             variant="secondary"
                             onClick={() => {
-                                closeModal();
+                                closeModal('cancel');
                             }}
                         >
                             Cancel
@@ -64,26 +66,54 @@ export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }
     );
 }
 
+function useInputField(
+    index: number,
+    mappingId: string,
+    mapperIdList: string[],
+    setMapperIdList: (newMapperIdList: string[]) => void,
+    setIsRenamedMappingId: (isRenamed: boolean) => void,
+) {
+    const [mappingIdInputValue, setMappingIdInputValue] = useState(mappingId);
+
+    const onMappingIdChange = (e: React.ChangeEvent<any>) => {
+        // TODO HTMLInputElement type in React.ChangeEvent
+        const newMapperIdList = [...mapperIdList];
+        newMapperIdList[index] = e.target.value;
+        setMapperIdList(newMapperIdList);
+        setMappingIdInputValue(e.target.value);
+        setIsRenamedMappingId(true);
+    };
+
+    return {
+        mappingIdInputValue,
+        onMappingIdChange,
+    };
+}
+
 interface InputType {
     index: number;
     mappingId: string;
     mapperIdList: string[];
     setMapperIdList: (newMapperIdList: string[]) => void;
+    setIsRenamedMappingId: (isRenamed: boolean) => void;
 }
 
-const Input = ({ index, mappingId, mapperIdList, setMapperIdList }: InputType) => {
-    const [inputValue, setInputValue] = useState(mappingId);
+const Input = (props: InputType) => {
+    const { index, mappingId, mapperIdList, setMapperIdList, setIsRenamedMappingId } = props;
+    const { mappingIdInputValue, onMappingIdChange } = useInputField(
+        index,
+        mappingId,
+        mapperIdList,
+        setMapperIdList,
+        setIsRenamedMappingId,
+    );
+
     return (
         <InputField
             input={{
                 name: 'mappingId',
-                value: inputValue,
-                onChange: (e) => {
-                    const newMapperIdList = [...mapperIdList];
-                    newMapperIdList[index] = e.target.value;
-                    setMapperIdList(newMapperIdList);
-                    setInputValue(e.target.value);
-                },
+                value: mappingIdInputValue,
+                onChange: onMappingIdChange,
                 onBlur: () => {},
                 onFocus: () => {},
             }}
