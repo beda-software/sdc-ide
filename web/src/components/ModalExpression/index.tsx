@@ -61,6 +61,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 fullLaunchContext={fullLaunchContext}
                                 parameterName={parameterName}
+                                setExpression={setExpression}
                             />
                         ) : (
                             <div>Error: no data</div>
@@ -90,9 +91,16 @@ interface InputDataProps {
     questionnaireResponseRD: RemoteData<AidboxResource>;
     fullLaunchContext: Record<string, any>;
     parameterName: string;
+    setExpression: (expression: string) => void;
 }
 
-function InputData({ expressionModalInfo, questionnaireResponseRD, fullLaunchContext, parameterName }: InputDataProps) {
+function InputData({
+    expressionModalInfo,
+    questionnaireResponseRD,
+    fullLaunchContext,
+    parameterName,
+    setExpression,
+}: InputDataProps) {
     if (expressionModalInfo.type === 'LaunchContext') {
         if (parameterName in fullLaunchContext) {
             return (
@@ -107,7 +115,7 @@ function InputData({ expressionModalInfo, questionnaireResponseRD, fullLaunchCon
             return (
                 <div>
                     {Object.keys(fullLaunchContext).map((key: string) => (
-                        <p className={s.parameterName} key={key}>
+                        <p className={s.parameterName} key={key} onClick={() => setExpression('%' + key)}>
                             %{key}
                         </p>
                     ))}

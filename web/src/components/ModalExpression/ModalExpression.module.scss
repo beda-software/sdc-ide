@@ -65,6 +65,11 @@
                     color: #219;
                     margin: 0px;
                     padding: 0px 4px;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #597ef74b;
+                    }
                 }
             }
 
