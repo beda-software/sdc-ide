@@ -58,6 +58,14 @@
                 padding: 10px;
                 overflow-x: scroll;
                 overflow-y: scroll;
+
+                .parameterName {
+                    font-family: 'Fira Code', monospace;
+                    font-size: 0.75em;
+                    color: #219;
+                    margin: 0px;
+                    padding: 0px 4px;
+                }
             }
 
             .outputData {

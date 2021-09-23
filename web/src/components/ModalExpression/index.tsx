@@ -9,6 +9,7 @@ import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
+import { checkParameterName } from './utils';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -20,7 +21,7 @@ interface ModalExpressionProps {
 
 export function ModalExpression(props: ModalExpressionProps) {
     const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
-    const { expressionResultOutput, saveExpression, launchContextValue } = useModal(
+    const { expressionResultOutput, saveExpression, launchContextValue, parameterName } = useModal(
         expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
@@ -55,16 +56,13 @@ export function ModalExpression(props: ModalExpressionProps) {
                 </div>
                 <div className={s.data}>
                     <div className={s.inputData}>
-                        <div>
-                            {launchContext.parameter?.map((item) => (
-                                <p key={item.name}>{item.name}</p>
-                            ))}
-                        </div>
                         {launchContext || questionnaireResponseRD ? (
                             <InputData
                                 expressionModalInfo={expressionModalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 launchContextValue={launchContextValue}
+                                launchContext={launchContext}
+                                parameterName={parameterName}
                             />
                         ) : (
                             <div>Error: no data</div>
@@ -93,19 +91,38 @@ interface InputDataProps {
     expressionModalInfo: ExpressionModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
     launchContextValue?: ValueObject;
+    launchContext: Parameters;
+    parameterName: string;
 }
 
-function InputData({ expressionModalInfo, questionnaireResponseRD, launchContextValue }: InputDataProps) {
-    console.log('LCV', launchContextValue);
+function InputData({
+    expressionModalInfo,
+    questionnaireResponseRD,
+    launchContextValue,
+    launchContext,
+    parameterName,
+}: InputDataProps) {
     if (expressionModalInfo.type === 'LaunchContext') {
-        return (
-            <CodeEditor
-                valueObject={launchContextValue}
-                options={{
-                    readOnly: true,
-                }}
-            />
-        );
+        if (checkParameterName(parameterName, launchContext)) {
+            return (
+                <CodeEditor
+                    valueObject={launchContextValue}
+                    options={{
+                        readOnly: true,
+                    }}
+                />
+            );
+        } else {
+            return (
+                <div>
+                    {launchContext.parameter?.map((item) => (
+                        <p className={s.parameterName} key={item.name}>
+                            %{item.name}
+                        </p>
+                    ))}
+                </div>
+            );
+        }
     } else if (expressionModalInfo.type === 'QuestionnaireResponse') {
         return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
     } else return <div>Error: Invalid modal type</div>;

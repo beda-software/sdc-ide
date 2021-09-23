@@ -17,8 +17,7 @@ export function useModal(
     const [indexOfContext, setIndexOfContext] = useState(0);
     const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
 
-    console.log('expressionModalInfo.expression', expressionModalInfo.expression);
-    console.log('parsed', extractParameterName(expressionModalInfo.expression));
+    const parameterName = extractParameterName(expressionModalInfo.expression);
 
     const setContextData = useCallback(() => {
         if (expressionModalInfo.type === 'LaunchContext') {
@@ -90,5 +89,6 @@ export function useModal(
         expressionResultOutput,
         saveExpression,
         launchContextValue,
+        parameterName,
     };
 }
