@@ -97,7 +97,7 @@ function InputData({ expressionModalInfo, questionnaireResponseRD, fullLaunchCon
         if (parameterName in fullLaunchContext) {
             return (
                 <CodeEditor
-                    valueObject={fullLaunchContext}
+                    valueObject={fullLaunchContext[parameterName]}
                     options={{
                         readOnly: true,
                     }}
