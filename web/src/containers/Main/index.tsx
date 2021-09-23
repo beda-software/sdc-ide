@@ -13,9 +13,6 @@ import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
-import { ModalExpression } from 'src/components/ModalExpression';
-import { useContextMenu } from 'src/containers/Main/hooks/contextMenuHook';
-import { ContextMenuModal } from 'src/components/ContextMenuModal';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -44,15 +41,6 @@ export function Main() {
         mapperInfoList,
     } = useMain(questionnaireId);
 
-    const {
-        closeExpressionModal,
-        expressionModalInfo,
-        setExpression,
-        openContextMenu,
-        contextMenuInfo,
-        contextMenu,
-    } = useContextMenu();
-
     return (
         <>
             {showModal && mapperInfoList && (
@@ -62,30 +50,18 @@ export function Main() {
                     mapperInfoList={mapperInfoList}
                 />
             )}
-            {expressionModalInfo !== null && (
-                <ModalExpression
-                    expressionModalInfo={expressionModalInfo}
-                    launchContext={launchContext}
-                    questionnaireResponseRD={questionnaireResponseRD}
-                    closeExpressionModal={closeExpressionModal}
-                    setExpression={setExpression}
-                    openContextMenu={openContextMenu}
-                />
-            )}
-            {contextMenuInfo?.showContextMenu && (
-                <ContextMenuModal contextMenuPosition={contextMenuInfo.menuPosition} contextMenu={contextMenu} />
-            )}
             <div className={s.mainContainer}>
                 <ToastContainer />
                 <ExpandableRow cssClass={s.upperRowContainer}>
                     <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
-                        <LaunchContextDisplay parameters={launchContext} openContextMenu={openContextMenu} />
+                        <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
                         <ResourceCodeEditor
                             resourceRD={questionnaireFHIRRD}
                             onSave={saveQuestionnaireFHIR}
-                            openContextMenu={openContextMenu}
+                            launchContext={launchContext}
+                            questionnaireResponseRD={questionnaireResponseRD}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
@@ -101,10 +77,7 @@ export function Main() {
                         title="QuestionnaireResponse FHIR resource"
                         cssClass={s.questionnaireResponseFHIRResourceBox}
                     >
-                        <ResourceCodeDisplay
-                            resourceResponse={questionnaireResponseRD}
-                            openContextMenu={openContextMenu}
-                        />
+                        <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
                     <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
                         <div>
@@ -116,13 +89,14 @@ export function Main() {
                             <ResourceCodeEditor
                                 resourceRD={mappingRD}
                                 onSave={saveMapping}
-                                openContextMenu={openContextMenu}
+                                launchContext={launchContext}
+                                questionnaireResponseRD={questionnaireResponseRD}
                             />
                         </div>
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
                         <div>
-                            <ResourceCodeDisplay resourceResponse={batchRequestRD} openContextMenu={openContextMenu} />
+                            <ResourceCodeDisplay resourceResponse={batchRequestRD} />
                             <Button onClick={applyMappings}>Apply</Button>
                         </div>
                     </ExpandableElement>

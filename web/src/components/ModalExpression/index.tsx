@@ -2,13 +2,13 @@ import React from 'react';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { CodeEditor } from 'src/components/CodeEditor';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
-import { ExpressionModalInfo, OpenContextMenu, ValueObject } from 'src/containers/Main/types';
+import { ExpressionModalInfo } from 'src/containers/Main/types';
 import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
+import { CodeEditor } from 'src/components/CodeEditor';
+import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -16,19 +16,11 @@ interface ModalExpressionProps {
     expressionModalInfo: ExpressionModalInfo;
     closeExpressionModal: () => void;
     setExpression: (expression: string) => void;
-    openContextMenu: OpenContextMenu;
 }
 
 export function ModalExpression(props: ModalExpressionProps) {
-    const {
-        launchContext,
-        questionnaireResponseRD,
-        expressionModalInfo,
-        closeExpressionModal,
-        setExpression,
-        openContextMenu,
-    } = props;
-    const { expressionResultOutput, saveExpression, launchContextValue } = useModal(
+    const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
+    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useModal(
         expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
@@ -67,8 +59,8 @@ export function ModalExpression(props: ModalExpressionProps) {
                             <InputData
                                 expressionModalInfo={expressionModalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
-                                launchContextValue={launchContextValue}
-                                openContextMenu={openContextMenu}
+                                fullLaunchContext={fullLaunchContext}
+                                parameterName={parameterName}
                             />
                         ) : (
                             <div>Error: no data</div>
@@ -96,27 +88,33 @@ export function ModalExpression(props: ModalExpressionProps) {
 interface InputDataProps {
     expressionModalInfo: ExpressionModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
-    launchContextValue?: ValueObject;
-    openContextMenu: OpenContextMenu;
+    fullLaunchContext: Record<string, any>;
+    parameterName: string;
 }
 
-function InputData({
-    expressionModalInfo,
-    questionnaireResponseRD,
-    openContextMenu,
-    launchContextValue,
-}: InputDataProps) {
+function InputData({ expressionModalInfo, questionnaireResponseRD, fullLaunchContext, parameterName }: InputDataProps) {
     if (expressionModalInfo.type === 'LaunchContext') {
-        return (
-            <CodeEditor
-                valueObject={launchContextValue}
-                options={{
-                    readOnly: true,
-                }}
-                openContextMenu={openContextMenu}
-            />
-        );
+        if (parameterName in fullLaunchContext) {
+            return (
+                <CodeEditor
+                    valueObject={fullLaunchContext}
+                    options={{
+                        readOnly: true,
+                    }}
+                />
+            );
+        } else {
+            return (
+                <div>
+                    {Object.keys(fullLaunchContext).map((key: string) => (
+                        <p className={s.parameterName} key={key}>
+                            %{key}
+                        </p>
+                    ))}
+                </div>
+            );
+        }
     } else if (expressionModalInfo.type === 'QuestionnaireResponse') {
-        return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} openContextMenu={openContextMenu} />;
+        return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
     } else return <div>Error: Invalid modal type</div>;
 }

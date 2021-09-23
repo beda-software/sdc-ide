@@ -22,27 +22,32 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
             className={s.wrapper}
             ref={wrapperRef}
         >
-            <div className={s.button} onClick={() => contextMenu.debugger()}>
-                - Debugger
-            </div>
-            <div className={s.separater}>-------------</div>
-            <div className={s.button} onClick={() => contextMenu.undo()}>
+            {contextMenu.debugger && (
+                <>
+                    <div className={s.button} onClick={contextMenu.debugger}>
+                        - Debugger
+                    </div>
+                    <div className={s.separater}>-------------</div>
+                </>
+            )}
+
+            <div className={s.button} onClick={contextMenu.undo}>
                 - Undo {'<--'}{' '}
             </div>
-            <div className={s.button} onClick={() => contextMenu.redo()}>
+            <div className={s.button} onClick={contextMenu.redo}>
                 - Redo {'-->'}{' '}
             </div>
             <div className={s.separater}>-------------</div>
-            <div className={s.button} onClick={() => contextMenu.cut()}>
+            <div className={s.button} onClick={contextMenu.cut}>
                 - Cut
             </div>
-            <div className={s.button} onClick={() => contextMenu.copy()}>
+            <div className={s.button} onClick={contextMenu.copy}>
                 - Copy
             </div>
-            <div className={s.button} onClick={() => contextMenu.paste()}>
+            <div className={s.button} onClick={contextMenu.paste}>
                 - Paste
             </div>
-            <div className={s.button} onClick={() => contextMenu.selectAll()}>
+            <div className={s.button} onClick={contextMenu.selectAll}>
                 - Select All
             </div>
         </div>
