@@ -4,12 +4,11 @@ import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
-import { ExpressionModalInfo, ValueObject } from 'src/containers/Main/types';
+import { ExpressionModalInfo } from 'src/containers/Main/types';
 import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { checkParameterName } from './utils';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -21,7 +20,7 @@ interface ModalExpressionProps {
 
 export function ModalExpression(props: ModalExpressionProps) {
     const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
-    const { expressionResultOutput, saveExpression, launchContextValue, parameterName } = useModal(
+    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useModal(
         expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
@@ -60,8 +59,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                             <InputData
                                 expressionModalInfo={expressionModalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
-                                launchContextValue={launchContextValue}
-                                launchContext={launchContext}
+                                fullLaunchContext={fullLaunchContext}
                                 parameterName={parameterName}
                             />
                         ) : (
@@ -90,23 +88,16 @@ export function ModalExpression(props: ModalExpressionProps) {
 interface InputDataProps {
     expressionModalInfo: ExpressionModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
-    launchContextValue?: ValueObject;
-    launchContext: Parameters;
+    fullLaunchContext: Record<string, any>;
     parameterName: string;
 }
 
-function InputData({
-    expressionModalInfo,
-    questionnaireResponseRD,
-    launchContextValue,
-    launchContext,
-    parameterName,
-}: InputDataProps) {
+function InputData({ expressionModalInfo, questionnaireResponseRD, fullLaunchContext, parameterName }: InputDataProps) {
     if (expressionModalInfo.type === 'LaunchContext') {
-        if (checkParameterName(parameterName, launchContext)) {
+        if (parameterName in fullLaunchContext) {
             return (
                 <CodeEditor
-                    valueObject={launchContextValue}
+                    valueObject={fullLaunchContext}
                     options={{
                         readOnly: true,
                     }}
@@ -115,9 +106,9 @@ function InputData({
         } else {
             return (
                 <div>
-                    {launchContext.parameter?.map((item) => (
-                        <p className={s.parameterName} key={item.name}>
-                            %{item.name}
+                    {Object.keys(fullLaunchContext).map((key: string) => (
+                        <p className={s.parameterName} key={key}>
+                            %{key}
                         </p>
                     ))}
                 </div>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { AidboxResource, Parameters, Resource } from 'shared/src/contrib/aidbox';
+import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
 import { replaceLine } from 'src/utils/codemirror';
 import { extractParameterName } from './utils';
@@ -16,8 +16,6 @@ export function useModal(
     closeExpressionModal: () => void,
 ) {
     const [expressionResultOutput, setExpressionResultOutput] = useState<ExpressionResultOutput | null>(null);
-    const [indexOfContext, setIndexOfContext] = useState(0);
-    const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
     const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
 
     const [fullLaunchContextRD] = useService(async () => {
@@ -38,13 +36,7 @@ export function useModal(
 
     const setContextData = useCallback(() => {
         if (expressionModalInfo.type === 'LaunchContext') {
-            launchContext?.parameter?.map((parameter, index) => {
-                if (parameter.name === extractParameterName(expressionModalInfo.expression)) {
-                    setIndexOfContext(index);
-                }
-            });
-            setLaunchContextValue(launchContext?.parameter?.[indexOfContext]?.resource);
-            return launchContext?.parameter?.[indexOfContext]?.resource;
+            return fullLaunchContext[parameterName];
         }
         if (expressionModalInfo.type === 'QuestionnaireResponse') {
             if (isSuccess(questionnaireResponseRD)) {
@@ -52,13 +44,7 @@ export function useModal(
             }
         }
         return launchContext.parameter?.map((item) => item.name);
-    }, [
-        indexOfContext,
-        launchContext.parameter,
-        expressionModalInfo.expression,
-        expressionModalInfo.type,
-        questionnaireResponseRD,
-    ]);
+    }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 
     const saveExpression = () => {
         let newLine;
@@ -85,10 +71,11 @@ export function useModal(
             setExpressionResultOutput({ type: 'error', result: String(e) });
         }
     }, [expressionModalInfo.expression, fullLaunchContext, setContextData]);
+
     return {
         expressionResultOutput,
         saveExpression,
-        launchContextValue,
         parameterName,
+        fullLaunchContext,
     };
 }
