@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Parameters } from 'shared/src/contrib/aidbox/index';
+import { Parameters, Questionnaire } from 'shared/src/contrib/aidbox/index';
 
 import { CodeEditor } from 'src/components/CodeEditor';
 import { Button } from 'src/components/Button';
@@ -13,14 +13,17 @@ interface Props {
     sourceQueryId: string;
     closeExpressionModal: () => void;
     launchContext: Parameters;
+    resource: Questionnaire;
 }
 
 export function SourceQueryDebugModal(props: Props) {
-    const { sourceQueryId, closeExpressionModal, launchContext } = props;
-    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange } = useSourceQueryDebugModal(
+    const { sourceQueryId, closeExpressionModal, launchContext, resource } = props;
+    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
         sourceQueryId,
-    );
+        resource,
+        closeExpressionModal,
+    });
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
@@ -29,7 +32,7 @@ export function SourceQueryDebugModal(props: Props) {
                         <h2>ID: {sourceQueryId}</h2>
                     </div>
                     <div className={s.save}>
-                        <Button onClick={console.log}>save</Button>
+                        <Button onClick={onSave}>save</Button>
                     </div>
                     <div className={s.close}>
                         <Button variant="secondary" onClick={closeExpressionModal}>

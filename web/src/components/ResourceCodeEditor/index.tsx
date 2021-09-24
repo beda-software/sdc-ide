@@ -39,11 +39,16 @@ export function ResourceCodeEditor<R extends AidboxResource>({
             </RenderRemoteData>
             {expressionModalInfo &&
                 (expressionModalInfo.type === 'SourceQueries' ? (
-                    <SourceQueryDebugModal
-                        sourceQueryId={expressionModalInfo?.expression || ''}
-                        closeExpressionModal={closeExpressionModal}
-                        launchContext={launchContext}
-                    />
+                    <RenderRemoteData remoteData={resourceRD}>
+                        {(resource) => (
+                            <SourceQueryDebugModal
+                                sourceQueryId={expressionModalInfo?.expression || ''}
+                                closeExpressionModal={closeExpressionModal}
+                                launchContext={launchContext}
+                                resource={resource}
+                            />
+                        )}
+                    </RenderRemoteData>
                 ) : (
                     <ModalExpression
                         expressionModalInfo={expressionModalInfo}

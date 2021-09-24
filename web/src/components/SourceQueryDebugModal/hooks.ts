@@ -1,11 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Bundle, Parameters } from 'shared/src/contrib/aidbox/index';
+import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { mapSuccess, service } from 'aidbox-react/src/services/service';
 import { failure, isSuccess } from 'aidbox-react/src/libs/remoteData';
+import { updateQuestionnaire } from 'src/containers/Main/hooks';
 import _ from 'lodash';
 
-export function useSourceQueryDebugModal(launchContext: Parameters, sourceQueryId: string) {
+interface Props {
+    launchContext: Parameters;
+    sourceQueryId: string;
+    resource: Questionnaire;
+    closeExpressionModal: () => void;
+}
+
+export function useSourceQueryDebugModal(props: Props) {
+    const { launchContext, sourceQueryId, resource, closeExpressionModal } = props;
     const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
@@ -23,6 +32,16 @@ export function useSourceQueryDebugModal(launchContext: Parameters, sourceQueryI
             }
         })();
     }, [launchContext, sourceQueryId]);
+
+    const onSave = () => {
+        const newResource = { ...resource };
+        if (newResource && newResource.contained && rawSourceQuery) {
+            const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
+            newResource.contained[indexOfContainedId] = rawSourceQuery;
+            updateQuestionnaire(newResource, false);
+        }
+        closeExpressionModal();
+    };
 
     const onChangeRaw = (newRawSourceQuery: Bundle) => {
         setRawSourceQuery(newRawSourceQuery);
@@ -62,5 +81,6 @@ export function useSourceQueryDebugModal(launchContext: Parameters, sourceQueryI
         rawSourceQuery,
         preparedSourceQueryRD,
         onChange,
+        onSave,
     };
 }
