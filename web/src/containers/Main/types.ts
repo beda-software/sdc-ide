@@ -37,7 +37,7 @@ export interface ContextMenuInfo {
 
 export type ValueObject = Resource | ParametersParameterValue;
 
-export type ModalType = 'LaunchContext' | 'QuestionnaireResponse';
+export type ModalType = 'LaunchContext' | 'QuestionnaireResponse' | 'SourceQueries';
 
 export type ExpressionResultOutput = {
     type: 'success' | 'error';

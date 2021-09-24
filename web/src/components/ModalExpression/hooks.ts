@@ -43,6 +43,11 @@ export function useModal(
                 return questionnaireResponseRD.data;
             }
         }
+        if (expressionModalInfo.type === 'SourceQueries') {
+            if (isSuccess(questionnaireResponseRD)) {
+                return 'TEST Source Query';
+            }
+        }
         return launchContext.parameter?.map((item) => item.name);
     }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 

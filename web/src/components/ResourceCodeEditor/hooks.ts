@@ -18,6 +18,10 @@ export function useExpressionModal() {
                     modalType = 'LaunchContext';
                     choosenExpression = contextMenuInfo.event.target.innerText.replaceAll('"', '');
                 }
+                if (contextMenuInfo.event.target.innerText.includes('localRef')) {
+                    modalType = 'SourceQueries';
+                    choosenExpression = contextMenuInfo.event.target.innerText.split('#')[1];
+                }
             }
             if (contextMenuInfo.valueObject.resourceType === 'Mapping') {
                 if (contextMenuInfo.event.target.innerText.split('')[0] === "'") {
