@@ -7,6 +7,7 @@ import { Button } from 'src/components/Button';
 import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
 
 import s from './SourceQueryDebugModal.module.scss';
+import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
 
 interface Props {
     sourceQueryId: string;
@@ -16,7 +17,10 @@ interface Props {
 
 export function SourceQueryDebugModal(props: Props) {
     const { sourceQueryId, closeExpressionModal, launchContext } = props;
-    const { rawSourceQuery, preparedSourceQuery, bunleResult } = useSourceQueryDebugModal(launchContext, sourceQueryId);
+    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange } = useSourceQueryDebugModal(
+        launchContext,
+        sourceQueryId,
+    );
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
@@ -37,35 +41,33 @@ export function SourceQueryDebugModal(props: Props) {
                     <div className={s.inputData}>
                         <h2>Raw</h2>
                         {rawSourceQuery && (
-                            <CodeEditor key={sourceQueryId} valueObject={rawSourceQuery} onChange={console.log} />
+                            <CodeEditor key={sourceQueryId} valueObject={rawSourceQuery} onChange={onChange} />
                         )}
 
                         <h2>Prepared</h2>
-                        {/*<RenderRemoteData remoteData={preparedSourceQueryRD}>*/}
-                        {/*    {(resource) => (*/}
-                        {/*        <CodeEditor*/}
-                        {/*            key={resource.id}*/}
-                        {/*            valueObject={resource}*/}
-                        {/*            options={{*/}
-                        {/*                readOnly: true,*/}
-                        {/*            }}*/}
-                        {/*        />*/}
-                        {/*    )}*/}
-                        {/*</RenderRemoteData>*/}
-                        <CodeEditor
-                            valueObject={preparedSourceQuery}
-                            options={{
-                                readOnly: true,
-                            }}
-                        />
+                        <RenderRemoteData remoteData={preparedSourceQueryRD}>
+                            {(resource) => (
+                                <CodeEditor
+                                    key={resource.id}
+                                    valueObject={resource}
+                                    options={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            )}
+                        </RenderRemoteData>
                     </div>
                     <div className={s.outputData}>
-                        <CodeEditor
-                            valueObject={bunleResult}
-                            options={{
-                                readOnly: true,
-                            }}
-                        />
+                        <RenderRemoteData remoteData={bundleResultRD}>
+                            {(resource) => (
+                                <CodeEditor
+                                    valueObject={resource}
+                                    options={{
+                                        readOnly: true,
+                                    }}
+                                />
+                            )}
+                        </RenderRemoteData>
                     </div>
                 </div>
             </div>
