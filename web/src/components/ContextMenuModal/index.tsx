@@ -18,20 +18,21 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
         left: contextMenuPosition.left,
     };
 
-    if (contextMenuPosition.top > document.documentElement.clientHeight - 145) {
-        position.top = contextMenuPosition.top - 145;
+    if (contextMenuPosition.top > document.documentElement.clientHeight - 165) {
+        position.top -= 165;
     }
 
     return (
         <div style={{ top: position.top, left: position.left }} className={s.wrapper} ref={wrapperRef}>
-            {contextMenu.debugger && (
-                <>
-                    <div className={s.button} onClick={contextMenu.debugger}>
-                        - Debugger
-                    </div>
-                    <div className={s.separater}>-------------</div>
-                </>
-            )}
+            <>
+                <div
+                    className={contextMenu.debugger ? s.button : s.buttonDisable}
+                    onClick={contextMenu.debugger && contextMenu.debugger}
+                >
+                    - Debugger
+                </div>
+                <div className={s.separater}>-------------</div>
+            </>
 
             <div className={s.button} onClick={contextMenu.undo}>
                 - Undo {'<--'}{' '}
