@@ -46,7 +46,7 @@ export function SourceQueryDebugModal(props: Props) {
                         {rawSourceQuery && (
                             <CodeEditor key={sourceQueryId} valueObject={rawSourceQuery} onChange={onChange} />
                         )}
-
+                        <div className={s.separator} />
                         <h2>Prepared</h2>
                         <RenderRemoteData remoteData={preparedSourceQueryRD}>
                             {(resource) => (
