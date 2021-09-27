@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { mapSuccess, service } from 'aidbox-react/src/services/service';
@@ -15,25 +15,9 @@ interface Props {
 
 export function useSourceQueryDebugModal(props: Props) {
     const { launchContext, sourceQueryId, resource, closeExpressionModal } = props;
-    const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
-    useEffect(() => {
-        (async () => {
-            const response = await service<Record<string, any>>({
-                method: 'POST',
-                url: 'Questionnaire/$context',
-                data: launchContext,
-            });
-            if (isSuccess(response)) {
-                const newFullLaunchContext = response.data;
-                setFullLaunchContext(newFullLaunchContext);
-                setRawSourceQuery(_.find(newFullLaunchContext.Questionnaire?.contained, { id: sourceQueryId }));
-            }
-        })();
-    }, [launchContext, sourceQueryId]);
-
-    const onSave = () => {
+    const onSave = useCallback(() => {
         const newResource = { ...resource };
         if (newResource && newResource.contained && rawSourceQuery) {
             const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
@@ -41,13 +25,24 @@ export function useSourceQueryDebugModal(props: Props) {
             updateQuestionnaire(newResource, false);
         }
         closeExpressionModal();
-    };
+    }, [closeExpressionModal, rawSourceQuery, resource, sourceQueryId]);
 
-    const onChangeRaw = (newRawSourceQuery: Bundle) => {
-        setRawSourceQuery(newRawSourceQuery);
-    };
+    const onChange = _.debounce(setRawSourceQuery, 1000);
 
-    const onChange = useCallback(_.debounce(onChangeRaw, 1000), [onChangeRaw]);
+    const [fullLaunchContext] = useService(async () => {
+        const response = await service<any>({
+            // TODO use right type
+            method: 'POST',
+            url: 'Questionnaire/$context',
+            data: launchContext,
+        });
+        if (isSuccess(response)) {
+            setRawSourceQuery(_.find(response.data.Questionnaire?.contained, { id: sourceQueryId }));
+            console.log(response.data);
+            return response.data;
+        }
+        return failure(null);
+    }, [launchContext, sourceQueryId]);
 
     const [preparedSourceQueryRD] = useService(async () => {
         if (rawSourceQuery && fullLaunchContext) {
@@ -62,7 +57,7 @@ export function useSourceQueryDebugModal(props: Props) {
             return mapSuccess(response, (expression) => JSON.parse(expression));
         }
         return failure(null);
-    }, [rawSourceQuery]);
+    }, [rawSourceQuery, fullLaunchContext]);
 
     const [bundleResultRD] = useService(async () => {
         if (isSuccess(preparedSourceQueryRD)) {
