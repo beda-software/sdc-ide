@@ -13,15 +13,17 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
     const wrapperRef = useRef(null);
     useOutsideClick(wrapperRef, contextMenu);
 
+    const position = {
+        top: contextMenuPosition.top,
+        left: contextMenuPosition.left,
+    };
+
+    if (contextMenuPosition.top > document.documentElement.clientHeight - 145) {
+        position.top = contextMenuPosition.top - 145;
+    }
+
     return (
-        <div
-            style={{
-                top: contextMenuPosition.top,
-                left: contextMenuPosition.left,
-            }}
-            className={s.wrapper}
-            ref={wrapperRef}
-        >
+        <div style={{ top: position.top, left: position.left }} className={s.wrapper} ref={wrapperRef}>
             {contextMenu.debugger && (
                 <>
                     <div className={s.button} onClick={contextMenu.debugger}>
