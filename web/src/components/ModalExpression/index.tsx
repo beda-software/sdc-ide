@@ -2,13 +2,13 @@ import React from 'react';
 import { RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { CodeEditor } from 'src/components/CodeEditor';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
-import { ExpressionModalInfo, ValueObject } from 'src/containers/Main/types';
+import { ExpressionModalInfo } from 'src/containers/Main/types';
 import { useModal } from 'src/components/ModalExpression/hooks';
 import s from './ModalExpression.module.scss';
+import { CodeEditor } from 'src/components/CodeEditor';
+import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -20,14 +20,12 @@ interface ModalExpressionProps {
 
 export function ModalExpression(props: ModalExpressionProps) {
     const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
-    const { expressionResultOutput, saveExpression, launchContextValue } = useModal(
+    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useModal(
         expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
         closeExpressionModal,
     );
-
-    console.log('expressionModalInfo', expressionModalInfo);
 
     return (
         <div className={s.wrapper}>
@@ -61,7 +59,9 @@ export function ModalExpression(props: ModalExpressionProps) {
                             <InputData
                                 expressionModalInfo={expressionModalInfo}
                                 questionnaireResponseRD={questionnaireResponseRD}
-                                launchContextValue={launchContextValue}
+                                fullLaunchContext={fullLaunchContext}
+                                parameterName={parameterName}
+                                setExpression={setExpression}
                             />
                         ) : (
                             <div>Error: no data</div>
@@ -89,19 +89,39 @@ export function ModalExpression(props: ModalExpressionProps) {
 interface InputDataProps {
     expressionModalInfo: ExpressionModalInfo;
     questionnaireResponseRD: RemoteData<AidboxResource>;
-    launchContextValue?: ValueObject;
+    fullLaunchContext: Record<string, any>;
+    parameterName: string;
+    setExpression: (expression: string) => void;
 }
 
-function InputData({ expressionModalInfo, questionnaireResponseRD, launchContextValue }: InputDataProps) {
+function InputData({
+    expressionModalInfo,
+    questionnaireResponseRD,
+    fullLaunchContext,
+    parameterName,
+    setExpression,
+}: InputDataProps) {
     if (expressionModalInfo.type === 'LaunchContext') {
-        return (
-            <CodeEditor
-                valueObject={launchContextValue}
-                options={{
-                    readOnly: true,
-                }}
-            />
-        );
+        if (parameterName in fullLaunchContext) {
+            return (
+                <CodeEditor
+                    valueObject={fullLaunchContext[parameterName]}
+                    options={{
+                        readOnly: true,
+                    }}
+                />
+            );
+        } else {
+            return (
+                <div>
+                    {Object.keys(fullLaunchContext).map((key: string) => (
+                        <p className={s.parameterName} key={key} onClick={() => setExpression('%' + key)}>
+                            %{key}
+                        </p>
+                    ))}
+                </div>
+            );
+        }
     } else if (expressionModalInfo.type === 'QuestionnaireResponse') {
         return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
     } else return <div>Error: Invalid modal type</div>;

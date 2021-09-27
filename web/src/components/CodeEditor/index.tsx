@@ -22,6 +22,7 @@ export function CodeEditor(props: CodeEditorProps) {
     const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({ openExpressionModal });
 
     const cache = useRef(valueObject);
+    // console.log('valueObject', valueObject);
 
     return (
         <>

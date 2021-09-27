@@ -6,6 +6,7 @@ import { CodeEditor } from 'src/components/CodeEditor';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { ModalExpression } from 'src/components/ModalExpression';
 import { useExpressionModal } from './hooks';
+import { SourceQueryDebugModal } from 'src/components/SourceQueryDebugModal';
 
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;
@@ -36,8 +37,19 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                     />
                 )}
             </RenderRemoteData>
-            {expressionModalInfo && (
-                <>
+            {expressionModalInfo &&
+                (expressionModalInfo.type === 'SourceQueries' ? (
+                    <RenderRemoteData remoteData={resourceRD}>
+                        {(resource) => (
+                            <SourceQueryDebugModal
+                                sourceQueryId={expressionModalInfo?.expression || ''}
+                                closeExpressionModal={closeExpressionModal}
+                                launchContext={launchContext}
+                                resource={resource}
+                            />
+                        )}
+                    </RenderRemoteData>
+                ) : (
                     <ModalExpression
                         expressionModalInfo={expressionModalInfo}
                         launchContext={launchContext}
@@ -45,8 +57,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                         closeExpressionModal={closeExpressionModal}
                         setExpression={setExpression}
                     />
-                </>
-            )}
+                ))}
         </>
     );
 }

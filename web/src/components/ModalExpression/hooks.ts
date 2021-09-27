@@ -2,9 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { AidboxResource, Parameters, Resource } from 'shared/src/contrib/aidbox';
-import { ExpressionResultOutput, ExpressionModalInfo } from 'src/containers/Main/types';
+import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
+import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
 import { replaceLine } from 'src/utils/codemirror';
+import { extractParameterName } from './utils';
+import { useService } from 'aidbox-react/src/hooks/service';
+import { service } from 'aidbox-react/src/services/service';
 
 export function useModal(
     expressionModalInfo: ExpressionModalInfo,
@@ -13,47 +16,40 @@ export function useModal(
     closeExpressionModal: () => void,
 ) {
     const [expressionResultOutput, setExpressionResultOutput] = useState<ExpressionResultOutput | null>(null);
-    const [indexOfContext, setIndexOfContext] = useState(0);
-    const [launchContextValue, setLaunchContextValue] = useState<Resource | undefined>();
+    const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
+
+    const [fullLaunchContextRD] = useService(async () => {
+        return await service<Record<string, any>>({
+            method: 'POST',
+            url: 'Questionnaire/$context',
+            data: launchContext,
+        });
+    });
+
+    useEffect(() => {
+        if (isSuccess(fullLaunchContextRD)) {
+            setFullLaunchContext(fullLaunchContextRD.data);
+        }
+    }, [fullLaunchContext, fullLaunchContextRD]);
+
+    const parameterName = extractParameterName(expressionModalInfo.expression);
 
     const setContextData = useCallback(() => {
         if (expressionModalInfo.type === 'LaunchContext') {
-            launchContext?.parameter?.map((parameter, index) => {
-                if (parameter.name === String(expressionModalInfo.expression.split('.')[0]).slice(1)) {
-                    setIndexOfContext(index);
-                }
-            });
-            setLaunchContextValue(launchContext?.parameter?.[indexOfContext]?.resource);
-            return launchContext?.parameter?.[indexOfContext]?.resource;
+            return fullLaunchContext[parameterName];
         }
         if (expressionModalInfo.type === 'QuestionnaireResponse') {
             if (isSuccess(questionnaireResponseRD)) {
                 return questionnaireResponseRD.data;
             }
         }
-    }, [
-        indexOfContext,
-        launchContext.parameter,
-        expressionModalInfo.expression,
-        expressionModalInfo.type,
-        questionnaireResponseRD,
-    ]);
-
-    const selectContext = useCallback(() => {
-        const contextData: Record<string, any> = {};
-        if (expressionModalInfo.type === 'LaunchContext') {
-            launchContext.parameter?.map((parameter) => {
-                contextData[parameter.name] = setContextData();
-            });
-            return contextData;
-        }
-        if (expressionModalInfo.type === 'QuestionnaireResponse') {
+        if (expressionModalInfo.type === 'SourceQueries') {
             if (isSuccess(questionnaireResponseRD)) {
-                contextData[questionnaireResponseRD.data.resourceType] = setContextData();
-                return contextData;
+                return 'TEST Source Query';
             }
         }
-    }, [launchContext.parameter, expressionModalInfo.type, questionnaireResponseRD, setContextData]);
+        return launchContext.parameter?.map((item) => item.name);
+    }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 
     const saveExpression = () => {
         let newLine;
@@ -74,16 +70,17 @@ export function useModal(
 
     useEffect(() => {
         try {
-            const evaluate = fhirpath.evaluate(setContextData(), expressionModalInfo.expression, selectContext());
+            const evaluate = fhirpath.evaluate(setContextData(), expressionModalInfo.expression, fullLaunchContext);
             setExpressionResultOutput({ type: 'success', result: yaml.dump(JSON.parse(JSON.stringify(evaluate))) });
         } catch (e) {
             setExpressionResultOutput({ type: 'error', result: String(e) });
         }
-    }, [expressionModalInfo.expression, selectContext, setContextData]);
+    }, [expressionModalInfo.expression, fullLaunchContext, setContextData]);
 
     return {
         expressionResultOutput,
         saveExpression,
-        launchContextValue,
+        parameterName,
+        fullLaunchContext,
     };
 }

@@ -13,23 +13,26 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
     const wrapperRef = useRef(null);
     useOutsideClick(wrapperRef, contextMenu);
 
+    const position = {
+        top: contextMenuPosition.top,
+        left: contextMenuPosition.left,
+    };
+
+    if (contextMenuPosition.top > document.documentElement.clientHeight - 165) {
+        position.top -= 165;
+    }
+
     return (
-        <div
-            style={{
-                top: contextMenuPosition.top,
-                left: contextMenuPosition.left,
-            }}
-            className={s.wrapper}
-            ref={wrapperRef}
-        >
-            {contextMenu.debugger && (
-                <>
-                    <div className={s.button} onClick={contextMenu.debugger}>
-                        - Debugger
-                    </div>
-                    <div className={s.separater}>-------------</div>
-                </>
-            )}
+        <div style={{ top: position.top, left: position.left }} className={s.wrapper} ref={wrapperRef}>
+            <>
+                <div
+                    className={contextMenu.debugger ? s.button : s.buttonDisable}
+                    onClick={contextMenu.debugger && contextMenu.debugger}
+                >
+                    - Debugger
+                </div>
+                <div className={s.separater}>-------------</div>
+            </>
 
             <div className={s.button} onClick={contextMenu.undo}>
                 - Undo {'<--'}{' '}

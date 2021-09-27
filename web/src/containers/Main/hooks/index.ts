@@ -35,7 +35,7 @@ export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnai
     }
 };
 
-const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) => {
+export const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) => {
     return service<unknown, OperationOutcome>({
         method: 'PUT',
         data: resource,
