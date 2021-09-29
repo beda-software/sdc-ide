@@ -6,7 +6,7 @@ import { failure, isSuccess } from 'aidbox-react/src/libs/remoteData';
 import { updateQuestionnaire } from 'src/containers/Main/hooks';
 import _ from 'lodash';
 
-interface Props {
+export interface Props {
     launchContext: Parameters;
     sourceQueryId: string;
     resource: Questionnaire;
@@ -36,22 +36,18 @@ export function useSourceQueryDebugModal(props: Props) {
             url: 'Questionnaire/$context',
             data: launchContext,
         });
-        if (isSuccess(response)) {
-            setRawSourceQuery(_.find(response.data.Questionnaire?.contained, { id: sourceQueryId }));
-            console.log(response.data);
-            return response.data;
-        }
-        return failure(null);
+        isSuccess(response) && setRawSourceQuery(_.find(response.data.Questionnaire?.contained, { id: sourceQueryId }));
+        return response;
     }, [launchContext, sourceQueryId]);
 
     const [preparedSourceQueryRD] = useService(async () => {
-        if (rawSourceQuery && fullLaunchContext) {
+        if (rawSourceQuery && isSuccess(fullLaunchContext)) {
             const response = await service<string>({
                 method: 'POST',
                 url: `Questionnaire/$resolve-expression`,
                 data: {
                     expression: JSON.stringify(rawSourceQuery),
-                    env: fullLaunchContext,
+                    env: fullLaunchContext.data,
                 },
             });
             return mapSuccess(response, (expression) => JSON.parse(expression));
