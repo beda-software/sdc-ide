@@ -1,4 +1,4 @@
-export const expectedData = {
+export const expectedPreparedSourceQueryData = {
     id: 'DietAndNutrition',
     type: 'batch',
     entry: [

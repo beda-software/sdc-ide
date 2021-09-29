@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Parameters, Questionnaire } from 'shared/src/contrib/aidbox/index';
+import { Parameters } from 'shared/src/contrib/aidbox/index';
 
 import { CodeEditor } from 'src/components/CodeEditor';
 import { Button } from 'src/components/Button';
@@ -13,7 +13,7 @@ interface Props {
     sourceQueryId: string;
     closeExpressionModal: () => void;
     launchContext: Parameters;
-    resource: Questionnaire;
+    resource: any; // TODO edit type (Questionnaire or AidboxResource)
 }
 
 export function SourceQueryDebugModal(props: Props) {

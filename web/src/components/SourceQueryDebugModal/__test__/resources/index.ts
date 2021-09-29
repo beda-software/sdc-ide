@@ -1,4 +1,4 @@
-import { Bundle, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
+import { Bundle, NutritionOrder, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 import { Props } from 'src/components/SourceQueryDebugModal/hooks';
 
 const bundleArray = [
@@ -87,7 +87,7 @@ const sourceQueriesArray = [
     },
 ] as any;
 
-const patient: Patient = {
+export const patientData: Patient = {
     name: [
         {
             given: ['Jane', 'Jr.'],
@@ -114,6 +114,17 @@ const patient: Patient = {
     birthDate: '1980-01-01',
     id: 'patient-1',
     resourceType: 'Patient',
+};
+
+export const nutritionorderData: NutritionOrder = {
+    resourceType: 'NutritionOrder',
+    status: 'active',
+    intent: 'order',
+    patient: {
+        id: 'patient-1',
+        resourceType: 'Patient',
+    },
+    dateTime: '2021-07-29T00:30:00Z',
 };
 
 const questionnaire: Questionnaire = {
@@ -263,7 +274,7 @@ export const props: Props = {
         parameter: [
             {
                 name: 'LaunchPatient',
-                resource: patient,
+                resource: patientData,
             },
             {
                 name: 'Questionnaire',
