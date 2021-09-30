@@ -8,29 +8,36 @@ export function useExpressionModal() {
     const openExpressionModal = (contextMenuInfo: ContextMenuInfo) => {
         let modalType: ModalType | undefined;
         let choosenExpression;
+
+        const innerText = contextMenuInfo.event.target.innerText;
+
         if (contextMenuInfo && hasOwnProperty(contextMenuInfo.valueObject, 'resourceType')) {
             if (contextMenuInfo.valueObject.resourceType === 'Questionnaire') {
-                if (contextMenuInfo.event.target.innerText.split('')[0] === "'") {
+                if (innerText.split('')[0] === "'") {
                     modalType = 'LaunchContext';
-                    choosenExpression = contextMenuInfo.event.target.innerText.replaceAll("'", '');
+                    choosenExpression = innerText.replaceAll("'", '');
                 }
-                if (contextMenuInfo.event.target.innerText.split('')[0] === '"') {
+                if (innerText.split('')[0] === '"') {
                     modalType = 'LaunchContext';
-                    choosenExpression = contextMenuInfo.event.target.innerText.replaceAll('"', '');
+                    choosenExpression = innerText.replaceAll('"', '');
                 }
-                if (contextMenuInfo.event.target.innerText.includes('localRef')) {
+                if (innerText.includes('localRef')) {
                     modalType = 'SourceQueries';
-                    choosenExpression = contextMenuInfo.event.target.innerText.split('#')[1];
+                    choosenExpression = innerText.split('#')[1];
+                }
+                if (innerText.includes('#Bundle')) {
+                    modalType = 'SourceQueries';
+                    choosenExpression = innerText.split('#')[2].replace("'", '');
                 }
             }
             if (contextMenuInfo.valueObject.resourceType === 'Mapping') {
-                if (contextMenuInfo.event.target.innerText.split('')[0] === "'") {
+                if (innerText.split('')[0] === "'") {
                     modalType = 'QuestionnaireResponse';
-                    choosenExpression = contextMenuInfo.event.target.innerText.replaceAll("'", '');
+                    choosenExpression = innerText.replaceAll("'", '');
                 }
-                if (contextMenuInfo.event.target.innerText.split('')[0] === '"') {
+                if (innerText.split('')[0] === '"') {
                     modalType = 'QuestionnaireResponse';
-                    choosenExpression = contextMenuInfo.event.target.innerText.replaceAll('"', '');
+                    choosenExpression = innerText.replaceAll('"', '');
                 }
             }
         }
