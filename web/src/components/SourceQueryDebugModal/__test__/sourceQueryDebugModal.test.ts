@@ -24,13 +24,26 @@ beforeEach(async () => {
     };
 });
 
+test('preparedSourceQueryRD', async () => {
+    await setup();
+    const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
+    await waitFor(() => isSuccess(result.current.preparedSourceQueryRD));
+    const preparedSourceQueryData = ensure(result.current.preparedSourceQueryRD);
+    expect(preparedSourceQueryData).toStrictEqual(expectedPreparedSourceQueryData);
+});
+
 test('bundleResultRD', async () => {
     const { nutritionorder } = await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
     await waitFor(() => isSuccess(result.current.bundleResultRD));
-    const preparedSourceQueryData = ensure(result.current.preparedSourceQueryRD);
     const bundleResultData = ensure(result.current.bundleResultRD);
-    expect(preparedSourceQueryData).toStrictEqual(expectedPreparedSourceQueryData);
     expect(bundleResultData.entry?.[0].resource.entry?.[0].resource).toStrictEqual(nutritionorder);
+});
+
+test('onSave', async () => {
+    await setup();
+    const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
+    await waitFor(() => isSuccess(result.current.bundleResultRD));
     act(() => result.current.onSave());
+    // const newResource = { ...props.resource };
 });
