@@ -1,31 +1,37 @@
 import { useCallback, useState } from 'react';
-import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
+import { Bundle, Parameters, Resource } from 'shared/src/contrib/aidbox/index';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { mapSuccess, service } from 'aidbox-react/src/services/service';
 import { failure, isSuccess } from 'aidbox-react/src/libs/remoteData';
-import { updateQuestionnaire } from 'src/containers/Main/hooks';
+import { showToast, updateQuestionnaire } from 'src/containers/Main/hooks';
 import _ from 'lodash';
 
 export interface Props {
     launchContext: Parameters;
     sourceQueryId: string;
-    resource: Questionnaire;
     closeExpressionModal: () => void;
 }
 
 export function useSourceQueryDebugModal(props: Props) {
-    const { launchContext, sourceQueryId, resource, closeExpressionModal } = props;
+    const { launchContext, sourceQueryId, closeExpressionModal } = props;
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
-    const onSave = useCallback(() => {
-        const newResource = { ...resource };
-        if (newResource && newResource.contained && rawSourceQuery) {
-            const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
-            newResource.contained[indexOfContainedId] = rawSourceQuery;
-            updateQuestionnaire(newResource, false);
-        }
-        closeExpressionModal();
-    }, [closeExpressionModal, rawSourceQuery, resource, sourceQueryId]);
+    const onSave = useCallback(
+        async (resource) => {
+            const newResource = { ...resource };
+            if (newResource && newResource.contained && rawSourceQuery) {
+                const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
+                newResource.contained[indexOfContainedId] = rawSourceQuery;
+                const response = await updateQuestionnaire(newResource, false);
+                if (isSuccess(response)) {
+                    closeExpressionModal();
+                } else {
+                    showToast('error', response.error);
+                }
+            }
+        },
+        [closeExpressionModal, rawSourceQuery, sourceQueryId],
+    );
 
     const onChange = _.debounce(setRawSourceQuery, 1000);
 
