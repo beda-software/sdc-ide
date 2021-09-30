@@ -2,13 +2,13 @@ import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-dom/test-utils';
 import { ensure } from 'aidbox-react/src/utils/tests';
 import { axiosInstance } from 'aidbox-react/src/services/instance';
-import { saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
 import { isSuccess } from 'aidbox-react/src/libs/remoteData';
 import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
 import { setData } from 'src/services/localStorage';
 import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
-import { expectedPreparedSourceQueryData } from './resources/expectedData';
-import { nutritionorderData, patientData, props } from './resources';
+import { expectedNewQuestionnaireData, expectedPreparedSourceQueryData } from './resources/expectedData';
+import { nutritionorderData, patientData, props, resource } from './resources';
 
 async function setup() {
     const patient = ensure(await saveFHIRResource<Patient>(patientData));
@@ -44,6 +44,9 @@ test('onSave', async () => {
     await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
     await waitFor(() => isSuccess(result.current.bundleResultRD));
-    act(() => result.current.onSave());
-    // const newResource = { ...props.resource };
-});
+    await act(() => result.current.onSave(resource));
+    const newQuestionnaireData = ensure(
+        await getFHIRResource({ id: 'health-and-lifestyle', resourceType: 'Questionnaire' }),
+    );
+    expect(newQuestionnaireData).toStrictEqual(expectedNewQuestionnaireData);
+}); // TODO for work onSave in test and fix it need update docker-compose.tests.yaml
