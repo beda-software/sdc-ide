@@ -21,7 +21,6 @@ export function SourceQueryDebugModal(props: Props) {
     const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
         sourceQueryId,
-        resource,
         closeExpressionModal,
     });
     return (
@@ -32,7 +31,7 @@ export function SourceQueryDebugModal(props: Props) {
                         <h2>ID: {sourceQueryId}</h2>
                     </div>
                     <div className={s.save}>
-                        <Button onClick={onSave}>save</Button>
+                        <Button onClick={() => onSave(resource)}>save</Button>
                     </div>
                     <div className={s.close}>
                         <Button variant="secondary" onClick={closeExpressionModal}>

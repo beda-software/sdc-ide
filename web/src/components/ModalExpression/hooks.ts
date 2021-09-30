@@ -38,15 +38,8 @@ export function useModal(
         if (expressionModalInfo.type === 'LaunchContext') {
             return fullLaunchContext[parameterName];
         }
-        if (expressionModalInfo.type === 'QuestionnaireResponse') {
-            if (isSuccess(questionnaireResponseRD)) {
-                return questionnaireResponseRD.data;
-            }
-        }
-        if (expressionModalInfo.type === 'SourceQueries') {
-            if (isSuccess(questionnaireResponseRD)) {
-                return 'TEST Source Query';
-            }
+        if (expressionModalInfo.type === 'QuestionnaireResponse' && isSuccess(questionnaireResponseRD)) {
+            return questionnaireResponseRD.data;
         }
         return launchContext.parameter?.map((item) => item.name);
     }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
