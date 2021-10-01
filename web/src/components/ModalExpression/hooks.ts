@@ -4,7 +4,7 @@ import yaml from 'js-yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
-import { replaceLine } from 'src/utils/codemirror';
+import { chooseMultiLineExpression, replaceLine, replaceMultiLine } from 'src/utils/codemirror';
 import { extractParameterName } from './utils';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { service } from 'aidbox-react/src/services/service';
@@ -45,19 +45,27 @@ export function useModal(
     }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 
     const saveExpression = () => {
-        let newLine;
-        const lineBefore = expressionModalInfo.doc.getLine(expressionModalInfo.cursorPosition.line);
-        if (expressionModalInfo.type === 'LaunchContext') {
+        const cursorPosition = expressionModalInfo.cursorPosition;
+        const lineBefore = expressionModalInfo.doc.getLine(cursorPosition.line);
+        const doc = expressionModalInfo.doc;
+
+        if (expressionModalInfo.type === 'LaunchContext' && lineBefore.trimStart()[0] === '%') {
+            const multiLineExpression = chooseMultiLineExpression(lineBefore, doc, cursorPosition);
+            multiLineExpression.text = expressionModalInfo.expression;
+            replaceMultiLine(doc, cursorPosition, multiLineExpression);
+        }
+        if (expressionModalInfo.type === 'LaunchContext' && lineBefore.trimStart()[0] !== '%') {
             const array = lineBefore.split("'");
             array[1] = expressionModalInfo.expression;
-            newLine = array.join("'");
+            const expression = array.join("'");
+            replaceLine(doc, cursorPosition, expression);
         }
         if (expressionModalInfo.type === 'QuestionnaireResponse') {
             const array = lineBefore.split('"');
             array[1] = expressionModalInfo.expression;
-            newLine = array.join('"');
+            const expression = array.join('"');
+            replaceLine(doc, cursorPosition, expression);
         }
-        replaceLine(expressionModalInfo.doc, expressionModalInfo.cursorPosition, newLine);
         closeExpressionModal();
     };
 

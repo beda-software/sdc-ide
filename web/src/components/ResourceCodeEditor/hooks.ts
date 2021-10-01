@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'src/containers/Main/types';
+import { chooseMultiLineExpression } from 'src/utils/codemirror';
 import { hasOwnProperty } from 'src/utils/common';
 
 export function useExpressionModal() {
@@ -10,6 +11,8 @@ export function useExpressionModal() {
         let choosenExpression;
 
         const innerText = contextMenuInfo.event.target.innerText;
+        const doc = contextMenuInfo.editor.getDoc();
+        const cursorPosition = contextMenuInfo.cursorPosition;
 
         if (contextMenuInfo && hasOwnProperty(contextMenuInfo.valueObject, 'resourceType')) {
             if (contextMenuInfo.valueObject.resourceType === 'Questionnaire') {
@@ -28,6 +31,10 @@ export function useExpressionModal() {
                 if (innerText.includes('#Bundle')) {
                     modalType = 'SourceQueries';
                     choosenExpression = innerText.split('#')[2].replace("'", '');
+                }
+                if (innerText.trimStart()[0] === '%') {
+                    modalType = 'LaunchContext';
+                    choosenExpression = chooseMultiLineExpression(innerText, doc, cursorPosition).text;
                 }
             }
             if (contextMenuInfo.valueObject.resourceType === 'Mapping') {
