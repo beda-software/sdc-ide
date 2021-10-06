@@ -1,53 +1,64 @@
 import { useState } from 'react';
+import YAML, { visitor, visitorFn } from 'yaml';
+import { Pair } from 'yaml/types';
 import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'src/containers/Main/types';
-import { chooseMultiLineExpression } from 'src/utils/codemirror';
 import { hasOwnProperty } from 'src/utils/common';
+
+interface QuestionnaireVisitor {
+    Pair?: visitorFn<Pair>;
+}
+
+type Path = readonly any[];
 
 export function useExpressionModal() {
     const [expressionModalInfo, setExpressionModalInfo] = useState<ExpressionModalInfo | null>(null);
 
     const openExpressionModal = (contextMenuInfo: ContextMenuInfo) => {
         let modalType: ModalType | undefined;
-        let choosenExpression;
+        let choosenExpression = '';
 
-        const innerText = contextMenuInfo.event.target.innerText;
-        const doc = contextMenuInfo.editor.getDoc();
-        const cursorPosition = contextMenuInfo.cursorPosition;
+        const doc = YAML.parseDocument(contextMenuInfo.editor.getDoc().getValue());
+        const index = contextMenuInfo.editor.indexFromPos(contextMenuInfo.cursorPosition);
+
+        const questionnaireVisitor: QuestionnaireVisitor = {
+            Pair(_, pair, path: Path) {
+                if (index >= pair.value.range[0] && index <= pair.value.range[2]) {
+                    const length = path.length;
+                    if (
+                        pair.key.value === 'expression' &&
+                        path[length - 1].items[0].key.value === 'language' &&
+                        path[length - 1].items[0].value.value === 'text/fhirpath'
+                    ) {
+                        modalType = 'LaunchContext';
+                        choosenExpression = pair.value.value;
+                        return YAML.visit.BREAK;
+                    }
+
+                    if (pair.key.value === 'localRef' && path[length - 3].key.value === 'sourceQueries') {
+                        modalType = 'SourceQueries';
+                        choosenExpression = pair.value.value.split('#')[1];
+                        return YAML.visit.BREAK;
+                    }
+                    if (
+                        pair.key.value === 'reference' &&
+                        pair.value.value.slice(0, 7) === '#Bundle' &&
+                        path[length - 2].key.value === 'valueReference' &&
+                        path[length - 3].items[0].key.value === 'url'
+                    ) {
+                        modalType = 'SourceQueries';
+                        choosenExpression = pair.value.value.split('#')[2];
+                        return YAML.visit.BREAK;
+                    }
+                }
+            },
+        };
 
         if (contextMenuInfo && hasOwnProperty(contextMenuInfo.valueObject, 'resourceType')) {
             if (contextMenuInfo.valueObject.resourceType === 'Questionnaire') {
-                if (innerText.split('')[0] === "'") {
-                    modalType = 'LaunchContext';
-                    choosenExpression = innerText.replaceAll("'", '');
-                }
-                if (innerText.split('')[0] === '"') {
-                    modalType = 'LaunchContext';
-                    choosenExpression = innerText.replaceAll('"', '');
-                }
-                if (innerText.includes('localRef')) {
-                    modalType = 'SourceQueries';
-                    choosenExpression = innerText.split('#')[1];
-                }
-                if (innerText.includes('#Bundle')) {
-                    modalType = 'SourceQueries';
-                    choosenExpression = innerText.split('#')[2].replace("'", '');
-                }
-                if (innerText.trimStart()[0] === '%') {
-                    modalType = 'LaunchContext';
-                    choosenExpression = chooseMultiLineExpression(innerText, doc, cursorPosition).text;
-                }
-            }
-            if (contextMenuInfo.valueObject.resourceType === 'Mapping') {
-                if (innerText.split('')[0] === "'") {
-                    modalType = 'QuestionnaireResponse';
-                    choosenExpression = innerText.replaceAll("'", '');
-                }
-                if (innerText.split('')[0] === '"') {
-                    modalType = 'QuestionnaireResponse';
-                    choosenExpression = innerText.replaceAll('"', '');
-                }
+                YAML.visit(doc, questionnaireVisitor as visitor);
             }
         }
+
         if (modalType) {
             setExpressionModalInfo({
                 type: modalType,

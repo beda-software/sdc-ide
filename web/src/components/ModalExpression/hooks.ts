@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
+import YAML, { visitor } from 'yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
+import { AidboxResource, Parameters, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
-import { chooseMultiLineExpression, replaceLine, replaceMultiLine } from 'src/utils/codemirror';
-import { extractParameterName } from './utils';
+import { extractParameterName } from 'src/components/ModalExpression/utils';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { service } from 'aidbox-react/src/services/service';
 
-export function useModal(
+export function useExpressionModal(
     expressionModalInfo: ExpressionModalInfo,
     launchContext: Parameters,
     questionnaireResponseRD: RemoteData<AidboxResource>,
@@ -19,7 +19,7 @@ export function useModal(
     const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
 
     const [fullLaunchContextRD] = useService(async () => {
-        return await service<Record<string, any>>({
+        return await service<Record<string, QuestionnaireResponse>>({
             method: 'POST',
             url: 'Questionnaire/$context',
             data: launchContext,
@@ -35,37 +35,33 @@ export function useModal(
     const parameterName = extractParameterName(expressionModalInfo.expression);
 
     const setContextData = useCallback(() => {
+        if (isSuccess(questionnaireResponseRD)) {
+            return questionnaireResponseRD.data;
+        }
         if (expressionModalInfo.type === 'LaunchContext') {
             return fullLaunchContext[parameterName];
-        }
-        if (expressionModalInfo.type === 'QuestionnaireResponse' && isSuccess(questionnaireResponseRD)) {
-            return questionnaireResponseRD.data;
         }
         return launchContext.parameter?.map((item) => item.name);
     }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 
     const saveExpression = () => {
-        const cursorPosition = expressionModalInfo.cursorPosition;
-        const lineBefore = expressionModalInfo.doc.getLine(cursorPosition.line);
         const doc = expressionModalInfo.doc;
+        const newDoc = YAML.parseDocument(expressionModalInfo.doc.getValue());
+        const index = doc.getEditor()?.indexFromPos(expressionModalInfo.cursorPosition);
 
-        if (expressionModalInfo.type === 'LaunchContext' && lineBefore.trimStart()[0] === '%') {
-            const multiLineExpression = chooseMultiLineExpression(lineBefore, doc, cursorPosition);
-            multiLineExpression.text = expressionModalInfo.expression;
-            replaceMultiLine(doc, cursorPosition, multiLineExpression);
+        const questionnaireVisitor: visitor = {
+            Scalar(key, node) {
+                if (index && node.range && index >= node.range[0] && index <= node.range[2]) {
+                    node.value = expressionModalInfo.expression;
+                }
+            },
+        };
+
+        if (expressionModalInfo.type === 'LaunchContext') {
+            YAML.visit(newDoc, questionnaireVisitor);
+            doc.setValue(YAML.stringify(newDoc));
         }
-        if (expressionModalInfo.type === 'LaunchContext' && lineBefore.trimStart()[0] !== '%') {
-            const array = lineBefore.split("'");
-            array[1] = expressionModalInfo.expression;
-            const expression = array.join("'");
-            replaceLine(doc, cursorPosition, expression);
-        }
-        if (expressionModalInfo.type === 'QuestionnaireResponse') {
-            const array = lineBefore.split('"');
-            array[1] = expressionModalInfo.expression;
-            const expression = array.join('"');
-            replaceLine(doc, cursorPosition, expression);
-        }
+
         closeExpressionModal();
     };
 

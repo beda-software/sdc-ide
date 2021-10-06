@@ -1,14 +1,14 @@
 import React from 'react';
-import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { InputField } from 'src/components/InputField';
 import { Button } from 'src/components/Button';
 import { ExpressionModalInfo } from 'src/containers/Main/types';
-import { useModal } from 'src/components/ModalExpression/hooks';
-import s from './ModalExpression.module.scss';
+import { useExpressionModal } from 'src/components/ModalExpression/hooks';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
+import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
@@ -20,7 +20,7 @@ interface ModalExpressionProps {
 
 export function ModalExpression(props: ModalExpressionProps) {
     const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
-    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useModal(
+    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useExpressionModal(
         expressionModalInfo,
         launchContext,
         questionnaireResponseRD,
@@ -111,6 +111,8 @@ function InputData({
                     }}
                 />
             );
+        } else if (isSuccess(questionnaireResponseRD) && parameterName === 'QuestionnaireResponse'.slice(1)) {
+            return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
         } else {
             return (
                 <div>
@@ -119,10 +121,16 @@ function InputData({
                             %{key}
                         </p>
                     ))}
+                    {isSuccess(questionnaireResponseRD) && (
+                        <p
+                            className={s.parameterName}
+                            onClick={() => setExpression(questionnaireResponseRD.data.resourceType)}
+                        >
+                            {questionnaireResponseRD.data.resourceType}
+                        </p>
+                    )}
                 </div>
             );
         }
-    } else if (expressionModalInfo.type === 'QuestionnaireResponse') {
-        return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
     } else return <div>Error: Invalid modal type</div>;
 }

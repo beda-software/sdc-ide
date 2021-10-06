@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Parameters } from 'shared/src/contrib/aidbox/index';
+import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
 
 import { CodeEditor } from 'src/components/CodeEditor';
 import { Button } from 'src/components/Button';
@@ -13,15 +13,17 @@ interface Props {
     sourceQueryId: string;
     closeExpressionModal: () => void;
     launchContext: Parameters;
-    resource: any; // TODO edit type (Questionnaire or AidboxResource)
+    resource: AidboxResource;
+    fhirMode: boolean;
 }
 
 export function SourceQueryDebugModal(props: Props) {
-    const { sourceQueryId, closeExpressionModal, launchContext, resource } = props;
+    const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
     const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
         sourceQueryId,
         closeExpressionModal,
+        fhirMode,
     });
     return (
         <div className={s.wrapper}>

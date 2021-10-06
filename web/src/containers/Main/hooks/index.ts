@@ -142,7 +142,7 @@ export function useMain(questionnaireId: string) {
                 showToast('error', saveFHIRResourceResponse.error, indexMapperInfo);
                 return;
             }
-            const serviceResponse = await updateQuestionnaire(resource, false); // TODO use right fhirMode
+            const serviceResponse = await updateQuestionnaire(resource, fhirMode);
             if (isFailure(serviceResponse)) {
                 showToast('error', serviceResponse.error, indexMapperInfo);
                 return;

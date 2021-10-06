@@ -10,10 +10,11 @@ export interface Props {
     launchContext: Parameters;
     sourceQueryId: string;
     closeExpressionModal: () => void;
+    fhirMode: boolean;
 }
 
 export function useSourceQueryDebugModal(props: Props) {
-    const { launchContext, sourceQueryId, closeExpressionModal } = props;
+    const { launchContext, sourceQueryId, closeExpressionModal, fhirMode } = props;
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
     const onSave = useCallback(
@@ -22,7 +23,7 @@ export function useSourceQueryDebugModal(props: Props) {
             if (newResource && newResource.contained && rawSourceQuery) {
                 const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
                 newResource.contained[indexOfContainedId] = rawSourceQuery;
-                const response = await updateQuestionnaire(newResource, false);
+                const response = await updateQuestionnaire(newResource, fhirMode);
                 if (isSuccess(response)) {
                     closeExpressionModal();
                 } else {
@@ -30,14 +31,13 @@ export function useSourceQueryDebugModal(props: Props) {
                 }
             }
         },
-        [closeExpressionModal, rawSourceQuery, sourceQueryId],
+        [closeExpressionModal, fhirMode, rawSourceQuery, sourceQueryId],
     );
 
     const onChange = _.debounce(setRawSourceQuery, 1000);
 
     const [fullLaunchContext] = useService(async () => {
-        const response = await service<any>({
-            // TODO use right type
+        const response = await service({
             method: 'POST',
             url: 'Questionnaire/$context',
             data: launchContext,
