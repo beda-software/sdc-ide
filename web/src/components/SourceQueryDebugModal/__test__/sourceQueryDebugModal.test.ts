@@ -2,17 +2,25 @@ import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-dom/test-utils';
 import { ensure } from 'aidbox-react/src/utils/tests';
 import { axiosInstance } from 'aidbox-react/src/services/instance';
-import { getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
-import { isSuccess } from 'aidbox-react/src/libs/remoteData';
+import { saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { isFailure, isSuccess } from 'aidbox-react/src/libs/remoteData';
 import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
 import { setData } from 'src/services/localStorage';
 import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
-import { expectedNewQuestionnaireData, expectedPreparedSourceQueryData } from './resources/expectedData';
-import { nutritionorderData, patientData, props, resource } from './resources';
+import { updateQuestionnaire } from 'src/containers/Main/hooks';
+import {
+    nutritionorderData,
+    patientData,
+    props,
+    resourceSuccess,
+    resourceFailure,
+    expectedPreparedSourceQueryData,
+} from './resources';
 
 async function setup() {
     const patient = ensure(await saveFHIRResource<Patient>(patientData));
     const nutritionorder = ensure(await saveFHIRResource<NutritionOrder>(nutritionorderData));
+    ensure(await saveFHIRResource(resourceSuccess));
     return { patient, nutritionorder };
 }
 
@@ -44,9 +52,12 @@ test('onSave', async () => {
     await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
     await waitFor(() => isSuccess(result.current.bundleResultRD));
-    await act(() => result.current.onSave(resource));
-    const newQuestionnaireData = ensure(
-        await getFHIRResource({ id: 'health-and-lifestyle', resourceType: 'Questionnaire' }),
-    );
-    expect(newQuestionnaireData).toStrictEqual(expectedNewQuestionnaireData);
-}); // TODO for work onSave in test and fix it need update docker-compose.tests.yaml
+
+    await act(() => result.current.onSave(resourceSuccess));
+    const responseMustBeSuccess = await updateQuestionnaire(resourceSuccess as any, false);
+    expect(isSuccess(responseMustBeSuccess)).toBeTruthy();
+
+    await act(() => result.current.onSave(resourceFailure));
+    const responseMustBeFailure = await updateQuestionnaire(resourceFailure as any, false);
+    expect(isFailure(responseMustBeFailure)).toBeTruthy();
+});

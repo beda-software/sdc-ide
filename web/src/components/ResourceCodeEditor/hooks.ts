@@ -8,6 +8,7 @@ interface QuestionnaireVisitor {
     Pair?: visitorFn<Pair>;
 }
 
+// no more strict type
 type Path = readonly any[];
 
 export function useExpressionModal() {
@@ -33,7 +34,6 @@ export function useExpressionModal() {
                         choosenExpression = pair.value.value;
                         return YAML.visit.BREAK;
                     }
-
                     if (pair.key.value === 'localRef' && path[length - 3].key.value === 'sourceQueries') {
                         modalType = 'SourceQueries';
                         choosenExpression = pair.value.value.split('#')[1];
