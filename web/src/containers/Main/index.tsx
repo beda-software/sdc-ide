@@ -13,6 +13,7 @@ import { QRFormWrapper } from 'src/components/QRFormWrapper';
 import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
+import { Mapping, Questionnaire } from 'shared/src/contrib/aidbox';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -57,11 +58,12 @@ export function Main() {
                         <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
-                        <ResourceCodeEditor
+                        <ResourceCodeEditor<Questionnaire>
                             resourceRD={questionnaireFHIRRD}
                             onSave={saveQuestionnaireFHIR}
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
+                            fhirMode={fhirMode}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
@@ -86,11 +88,12 @@ export function Main() {
                                 activeMappingId={activeMappingId}
                                 setActiveMappingId={setActiveMappingId}
                             />
-                            <ResourceCodeEditor
+                            <ResourceCodeEditor<Mapping>
                                 resourceRD={mappingRD}
                                 onSave={saveMapping}
                                 launchContext={launchContext}
                                 questionnaireResponseRD={questionnaireResponseRD}
+                                fhirMode={fhirMode}
                             />
                         </div>
                     </ExpandableElement>

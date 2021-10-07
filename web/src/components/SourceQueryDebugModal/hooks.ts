@@ -1,68 +1,65 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
+import { useCallback, useState } from 'react';
+import { Bundle, Parameters, Resource } from 'shared/src/contrib/aidbox/index';
 import { useService } from 'aidbox-react/src/hooks/service';
 import { mapSuccess, service } from 'aidbox-react/src/services/service';
 import { failure, isSuccess } from 'aidbox-react/src/libs/remoteData';
-import { updateQuestionnaire } from 'src/containers/Main/hooks';
+import { showToast, updateQuestionnaire } from 'src/containers/Main/hooks';
 import _ from 'lodash';
 
-interface Props {
+export interface Props {
     launchContext: Parameters;
     sourceQueryId: string;
-    resource: Questionnaire;
     closeExpressionModal: () => void;
+    fhirMode: boolean;
 }
 
 export function useSourceQueryDebugModal(props: Props) {
-    const { launchContext, sourceQueryId, resource, closeExpressionModal } = props;
-    const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
+    const { launchContext, sourceQueryId, closeExpressionModal, fhirMode } = props;
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
-    useEffect(() => {
-        (async () => {
-            const response = await service<Record<string, any>>({
-                method: 'POST',
-                url: 'Questionnaire/$context',
-                data: launchContext,
-            });
-            if (isSuccess(response)) {
-                const newFullLaunchContext = response.data;
-                setFullLaunchContext(newFullLaunchContext);
-                setRawSourceQuery(_.find(newFullLaunchContext.Questionnaire?.contained, { id: sourceQueryId }));
+    const onSave = useCallback(
+        async (resource) => {
+            const newResource = { ...resource };
+            if (newResource && newResource.contained && rawSourceQuery) {
+                const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
+                newResource.contained[indexOfContainedId] = rawSourceQuery;
+                const response = await updateQuestionnaire(newResource, fhirMode);
+                if (isSuccess(response)) {
+                    closeExpressionModal();
+                } else {
+                    showToast('error', response.error);
+                }
             }
-        })();
+        },
+        [closeExpressionModal, fhirMode, rawSourceQuery, sourceQueryId],
+    );
+
+    const onChange = _.debounce(setRawSourceQuery, 1000);
+
+    const [fullLaunchContext] = useService(async () => {
+        const response = await service({
+            method: 'POST',
+            url: 'Questionnaire/$context',
+            data: launchContext,
+        });
+        isSuccess(response) && setRawSourceQuery(_.find(response.data.Questionnaire?.contained, { id: sourceQueryId }));
+        return response;
     }, [launchContext, sourceQueryId]);
 
-    const onSave = () => {
-        const newResource = { ...resource };
-        if (newResource && newResource.contained && rawSourceQuery) {
-            const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
-            newResource.contained[indexOfContainedId] = rawSourceQuery;
-            updateQuestionnaire(newResource, false);
-        }
-        closeExpressionModal();
-    };
-
-    const onChangeRaw = (newRawSourceQuery: Bundle) => {
-        setRawSourceQuery(newRawSourceQuery);
-    };
-
-    const onChange = useCallback(_.debounce(onChangeRaw, 1000), [onChangeRaw]);
-
     const [preparedSourceQueryRD] = useService(async () => {
-        if (rawSourceQuery && fullLaunchContext) {
+        if (rawSourceQuery && isSuccess(fullLaunchContext)) {
             const response = await service<string>({
                 method: 'POST',
                 url: `Questionnaire/$resolve-expression`,
                 data: {
                     expression: JSON.stringify(rawSourceQuery),
-                    env: fullLaunchContext,
+                    env: fullLaunchContext.data,
                 },
             });
             return mapSuccess(response, (expression) => JSON.parse(expression));
         }
         return failure(null);
-    }, [rawSourceQuery]);
+    }, [rawSourceQuery, fullLaunchContext]);
 
     const [bundleResultRD] = useService(async () => {
         if (isSuccess(preparedSourceQueryRD)) {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Parameters, Questionnaire } from 'shared/src/contrib/aidbox/index';
+import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
 
 import { CodeEditor } from 'src/components/CodeEditor';
 import { Button } from 'src/components/Button';
@@ -13,16 +13,17 @@ interface Props {
     sourceQueryId: string;
     closeExpressionModal: () => void;
     launchContext: Parameters;
-    resource: Questionnaire;
+    resource: AidboxResource;
+    fhirMode: boolean;
 }
 
 export function SourceQueryDebugModal(props: Props) {
-    const { sourceQueryId, closeExpressionModal, launchContext, resource } = props;
+    const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
     const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
         sourceQueryId,
-        resource,
         closeExpressionModal,
+        fhirMode,
     });
     return (
         <div className={s.wrapper}>
@@ -32,7 +33,7 @@ export function SourceQueryDebugModal(props: Props) {
                         <h2>ID: {sourceQueryId}</h2>
                     </div>
                     <div className={s.save}>
-                        <Button onClick={onSave}>save</Button>
+                        <Button onClick={() => onSave(resource)}>save</Button>
                     </div>
                     <div className={s.close}>
                         <Button variant="secondary" onClick={closeExpressionModal}>
@@ -46,7 +47,7 @@ export function SourceQueryDebugModal(props: Props) {
                         {rawSourceQuery && (
                             <CodeEditor key={sourceQueryId} valueObject={rawSourceQuery} onChange={onChange} />
                         )}
-
+                        <div className={s.separator} />
                         <h2>Prepared</h2>
                         <RenderRemoteData remoteData={preparedSourceQueryRD}>
                             {(resource) => (
