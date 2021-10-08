@@ -205,19 +205,10 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 disabled={hidden}
                 name={fieldName}
                 label={text}
-                options={_.map(answerOption, (opt) => {
-                    if (opt.value !== undefined) {
-                        return {
-                            value: opt.value.string!,
-                            label: opt.value.string!,
-                        };
-                    } else {
-                        return {
-                            value: '',
-                            label: '',
-                        };
-                    }
-                })}
+                options={_.map(answerOption, (opt) => ({
+                    value: opt.value?.string!,
+                    label: opt.value?.string!,
+                }))}
                 initialValue={{
                     value: 'mobile',
                 }}
