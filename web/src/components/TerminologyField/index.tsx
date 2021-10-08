@@ -1,5 +1,5 @@
-import { isSuccess } from 'aidbox-react/src/libs/remoteData';
-import { mapSuccess, service } from 'aidbox-react/src/services/service';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 import _ from 'lodash';
 import * as React from 'react';
 import { Field } from 'react-final-form';
@@ -82,7 +82,7 @@ export function TerminologyField({ label, name, valueSetId, repeats }: Terminolo
                         getOptionValue={getOptionValue}
                         onChange={input.onChange}
                         value={input.value}
-                        isMulti={repeats}
+                        isMulti={repeats === false ? false : undefined}
                     />
                 </div>
             )}

@@ -7,7 +7,7 @@ import { Button } from 'src/components/Button';
 import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
 
 import s from './SourceQueryDebugModal.module.scss';
-import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 interface Props {
     sourceQueryId: string;

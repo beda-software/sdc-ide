@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { AidboxResource } from 'shared/src/contrib/aidbox';
 import { CodeEditor } from 'src/components/CodeEditor';
 

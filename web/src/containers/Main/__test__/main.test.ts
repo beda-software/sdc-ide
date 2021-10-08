@@ -3,13 +3,13 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import _ from 'lodash';
 
 import { Extension } from 'shared/src/contrib/aidbox';
-import { ensure } from 'aidbox-react/src/utils/tests';
+import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import { idExtraction, showToast, useMain } from 'src/containers/Main/hooks';
 
 import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
-import { isSuccess } from 'aidbox-react/src/libs/remoteData';
-import { axiosInstance } from 'aidbox-react/src/services/instance';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { setData } from 'src/services/localStorage';
 
 const questionnaireIdInitial = 'demo-1';

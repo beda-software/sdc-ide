@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import _ from 'lodash';
-import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';

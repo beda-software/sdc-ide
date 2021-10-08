@@ -1,5 +1,5 @@
-import { useService } from 'aidbox-react/src/hooks/service';
-import { getFHIRResource, saveFHIRResource } from 'aidbox-react/src/services/fhir';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import {
     Bundle,
     Mapping,
@@ -9,9 +9,9 @@ import {
     QuestionnaireResponse,
     Reference,
 } from 'shared/src/contrib/aidbox';
-import { service, sequenceMap } from 'aidbox-react/src/services/service';
-import { isSuccess, notAsked, RemoteData, loading, success, isFailure } from 'aidbox-react/src/libs/remoteData';
-import { formatError } from 'aidbox-react/src/utils/error';
+import { service, sequenceMap } from 'aidbox-react/lib/services/service';
+import { isSuccess, notAsked, RemoteData, loading, success, isFailure } from 'aidbox-react/lib/libs/remoteData';
+import { formatError } from 'aidbox-react/lib/utils/error';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';

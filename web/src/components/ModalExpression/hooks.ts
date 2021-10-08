@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import YAML, { visitor } from 'yaml';
-import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { AidboxResource, Parameters, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
 import { extractParameterName } from 'src/components/ModalExpression/utils';
-import { useService } from 'aidbox-react/src/hooks/service';
-import { service } from 'aidbox-react/src/services/service';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { service } from 'aidbox-react/lib/services/service';
 
 export function useExpressionModal(
     expressionModalInfo: ExpressionModalInfo,

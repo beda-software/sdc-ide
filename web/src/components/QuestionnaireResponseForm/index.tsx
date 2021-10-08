@@ -148,7 +148,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         index = 0,
     ) {
-        const { linkId, text, item, hidden } = questionItem;
+        const { linkId = '', text, item, hidden } = questionItem;
         const fieldPath = [...parentPath, linkId, _.toString(index)];
 
         return (
@@ -173,7 +173,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         index = 0,
     ) {
-        const { linkId, text, item } = questionItem;
+        const { linkId = '', text, item } = questionItem;
         const fieldPath = [...parentPath, linkId, _.toString(index)];
 
         return (
@@ -190,7 +190,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     }
 
     public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
-        const { linkId, text, answerOption, repeats, required, answerValueSet, hidden } = questionItem;
+        const { linkId, text, answerOption, repeats = false, required, answerValueSet, hidden } = questionItem;
         if (answerValueSet) {
             const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0'])];
             const fieldName = fieldPath.join('.');
@@ -205,10 +205,19 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 disabled={hidden}
                 name={fieldName}
                 label={text}
-                options={_.map(answerOption, (opt) => ({
-                    value: opt.value.string!,
-                    label: opt.value.string!,
-                }))}
+                options={_.map(answerOption, (opt) => {
+                    if (opt.value !== undefined) {
+                        return {
+                            value: opt.value.string!,
+                            label: opt.value.string!,
+                        };
+                    } else {
+                        return {
+                            value: '',
+                            label: '',
+                        };
+                    }
+                })}
                 initialValue={{
                     value: 'mobile',
                 }}
@@ -248,7 +257,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         // fieldsRenderConfig: FieldsRenderConfig,
     ) {
-        const { linkId, item, text, repeats } = questionItem;
+        const { linkId = '', item, text, repeats } = questionItem;
 
         if (item) {
             const baseFieldPath = [...parentPath, linkId];

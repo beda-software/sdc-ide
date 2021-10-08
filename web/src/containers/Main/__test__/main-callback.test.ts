@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { ensure } from 'aidbox-react/src/utils/tests';
+import { ensure } from 'aidbox-react/lib/utils/tests';
 
-import { service } from 'aidbox-react/src/services/service';
+import { service } from 'aidbox-react/lib/services/service';
 
 import { useMain } from 'src/containers/Main/hooks';
 
@@ -16,9 +16,9 @@ import questionnaireTest1FHIRNew from './resources/Questionnaire/test-1-fhir-new
 import questionnaireResponseNew from './resources/QuestionnaireResponse/demo-1-new.json';
 import { setData } from 'src/services/localStorage';
 import { EXPECTED_RESOURCES } from './resources';
-import { axiosInstance } from 'aidbox-react/src/services/instance';
-import { getFHIRResource } from 'aidbox-react/src/services/fhir';
-import { isSuccess } from 'aidbox-react/src/libs/remoteData';
+import { axiosInstance } from 'aidbox-react/lib/services/instance';
+import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 
 async function setup() {
     return service({

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { isFailure, isLoading, isNotAsked, isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { formatError } from 'aidbox-react/src/utils/error';
+import { isFailure, isLoading, isNotAsked, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { formatError } from 'aidbox-react/lib/utils/error';
 
 interface RenderRemoteDataProps<S, E = any> {
     remoteData: RemoteData<S, E>;

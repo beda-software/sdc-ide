@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
-import { getFHIRResource } from 'aidbox-react/src/services/fhir';
-import { mapSuccess, resolveMap } from 'aidbox-react/src/services/service';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
 import { useReducer } from 'react';
 import {
     AidboxResource,

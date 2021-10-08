@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useService } from 'aidbox-react/src/hooks/service';
-import { getFHIRResources } from 'aidbox-react/src/services/fhir';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
 import { ArrowDirections } from 'src/components/Icon/Arrow';
 import { getData, setData } from 'src/services/localStorage';
 
