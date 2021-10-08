@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Bundle, Parameters, Resource } from 'shared/src/contrib/aidbox/index';
-import { useService } from 'aidbox-react/src/hooks/service';
-import { mapSuccess, service } from 'aidbox-react/src/services/service';
-import { failure, isSuccess } from 'aidbox-react/src/libs/remoteData';
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { mapSuccess, service } from 'aidbox-react/lib/services/service';
+import { failure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { showToast, updateQuestionnaire } from 'src/containers/Main/hooks';
 import _ from 'lodash';
 

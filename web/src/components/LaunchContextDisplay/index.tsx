@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
 import { Parameters } from 'shared/src/contrib/aidbox';
-import { success } from 'aidbox-react/src/libs/remoteData';
+import { success } from 'aidbox-react/lib/libs/remoteData';
 
 import s from './LaunchContextDisplay.module.scss';
 

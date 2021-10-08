@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { act } from 'react-dom/test-utils';
-import { ensure } from 'aidbox-react/src/utils/tests';
-import { axiosInstance } from 'aidbox-react/src/services/instance';
-import { saveFHIRResource } from 'aidbox-react/src/services/fhir';
-import { isFailure, isSuccess } from 'aidbox-react/src/libs/remoteData';
+import { ensure } from 'aidbox-react/lib/utils/tests';
+import { axiosInstance } from 'aidbox-react/lib/services/instance';
+import { saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { isFailure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
 import { setData } from 'src/services/localStorage';
 import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';

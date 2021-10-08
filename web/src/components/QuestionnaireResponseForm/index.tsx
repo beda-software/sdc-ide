@@ -149,7 +149,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         index = 0,
     ) {
         const { linkId, text, item, hidden } = questionItem;
-        const fieldPath = [...parentPath, linkId, _.toString(index)];
+        const fieldPath = [...parentPath, linkId!, _.toString(index)];
 
         return (
             <div style={hidden ? { opacity: '0.3' } : {}}>
@@ -174,7 +174,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         index = 0,
     ) {
         const { linkId, text, item } = questionItem;
-        const fieldPath = [...parentPath, linkId, _.toString(index)];
+        const fieldPath = [...parentPath, linkId!, _.toString(index)];
 
         return (
             <>
@@ -190,7 +190,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
     }
 
     public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
-        const { linkId, text, answerOption, repeats, required, answerValueSet, hidden } = questionItem;
+        const { linkId, text, answerOption, repeats = false, required, answerValueSet, hidden } = questionItem;
         if (answerValueSet) {
             const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0'])];
             const fieldName = fieldPath.join('.');
@@ -206,8 +206,8 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                 name={fieldName}
                 label={text}
                 options={_.map(answerOption, (opt) => ({
-                    value: opt.value.string!,
-                    label: opt.value.string!,
+                    value: opt.value?.string!,
+                    label: opt.value?.string!,
                 }))}
                 initialValue={{
                     value: 'mobile',
@@ -291,7 +291,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                                                         <div className={s.repeatsGroupItemBody}>
                                                             {this.renderQuestions(
                                                                 item,
-                                                                [...parentPath, linkId, 'items', index.toString()],
+                                                                [...parentPath, linkId!, 'items', index.toString()],
                                                                 formParams,
                                                             )}
                                                         </div>
@@ -320,7 +320,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             return (
                 <div style={{ paddingBottom: 10 }}>
                     <p className={s.questLabel}>{text}</p>
-                    {this.renderQuestions(item, [...parentPath, linkId, 'items'], formParams)}
+                    {this.renderQuestions(item, [...parentPath, linkId!, 'items'], formParams)}
                 </div>
             );
         }

@@ -7,7 +7,7 @@ import { App } from 'src/containers/App';
 import 'src/styles/index.scss';
 
 import * as serviceWorker from './serviceWorker';
-import { axiosInstance } from 'aidbox-react/src/services/instance';
+import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { getData } from 'src/services/localStorage';
 
 const { client, secret, baseUrl } = getData('connection');

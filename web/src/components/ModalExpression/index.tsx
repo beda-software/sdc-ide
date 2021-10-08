@@ -1,5 +1,5 @@
 import React from 'react';
-import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { InputField } from 'src/components/InputField';

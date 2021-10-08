@@ -6,9 +6,9 @@ import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
-import { RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { Questionnaire, QuestionnaireLaunchContext, Parameters, ParametersParameter } from 'shared/src/contrib/aidbox';
-import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
 
 interface MenuProps {

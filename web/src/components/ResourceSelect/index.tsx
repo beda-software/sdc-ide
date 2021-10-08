@@ -1,16 +1,16 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
-import _ from 'lodash'
+import _ from 'lodash';
 import classNames from 'classnames';
 
-import { RenderRemoteData } from 'aidbox-react/src/components/RenderRemoteData';
-import { isSuccess, RemoteData } from 'aidbox-react/src/libs/remoteData';
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
 import { AidboxResource, Bundle, Resource } from 'shared/src/contrib/aidbox';
 
 import s from './ResourceSelect.module.scss';
-import { getFHIRResources } from 'aidbox-react/src/services/fhir';
-import { mapSuccess } from 'aidbox-react/src/services/service';
+import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 interface ResourceSelectProps<R extends AidboxResource> {
     cssClass?: string;
@@ -19,7 +19,6 @@ interface ResourceSelectProps<R extends AidboxResource> {
     display?: (resource: R) => string;
     bundleResponse: RemoteData<Bundle<R>>;
 }
-
 
 export function ResourceSelect<R extends AidboxResource>({
     cssClass,
@@ -51,7 +50,7 @@ interface RemoteResourceSelectProps<R extends AidboxResource> {
     value: R | null | undefined;
     onChange: (resource: R | null | undefined) => void;
     display?: (resource: R) => string;
-    resourceType: R['resourceType'],
+    resourceType: R['resourceType'];
 }
 
 export function RemoteResourceSelect<R extends AidboxResource>({
@@ -59,19 +58,17 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     resourceType,
     onChange,
     display,
-}: RemoteResourceSelectProps<R>){
+}: RemoteResourceSelectProps<R>) {
     const loadOptions = React.useCallback(
         async (searchText: string) => {
-            const response = await getFHIRResources<R>(resourceType, {_ilike: `%${searchText}%`})
-            const prepared = mapSuccess(
-                response,
-                (bundle) => (bundle.entry ?? []).map(e=>e.resource!))
-            if(isSuccess(prepared)){
-                return prepared.data
+            const response = await getFHIRResources(resourceType, { _ilike: `%${searchText}%` });
+            const prepared = mapSuccess(response, (bundle) => (bundle.entry ?? []).map((e) => e.resource!));
+            if (isSuccess(prepared)) {
+                return prepared.data;
             }
-            return []
+            return [];
         },
-        [resourceType]
+        [resourceType],
     );
 
     const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: R[]) => void) => {
@@ -90,4 +87,4 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     );
 }
 
-const getId = (r:Resource | undefined | null) => r?.id ?? 'undefined'
+const getId = (r: Resource | undefined | null) => r?.id ?? 'undefined';
