@@ -148,8 +148,8 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         index = 0,
     ) {
-        const { linkId = '', text, item, hidden } = questionItem;
-        const fieldPath = [...parentPath, linkId, _.toString(index)];
+        const { linkId, text, item, hidden } = questionItem;
+        const fieldPath = [...parentPath, linkId!, _.toString(index)];
 
         return (
             <div style={hidden ? { opacity: '0.3' } : {}}>
@@ -173,8 +173,8 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         index = 0,
     ) {
-        const { linkId = '', text, item } = questionItem;
-        const fieldPath = [...parentPath, linkId, _.toString(index)];
+        const { linkId, text, item } = questionItem;
+        const fieldPath = [...parentPath, linkId!, _.toString(index)];
 
         return (
             <>
@@ -248,7 +248,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         formParams: FormRenderProps,
         // fieldsRenderConfig: FieldsRenderConfig,
     ) {
-        const { linkId = '', item, text, repeats } = questionItem;
+        const { linkId, item, text, repeats } = questionItem;
 
         if (item) {
             const baseFieldPath = [...parentPath, linkId];
@@ -291,7 +291,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                                                         <div className={s.repeatsGroupItemBody}>
                                                             {this.renderQuestions(
                                                                 item,
-                                                                [...parentPath, linkId, 'items', index.toString()],
+                                                                [...parentPath, linkId!, 'items', index.toString()],
                                                                 formParams,
                                                             )}
                                                         </div>
@@ -320,7 +320,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             return (
                 <div style={{ paddingBottom: 10 }}>
                     <p className={s.questLabel}>{text}</p>
-                    {this.renderQuestions(item, [...parentPath, linkId, 'items'], formParams)}
+                    {this.renderQuestions(item, [...parentPath, linkId!, 'items'], formParams)}
                 </div>
             );
         }
