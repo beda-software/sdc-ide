@@ -75,7 +75,7 @@ export function useMain(questionnaireId: string) {
     };
 
     const [closingCreateMapper, setClosingCreateMapper] = useState(createMappingDefault);
-    const [questionnaireUpdateToggle, setQuestionnaireUpdateToggle] = useState(false);
+    const [questionnaireUpdate, setQuestionnaireUpdate] = useState(false);
 
     const closeModal = (status: 'save' | 'cancel', isRenamedMappingId?: boolean) => {
         if (status === 'save' && isRenamedMappingId !== undefined) {
@@ -86,7 +86,7 @@ export function useMain(questionnaireId: string) {
             setClosingCreateMapper(createMapping);
         }
         if (status === 'cancel') {
-            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+            setQuestionnaireUpdate(!questionnaireUpdate);
         }
         setShowModal(false);
         setMapperInfoList([]);
@@ -116,7 +116,7 @@ export function useMain(questionnaireId: string) {
             }
         }
         if (closingCreateMapper.status && closingCreateMapper.renamed) {
-            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+            setQuestionnaireUpdate(!questionnaireUpdate);
             setClosingCreateMapper(createMappingDefault);
         }
         return response;
@@ -159,7 +159,7 @@ export function useMain(questionnaireId: string) {
                 method: 'GET',
                 url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
             }),
-        [questionnaireId, fhirMode, questionnaireUpdateToggle],
+        [questionnaireId, fhirMode, questionnaireUpdate],
     );
 
     const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
@@ -341,5 +341,7 @@ export function useMain(questionnaireId: string) {
         saveNewMapping,
         closeModal,
         mapperInfoList,
+        questionnaireUpdate,
+        setQuestionnaireUpdate,
     };
 }

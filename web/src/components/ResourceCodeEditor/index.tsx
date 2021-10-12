@@ -14,6 +14,8 @@ interface ResourceCodeEditorProps<R> {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<AidboxResource>;
     fhirMode: boolean;
+    questionnaireUpdate?: boolean;
+    setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
 }
 
 export function ResourceCodeEditor<R extends AidboxResource>({
@@ -22,6 +24,8 @@ export function ResourceCodeEditor<R extends AidboxResource>({
     launchContext,
     questionnaireResponseRD,
     fhirMode,
+    questionnaireUpdate,
+    setQuestionnaireUpdate,
 }: ResourceCodeEditorProps<R>) {
     const onChange = useCallback(_.debounce(onSave, 1000), [onSave]);
 
@@ -36,6 +40,8 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                         valueObject={resource}
                         onChange={onChange}
                         openExpressionModal={openExpressionModal}
+                        questionnaireUpdate={questionnaireUpdate}
+                        setQuestionnaireUpdate={setQuestionnaireUpdate}
                     />
                 )}
             </RenderRemoteData>

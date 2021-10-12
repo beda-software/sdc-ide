@@ -14,12 +14,25 @@ interface CodeEditorProps extends IUnControlledCodeMirror {
     valueObject?: ValueObject;
     onChange?: (object: any) => void; // TODO check for more strict type
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
+    questionnaireUpdate?: boolean;
+    setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
 }
 
 export function CodeEditor(props: CodeEditorProps) {
-    const { valueObject = {}, options, onChange, openExpressionModal } = props;
+    const {
+        valueObject = {},
+        options,
+        onChange,
+        openExpressionModal,
+        questionnaireUpdate,
+        setQuestionnaireUpdate,
+    } = props;
 
-    const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({ openExpressionModal });
+    const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({
+        openExpressionModal,
+        questionnaireUpdate,
+        setQuestionnaireUpdate,
+    });
 
     const cache = useRef(valueObject);
 

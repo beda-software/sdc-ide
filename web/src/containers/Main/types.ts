@@ -18,6 +18,7 @@ export interface ContextMenuPosition {
 export interface ContextMenu {
     close: () => void;
     debugger?: () => void;
+    reload?: () => void;
     undo: () => void;
     redo: () => void;
     cut: () => void;

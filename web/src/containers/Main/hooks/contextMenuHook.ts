@@ -4,9 +4,11 @@ import { ContextMenu, ContextMenuInfo, ValueObject } from 'src/containers/Main/t
 
 interface Props {
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
+    questionnaireUpdate?: boolean;
+    setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
 }
 
-export function useContextMenu({ openExpressionModal }: Props) {
+export function useContextMenu({ openExpressionModal, questionnaireUpdate, setQuestionnaireUpdate }: Props) {
     const [contextMenuInfo, setContextMenuInfo] = useState<ContextMenuInfo | null>(null);
 
     const contextMenu: ContextMenu = {
@@ -18,6 +20,12 @@ export function useContextMenu({ openExpressionModal }: Props) {
                   closeContextMenu();
               }
             : undefined,
+        reload:
+            setQuestionnaireUpdate && questionnaireUpdate !== undefined
+                ? () => {
+                      setQuestionnaireUpdate(!questionnaireUpdate);
+                  }
+                : undefined,
         undo: () => {
             contextMenuInfo?.editor.undo();
             closeContextMenu();

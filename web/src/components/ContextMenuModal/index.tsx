@@ -25,11 +25,11 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
     return (
         <div style={{ top: position.top, left: position.left }} className={s.wrapper} ref={wrapperRef}>
             <>
-                <div
-                    className={contextMenu.debugger ? s.button : s.buttonDisable}
-                    onClick={contextMenu.debugger && contextMenu.debugger}
-                >
+                <div className={contextMenu.debugger ? s.button : s.buttonDisable} onClick={contextMenu.debugger}>
                     - Debugger
+                </div>
+                <div className={contextMenu.reload ? s.button : s.buttonDisable} onClick={contextMenu.reload}>
+                    - Reload
                 </div>
                 <div className={s.separater}>-------------</div>
             </>

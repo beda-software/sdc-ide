@@ -40,6 +40,8 @@ export function Main() {
         saveNewMapping,
         closeModal,
         mapperInfoList,
+        questionnaireUpdate,
+        setQuestionnaireUpdate,
     } = useMain(questionnaireId);
 
     return (
@@ -64,6 +66,8 @@ export function Main() {
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
                             fhirMode={fhirMode}
+                            questionnaireUpdate={questionnaireUpdate}
+                            setQuestionnaireUpdate={setQuestionnaireUpdate}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
