@@ -2,8 +2,9 @@ name: actions-demo
 on: [push]
 jobs:
   Build-New-Image:
-    runs-on: docker
+    runs-on: ubuntu-latest
     steps:
+        - uses: actions/checkout@v2
         - run: echo "GITHUB_SHA $GITHUB_SHA"
         - run: echo "GITHUB_REF $GITHUB_REF"
         - run: echo "start building new image"
