@@ -2,7 +2,7 @@ name: actions-demo
 on: [push]
 jobs:
   Build-New-Image:
-    runs-on: ubuntu-latest
+    runs-on: docker:20
     steps:
         - run: echo "GITHUB_SHA $GITHUB_SHA"
         - run: echo "GITHUB_REF $GITHUB_REF"
