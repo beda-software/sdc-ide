@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        # - run: export BUILD_IMAGE="${{ secrets.DOCKER_HUB_REPOSITORY }}:test"
-        - run: export BUILD_IMAGE=test:test
+        - run: export BUILD_IMAGE=${{ secrets.DOCKER_HUB_REPOSITORY }}:test
         - run: echo "GITHUB_SHA $GITHUB_SHA"
         - run: echo "GITHUB_REF $GITHUB_REF"
+        - run: echo $BUILD_IMAGE
         - run: echo "GITHUB_BUILD_IMAGE $BUILD_IMAGE"
         - run: echo "start building new image"
         # - run: export TIER=staging
