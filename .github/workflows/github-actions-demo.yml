@@ -29,15 +29,15 @@ jobs:
         # - run: docker tag test-release:test-tag2 atuonufure/test-release:test-tag2
         - run: docker push ${{ env.BUILD_IMAGE }}
         - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
-  Deploy-New-Image:
-    runs-on: ubuntu-latest
-    on: 
-      push:
-        branches: [master]
-    env:
-      BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
-    steps:
-        - uses: 
+  # Deploy-New-Image:
+  #   runs-on: ubuntu-latest
+  #   on: 
+  #     push:
+  #       branches: [master]
+  #   env:
+  #     BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
+  #   steps:
+  #       - uses: 
 
       # username: ${{ secrets.DOCKERHUB_USERNAME }}
       # password: ${{ secrets.DOCKERHUB_TOKEN }}
