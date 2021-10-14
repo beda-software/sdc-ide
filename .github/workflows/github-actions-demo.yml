@@ -9,8 +9,8 @@ jobs:
       BRANCH_NAME: ${GITHUB_REF#refs/heads/}
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
-        - run: export AIDBOX_LICENSE_KEY_TESTS=${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
-        - run: export AIDBOX_LICENSE_ID_TESTS=${{secrets.AIDBOX_LICENSE_ID_TESTS}}
+        # - run: export AIDBOX_LICENSE_KEY_TESTS=${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+        # - run: export AIDBOX_LICENSE_ID_TESTS=${{secrets.AIDBOX_LICENSE_ID_TESTS}}
         - uses: actions/checkout@v2
         # - run: docker build --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} .
         # -
@@ -22,6 +22,9 @@ jobs:
         # - run: docker push ${{ env.BUILD_IMAGE }}
         # - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
         - run: ./run_test.sh
+          with:
+            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
   # Deploy-New-Image:
   #   runs-on: ubuntu-latest
   #   on: 
