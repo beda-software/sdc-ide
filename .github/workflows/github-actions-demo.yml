@@ -9,15 +9,7 @@ jobs:
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
         - uses: actions/checkout@v2
-        - run: echo ${{ env.BUILD_IMAGE }}
-        # - run: export BUILD_IMAGE="atuonufure/sdc-ide-frontend:test"
-        # - run: export BUILD_IMAGE="${{ secrets.DOCKER_HUB_REPOSITORY }}:test"
-        - run: echo "GITHUB_SHA $GITHUB_SHA"
-        - run: echo "GITHUB_REF $GITHUB_REF"
-        - run: echo ${{ env.BUILD_IMAGE }}
-        - run: echo "GITHUB_BUILD_IMAGE ${{ env.BUILD_IMAGE }}"
         - run: echo "start building new image"
-        # - run: export TIER=staging
         - run: docker build --build-arg TIER=develop -t ${{ env.BUILD_IMAGE }} .
         -
           name: Login to Docker Hub
@@ -25,7 +17,6 @@ jobs:
           with:
             username: ${{ secrets.DOCKER_HUB_USERNAME }}
             password: ${{ secrets.DOCKER_HUB_TOKEN }}
-        # - run: docker tag test-release:test-tag2 atuonufure/test-release:test-tag2
         - run: docker push ${{ env.BUILD_IMAGE }}
         - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
   # Deploy-New-Image:
