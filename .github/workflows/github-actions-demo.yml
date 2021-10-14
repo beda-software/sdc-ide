@@ -6,6 +6,12 @@ jobs:
   Build-New-Image:
     runs-on: ubuntu-latest
     env:
+      BRANCH_NAME: ${GITHUB_REF#refs/heads/}
+      TIER: ${{ GITHUB_REF#refs/heads/ == 'master' && 'production' || 'develop' }}
+        # - if: [ "${GITHUB_REF#refs/heads/}" == master ]
+        #   when: production
+        # - if: [ "${GITHUB_REF#refs/heads/}" != master ]
+        #   when: develop
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
         - uses: actions/checkout@v2
