@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${GITHUB_REF#refs/heads/}
-      TIER: ${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
+      TIER: ${{ GITHUB_REF#refs/heads/ == 'master' && 'production' || 'develop' }}
         # - if: [ "${GITHUB_REF#refs/heads/}" == master ]
         #   when: production
         # - if: [ "${GITHUB_REF#refs/heads/}" != master ]
