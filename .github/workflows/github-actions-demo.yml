@@ -12,40 +12,28 @@ jobs:
       AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
       AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
     steps:
-        - uses: actions/checkout@v2
-        - run: docker pull ${{ env.CACHE_IMAGE }} || true 
-        - run: docker build --cache-from ${{ env.CACHE_IMAGE }} --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
-        -
-          name: Login to Docker Hub
-          uses: docker/login-action@v1
-          with:
-            username: ${{ secrets.DOCKER_HUB_USERNAME }}
-            password: ${{ secrets.DOCKER_HUB_TOKEN }}
-        - run: docker push ${{ env.BUILD_IMAGE }}
-        - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
-        - run: ./run_test.sh
+      - uses: actions/checkout@v2
+      - run: docker pull ${{ env.CACHE_IMAGE }} || true 
+      - run: docker build --cache-from ${{ env.CACHE_IMAGE }} --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      - run: docker push ${{ env.BUILD_IMAGE }}
+      - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
+      # - run: ./run_test.sh
 
-  # Deploy-New-Image:
-  #   runs-on: ubuntu-latest
-  #   on: 
-  #     push:
-  #       branches: [master]
-  #   env:
-  #     BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
-  #   steps:
-  #       - uses: 
-
-      # username: ${{ secrets.DOCKERHUB_USERNAME }}
-      # password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      # - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      # - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      # - name: Check out repository code
-      #   uses: actions/checkout@v2
-      # - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      # - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      # - name: List files in the repository
-      #   run: |
-      #     ls ${{ github.workspace }}
-      # - run: echo "🍏 This job's status is ${{ job.status }}."
+  Deploy-New-Image:
+    runs-on: ubuntu-latest
+    on: 
+      push:
+        branches: [master]
+    env:
+      BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
+    steps:
+      - run: ssh root@sdc.beda.software
+      - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
+      - run: docker-compose -f docker-compose.production.yaml pull
+      - run: docker-compose -f docker-compose.production.yaml up -d
