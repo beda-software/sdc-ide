@@ -7,17 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${GITHUB_REF#refs/heads/}
-      # TIER: ${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
-        # - if: [ "${GITHUB_REF#refs/heads/}" == master ]
-        #   when: production
-        # - if: [ "${GITHUB_REF#refs/heads/}" != master ]
-        #   when: develop
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
-        - run: echo ${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
+        - run: echo 
         - uses: actions/checkout@v2
         - run: echo "start building new image"
-        - run: docker build --build-arg TIER=develop -t ${{ env.BUILD_IMAGE }} .
+        - run: docker build --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} .
         -
           name: Login to Docker Hub
           uses: docker/login-action@v1
@@ -26,6 +21,7 @@ jobs:
             password: ${{ secrets.DOCKER_HUB_TOKEN }}
         - run: docker push ${{ env.BUILD_IMAGE }}
         - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
+        - run: ./run_test.sh
   # Deploy-New-Image:
   #   runs-on: ubuntu-latest
   #   on: 
