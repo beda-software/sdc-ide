@@ -6,12 +6,10 @@ jobs:
   Build-New-Image:
     runs-on: ubuntu-latest
     env:
-      BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
+      BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
-        # - uses: nelonoel/branch-name@v1.0.1
-        - run: echo ${GITHUB_REF}
-        - run: echo ${GITHUB_REF#refs/heads/}
         - uses: actions/checkout@v2
+        - run: echo ${{ env.BUILD_IMAGE }}
         # - run: export BUILD_IMAGE="atuonufure/sdc-ide-frontend:test"
         # - run: export BUILD_IMAGE="${{ secrets.DOCKER_HUB_REPOSITORY }}:test"
         - run: echo "GITHUB_SHA $GITHUB_SHA"
