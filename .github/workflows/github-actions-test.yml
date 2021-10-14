@@ -12,7 +12,7 @@ jobs:
             AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
             AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
         steps:
-            - echo: 'ok'
+            - run: echo 'ok'
             # - uses: actions/checkout@v2
             # - run: docker pull ${{ env.CACHE_IMAGE }} || true
             # - run: docker build --cache-from ${{ env.CACHE_IMAGE }} --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
