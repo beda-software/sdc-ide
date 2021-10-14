@@ -29,6 +29,7 @@ jobs:
             BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
         steps:
         if: github.ref == 'refs/heads/master'
+        run: |
             - run: ssh root@sdc.beda.software
             - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
             - run: docker-compose -f docker-compose.production.yaml pull
