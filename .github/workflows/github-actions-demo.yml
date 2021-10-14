@@ -7,13 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${GITHUB_REF#refs/heads/}
-      TIER: ${{ GITHUB_REF#refs/heads/ == 'master' && 'production' || 'develop' }}
+      TIER: ${GITHUB_REF#refs/heads/} == 'master' && 'production' || 'develop'
         # - if: [ "${GITHUB_REF#refs/heads/}" == master ]
         #   when: production
         # - if: [ "${GITHUB_REF#refs/heads/}" != master ]
         #   when: develop
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
     steps:
+        - run: echo ${{env.TIER}}
         - uses: actions/checkout@v2
         - run: echo "start building new image"
         - run: docker build --build-arg TIER=develop -t ${{ env.BUILD_IMAGE }} .
