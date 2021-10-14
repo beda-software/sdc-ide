@@ -26,6 +26,7 @@ jobs:
 on:
     pull_request:
         branches: [master]
+jobs:
     Deploy-New-Image:
         runs-on: ubuntu-latest
         env:
