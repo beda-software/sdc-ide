@@ -3,7 +3,7 @@ on:
     push:
         branches: [master, test]
 jobs:
-    Build-New-Image:
+    test:
         runs-on: ubuntu-latest
         env:
             BRANCH_NAME: ${GITHUB_REF#refs/heads/}
@@ -23,7 +23,7 @@ jobs:
             - run: docker push ${{ env.BUILD_IMAGE }}
             - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
             # - run: ./run_test.sh
-    Deploy-New-Image:
+    deploy:
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
