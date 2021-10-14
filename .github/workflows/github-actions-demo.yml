@@ -9,8 +9,8 @@ jobs:
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:test
     steps:
         # - uses: nelonoel/branch-name@v1.0.1
-        - run: echo ${GITHUB_HEAD_REF}
-        - run: echo ${GITHUB_BASE_REF}
+        - run: echo ${GITHUB_REF}
+        - run: echo ${GITHUB_REF#refs/heads/}
         - uses: actions/checkout@v2
         # - run: export BUILD_IMAGE="atuonufure/sdc-ide-frontend:test"
         # - run: export BUILD_IMAGE="${{ secrets.DOCKER_HUB_REPOSITORY }}:test"
