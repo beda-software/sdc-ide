@@ -8,7 +8,6 @@ jobs:
     env:
       BRANCH_NAME: ${GITHUB_REF#refs/heads/}
       BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
-    outputs:
       AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
       AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
     steps:
