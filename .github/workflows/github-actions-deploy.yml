@@ -11,14 +11,19 @@ jobs:
             - name: Create SSH key
               run: |
                   mkdir -p ~/.ssh/
-                  echo "$SSH_PRIVATE_KEY" > ../private.key
-                  sudo chmod 600 ../private.key
+                  echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
+                  sudo chmod 600 ~/.ssh/private.key
                   echo "$SSH_HOST" > ~/.ssh/known_hosts
               shell: bash
               env:
                   SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
                   SSH_HOST: ${{secrets.SSH_HOST}}
                   SSH_KEY_PATH: ${{ github.workspace }}/../private.key
+            - run: ssh -i ~/.ssh/private.key root@sdc.beda.software
+            - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
+            - run: docker-compose -f docker-compose.production.yaml pull
+            - run:
+                  docker-compose -f docker-compose.production.yaml up -d
             # - name: Install SSH Key
             #   uses: shimataro/ssh-key-action@v2
             #   with:
@@ -29,7 +34,3 @@ jobs:
             # - name: Deploy with rsync
             #   run: ls -la
             #   run: rsync -avz ./root ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/sdc-demo/
-            - run: ssh root@sdc.beda.software
-            - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
-            - run: docker-compose -f docker-compose.production.yaml pull
-            - run: docker-compose -f docker-compose.production.yaml up -d
