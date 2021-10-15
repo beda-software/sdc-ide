@@ -15,7 +15,10 @@ jobs:
                   known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
             - name: Adding Known Hosts
               run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-            - run: ssh -tt root@sdc.beda.software
-            - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
-            - run: docker-compose -f docker-compose.production.yaml pull
-            - run: docker-compose -f docker-compose.production.yaml up -d
+            - name: Deploy with rsync
+              run: ls -la
+            #   run: rsync -avz ./dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/root/sdc-demo/
+            # - run: ssh -tt root@sdc.beda.software
+            # - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
+            # - run: docker-compose -f docker-compose.production.yaml pull
+            # - run: docker-compose -f docker-compose.production.yaml up -d
