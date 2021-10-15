@@ -19,7 +19,7 @@ jobs:
                   SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
                   SSH_HOST: ${{secrets.SSH_HOST}}
                   SSH_KEY_PATH: ~/.ssh/private.key
-            - run: ssh -tt -v -f ~/.ssh/private.key root@sdc.beda.software
+            - run: ssh -tt -v -i private root@sdc.beda.software
             - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
             - run: docker-compose -f docker-compose.production.yaml pull
             - run:
