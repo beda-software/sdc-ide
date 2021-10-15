@@ -1,0 +1,26 @@
+name: action-test
+on:
+    push:
+        branches: [master, test]
+jobs:
+    Build-New-Image:
+        runs-on: ubuntu-latest
+        env:
+            BRANCH_NAME: ${GITHUB_REF#refs/heads/}
+            BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${GITHUB_REF#refs/heads/}
+            CACHE_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
+            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
+        steps:
+            - run: echo 'ok'
+            # - uses: actions/checkout@v2
+            # - run: docker pull ${{ env.CACHE_IMAGE }} || true
+            # - run: docker build --cache-from ${{ env.CACHE_IMAGE }} --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }} -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
+            # - name: Login to Docker Hub
+            #   uses: docker/login-action@v1
+            #   with:
+            #       username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            #       password: ${{ secrets.DOCKER_HUB_TOKEN }}
+            # - run: docker push ${{ env.BUILD_IMAGE }}
+            # - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
+              # - run: ./run_test.sh
