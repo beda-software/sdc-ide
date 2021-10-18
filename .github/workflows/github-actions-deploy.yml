@@ -53,6 +53,6 @@ jobs:
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   port: 22
                   script: |
+                      echo -n $ENV_FILE /root/sdc-demo
                       docker-compose -f docker-compose.production.yaml pull
                       docker-compose -f docker-compose.production.yaml up -d
-                      echo -n $ENV_FILE /root/sdc-demo
