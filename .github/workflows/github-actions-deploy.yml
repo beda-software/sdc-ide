@@ -16,6 +16,7 @@ jobs:
         #           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         #       shell: bash
         steps:
+            - uses: actions/checkout@v2
             - name: Create SSH key
               run: |
                   mkdir -p ~/.ssh/
