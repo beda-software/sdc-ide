@@ -39,7 +39,7 @@ jobs:
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
                   ARGS: '-rltgoDzvO --delete'
-                  SOURCE: './examples'
+                  SOURCE: './examples/'
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
                   TARGET: '/root/sdc-demo'
