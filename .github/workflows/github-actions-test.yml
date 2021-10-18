@@ -6,8 +6,8 @@ jobs:
     Build-New-Image:
         runs-on: ubuntu-latest
         env:
-            BRANCH_NAME: ${{ github.head_ref }}
-            BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:${{ github.head_ref }}
+            BRANCH_NAME: master
+            BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:master
             CACHE_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
             AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
             AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
