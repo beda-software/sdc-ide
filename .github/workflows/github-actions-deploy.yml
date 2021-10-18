@@ -45,8 +45,8 @@ jobs:
                   TARGET: '/root/sdc-demo'
             - name: Restart
               uses: appleboy/ssh-action@master
-              env:
-                  ENV_FILE: ${{ secrets.ENV_FILE }}
+            #   env:
+            #       ENV_FILE: ${{ secrets.ENV_FILE }}
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
@@ -54,6 +54,6 @@ jobs:
                   port: 22
                   script: |
                       cd /root/sdc-demo
-                      echo -n $ENV_FILE > .env
+                      echo -n ${{ secrets.ENV_FILE }} > .env
                       docker-compose -f docker-compose.production.yaml pull
                       docker-compose -f docker-compose.production.yaml up -d
