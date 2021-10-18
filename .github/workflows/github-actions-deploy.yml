@@ -43,17 +43,16 @@ jobs:
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
                   TARGET: '/root/sdc-demo'
-            # - name: Restart node
-            #   uses: appleboy/ssh-action@master
-            #   with:
-            #       host: ${{ secrets.REMOTE_HOST }}
-            #       username: ${{ secrets.REMOTE_USER }}
-            #       key: ${{ secrets.SSH_PRIVATE_KEY }}
-            #       port: 22
-            #       script: |
-            #           killall -9 node
-            #           cd ~/app/public
-            #           rm -rf assets/
-            #           unzip ~/assets.zip
-            #           cd ~/app/
-            #           npm run server > log.log&
+            - name: Restart
+              uses: appleboy/ssh-action@master
+              env:
+                  ENV_FILE: ${{ secrets.ENV_FILE }}
+              with:
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  script: |
+                      docker-compose -f docker-compose.production.yaml pull
+                      docker-compose -f docker-compose.production.yaml up -d
+                      echo -n $ENV_FILE /root/sdc-demo
