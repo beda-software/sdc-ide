@@ -38,7 +38,7 @@ jobs:
               uses: easingthemes/ssh-deploy@v2.1.1
               env:
                   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-                  ARGS: '-rltgoDzvO --delete'
+                  ARGS: '-rltgoDzvO'
                   SOURCE: './examples/'
                   REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
                   REMOTE_USER: ${{ secrets.REMOTE_USER }}
@@ -58,3 +58,5 @@ jobs:
                       echo -n $ENV_FILE|base64 -d > .env
                       docker-compose -f docker-compose.production.yaml pull
                       docker-compose -f docker-compose.production.yaml up -d
+
+                    #   docker-compose -f docker-compose.production.yaml restart nginx
