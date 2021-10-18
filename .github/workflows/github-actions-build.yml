@@ -1,4 +1,4 @@
-name: action-test
+name: action-build
 on:
     push:
         branches: [master, test]

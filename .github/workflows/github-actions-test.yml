@@ -7,6 +7,8 @@ jobs:
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:master
+            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
         steps:
             - uses: actions/checkout@v2
             - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
