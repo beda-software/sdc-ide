@@ -13,13 +13,18 @@ jobs:
                   mkdir -p ~/.ssh/
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/private.key
                   sudo chmod 600 ~/.ssh/private.key
-                  echo "$SSH_HOST" > ~/.ssh/known_hosts
+                  echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
               shell: bash
+            #   env:
+            #       SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+            #       SSH_HOST: ${{secrets.SSH_HOST}}
+            #       SSH_KEY_PATH: ~/.ssh/private.key
               env:
                   SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-                  SSH_HOST: ${{secrets.SSH_HOST}}
-                  SSH_KEY_PATH: ~/.ssh/private.key
-            - run: ssh -tt -v -i private root@sdc.beda.software
+                  SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+                  SSH_KEY_PATH: ${{ github.workspace }}/private.key
+            # - run: ssh -tt -v -i private root@sdc.beda.software
+            - run: ssh -i $SSH_KEY_PATH root@sdc.beda.software
             - run: scp ./docker-compose.production.yaml root@sdc.beda.software:sdc-demo
             - run: docker-compose -f docker-compose.production.yaml pull
             - run: docker-compose -f docker-compose.production.yaml up -d
