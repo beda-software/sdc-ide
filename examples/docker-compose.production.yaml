@@ -1,9 +1,24 @@
 version: '3.1'
 services:
+  nginx:
+    image: staticfloat/nginx-certbot
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./nginx:/etc/nginx/user.conf.d:ro
+    - ./letsencrypt:/etc/letsencrypt
+    environment:
+      CERTBOT_EMAIL: ir4y.ix@gmail.com
+  dockerize:
+    image: jwilder/dockerize
+    command: dockerize -wait http://backend:8081/live -wait http://frontend:5000 -timeout 300s
+    depends_on:
+      - backend
+    links:
+      - backend
   frontend:
     image: bedasoftware/sdc-ide:latest
-    ports:
-    - 5000:5000
   backend:
     image: bedasoftware/aidbox-sdc:latest
     command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081", "--reload"]
@@ -14,8 +29,6 @@ services:
     env_file:
       - .env.base
       - .env
-    ports:
-      - 8080:8080
     volumes:
       - ./config:/var/config:cached
       - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached

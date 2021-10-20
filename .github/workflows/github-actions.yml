@@ -1,0 +1,71 @@
+name: github-actions
+on:
+    push:
+        branches: [master, develop, test]
+    pull_request:
+        branches: [master]
+jobs:
+    Build:
+        runs-on: ubuntu-latest
+        env:
+            BRANCH_NAME: master
+            BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:master
+            CACHE_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
+            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
+        steps:
+            - uses: actions/checkout@v2
+            - run: docker pull ${{ env.CACHE_IMAGE }} || true
+            - run: >-
+                  docker build --cache-from ${{ env.CACHE_IMAGE }}
+                  --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
+                  -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
+            - name: Login to Docker Hub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKER_HUB_USERNAME }}
+                  password: ${{ secrets.DOCKER_HUB_TOKEN }}
+            - run: docker push ${{ env.BUILD_IMAGE }}
+    Test:
+        needs: Build
+        runs-on: ubuntu-latest
+        env:
+            BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:master
+            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
+            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
+        steps:
+            - uses: actions/checkout@v2
+            - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
+            - run: ./run_test.sh
+    Deploy:
+        needs: Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Deploy to Server
+              uses: easingthemes/ssh-deploy@v2.1.1
+              env:
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+                  ARGS: '-rltgoDzvO'
+                  SOURCE: './examples/'
+                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
+                  TARGET: '/root/sdc-demo'
+            - name: Restart
+              uses: appleboy/ssh-action@master
+              env:
+                  ENV_FILE: ${{ secrets.ENV_FILE }}
+              with:
+                  host: ${{ secrets.REMOTE_HOST }}
+                  username: ${{ secrets.REMOTE_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  port: 22
+                  envs: ENV_FILE
+                  script: |
+                      cd /root/sdc-demo
+                      echo -n $ENV_FILE|base64 -d > .env
+                      docker-compose -f docker-compose.production.yaml pull
+                      docker-compose -f docker-compose.production.yaml up -d devbox devbox-db backend frontend
+                      docker-compose -f docker-compose.production.yaml up --exit-code-from dockerize dockerize
+                      docker-compose -f docker-compose.production.yaml stop nginx
+                      docker-compose -f docker-compose.production.yaml up -d nginx
