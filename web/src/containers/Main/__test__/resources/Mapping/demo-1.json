@@ -1,0 +1,30 @@
+{
+    "body": {
+        "type": "transaction",
+        "entry": [
+            {
+                "request": {
+                    "url": "$ \"/Patient/\" + fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='patientId').answer.children().string\").0",
+                    "method": "PATCH"
+                },
+                "resource": {
+                    "name": [
+                        {
+                            "given": [
+                                "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='first-name').answer.value.string\").0",
+                                "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='middle-name').answer.value.string\").0"
+                            ],
+                            "family": "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='last-name').answer.value.string\").0"
+                        }
+                    ],
+                    "gender": "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='gender').answer.value.string\").0",
+                    "birthDate": "$ fhirpath(\"QuestionnaireResponse.repeat(item).where(linkId='date-of-birth').answer.value.date\").0",
+                    "resourceType": "Patient"
+                }
+            }
+        ],
+        "resourceType": "Bundle"
+    },
+    "id": "demo-1",
+    "resourceType": "Mapping"
+}

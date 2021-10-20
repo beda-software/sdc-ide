@@ -1,0 +1,86 @@
+{
+    "item": [
+        {
+            "item": [
+                {
+                    "text": "First Name",
+                    "type": "string",
+                    "linkId": "first-name",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.name.given.first()"
+                    }
+                },
+                {
+                    "text": "Middle Name",
+                    "type": "string",
+                    "linkId": "middle-name",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.name.given[1]"
+                    }
+                },
+                {
+                    "text": "Last Name",
+                    "type": "string",
+                    "linkId": "last-name",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.name.family.first()"
+                    }
+                },
+                {
+                    "text": "Date of Birth",
+                    "type": "date",
+                    "linkId": "date-of-birth",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.birthDate"
+                    }
+                },
+                {
+                    "text": "Gender",
+                    "type": "string",
+                    "linkId": "gender",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.gender"
+                    }
+                },
+                {
+                    "text": "ID",
+                    "type": "string",
+                    "hidden": true,
+                    "linkId": "patientId",
+                    "initialExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "%LaunchPatient.id"
+                    }
+                }
+            ],
+            "text": "Demographics",
+            "type": "group",
+            "linkId": "Demographics"
+        }
+    ],
+    "status": "active",
+    "mapping": [
+        {
+            "id": "demo-1",
+            "resourceType": "Mapping"
+        },
+        {
+            "id": "demo-2",
+            "resourceType": "Mapping"
+        }
+    ],
+    "launchContext": [
+        {
+            "name": "LaunchPatient",
+            "type": "Patient",
+            "description": "The patient that is to be used to pre-populate the form"
+        }
+    ],
+    "id": "demo-3",
+    "resourceType": "Questionnaire"
+}

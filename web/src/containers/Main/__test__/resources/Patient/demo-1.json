@@ -1,0 +1,24 @@
+{
+    "name": [
+        {
+            "given": ["Jane", "Jr."],
+            "family": "Smith"
+        }
+    ],
+    "gender": "Female",
+    "telecom": [
+        {
+            "use": "Mobile",
+            "value": "+123456789d",
+            "system": "phone"
+        },
+        {
+            "use": "Mobile",
+            "value": "+198765432",
+            "system": "phone"
+        }
+    ],
+    "birthDate": "1980-01-01",
+    "id": "patient-1",
+    "resourceType": "Patient"
+}
