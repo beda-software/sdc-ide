@@ -10,6 +10,7 @@ import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { Questionnaire, QuestionnaireLaunchContext, Parameters, ParametersParameter } from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
+import { version } from 'src/version';
 
 interface MenuProps {
     launchContext: Parameters;
@@ -88,6 +89,7 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, 
                 <div className={s.menuItem} />
                 <div className={s.menuItem}>
                     <button onClick={configForm.applyConfig}>Apply config</button>
+                    <div className={s.version}>{version}</div>
                 </div>
             </div>
         </>

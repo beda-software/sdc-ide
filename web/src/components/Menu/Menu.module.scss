@@ -28,7 +28,7 @@
   right: 20px;
   background-color: #597EF7;
   z-index: 400;
-  padding: 24px 10px 10px;
+  padding: 24px 10px 5px;
   display: grid;
   grid-template-columns: 30% 55%;
   grid-column-gap: 20px;
@@ -61,3 +61,13 @@
   color: $base-light-color;
 }
 
+.version {
+  font-size: 14px;
+  float: right;
+  padding-top: 10px;
+  margin-right: -6vw;
+
+  @media screen and (max-width: 900px) {
+    margin-right: -5vw;
+  }
+}
