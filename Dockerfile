@@ -17,10 +17,17 @@ ADD tsconfig.base.json tsconfig.base.json
 ADD shared /app/shared
 
 RUN yarn --network-concurrency=1
+RUN yarn global add serve
 
 ADD . /app
 
 ARG TIER
 RUN cp web/src/services/initialize.${TIER}.ts web/src/services/initialize.ts
+
+WORKDIR /app/web/build
+
+EXPOSE 5000
+ENV PORT="5000"
+CMD serve -n -l tcp://0.0.0.0:5000
 
 RUN yarn build
