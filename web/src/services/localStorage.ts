@@ -1,5 +1,6 @@
 import { ParametersParameter } from 'shared/src/contrib/aidbox';
 import _ from 'lodash';
+import { BASE_URL } from './config.json';
 
 interface StorageData {
     connection: {
@@ -22,7 +23,7 @@ function loadStorageData(): StorageData {
             : {
                   client: 'root',
                   secret: 'secret',
-                  baseUrl: 'http://localhost:8080',
+                  baseUrl: BASE_URL,
               },
         fhirMode: storageData.getItem('fhirMode') === 'true',
         prevActiveMappingId: storageData.getItem('prevActiveMappingId'),

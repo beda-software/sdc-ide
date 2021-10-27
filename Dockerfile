@@ -21,6 +21,9 @@ RUN yarn global add serve
 
 ADD . /app
 
+ARG BASE_URL
+RUN echo "{\"BASE_URL\": \"$BASE_URL\"}" > web/src/services/config.json
+
 ARG TIER
 RUN cp web/src/services/initialize.${TIER}.ts web/src/services/initialize.ts
 

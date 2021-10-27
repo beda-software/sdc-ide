@@ -7,14 +7,16 @@ jobs:
             BRANCH_NAME: master
             BUILD_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:master
             CACHE_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
-            AIDBOX_LICENSE_KEY_TESTS: ${{secrets.AIDBOX_LICENSE_KEY_TESTS}}
-            AIDBOX_LICENSE_ID_TESTS: ${{secrets.AIDBOX_LICENSE_ID_TESTS}}
+            AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
+            AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
+            BASE_URL: ${{ secrets.BASE_URL }}
         steps:
             - uses: actions/checkout@v2
             - run: docker pull ${{ env.CACHE_IMAGE }} || true
             - run: >-
                   docker build --cache-from ${{ env.CACHE_IMAGE }}
                   --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
+                  --build-arg BASE_URL=${{ env.BASE_URL }}
                   -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
             - name: Login to Docker Hub
               uses: docker/login-action@v1
