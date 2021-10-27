@@ -9,7 +9,7 @@ jobs:
             CACHE_IMAGE: ${{ secrets.DOCKER_HUB_REPOSITORY }}:latest
             AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
             AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
-            BASE_URL: ${{ secrets.BASE_URL }}
+            BASE_URL: https://aidbox.sdc.beda.software
         steps:
             - uses: actions/checkout@v2
             - run: docker pull ${{ env.CACHE_IMAGE }} || true
