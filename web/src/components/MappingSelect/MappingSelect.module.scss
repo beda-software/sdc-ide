@@ -41,3 +41,16 @@ button {
 .checked:hover {
   background-color: $base-surface-color;
 }
+
+.error {
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-weight: 500;
+  font-size: 12px;
+  background-color: #ff6b6c;
+  margin-left: 10px;
+}
+
+.count {
+  margin: 0 5px;
+}

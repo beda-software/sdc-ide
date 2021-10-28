@@ -15,6 +15,7 @@ import { formatError } from 'aidbox-react/lib/utils/error';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
+import { ErrorDebugState, useErrorDebug } from './errorDebugHook';
 import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
 import { MapperInfo } from 'src/components/ModalCreateMapper/types';
@@ -51,11 +52,20 @@ export const showToast = (type: string, error?: OperationOutcome, index?: number
             formatError(error, {
                 mapping: { conflict: 'Please reload page' },
                 format: (errorCode, errorDescription) =>
-                    `An error occurred: ${
-                        error?.issue[index as number]?.diagnostics || errorDescription
+                    `An error occurred: ${error?.issue[index as number]?.diagnostics || errorDescription} ${
+                        error?.issue[index as number]?.expression?.[0] || ''
                     } (${errorCode}).`,
             }),
         );
+    }
+};
+
+export const showError = (errorState: ErrorDebugState, title: string) => {
+    if (title === 'Questionnaire FHIR Resource') {
+        errorState?.questionnaireErrors.map((error, index) => showToast('error', error, index));
+    }
+    if (title === 'Patient JUTE Mapping') {
+        errorState?.mappingErrors.map((error, index) => showToast('error', error, index));
     }
 };
 
@@ -67,6 +77,9 @@ export function useMain(questionnaireId: string) {
         setData('fhirMode', fhirMode);
     }, []);
     const [launchContext, dispatch] = useLaunchContext();
+
+    // Show error in questionnaire and mapping
+    const [errorState, errorDispatch] = useErrorDebug();
 
     // Closing create mapping modal
     const createMappingDefault = {
@@ -153,20 +166,23 @@ export function useMain(questionnaireId: string) {
     };
 
     // Questionnaire in FHIR format
-    const [questionnaireFHIRRD] = useService(
-        () =>
-            service<Questionnaire>({
-                method: 'GET',
-                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
-            }),
-        [questionnaireId, fhirMode, questionnaireUpdate],
-    );
+    const [questionnaireFHIRRD] = useService(() => {
+        errorDispatch({ type: 'reset questionnaire errors' });
+        return service<Questionnaire>({
+            method: 'GET',
+            url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
+        });
+    }, [questionnaireId, fhirMode, questionnaireUpdate]);
 
     const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
     const [showModal, setShowModal] = useState(false);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
+            let errorCount = 0;
+            const addError = (error: OperationOutcome) =>
+                errorDispatch({ type: 'add questionnaire error', payload: ++errorCount, error });
+            errorDispatch({ type: 'reset questionnaire errors' });
             const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
                 questionnaireManager.reload();
@@ -178,6 +194,7 @@ export function useMain(questionnaireId: string) {
                     const mappingId: string | null | undefined = idExtraction(issue, resource, response.error);
                     const indexOfMapper = Number(issue.expression?.[0].slice(22));
                     if (!mappingId) {
+                        addError(response.error);
                         showToast('error', response.error, index);
                         return;
                     }
@@ -189,10 +206,11 @@ export function useMain(questionnaireId: string) {
                     setShowModal(true);
                 }
             } else {
+                addError(response.error);
                 showToast('error', response.error);
             }
         },
-        [fhirMode, questionnaireManager],
+        [errorDispatch, fhirMode, questionnaireManager],
     );
 
     // QuestionnaireResponse
@@ -260,18 +278,31 @@ export function useMain(questionnaireId: string) {
         })();
     }, [activeMappingId, loadMapping]);
 
+    const updateMapping = useCallback(async () => {
+        errorDispatch({ type: 'reset mapping errors' });
+        setMappingRD({ status: 'Loading' } as RemoteData);
+        const response = await service({ method: 'GET', url: `/Mapping/${activeMappingId}` });
+        setMappingRD(response);
+    }, [activeMappingId, errorDispatch]);
+
     const saveMapping = useCallback(
         async (mapping: Mapping) => {
+            let errorCount = 0;
+            errorDispatch({ type: 'reset mapping errors' });
             if (isSuccess(mappingRD)) {
                 if (!_.isEqual(mapping, mappingRD.data)) {
                     const response = await saveFHIRResource(mapping);
                     if (isSuccess(response)) {
                         await loadMapping();
                     }
+                    if (isFailure(response)) {
+                        errorDispatch({ type: 'add mapping error', payload: ++errorCount, error: response.error });
+                        showToast('error', response.error, 0);
+                    }
                 }
             }
         },
-        [loadMapping, mappingRD],
+        [errorDispatch, loadMapping, mappingRD],
     );
 
     // BatchRequest
@@ -343,5 +374,8 @@ export function useMain(questionnaireId: string) {
         mapperInfoList,
         questionnaireUpdate,
         setQuestionnaireUpdate,
+        updateMapping,
+        errorState,
+        errorDispatch,
     };
 }

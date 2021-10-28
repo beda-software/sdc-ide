@@ -6,9 +6,15 @@ interface Props {
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
     questionnaireUpdate?: boolean;
     setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
+    updateMapping?: () => void;
 }
 
-export function useContextMenu({ openExpressionModal, questionnaireUpdate, setQuestionnaireUpdate }: Props) {
+export function useContextMenu({
+    openExpressionModal,
+    questionnaireUpdate,
+    setQuestionnaireUpdate,
+    updateMapping,
+}: Props) {
     const [contextMenuInfo, setContextMenuInfo] = useState<ContextMenuInfo | null>(null);
 
     const contextMenu: ContextMenu = {
@@ -20,12 +26,14 @@ export function useContextMenu({ openExpressionModal, questionnaireUpdate, setQu
                   closeContextMenu();
               }
             : undefined,
-        reload:
-            setQuestionnaireUpdate && questionnaireUpdate !== undefined
-                ? () => {
-                      setQuestionnaireUpdate(!questionnaireUpdate);
-                  }
-                : undefined,
+        reload: () => {
+            if (setQuestionnaireUpdate && questionnaireUpdate !== undefined) {
+                setQuestionnaireUpdate(!questionnaireUpdate);
+            }
+            if (updateMapping) {
+                updateMapping();
+            }
+        },
         undo: () => {
             contextMenuInfo?.editor.undo();
             closeContextMenu();

@@ -10,7 +10,7 @@ export function objectToDisplay(resource: object) {
     }
 
     try {
-        const yamlString: string = yaml.safeDump(preparedResource);
+        const yamlString: string = yaml.dump(preparedResource);
         return yamlString;
     } catch (e) {
         console.log(e);

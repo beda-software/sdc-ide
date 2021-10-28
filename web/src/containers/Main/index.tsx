@@ -42,6 +42,9 @@ export function Main() {
         mapperInfoList,
         questionnaireUpdate,
         setQuestionnaireUpdate,
+        updateMapping,
+        errorState,
+        errorDispatch,
     } = useMain(questionnaireId);
 
     return (
@@ -59,7 +62,11 @@ export function Main() {
                     <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
                         <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
-                    <ExpandableElement title="Questionnaire FHIR Resource" cssClass={s.questFHIRResourceBox}>
+                    <ExpandableElement
+                        title="Questionnaire FHIR Resource"
+                        cssClass={s.questFHIRResourceBox}
+                        errorState={errorState}
+                    >
                         <ResourceCodeEditor<Questionnaire>
                             resourceRD={questionnaireFHIRRD}
                             onSave={saveQuestionnaireFHIR}
@@ -85,12 +92,20 @@ export function Main() {
                     >
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
-                    <ExpandableElement title="Patient JUTE Mapping" cssClass={s.patientMapperBox}>
+                    <ExpandableElement
+                        title="Patient JUTE Mapping"
+                        cssClass={s.patientMapperBox}
+                        errorState={errorState}
+                        mappingList={mappingList}
+                    >
                         <div>
                             <MappingSelect
                                 mappingList={mappingList}
                                 activeMappingId={activeMappingId}
                                 setActiveMappingId={setActiveMappingId}
+                                errorState={errorState}
+                                title="Patient JUTE Mapping"
+                                errorDispatch={errorDispatch}
                             />
                             <ResourceCodeEditor<Mapping>
                                 resourceRD={mappingRD}
@@ -98,6 +113,7 @@ export function Main() {
                                 launchContext={launchContext}
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 fhirMode={fhirMode}
+                                updateMapping={updateMapping}
                             />
                         </div>
                     </ExpandableElement>

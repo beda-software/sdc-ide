@@ -16,6 +16,7 @@ interface CodeEditorProps extends IUnControlledCodeMirror {
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
     questionnaireUpdate?: boolean;
     setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
+    updateMapping?: () => void;
 }
 
 export function CodeEditor(props: CodeEditorProps) {
@@ -26,12 +27,14 @@ export function CodeEditor(props: CodeEditorProps) {
         openExpressionModal,
         questionnaireUpdate,
         setQuestionnaireUpdate,
+        updateMapping,
     } = props;
 
     const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({
         openExpressionModal,
         questionnaireUpdate,
         setQuestionnaireUpdate,
+        updateMapping,
     });
 
     const cache = useRef(valueObject);
