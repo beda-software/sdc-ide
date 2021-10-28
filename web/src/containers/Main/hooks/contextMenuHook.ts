@@ -26,14 +26,17 @@ export function useContextMenu({
                   closeContextMenu();
               }
             : undefined,
-        reload: () => {
-            if (setQuestionnaireUpdate && questionnaireUpdate !== undefined) {
-                setQuestionnaireUpdate(!questionnaireUpdate);
-            }
-            if (updateMapping) {
-                updateMapping();
-            }
-        },
+        reload:
+            setQuestionnaireUpdate || updateMapping
+                ? () => {
+                      if (setQuestionnaireUpdate && questionnaireUpdate !== undefined) {
+                          setQuestionnaireUpdate(!questionnaireUpdate);
+                      }
+                      if (updateMapping) {
+                          updateMapping();
+                      }
+                  }
+                : undefined,
         undo: () => {
             contextMenuInfo?.editor.undo();
             closeContextMenu();
