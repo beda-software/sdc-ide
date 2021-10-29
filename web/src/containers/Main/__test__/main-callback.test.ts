@@ -101,13 +101,11 @@ test('saveMapping', async () => {
     });
 });
 
-// TODO: rewrite this test
-test.skip('saveNewMapping', async () => {
+test('saveNewMapping', async () => {
     const notFoundMappingId = 'foobar-100';
     const existingMappingId = 'foobar-101';
 
     await setup();
-
     const { result } = renderHook(() => useMain('test-1'));
 
     expect(
@@ -136,6 +134,6 @@ test.skip('saveNewMapping', async () => {
     if (isSuccess(responseAfter)) {
         expect(responseAfter.data.id).toBe(existingMappingId);
     } else {
-        expect(responseAfter.error.id).toBe('should be success');
+        expect(responseAfter.error.id).toBe('not-found');
     }
 });

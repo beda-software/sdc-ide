@@ -190,17 +190,13 @@ test('idExtraction', () => {
     ).toBeUndefined();
 });
 
-// TODO: rewrite this test
-test.skip('showToast', () => {
-    if (EXPECTED_RESOURCES.showToastType === 'error') {
-        expect(
-            showToast(
-                EXPECTED_RESOURCES.showToastType,
-                EXPECTED_RESOURCES.showToastError,
-                EXPECTED_RESOURCES.showToastIndex,
-            ),
-        ).toBeTruthy();
-    } else {
-        expect(showToast('success')).toBeTruthy();
-    }
+test('showToast', async () => {
+    expect(
+        showToast(
+            EXPECTED_RESOURCES.showToastType,
+            EXPECTED_RESOURCES.showToastError,
+            EXPECTED_RESOURCES.showToastIndex,
+        ),
+    ).toBeTruthy();
+    expect(showToast('success')).toBeTruthy();
 });

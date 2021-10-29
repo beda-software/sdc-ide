@@ -43,11 +43,12 @@ export const updateQuestionnaire = (resource: Questionnaire, fhirMode: boolean) 
     });
 };
 
-export const showToast = (type: string, error?: OperationOutcome, index?: number) => {
+export const showToast = (type: 'success' | 'error', error?: OperationOutcome, index?: number) => {
     if (type === 'success') {
-        toast.success('New mapper created');
-    } else {
-        toast.error(
+        return toast.success('New mapper created');
+    }
+    if (type === 'error') {
+        return toast.error(
             formatError(error, {
                 mapping: { conflict: 'Please reload page' },
                 format: (errorCode, errorDescription) =>

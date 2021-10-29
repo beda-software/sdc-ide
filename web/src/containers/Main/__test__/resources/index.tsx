@@ -339,7 +339,7 @@ const mappingInfoList: MapperInfo[] = [
     },
 ];
 
-const showToastType = 'error';
+const showToastType: 'error' = 'error';
 
 const showToastError: OperationOutcome = {
     resourceType: 'OperationOutcome',
