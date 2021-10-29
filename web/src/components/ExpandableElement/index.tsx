@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { showError } from 'src/containers/Main/hooks';
 import { ErrorDebugState } from 'src/containers/Main/hooks/errorDebugHook';
 import { Mapping, Reference } from 'shared/src/contrib/aidbox';
+import { ErrorButton } from 'src/components/ErrorButton';
 
 import s from './ExpandableElement.module.scss';
 
@@ -32,16 +32,10 @@ export function ExpandableElement(props: ExpandableElementProps) {
                 >
                     {title}
                     {title === 'Questionnaire FHIR Resource' && errorState?.showQuestionnaireErrors && (
-                        <span className={s.error} onClick={() => showError(errorState, title)}>
-                            <span className={s.count}>{errorState.questionnaireErrorCount}</span>
-                            ERR!
-                        </span>
+                        <ErrorButton errorState={errorState} title={title} />
                     )}
                     {title === 'Patient JUTE Mapping' && errorState?.showMappingErrors && mappingList?.length === 1 && (
-                        <span className={s.error} onClick={() => showError(errorState, title)}>
-                            <span className={s.count}>{errorState.mappingErrorCount}</span>
-                            ERR!
-                        </span>
+                        <ErrorButton errorState={errorState} title={title} />
                     )}
                 </h2>
             </div>

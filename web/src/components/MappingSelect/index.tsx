@@ -3,9 +3,9 @@ import _ from 'lodash';
 
 import { Mapping, Reference } from 'shared/src/contrib/aidbox';
 import { Action, ErrorDebugState } from 'src/containers/Main/hooks/errorDebugHook';
+import { ErrorButton } from 'src/components/ErrorButton';
 
 import s from './MappingSelect.module.scss';
-import { showError } from 'src/containers/Main/hooks';
 
 interface MappingSelectProps {
     mappingList: Reference<Mapping>[];
@@ -35,9 +35,6 @@ export function MappingSelect(props: MappingSelectProps) {
                                 errorDispatch({ type: 'reset mapping errors' });
                                 setActiveMappingId(id);
                             }
-                            if (errorState && id === activeMappingId) {
-                                showError(errorState, title);
-                            }
                         }}
                         className={id === activeMappingId ? s.checked : s.item}
                     >
@@ -45,12 +42,7 @@ export function MappingSelect(props: MappingSelectProps) {
                         {title === 'Patient JUTE Mapping' &&
                             errorState?.showMappingErrors &&
                             id === activeMappingId &&
-                            mappingList.length > 1 && (
-                                <span className={s.error}>
-                                    <span className={s.count}>{errorState.mappingErrorCount}</span>
-                                    ERR!
-                                </span>
-                            )}
+                            mappingList.length > 1 && <ErrorButton errorState={errorState} title={title} />}
                     </button>
                 </>
             ))}

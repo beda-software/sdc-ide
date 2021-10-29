@@ -114,6 +114,7 @@ export function useMain(questionnaireId: string) {
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
             const sortedMappings = _.sortBy(mappings, 'id');
+            errorDispatch({ type: 'reset mapping errors' });
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
             if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
@@ -296,8 +297,10 @@ export function useMain(questionnaireId: string) {
                         await loadMapping();
                     }
                     if (isFailure(response)) {
-                        errorDispatch({ type: 'add mapping error', payload: ++errorCount, error: response.error });
-                        showToast('error', response.error, 0);
+                        response.error.issue.map((error: never, index: number) => {
+                            errorDispatch({ type: 'add mapping error', payload: ++errorCount, error: response.error });
+                            showToast('error', response.error, index);
+                        });
                     }
                 }
             }
