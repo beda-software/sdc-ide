@@ -103,8 +103,8 @@ export function Main() {
                                 mappingList={mappingList}
                                 activeMappingId={activeMappingId}
                                 setActiveMappingId={setActiveMappingId}
-                                errorState={errorState}
                                 title="Patient JUTE Mapping"
+                                errorState={errorState}
                                 errorDispatch={errorDispatch}
                             />
                             <ResourceCodeEditor<Mapping>

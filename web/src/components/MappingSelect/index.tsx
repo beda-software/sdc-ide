@@ -11,8 +11,8 @@ interface MappingSelectProps {
     mappingList: Reference<Mapping>[];
     activeMappingId: string | undefined;
     setActiveMappingId: (mappingId: string | undefined) => void;
-    errorState?: ErrorDebugState;
     title: string;
+    errorState?: ErrorDebugState;
     errorDispatch: React.Dispatch<Action>;
 }
 
@@ -23,6 +23,13 @@ export function MappingSelect(props: MappingSelectProps) {
         return <div />;
     }
 
+    const selectMapping = (id?: string) => {
+        if (id !== activeMappingId) {
+            errorDispatch({ type: 'reset mapping errors' });
+            setActiveMappingId(id);
+        }
+    };
+
     return (
         <div className={s.wrapper}>
             {_.map(mappingList, ({ id }, index) => (
@@ -30,12 +37,7 @@ export function MappingSelect(props: MappingSelectProps) {
                     <button
                         type={'button'}
                         key={id + String(index)}
-                        onClick={() => {
-                            if (id !== activeMappingId) {
-                                errorDispatch({ type: 'reset mapping errors' });
-                                setActiveMappingId(id);
-                            }
-                        }}
+                        onClick={() => selectMapping(id)}
                         className={id === activeMappingId ? s.checked : s.item}
                     >
                         {id}
