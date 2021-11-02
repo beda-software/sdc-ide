@@ -5,8 +5,9 @@ import { RenderRemoteData } from 'src/components/RenderRemoteData';
 import { CodeEditor } from 'src/components/CodeEditor';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
 import { ModalExpression } from 'src/components/ModalExpression';
-import { useExpressionModal } from './hooks';
+import { useExpressionModal } from 'src/components/ResourceCodeEditor/hooks';
 import { SourceQueryDebugModal } from 'src/components/SourceQueryDebugModal';
+import { ReloadType } from 'src/containers/Main/types';
 
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;
@@ -14,9 +15,7 @@ interface ResourceCodeEditorProps<R> {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<AidboxResource>;
     fhirMode: boolean;
-    questionnaireUpdate?: boolean;
-    setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
-    updateMapping?: () => void;
+    reload: (type: ReloadType) => void;
 }
 
 export function ResourceCodeEditor<R extends AidboxResource>({
@@ -25,9 +24,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({
     launchContext,
     questionnaireResponseRD,
     fhirMode,
-    questionnaireUpdate,
-    setQuestionnaireUpdate,
-    updateMapping,
+    reload,
 }: ResourceCodeEditorProps<R>) {
     const onChange = useCallback(_.debounce(onSave, 1000), [onSave]);
 
@@ -42,9 +39,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                         valueObject={resource}
                         onChange={onChange}
                         openExpressionModal={openExpressionModal}
-                        questionnaireUpdate={questionnaireUpdate}
-                        setQuestionnaireUpdate={setQuestionnaireUpdate}
-                        updateMapping={updateMapping}
+                        reload={reload}
                     />
                 )}
             </RenderRemoteData>

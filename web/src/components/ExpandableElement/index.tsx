@@ -1,21 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { ErrorDebugState } from 'src/containers/Main/hooks/errorDebugHook';
-import { Mapping, Reference } from 'shared/src/contrib/aidbox';
-import { ErrorButton } from 'src/components/ErrorButton';
-
+import { Title } from 'src/containers/Main/types';
 import s from './ExpandableElement.module.scss';
 
 interface ExpandableElementProps {
     cssClass: string;
-    title: string | React.ReactElement;
+    title: Title | React.ReactElement;
     children: React.ReactElement;
-    errorState?: ErrorDebugState;
-    mappingList?: Reference<Mapping>[];
 }
 
-export function ExpandableElement(props: ExpandableElementProps) {
-    const { title, cssClass, children, errorState, mappingList } = props;
+export function ExpandableElement({ title, cssClass, children }: ExpandableElementProps) {
     const [expanded, setExpanded] = useState(false);
+
     const headerRef = useRef(null);
 
     return (
@@ -31,12 +26,6 @@ export function ExpandableElement(props: ExpandableElementProps) {
                     }}
                 >
                     {title}
-                    {title === 'Questionnaire FHIR Resource' && errorState?.showQuestionnaireErrors && (
-                        <ErrorButton errorState={errorState} title={title} />
-                    )}
-                    {title === 'Patient JUTE Mapping' && errorState?.showMappingErrors && mappingList?.length === 1 && (
-                        <ErrorButton errorState={errorState} title={title} />
-                    )}
                 </h2>
             </div>
             {children}

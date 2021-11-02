@@ -1,78 +1,75 @@
 import { useState } from 'react';
 import { commands, Editor } from 'codemirror';
-import { ContextMenu, ContextMenuInfo, ValueObject } from 'src/containers/Main/types';
+import { ContextMenu, ContextMenuInfo, ReloadType, ValueObject } from 'src/containers/Main/types';
+import { hasOwnProperty } from 'src/utils/common';
 
 interface Props {
+    valueObject: ValueObject;
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
-    questionnaireUpdate?: boolean;
-    setQuestionnaireUpdate?: (questionnaireUpdate: boolean) => void;
-    updateMapping?: () => void;
+    reload?: (type: ReloadType) => void;
 }
 
-export function useContextMenu({
-    openExpressionModal,
-    questionnaireUpdate,
-    setQuestionnaireUpdate,
-    updateMapping,
-}: Props) {
+export function useContextMenu({ valueObject, openExpressionModal, reload }: Props) {
     const [contextMenuInfo, setContextMenuInfo] = useState<ContextMenuInfo | null>(null);
 
-    const contextMenu: ContextMenu = {
-        close: () => closeContextMenu(),
-        // TODO: show debug item only in case we clicked on expression, otherwise disable this item
-        debugger: openExpressionModal
-            ? () => {
-                  contextMenuInfo && openExpressionModal && openExpressionModal(contextMenuInfo);
-                  closeContextMenu();
-              }
-            : undefined,
-        reload:
-            setQuestionnaireUpdate || updateMapping
-                ? () => {
-                      if (setQuestionnaireUpdate && questionnaireUpdate !== undefined) {
-                          setQuestionnaireUpdate(!questionnaireUpdate);
-                      }
-                      if (updateMapping) {
-                          updateMapping();
-                      }
-                  }
-                : undefined,
-        undo: () => {
-            contextMenuInfo?.editor.undo();
-            closeContextMenu();
-        },
-        redo: () => {
-            contextMenuInfo?.editor.redo();
-            closeContextMenu();
-        },
-        // TODO: disable items if we use read-only mode
-        cut: () => {
-            const selectedText = copySelectedText();
-            contextMenuInfo?.editor.replaceSelection('', selectedText);
-            closeContextMenu();
-        },
-        copy: () => {
-            copySelectedText();
-            closeContextMenu();
-        },
-        paste: () => {
-            navigator.clipboard.readText().then((clipText) => {
-                if (!contextMenuInfo?.editor.somethingSelected() && contextMenuInfo?.cursorPosition) {
-                    contextMenuInfo.editor.setCursor(contextMenuInfo.cursorPosition);
-                    contextMenuInfo.editor.replaceRange(clipText, contextMenuInfo.cursorPosition);
-                }
-                if (contextMenuInfo?.editor.somethingSelected()) {
-                    const selectedText = contextMenuInfo?.editor.getSelection();
-                    contextMenuInfo.editor.replaceSelection(clipText, selectedText);
-                }
-            });
-            closeContextMenu();
-        },
-        selectAll: () => {
-            contextMenuInfo && commands.selectAll(contextMenuInfo.editor);
-            contextMenuInfo?.editor.focus();
-            closeContextMenu();
-        },
+    const isMappingOrQuestionnaire = () => {
+        if (
+            hasOwnProperty(valueObject, 'resourceType') &&
+            (valueObject.resourceType === 'Mapping' || 'Questionnaire')
+        ) {
+            return valueObject.resourceType;
+        }
+    };
+
+    const debuggerOption = openExpressionModal
+        ? () => {
+              contextMenuInfo && openExpressionModal(contextMenuInfo);
+              close();
+          }
+        : undefined;
+
+    const reloadOption =
+        reload && isMappingOrQuestionnaire() ? () => reload(isMappingOrQuestionnaire() as ReloadType) : undefined;
+
+    const undo = () => {
+        contextMenuInfo?.editor.undo();
+        close();
+    };
+
+    const redo = () => {
+        contextMenuInfo?.editor.redo();
+        close();
+    };
+
+    const cut = () => {
+        const selectedText = copySelectedText();
+        contextMenuInfo?.editor.replaceSelection('', selectedText);
+        close();
+    };
+
+    const copy = () => {
+        copySelectedText();
+        close();
+    };
+
+    const paste = () => {
+        navigator.clipboard.readText().then((clipText) => {
+            if (!contextMenuInfo?.editor.somethingSelected() && contextMenuInfo?.cursorPosition) {
+                contextMenuInfo.editor.setCursor(contextMenuInfo.cursorPosition);
+                contextMenuInfo.editor.replaceRange(clipText, contextMenuInfo.cursorPosition);
+            }
+            if (contextMenuInfo?.editor.somethingSelected()) {
+                const selectedText = contextMenuInfo?.editor.getSelection();
+                contextMenuInfo.editor.replaceSelection(clipText, selectedText);
+            }
+        });
+        close();
+    };
+
+    const selectAll = () => {
+        contextMenuInfo && commands.selectAll(contextMenuInfo.editor);
+        contextMenuInfo?.editor.focus();
+        close();
     };
 
     const openContextMenu = (_editor: Editor, event: any, valueObject: ValueObject) => {
@@ -89,13 +86,24 @@ export function useContextMenu({
         });
     };
 
-    const closeContextMenu = () =>
-        setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
+    const close = () => setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
 
     const copySelectedText = () => {
         const selectedText = contextMenuInfo?.editor.getSelection();
         selectedText && navigator.clipboard.writeText(selectedText);
         return selectedText;
+    };
+
+    const contextMenu: ContextMenu = {
+        close,
+        debugger: debuggerOption, // TODO: show debug item only in case we clicked on expression, otherwise disable this item
+        reload: reloadOption,
+        undo,
+        redo,
+        cut, // TODO: disable items if we use read-only mode
+        copy,
+        paste,
+        selectAll,
     };
 
     return {

@@ -3,25 +3,21 @@ import { OperationOutcome } from 'shared/src/contrib/aidbox';
 
 export interface ErrorDebugState {
     showQuestionnaireErrors: boolean;
-    questionnaireErrorCount: number;
     questionnaireErrors: OperationOutcome[];
     showMappingErrors: boolean;
-    mappingErrorCount: number;
     mappingErrors: OperationOutcome[];
 }
 
-export interface Action {
-    type: 'add questionnaire error' | 'reset questionnaire errors' | 'add mapping error' | 'reset mapping errors';
-    payload?: number;
-    error?: OperationOutcome;
-}
+export type Action =
+    | { type: 'add questionnaire error'; error: OperationOutcome }
+    | { type: 'reset questionnaire errors' }
+    | { type: 'add mapping error'; error: OperationOutcome }
+    | { type: 'reset mapping errors' };
 
 const initialState: ErrorDebugState = {
     showQuestionnaireErrors: false,
-    questionnaireErrorCount: 0,
     questionnaireErrors: [],
     showMappingErrors: false,
-    mappingErrorCount: 0,
     mappingErrors: [],
 };
 
@@ -31,20 +27,18 @@ function reducer(state: ErrorDebugState, action: Action) {
             return {
                 ...state,
                 showQuestionnaireErrors: true,
-                questionnaireErrorCount: action.payload!,
-                questionnaireErrors: [...state.questionnaireErrors, action.error!],
+                questionnaireErrors: [...state.questionnaireErrors, action.error],
             };
         case 'add mapping error':
             return {
                 ...state,
                 showMappingErrors: true,
-                mappingErrorCount: action.payload!,
-                mappingErrors: [...state.mappingErrors, action.error!],
+                mappingErrors: [...state.mappingErrors, action.error],
             };
         case 'reset questionnaire errors':
-            return { ...state, showQuestionnaireErrors: false, questionnaireErrorCount: 0, questionnaireErrors: [] };
+            return { ...state, showQuestionnaireErrors: false, questionnaireErrors: [] };
         case 'reset mapping errors':
-            return { ...state, showMappingErrors: false, mappingErrorCount: 0, mappingErrors: [] };
+            return { ...state, showMappingErrors: false, mappingErrors: [] };
         default:
             throw new Error();
     }

@@ -19,6 +19,7 @@ import { ErrorDebugState, useErrorDebug } from './errorDebugHook';
 import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
 import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+import { ReloadType, Title } from 'src/containers/Main/types';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
@@ -60,7 +61,7 @@ export const showToast = (type: string, error?: OperationOutcome, index?: number
     }
 };
 
-export const showError = (errorState: ErrorDebugState, title: string) => {
+export const showError = (errorState: ErrorDebugState, title: Title) => {
     if (title === 'Questionnaire FHIR Resource') {
         errorState?.questionnaireErrors.map((error, index) => showToast('error', error, index));
     }
@@ -180,9 +181,7 @@ export function useMain(questionnaireId: string) {
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            let errorCount = 0;
-            const addError = (error: OperationOutcome) =>
-                errorDispatch({ type: 'add questionnaire error', payload: ++errorCount, error });
+            const addError = (error: OperationOutcome) => errorDispatch({ type: 'add questionnaire error', error });
             errorDispatch({ type: 'reset questionnaire errors' });
             const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
@@ -288,7 +287,6 @@ export function useMain(questionnaireId: string) {
 
     const saveMapping = useCallback(
         async (mapping: Mapping) => {
-            let errorCount = 0;
             errorDispatch({ type: 'reset mapping errors' });
             if (isSuccess(mappingRD)) {
                 if (!_.isEqual(mapping, mappingRD.data)) {
@@ -298,7 +296,7 @@ export function useMain(questionnaireId: string) {
                     }
                     if (isFailure(response)) {
                         response.error.issue.map((error: never, index: number) => {
-                            errorDispatch({ type: 'add mapping error', payload: ++errorCount, error: response.error });
+                            errorDispatch({ type: 'add mapping error', error: response.error });
                             showToast('error', response.error, index);
                         });
                     }
@@ -354,6 +352,41 @@ export function useMain(questionnaireId: string) {
         }
     }, [launchContext, questionnaireRD, questionnaireResponseRD]);
 
+    const reload = (type: ReloadType) => {
+        if (type === 'Questionnaire') {
+            setQuestionnaireUpdate(!questionnaireUpdate);
+        }
+        if (type === 'Mapping') {
+            updateMapping();
+        }
+    };
+
+    const titleWithErrorManager = {
+        showError: (title: Title) => showError(errorState, title),
+        errorCount: (title: Title) => {
+            if (title === 'Questionnaire FHIR Resource' && errorState?.showQuestionnaireErrors) {
+                return errorState.questionnaireErrors.length;
+            }
+            if (title === 'Patient JUTE Mapping' && errorState?.showMappingErrors && mappingList?.length === 1) {
+                return errorState.mappingErrors.length;
+            }
+        },
+    };
+
+    const mappingErrorManager = {
+        errorCount: errorState.mappingErrors.length,
+        showError: () => showError(errorState, 'Patient JUTE Mapping'),
+        isError: (id?: string) => {
+            return errorState?.showMappingErrors && id === activeMappingId && mappingList.length > 1;
+        },
+        selectMapping: (id?: string) => {
+            if (id !== activeMappingId) {
+                errorDispatch({ type: 'reset mapping errors' });
+                setActiveMappingId(id);
+            }
+        },
+    };
+
     return {
         questionnaireRD,
         questionnaireFHIRRD,
@@ -375,10 +408,8 @@ export function useMain(questionnaireId: string) {
         saveNewMapping,
         closeModal,
         mapperInfoList,
-        questionnaireUpdate,
-        setQuestionnaireUpdate,
-        updateMapping,
-        errorState,
-        errorDispatch,
+        reload,
+        mappingErrorManager,
+        titleWithErrorManager,
     };
 }

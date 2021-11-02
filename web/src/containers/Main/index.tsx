@@ -14,6 +14,7 @@ import { Button } from 'src/components/Button';
 import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
 import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
 import { Mapping, Questionnaire } from 'shared/src/contrib/aidbox';
+import { TitleWithErrors } from 'src/components/TitleWithErrors';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -40,11 +41,9 @@ export function Main() {
         saveNewMapping,
         closeModal,
         mapperInfoList,
-        questionnaireUpdate,
-        setQuestionnaireUpdate,
-        updateMapping,
-        errorState,
-        errorDispatch,
+        reload,
+        mappingErrorManager,
+        titleWithErrorManager,
     } = useMain(questionnaireId);
 
     return (
@@ -63,9 +62,13 @@ export function Main() {
                         <LaunchContextDisplay parameters={launchContext} />
                     </ExpandableElement>
                     <ExpandableElement
-                        title="Questionnaire FHIR Resource"
+                        title={
+                            <TitleWithErrors
+                                title={'Questionnaire FHIR Resource'}
+                                titleWithErrorManager={titleWithErrorManager}
+                            />
+                        }
                         cssClass={s.questFHIRResourceBox}
-                        errorState={errorState}
                     >
                         <ResourceCodeEditor<Questionnaire>
                             resourceRD={questionnaireFHIRRD}
@@ -73,8 +76,7 @@ export function Main() {
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
                             fhirMode={fhirMode}
-                            questionnaireUpdate={questionnaireUpdate}
-                            setQuestionnaireUpdate={setQuestionnaireUpdate}
+                            reload={reload}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
@@ -93,10 +95,13 @@ export function Main() {
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
                     <ExpandableElement
-                        title="Patient JUTE Mapping"
+                        title={
+                            <TitleWithErrors
+                                title={'Patient JUTE Mapping'}
+                                titleWithErrorManager={titleWithErrorManager}
+                            />
+                        }
                         cssClass={s.patientMapperBox}
-                        errorState={errorState}
-                        mappingList={mappingList}
                     >
                         <div>
                             <MappingSelect
@@ -104,8 +109,7 @@ export function Main() {
                                 activeMappingId={activeMappingId}
                                 setActiveMappingId={setActiveMappingId}
                                 title="Patient JUTE Mapping"
-                                errorState={errorState}
-                                errorDispatch={errorDispatch}
+                                mappingErrorManager={mappingErrorManager}
                             />
                             <ResourceCodeEditor<Mapping>
                                 resourceRD={mappingRD}
@@ -113,7 +117,7 @@ export function Main() {
                                 launchContext={launchContext}
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 fhirMode={fhirMode}
-                                updateMapping={updateMapping}
+                                reload={reload}
                             />
                         </div>
                     </ExpandableElement>
