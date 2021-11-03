@@ -15,7 +15,14 @@ import { formatError } from 'aidbox-react/lib/utils/error';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
-import { ErrorDebugState, useErrorDebug } from './errorDebugHook';
+import {
+    addMappingErrorAction,
+    addQuestionnaireErrorAction,
+    ErrorDebugState,
+    resetMappingErrorAction,
+    resetQuestionnaireErrorAction,
+    useErrorDebug,
+} from 'src/containers/Main/hooks/errorDebugHook';
 import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
 import { MapperInfo } from 'src/components/ModalCreateMapper/types';
@@ -115,7 +122,7 @@ export function useMain(questionnaireId: string) {
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
             const sortedMappings = _.sortBy(mappings, 'id');
-            errorDispatch({ type: 'reset mapping errors' });
+            errorDispatch(resetMappingErrorAction());
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
             if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
@@ -169,7 +176,7 @@ export function useMain(questionnaireId: string) {
 
     // Questionnaire in FHIR format
     const [questionnaireFHIRRD] = useService(() => {
-        errorDispatch({ type: 'reset questionnaire errors' });
+        errorDispatch(resetQuestionnaireErrorAction());
         return service<Questionnaire>({
             method: 'GET',
             url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
@@ -181,8 +188,8 @@ export function useMain(questionnaireId: string) {
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            const addError = (error: OperationOutcome) => errorDispatch({ type: 'add questionnaire error', error });
-            errorDispatch({ type: 'reset questionnaire errors' });
+            const addError = (error: OperationOutcome) => errorDispatch(addQuestionnaireErrorAction(error));
+            errorDispatch(resetQuestionnaireErrorAction());
             const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
                 questionnaireManager.reload();
@@ -279,7 +286,7 @@ export function useMain(questionnaireId: string) {
     }, [activeMappingId, loadMapping]);
 
     const updateMapping = useCallback(async () => {
-        errorDispatch({ type: 'reset mapping errors' });
+        errorDispatch(resetMappingErrorAction());
         setMappingRD({ status: 'Loading' } as RemoteData);
         const response = await service({ method: 'GET', url: `/Mapping/${activeMappingId}` });
         setMappingRD(response);
@@ -287,7 +294,7 @@ export function useMain(questionnaireId: string) {
 
     const saveMapping = useCallback(
         async (mapping: Mapping) => {
-            errorDispatch({ type: 'reset mapping errors' });
+            errorDispatch(resetMappingErrorAction());
             if (isSuccess(mappingRD)) {
                 if (!_.isEqual(mapping, mappingRD.data)) {
                     const response = await saveFHIRResource(mapping);
@@ -296,7 +303,7 @@ export function useMain(questionnaireId: string) {
                     }
                     if (isFailure(response)) {
                         response.error.issue.map((error: never, index: number) => {
-                            errorDispatch({ type: 'add mapping error', error: response.error });
+                            errorDispatch(addMappingErrorAction(response.error));
                             showToast('error', response.error, index);
                         });
                     }
@@ -381,7 +388,7 @@ export function useMain(questionnaireId: string) {
         },
         selectMapping: (id?: string) => {
             if (id !== activeMappingId) {
-                errorDispatch({ type: 'reset mapping errors' });
+                errorDispatch(resetMappingErrorAction());
                 setActiveMappingId(id);
             }
         },
