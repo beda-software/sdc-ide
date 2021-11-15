@@ -1,30 +1,34 @@
 import React, { useRef, useState } from 'react';
-
+import { Title } from 'src/containers/Main/types';
 import s from './ExpandableElement.module.scss';
 
 interface ExpandableElementProps {
     cssClass: string;
-    title: string | React.ReactElement;
+    title: Title | React.ReactElement;
     children: React.ReactElement;
 }
 
-export function ExpandableElement(props: ExpandableElementProps) {
+export function ExpandableElement({ title, cssClass, children }: ExpandableElementProps) {
     const [expanded, setExpanded] = useState(false);
+
     const headerRef = useRef(null);
+
     return (
-        <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
-            <h2
-                className={s.title}
-                ref={headerRef}
-                onClick={(e) => {
-                    if (e.target === headerRef.current) {
-                        setExpanded((f) => !f);
-                    }
-                }}
-            >
-                {props.title}
-            </h2>
-            {props.children}
+        <div className={cssClass} style={expanded ? { flex: 4 } : {}}>
+            <div>
+                <h2
+                    className={s.title}
+                    ref={headerRef}
+                    onClick={(e) => {
+                        if (e.target === headerRef.current) {
+                            setExpanded((f) => !f);
+                        }
+                    }}
+                >
+                    {title}
+                </h2>
+            </div>
+            {children}
         </div>
     );
 }

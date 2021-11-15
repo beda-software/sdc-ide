@@ -1,17 +1,21 @@
 import React from 'react';
 import _ from 'lodash';
-
 import { Mapping, Reference } from 'shared/src/contrib/aidbox';
-
+import { MappingSelectError } from 'src/components/MappingSelectError';
+import { MappingErrorManager, Title } from 'src/containers/Main/types';
 import s from './MappingSelect.module.scss';
 
 interface MappingSelectProps {
     mappingList: Reference<Mapping>[];
     activeMappingId: string | undefined;
     setActiveMappingId: (mappingId: string | undefined) => void;
+    title: Title;
+    mappingErrorManager: MappingErrorManager;
 }
 
-export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId }: MappingSelectProps) {
+export function MappingSelect(props: MappingSelectProps) {
+    const { mappingList, activeMappingId, mappingErrorManager } = props;
+
     if (mappingList.length === 1) {
         return <div />;
     }
@@ -21,14 +25,11 @@ export function MappingSelect({ mappingList, activeMappingId, setActiveMappingId
             {_.map(mappingList, ({ id }, index) => (
                 <button
                     type={'button'}
-                    // href="/#"
                     key={id + String(index)}
-                    onClick={() => {
-                        setActiveMappingId(id);
-                    }}
+                    onClick={() => mappingErrorManager.selectMapping(id)}
                     className={id === activeMappingId ? s.checked : s.item}
                 >
-                    {id}
+                    <MappingSelectError mappingErrorManager={mappingErrorManager} id={id} />
                 </button>
             ))}
         </div>

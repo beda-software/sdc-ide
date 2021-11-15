@@ -15,9 +15,18 @@ import { formatError } from 'aidbox-react/lib/utils/error';
 import React, { useCallback, useEffect, useState } from 'react';
 import _ from 'lodash';
 import { init, useLaunchContext } from './launchContextHook';
+import {
+    addMappingErrorAction,
+    addQuestionnaireErrorAction,
+    ErrorDebugState,
+    resetMappingErrorAction,
+    resetQuestionnaireErrorAction,
+    useErrorDebug,
+} from 'src/containers/Main/hooks/errorDebugHook';
 import { getData, setData } from 'src/services/localStorage';
 import { toast } from 'react-toastify';
 import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+import { ReloadType, Title } from 'src/containers/Main/types';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
@@ -52,11 +61,20 @@ export const showToast = (type: 'success' | 'error', error?: OperationOutcome, i
             formatError(error, {
                 mapping: { conflict: 'Please reload page' },
                 format: (errorCode, errorDescription) =>
-                    `An error occurred: ${
-                        error?.issue[index as number]?.diagnostics || errorDescription
+                    `An error occurred: ${error?.issue[index as number]?.diagnostics || errorDescription} ${
+                        error?.issue[index as number]?.expression?.[0] || ''
                     } (${errorCode}).`,
             }),
         );
+    }
+};
+
+export const showError = (errorState: ErrorDebugState, title: Title) => {
+    if (title === 'Questionnaire FHIR Resource') {
+        errorState?.questionnaireErrors.map((error, index) => showToast('error', error, index));
+    }
+    if (title === 'Patient JUTE Mapping') {
+        errorState?.mappingErrors.map((error, index) => showToast('error', error, index));
     }
 };
 
@@ -69,6 +87,9 @@ export function useMain(questionnaireId: string) {
     }, []);
     const [launchContext, dispatch] = useLaunchContext();
 
+    // Show error in questionnaire and mapping
+    const [errorState, errorDispatch] = useErrorDebug();
+
     // Closing create mapping modal
     const createMappingDefault = {
         status: false,
@@ -76,7 +97,7 @@ export function useMain(questionnaireId: string) {
     };
 
     const [closingCreateMapper, setClosingCreateMapper] = useState(createMappingDefault);
-    const [questionnaireUpdateToggle, setQuestionnaireUpdateToggle] = useState(false);
+    const [questionnaireUpdate, setQuestionnaireUpdate] = useState(false);
 
     const closeModal = (status: 'save' | 'cancel', isRenamedMappingId?: boolean) => {
         if (status === 'save' && isRenamedMappingId !== undefined) {
@@ -87,7 +108,7 @@ export function useMain(questionnaireId: string) {
             setClosingCreateMapper(createMapping);
         }
         if (status === 'cancel') {
-            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+            setQuestionnaireUpdate(!questionnaireUpdate);
         }
         setShowModal(false);
         setMapperInfoList([]);
@@ -102,6 +123,7 @@ export function useMain(questionnaireId: string) {
         if (isSuccess(response)) {
             const mappings = response.data.mapping || [];
             const sortedMappings = _.sortBy(mappings, 'id');
+            errorDispatch(resetMappingErrorAction());
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
             if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
@@ -117,7 +139,7 @@ export function useMain(questionnaireId: string) {
             }
         }
         if (closingCreateMapper.status && closingCreateMapper.renamed) {
-            setQuestionnaireUpdateToggle(!questionnaireUpdateToggle);
+            setQuestionnaireUpdate(!questionnaireUpdate);
             setClosingCreateMapper(createMappingDefault);
         }
         return response;
@@ -154,20 +176,21 @@ export function useMain(questionnaireId: string) {
     };
 
     // Questionnaire in FHIR format
-    const [questionnaireFHIRRD] = useService(
-        () =>
-            service<Questionnaire>({
-                method: 'GET',
-                url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
-            }),
-        [questionnaireId, fhirMode, questionnaireUpdateToggle],
-    );
+    const [questionnaireFHIRRD] = useService(() => {
+        errorDispatch(resetQuestionnaireErrorAction());
+        return service<Questionnaire>({
+            method: 'GET',
+            url: `/${fhirMode ? 'fhir/' : ''}Questionnaire/${questionnaireId}`,
+        });
+    }, [questionnaireId, fhirMode, questionnaireUpdate]);
 
     const [mapperInfoList, setMapperInfoList] = useState<MapperInfo[]>([]);
     const [showModal, setShowModal] = useState(false);
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
+            const addError = (error: OperationOutcome) => errorDispatch(addQuestionnaireErrorAction(error));
+            errorDispatch(resetQuestionnaireErrorAction());
             const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
                 questionnaireManager.reload();
@@ -179,6 +202,7 @@ export function useMain(questionnaireId: string) {
                     const mappingId: string | null | undefined = idExtraction(issue, resource, response.error);
                     const indexOfMapper = Number(issue.expression?.[0].slice(22));
                     if (!mappingId) {
+                        addError(response.error);
                         showToast('error', response.error, index);
                         return;
                     }
@@ -190,10 +214,11 @@ export function useMain(questionnaireId: string) {
                     setShowModal(true);
                 }
             } else {
+                addError(response.error);
                 showToast('error', response.error);
             }
         },
-        [fhirMode, questionnaireManager],
+        [errorDispatch, fhirMode, questionnaireManager],
     );
 
     // QuestionnaireResponse
@@ -261,18 +286,32 @@ export function useMain(questionnaireId: string) {
         })();
     }, [activeMappingId, loadMapping]);
 
+    const updateMapping = useCallback(async () => {
+        errorDispatch(resetMappingErrorAction());
+        setMappingRD({ status: 'Loading' } as RemoteData);
+        const response = await service({ method: 'GET', url: `/Mapping/${activeMappingId}` });
+        setMappingRD(response);
+    }, [activeMappingId, errorDispatch]);
+
     const saveMapping = useCallback(
         async (mapping: Mapping) => {
+            errorDispatch(resetMappingErrorAction());
             if (isSuccess(mappingRD)) {
                 if (!_.isEqual(mapping, mappingRD.data)) {
                     const response = await saveFHIRResource(mapping);
                     if (isSuccess(response)) {
                         await loadMapping();
                     }
+                    if (isFailure(response)) {
+                        response.error.issue.map((error: never, index: number) => {
+                            errorDispatch(addMappingErrorAction(response.error));
+                            showToast('error', response.error, index);
+                        });
+                    }
                 }
             }
         },
-        [loadMapping, mappingRD],
+        [errorDispatch, loadMapping, mappingRD],
     );
 
     // BatchRequest
@@ -321,6 +360,41 @@ export function useMain(questionnaireId: string) {
         }
     }, [launchContext, questionnaireRD, questionnaireResponseRD]);
 
+    const reload = (type: ReloadType) => {
+        if (type === 'Questionnaire') {
+            setQuestionnaireUpdate(!questionnaireUpdate);
+        }
+        if (type === 'Mapping') {
+            updateMapping();
+        }
+    };
+
+    const titleWithErrorManager = {
+        showError: (title: Title) => showError(errorState, title),
+        errorCount: (title: Title) => {
+            if (title === 'Questionnaire FHIR Resource' && errorState?.showQuestionnaireErrors) {
+                return errorState.questionnaireErrors.length;
+            }
+            if (title === 'Patient JUTE Mapping' && errorState?.showMappingErrors && mappingList?.length === 1) {
+                return errorState.mappingErrors.length;
+            }
+        },
+    };
+
+    const mappingErrorManager = {
+        errorCount: errorState.mappingErrors.length,
+        showError: () => showError(errorState, 'Patient JUTE Mapping'),
+        isError: (id?: string) => {
+            return errorState?.showMappingErrors && id === activeMappingId && mappingList.length > 1;
+        },
+        selectMapping: (id?: string) => {
+            if (id !== activeMappingId) {
+                errorDispatch(resetMappingErrorAction());
+                setActiveMappingId(id);
+            }
+        },
+    };
+
     return {
         questionnaireRD,
         questionnaireFHIRRD,
@@ -342,5 +416,8 @@ export function useMain(questionnaireId: string) {
         saveNewMapping,
         closeModal,
         mapperInfoList,
+        reload,
+        mappingErrorManager,
+        titleWithErrorManager,
     };
 }
