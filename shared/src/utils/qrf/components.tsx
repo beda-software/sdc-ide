@@ -2,28 +2,23 @@ import fhirpath from 'fhirpath';
 import isEqual from 'lodash/isEqual';
 import { useContext } from 'react';
 import * as React from 'react';
-import { useForm, useFormState } from 'react-final-form';
 
-import { QuestionnaireItem } from '../../contrib/aidbox';
-import { usePreviousValue } from '../../hooks/previous-value';
-import { getByPath } from '../path';
+import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
+import { usePreviousValue } from 'shared/src/hooks/previous-value';
+import { getByPath } from 'shared/src/utils/path';
+
+import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
-import {
-    FormItems,
-    ItemContext,
-    QRFContextData,
-    QuestionItemProps,
-    QuestionItemsProps,
-} from './types';
+import { ItemContext, QRFContextData, QuestionItemProps, QuestionItemsProps } from './types';
 import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
-    const { values } = useFormState<FormItems>();
+    const { formValues } = useQuestionnaireResponseFormContext();
 
     return (
         <>
-            {getEnabledQuestions(questionItems, parentPath, values).map((item, index) => {
+            {getEnabledQuestions(questionItems, parentPath, formValues).map((item, index) => {
                 return (
                     <QuestionItem
                         key={index}
@@ -46,17 +41,15 @@ export function QuestionItem(props: QuestionItemProps) {
         itemControlQuestionItemComponents,
         itemControlGroupItemComponents,
     } = useContext(QRFContext);
-
-    const { values } = useFormState<FormItems>();
-    const form = useForm<FormItems>();
+    const { formValues, setFormValue } = useQuestionnaireResponseFormContext();
 
     const { type, linkId, calculatedExpression, variable, repeats, hidden, itemControl } =
         questionItem;
-    const fieldPath = [...parentPath, linkId];
-    const fieldName = fieldPath.join('.');
+    const fieldName = [...parentPath, linkId];
+
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
     const branchItems = getBranchItems(
-        fieldPath,
+        fieldName,
         initialContext.questionnaire,
         initialContext.resource,
     );
@@ -66,7 +59,7 @@ export function QuestionItem(props: QuestionItemProps) {
                   calcContext(initialContext, variable, branchItems.qItem, curQRItem),
               )
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]);
-    const prevAnswers = usePreviousValue(getByPath(values, fieldPath));
+    const prevAnswers = usePreviousValue(getByPath(formValues, fieldName));
 
     React.useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
@@ -84,13 +77,13 @@ export function QuestionItem(props: QuestionItemProps) {
                     : undefined;
 
                 if (!isEqual(newAnswers, prevAnswers)) {
-                    form.change(fieldName, newAnswers);
+                    setFormValue(fieldName, newAnswers);
                 }
             }
         }
     }, [
-        form,
-        values,
+        setFormValue,
+        formValues,
         calculatedExpression,
         context,
         parentPath,
@@ -109,15 +102,15 @@ export function QuestionItem(props: QuestionItemProps) {
         if (itemControl) {
             if (
                 !itemControlGroupItemComponents ||
-                !itemControlGroupItemComponents[itemControl.code!]
+                !itemControlGroupItemComponents[itemControl?.[0]?.code!]
             ) {
-                console.warn(`QRF: Unsupported group itemControl '${itemControl.code!}'. 
-                Please define 'itemControlGroupWidgets' for '${itemControl.code!}'`);
+                console.warn(`QRF: Unsupported group itemControl '${itemControl?.[0]?.code!}'. 
+                Please define 'itemControlGroupWidgets' for '${itemControl?.[0]?.code!}'`);
 
                 return null;
             }
 
-            const Component = itemControlGroupItemComponents[itemControl.code!];
+            const Component = itemControlGroupItemComponents[itemControl?.[0]?.code!];
 
             return (
                 <Component context={context} parentPath={parentPath} questionItem={questionItem} />
@@ -143,16 +136,17 @@ export function QuestionItem(props: QuestionItemProps) {
     if (itemControl) {
         if (
             !itemControlQuestionItemComponents ||
-            !itemControlQuestionItemComponents[itemControl.code!]
+            !itemControlQuestionItemComponents[itemControl.coding?.[0]?.code!]
         ) {
             console.warn(
-                `QRF: Unsupported itemControl '${itemControl.code!}'. Please define 'itemControlWidgets' for '${itemControl.code!}'`,
+                `QRF: Unsupported itemControl '${itemControl?.[0]
+                    ?.code!}'. Please define 'itemControlWidgets' for '${itemControl?.[0]?.code!}'`,
             );
 
             return null;
         }
 
-        const Component = itemControlQuestionItemComponents[itemControl.code!];
+        const Component = itemControlQuestionItemComponents[itemControl?.[0]?.code!];
 
         return <Component context={context} parentPath={parentPath} questionItem={questionItem} />;
     }

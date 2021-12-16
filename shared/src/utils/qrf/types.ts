@@ -44,6 +44,9 @@ export interface QRFContextData {
     itemControlQuestionItemComponents?: ItemControlQuestionItemComponentMapping;
     itemControlGroupItemComponents?: ItemControlGroupItemComponentMapping;
     readOnly?: boolean;
+
+    formValues: FormItems;
+    setFormValue: (name: Array<string | number>, value: any) => void;
 }
 
 export interface QuestionItemsProps {
