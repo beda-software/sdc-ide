@@ -46,7 +46,7 @@ export interface QRFContextData {
     readOnly?: boolean;
 
     formValues: FormItems;
-    setFormValue: (name: Array<string | number>, value: any) => void;
+    setFormValues: (values: FormItems) => void;
 }
 
 export interface QuestionItemsProps {

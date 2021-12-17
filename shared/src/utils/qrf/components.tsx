@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { usePreviousValue } from 'shared/src/hooks/previous-value';
-import { getByPath } from 'shared/src/utils/path';
+import { getByPath, setByPath } from 'shared/src/utils/path';
 
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
@@ -41,7 +41,7 @@ export function QuestionItem(props: QuestionItemProps) {
         itemControlQuestionItemComponents,
         itemControlGroupItemComponents,
     } = useContext(QRFContext);
-    const { formValues, setFormValue } = useQuestionnaireResponseFormContext();
+    const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
 
     const { type, linkId, calculatedExpression, variable, repeats, hidden, itemControl } =
         questionItem;
@@ -77,12 +77,12 @@ export function QuestionItem(props: QuestionItemProps) {
                     : undefined;
 
                 if (!isEqual(newAnswers, prevAnswers)) {
-                    setFormValue(fieldName, newAnswers);
+                    setFormValues(setByPath(formValues, fieldName, newAnswers));
                 }
             }
         }
     }, [
-        setFormValue,
+        setFormValues,
         formValues,
         calculatedExpression,
         context,
