@@ -14,11 +14,13 @@ export type GroupItemComponent = React.ComponentType<GroupItemProps>;
 export type QuestionItemComponent = React.ComponentType<QuestionItemProps>;
 
 export type CustomWidgetsMapping = {
-    [linkId: QuestionnaireItem['linkId']]: QuestionItemComponent;
+    // [linkId: QuestionnaireItem['linkId']]: QuestionItemComponent;
+    [linkId: string]: QuestionItemComponent;
 };
 
 export type QuestionItemComponentMapping = {
-    [type: QuestionnaireItem['type']]: QuestionItemComponent;
+    // [type: QuestionnaireItem['type']]: QuestionItemComponent;
+    [type: string]: QuestionItemComponent;
 };
 
 export type ItemControlQuestionItemComponentMapping = {

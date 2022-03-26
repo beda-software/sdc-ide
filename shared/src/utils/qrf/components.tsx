@@ -45,7 +45,7 @@ export function QuestionItem(props: QuestionItemProps) {
 
     const { type, linkId, calculatedExpression, variable, repeats, hidden, itemControl } =
         questionItem;
-    const fieldName = [...parentPath, linkId];
+    const fieldName = [...parentPath, linkId!];
 
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
     const branchItems = getBranchItems(
@@ -58,7 +58,7 @@ export function QuestionItem(props: QuestionItemProps) {
             ? branchItems.qrItems.map((curQRItem) =>
                   calcContext(initialContext, variable, branchItems.qItem, curQRItem),
               )
-            : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]);
+            : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
     const prevAnswers = usePreviousValue(getByPath(formValues, fieldName));
 
     React.useEffect(() => {
@@ -102,15 +102,15 @@ export function QuestionItem(props: QuestionItemProps) {
         if (itemControl) {
             if (
                 !itemControlGroupItemComponents ||
-                !itemControlGroupItemComponents[itemControl?.[0]?.code!]
+                !itemControlGroupItemComponents[itemControl?.coding?.[0].code!]
             ) {
-                console.warn(`QRF: Unsupported group itemControl '${itemControl?.[0]?.code!}'. 
-                Please define 'itemControlGroupWidgets' for '${itemControl?.[0]?.code!}'`);
+                console.warn(`QRF: Unsupported group itemControl '${itemControl?.coding?.[0]?.code!}'. 
+                Please define 'itemControlGroupWidgets' for '${itemControl?.coding?.[0]?.code!}'`);
 
                 return null;
             }
 
-            const Component = itemControlGroupItemComponents[itemControl?.[0]?.code!];
+            const Component = itemControlGroupItemComponents[itemControl?.coding?.[0]?.code!];
 
             return (
                 <Component context={context} parentPath={parentPath} questionItem={questionItem} />
@@ -139,20 +139,20 @@ export function QuestionItem(props: QuestionItemProps) {
             !itemControlQuestionItemComponents[itemControl.coding?.[0]?.code!]
         ) {
             console.warn(
-                `QRF: Unsupported itemControl '${itemControl?.[0]
-                    ?.code!}'. Please define 'itemControlWidgets' for '${itemControl?.[0]?.code!}'`,
+                `QRF: Unsupported itemControl '${itemControl?.coding?.[0]?.code!}'.
+Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
             );
 
             return null;
         }
 
-        const Component = itemControlQuestionItemComponents[itemControl?.[0]?.code!];
+        const Component = itemControlQuestionItemComponents[itemControl?.coding?.[0]?.code!];
 
         return <Component context={context} parentPath={parentPath} questionItem={questionItem} />;
     }
 
     // TODO: deprecate!
-    if (customWidgets && linkId in customWidgets) {
+    if (customWidgets && linkId && linkId in customWidgets) {
         console.warn(
             `QRF: 'customWidgets' are deprecated, use 'Questionnaire.item.itemControl' instead`,
         );

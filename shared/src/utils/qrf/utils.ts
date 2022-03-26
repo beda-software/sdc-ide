@@ -123,8 +123,8 @@ export function calcContext(
 }
 
 export function compareValue(firstAnswerValue: AnswerValue, secondAnswerValue: AnswerValue) {
-    const firstValueType = _.keys(firstAnswerValue)[0];
-    const secondValueType = _.keys(secondAnswerValue)[0];
+    const firstValueType = _.keys(firstAnswerValue)[0] as keyof AnswerValue;
+    const secondValueType = _.keys(secondAnswerValue)[0] as keyof AnswerValue;
     if (firstValueType !== secondValueType) {
         throw new Error('Enable when must be used for the same type');
     }
@@ -144,10 +144,10 @@ export function compareValue(firstAnswerValue: AnswerValue, secondAnswerValue: A
     const firstValue = firstAnswerValue[firstValueType];
     const secondValue = secondAnswerValue[secondValueType];
 
-    if (firstValue < secondValue) {
+    if (firstValue! < secondValue!) {
         return -1;
     }
-    if (firstValue > secondValue) {
+    if (firstValue! > secondValue!) {
         return 1;
     }
     return 0;
@@ -540,7 +540,7 @@ export function calcInitialContext(
         ...qrfDataContext.launchContextParameters.reduce(
             (acc, { name, value, resource }) => ({
                 ...acc,
-                [name]: value && isPlainObject(value) ? value[Object.keys(value)[0]] : resource,
+                [name]: value && isPlainObject(value) ? value[Object.keys(value)[0] as keyof AnswerValue] : resource,
             }),
             {},
         ),
