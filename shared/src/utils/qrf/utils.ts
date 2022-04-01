@@ -224,6 +224,9 @@ function mapFormToResponseRecursive(
             {
                 linkId,
                 answer: answers.reduce((answersAcc, answer) => {
+                    if(typeof answer === 'undefined'){
+                        return answersAcc;
+                    }
                     if (!answer.value) {
                         return answersAcc;
                     }
