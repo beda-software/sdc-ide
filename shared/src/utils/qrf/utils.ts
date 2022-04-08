@@ -7,13 +7,13 @@ import queryString from 'query-string';
 import {
     Questionnaire,
     QuestionnaireItem,
-    QuestionnaireItemEnableWhen,
     QuestionnaireItemInitial,
     QuestionnaireResponse,
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
 
+import { setByPath } from '../path';
 import {
     AnswerValue,
     FormAnswerItems,
@@ -178,7 +178,6 @@ function hasSubAnswerItems(items?: FormItems): items is FormItems {
 function mapFormToResponseRecursive(
     answersItems: FormItems,
     questionnaireItems: QuestionnaireItem[],
-    checkQuestionEnabled: (question: QuestionnaireItem) => boolean,
 ): QuestionnaireResponseItem[] {
     return Object.entries(answersItems).reduce((acc, [linkId, answers]) => {
         if (!linkId) {
@@ -192,10 +191,6 @@ function mapFormToResponseRecursive(
             return acc;
         }
 
-        if (!checkQuestionEnabled(question)) {
-            return acc;
-        }
-
         if (isFormGroupItems(question, answers)) {
             const groups = isRepeatableFormGroupItems(question, answers)
                 ? answers.items || []
@@ -203,11 +198,7 @@ function mapFormToResponseRecursive(
                 ? [answers.items]
                 : [];
             return groups.reduce((newAcc, group) => {
-                const items = mapFormToResponseRecursive(
-                    group,
-                    question.item ?? [],
-                    checkQuestionEnabled,
-                );
+                const items = mapFormToResponseRecursive(group, question.item ?? []);
 
                 return [
                     ...newAcc,
@@ -224,19 +215,16 @@ function mapFormToResponseRecursive(
             {
                 linkId,
                 answer: answers.reduce((answersAcc, answer) => {
-                    if(typeof answer === 'undefined'){
-                        return answersAcc;
+                    if (typeof answer === 'undefined'){	
+                        return answersAcc;	
                     }
+                    
                     if (!answer.value) {
                         return answersAcc;
                     }
 
                     const items = hasSubAnswerItems(answer.items)
-                        ? mapFormToResponseRecursive(
-                              answer.items,
-                              question.item ?? [],
-                              checkQuestionEnabled,
-                          )
+                        ? mapFormToResponseRecursive(answer.items, question.item ?? [])
                         : [];
 
                     return [
@@ -253,20 +241,14 @@ function mapFormToResponseRecursive(
 }
 
 export function mapFormToResponse(
-    answersItems: FormItems,
+    values: FormItems,
     questionnaire: Questionnaire,
     keepDisabledAnswers?: boolean,
 ): Pick<QuestionnaireResponse, 'item'> {
-    const checkQuestionEnabled = (question: QuestionnaireItem) =>
-        question.enableWhen && !keepDisabledAnswers
-            ? isQuestionEnabled(question.enableWhen, question.enableBehavior, [], answersItems)
-            : true;
-
     return {
         item: mapFormToResponseRecursive(
-            answersItems,
+            keepDisabledAnswers ? values : removeDisabledAnswers(questionnaire.item ?? [], values),
             questionnaire.item ?? [],
-            checkQuestionEnabled,
         ),
     };
 }
@@ -414,7 +396,9 @@ export function isValueEqual(firstValue: AnswerValue, secondValue: AnswerValue) 
     const secondValueType = _.keys(secondValue)[0];
 
     if (firstValueType !== secondValueType) {
-        throw new Error('Enable when must be used for the same type');
+        console.error('Enable when must be used for the same type');
+
+        return false;
     }
 
     if (firstValueType === 'Coding') {
@@ -483,12 +467,13 @@ export function getChecker(
     return _.constant(true);
 }
 
-function isQuestionEnabled(
-    enableWhen: QuestionnaireItemEnableWhen[],
-    enableBehavior: string | undefined,
-    parentPath: string[],
-    values: FormItems,
-) {
+function isQuestionEnabled(qItem: QuestionnaireItem, parentPath: string[], values: FormItems) {
+    const { enableWhen, enableBehavior } = qItem;
+
+    if (!enableWhen) {
+        return true;
+    }
+
     const iterFn = enableBehavior === 'any' ? _.some : _.every;
 
     return iterFn(enableWhen, ({ question, answer, operator }) => {
@@ -508,25 +493,108 @@ function isQuestionEnabled(
     });
 }
 
+export function removeDisabledAnswers(
+    questionnaireItems: QuestionnaireItem[],
+    values: FormItems,
+): FormItems {
+    return removeDisabledAnswersRecursive(questionnaireItems, [], values, {});
+}
+
+function removeDisabledAnswersRecursive(
+    questionnaireItems: QuestionnaireItem[],
+    parentPath: string[],
+    answersItems: FormItems,
+    initialValues: FormItems,
+): FormItems {
+    return questionnaireItems.reduce((acc, questionnaireItem) => {
+        const values = parentPath.length ? setByPath(initialValues, parentPath, acc) : acc;
+
+        const { linkId } = questionnaireItem;
+        const answers = answersItems[linkId];
+
+        if (!answers) {
+            return acc;
+        }
+
+        if (!isQuestionEnabled(questionnaireItem, parentPath, values)) {
+            return acc;
+        }
+
+        if (isFormGroupItems(questionnaireItem, answers)) {
+            if (!answers.items) {
+                return acc;
+            }
+
+            if (isRepeatableFormGroupItems(questionnaireItem, answers)) {
+                return {
+                    ...acc,
+                    [linkId]: {
+                        ...answers,
+                        items: answers.items.map((group, index) =>
+                            removeDisabledAnswersRecursive(
+                                questionnaireItem.item ?? [],
+                                [...parentPath, linkId, 'items', index.toString()],
+                                group,
+                                values,
+                            ),
+                        ),
+                    },
+                };
+            } else {
+                return {
+                    ...acc,
+                    [linkId]: {
+                        ...answers,
+                        items: removeDisabledAnswersRecursive(
+                            questionnaireItem.item ?? [],
+                            [...parentPath, linkId, 'items'],
+                            answers.items,
+                            values,
+                        ),
+                    },
+                };
+            }
+        }
+
+        return {
+            ...acc,
+            [linkId]: answers.reduce((answersAcc, answer, index) => {                
+                if (typeof answer === 'undefined'){	
+                    return answersAcc;	
+                }
+                
+                if (!answer.value) {
+                    return answersAcc;
+                }
+
+                const items = hasSubAnswerItems(answer.items)
+                    ? removeDisabledAnswersRecursive(
+                          questionnaireItem.item ?? [],
+                          [...parentPath, linkId, index.toString(), 'items'],
+                          answer.items,
+                          values,
+                      )
+                    : {};
+
+                return [...answersAcc, { ...answer, items }];
+            }, [] as any),
+        };
+    }, {} as any);
+}
+
 export function getEnabledQuestions(
-    items: QuestionnaireItem[],
+    questionnaireItems: QuestionnaireItem[],
     parentPath: string[],
     values: FormItems,
 ) {
-    return _.filter(items, (item) => {
-        const { enableWhen, enableBehavior, linkId } = item;
+    return _.filter(questionnaireItems, (qItem) => {
+        const { linkId } = qItem;
 
         if (!linkId) {
             return false;
         }
 
-        if (enableWhen) {
-            if (!isQuestionEnabled(enableWhen, enableBehavior, parentPath, values)) {
-                return false;
-            }
-        }
-
-        return true;
+        return isQuestionEnabled(qItem, parentPath, values);
     });
 }
 
@@ -536,7 +604,7 @@ export function calcInitialContext(
 ): ItemContext {
     const questionnaireResponse = {
         ...qrfDataContext.questionnaireResponse,
-        ...mapFormToResponse(values, qrfDataContext.questionnaire, true),
+        ...mapFormToResponse(values, qrfDataContext.questionnaire),
     };
 
     return {
