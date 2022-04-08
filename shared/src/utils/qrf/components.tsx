@@ -10,7 +10,7 @@ import { getByPath, setByPath } from 'shared/src/utils/path';
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
 import { ItemContext, QRFContextData, QuestionItemProps, QuestionItemsProps } from './types';
-import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
+import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue, removeDisabledAnswers } from './utils';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
@@ -44,7 +44,7 @@ export function QuestionItem(props: QuestionItemProps) {
     } = useContext(QRFContext);
     const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
 
-    const { type, linkId, calculatedExpression, variable, repeats, hidden, itemControl } =
+    const { type, linkId, calculatedExpression, variable, repeats, itemControl } =
         questionItem;
     const fieldPath = [...parentPath, linkId!];
 
