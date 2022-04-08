@@ -15,10 +15,11 @@ import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } fro
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
     const { formValues } = useQuestionnaireResponseFormContext();
-
+    const cleanValues = removeDisabledAnswers(context.questionnaire.item!, formValues);
+    
     return (
         <>
-            {getEnabledQuestions(questionItems, parentPath, formValues).map((item, index) => {
+            {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
                 return (
                     <QuestionItem
                         key={index}
@@ -45,11 +46,11 @@ export function QuestionItem(props: QuestionItemProps) {
 
     const { type, linkId, calculatedExpression, variable, repeats, hidden, itemControl } =
         questionItem;
-    const fieldName = [...parentPath, linkId!];
+    const fieldPath = [...parentPath, linkId!];
 
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
     const branchItems = getBranchItems(
-        fieldName,
+        fieldPath,
         initialContext.questionnaire,
         initialContext.resource,
     );
@@ -59,7 +60,7 @@ export function QuestionItem(props: QuestionItemProps) {
                   calcContext(initialContext, variable, branchItems.qItem, curQRItem),
               )
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
-    const prevAnswers = usePreviousValue(getByPath(formValues, fieldName));
+    const prevAnswers = usePreviousValue(getByPath(formValues, fieldPath));
 
     React.useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
@@ -77,7 +78,7 @@ export function QuestionItem(props: QuestionItemProps) {
                     : undefined;
 
                 if (!isEqual(newAnswers, prevAnswers)) {
-                    setFormValues(setByPath(formValues, fieldName, newAnswers));
+                    setFormValues(setByPath(formValues, fieldPath, newAnswers));
                 }
             }
         }
@@ -91,7 +92,7 @@ export function QuestionItem(props: QuestionItemProps) {
         type,
         questionItem,
         prevAnswers,
-        fieldName,
+        fieldPath,
     ]);
 
     if (isGroupItem(questionItem, context)) {
