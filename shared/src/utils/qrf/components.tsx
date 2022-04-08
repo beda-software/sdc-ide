@@ -94,10 +94,6 @@ export function QuestionItem(props: QuestionItemProps) {
         fieldName,
     ]);
 
-    if (hidden) {
-        return null;
-    }
-
     if (isGroupItem(questionItem, context)) {
         if (itemControl) {
             if (
