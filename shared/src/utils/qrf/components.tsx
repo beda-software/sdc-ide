@@ -1,6 +1,6 @@
 import fhirpath from 'fhirpath';
 import isEqual from 'lodash/isEqual';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import * as React from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
@@ -10,13 +10,19 @@ import { getByPath, setByPath } from 'shared/src/utils/path';
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
 import { ItemContext, QRFContextData, QuestionItemProps, QuestionItemsProps } from './types';
-import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue, removeDisabledAnswers } from './utils';
+import {
+    calcContext,
+    getBranchItems,
+    getEnabledQuestions,
+    wrapAnswerValue,
+    removeDisabledAnswers,
+} from './utils';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
     const { formValues } = useQuestionnaireResponseFormContext();
     const cleanValues = removeDisabledAnswers(context.questionnaire.item!, formValues);
-    
+
     return (
         <>
             {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
@@ -44,9 +50,8 @@ export function QuestionItem(props: QuestionItemProps) {
     } = useContext(QRFContext);
     const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
 
-    const { type, linkId, calculatedExpression, variable, repeats, itemControl } =
-        questionItem;
-    const fieldPath = [...parentPath, linkId!];
+    const { type, linkId, calculatedExpression, variable, repeats, itemControl } = questionItem;
+    const fieldPath = useMemo(() => [...parentPath, linkId!], [parentPath, linkId]);
 
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
     const branchItems = getBranchItems(
@@ -101,7 +106,8 @@ export function QuestionItem(props: QuestionItemProps) {
                 !itemControlGroupItemComponents ||
                 !itemControlGroupItemComponents[itemControl?.coding?.[0].code!]
             ) {
-                console.warn(`QRF: Unsupported group itemControl '${itemControl?.coding?.[0]?.code!}'. 
+                console.warn(`QRF: Unsupported group itemControl '${itemControl?.coding?.[0]
+                    ?.code!}'. 
                 Please define 'itemControlGroupWidgets' for '${itemControl?.coding?.[0]?.code!}'`);
 
                 return null;

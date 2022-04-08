@@ -12,8 +12,8 @@ import {
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
+import { setByPath } from 'shared/src/utils/path';
 
-import { setByPath } from '../path';
 import {
     AnswerValue,
     FormAnswerItems,
@@ -215,10 +215,10 @@ function mapFormToResponseRecursive(
             {
                 linkId,
                 answer: answers.reduce((answersAcc, answer) => {
-                    if (typeof answer === 'undefined'){	
-                        return answersAcc;	
+                    if (typeof answer === 'undefined') {
+                        return answersAcc;
                     }
-                    
+
                     if (!answer.value) {
                         return answersAcc;
                     }
@@ -558,11 +558,11 @@ function removeDisabledAnswersRecursive(
 
         return {
             ...acc,
-            [linkId]: answers.reduce((answersAcc, answer, index) => {                
-                if (typeof answer === 'undefined'){	
-                    return answersAcc;	
+            [linkId]: answers.reduce((answersAcc, answer, index) => {
+                if (typeof answer === 'undefined') {
+                    return answersAcc;
                 }
-                
+
                 if (!answer.value) {
                     return answersAcc;
                 }
@@ -611,7 +611,10 @@ export function calcInitialContext(
         ...qrfDataContext.launchContextParameters.reduce(
             (acc, { name, value, resource }) => ({
                 ...acc,
-                [name]: value && isPlainObject(value) ? value[Object.keys(value)[0] as keyof AnswerValue] : resource,
+                [name]:
+                    value && isPlainObject(value)
+                        ? value[Object.keys(value)[0] as keyof AnswerValue]
+                        : resource,
             }),
             {},
         ),
