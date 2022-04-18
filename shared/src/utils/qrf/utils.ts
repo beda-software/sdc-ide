@@ -81,7 +81,7 @@ export function getBranchItems(
             if (qItem.repeats) {
                 if (i + 2 < fieldPath.length) {
                     // In the middle
-                    qrItem = qrItems[parseInt(fieldPath[i + 2], 10)];
+                    qrItem = qrItems[parseInt(fieldPath[i + 2]!, 10)];
                 } else {
                     // Leaf
                     return { qItem, qrItems };
@@ -288,7 +288,7 @@ function mapResponseToFormRecursive(
                     [linkId]: {
                         question: text,
                         items: mapResponseToFormRecursive(
-                            qrItems[0].item ?? [],
+                            qrItems[0]?.item ?? [],
                             question.item ?? [],
                         ),
                     },
@@ -510,7 +510,7 @@ function removeDisabledAnswersRecursive(
         const values = parentPath.length ? setByPath(initialValues, parentPath, acc) : acc;
 
         const { linkId } = questionnaireItem;
-        const answers = answersItems[linkId];
+        const answers = answersItems[linkId!];
 
         if (!answers) {
             return acc;
@@ -528,12 +528,12 @@ function removeDisabledAnswersRecursive(
             if (isRepeatableFormGroupItems(questionnaireItem, answers)) {
                 return {
                     ...acc,
-                    [linkId]: {
+                    [linkId!]: {
                         ...answers,
                         items: answers.items.map((group, index) =>
                             removeDisabledAnswersRecursive(
                                 questionnaireItem.item ?? [],
-                                [...parentPath, linkId, 'items', index.toString()],
+                                [...parentPath, linkId!, 'items', index.toString()],
                                 group,
                                 values,
                             ),
@@ -543,11 +543,11 @@ function removeDisabledAnswersRecursive(
             } else {
                 return {
                     ...acc,
-                    [linkId]: {
+                    [linkId!]: {
                         ...answers,
                         items: removeDisabledAnswersRecursive(
                             questionnaireItem.item ?? [],
-                            [...parentPath, linkId, 'items'],
+                            [...parentPath, linkId!, 'items'],
                             answers.items,
                             values,
                         ),
@@ -558,7 +558,7 @@ function removeDisabledAnswersRecursive(
 
         return {
             ...acc,
-            [linkId]: answers.reduce((answersAcc, answer, index) => {
+            [linkId!]: answers.reduce((answersAcc, answer, index) => {
                 if (typeof answer === 'undefined') {
                     return answersAcc;
                 }
@@ -570,7 +570,7 @@ function removeDisabledAnswersRecursive(
                 const items = hasSubAnswerItems(answer.items)
                     ? removeDisabledAnswersRecursive(
                           questionnaireItem.item ?? [],
-                          [...parentPath, linkId, index.toString(), 'items'],
+                          [...parentPath, linkId!, index.toString(), 'items'],
                           answer.items,
                           values,
                       )
@@ -653,7 +653,7 @@ function resolveTemplateExpr(str: string, context: ItemContext) {
 export function parseFhirQueryExpression(expression: string, context: ItemContext) {
     const [resourceType, paramsQS] = expression.split('?', 2);
     const searchParams = Object.fromEntries(
-        Object.entries(queryString.parse(paramsQS)).map(([key, value]) => {
+        Object.entries(queryString.parse(paramsQS ?? '')).map(([key, value]) => {
             if (!value) {
                 return [key, value];
             }

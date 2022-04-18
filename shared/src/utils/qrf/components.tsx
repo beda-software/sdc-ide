@@ -104,7 +104,7 @@ export function QuestionItem(props: QuestionItemProps) {
         if (itemControl) {
             if (
                 !itemControlGroupItemComponents ||
-                !itemControlGroupItemComponents[itemControl?.coding?.[0].code!]
+                !itemControlGroupItemComponents[itemControl?.coding?.[0]?.code!]
             ) {
                 console.warn(`QRF: Unsupported group itemControl '${itemControl?.coding?.[0]
                     ?.code!}'. 
@@ -113,7 +113,7 @@ export function QuestionItem(props: QuestionItemProps) {
                 return null;
             }
 
-            const Component = itemControlGroupItemComponents[itemControl?.coding?.[0]?.code!];
+            const Component = itemControlGroupItemComponents[itemControl?.coding?.[0]?.code!]!;
 
             return (
                 <Component context={context} parentPath={parentPath} questionItem={questionItem} />
@@ -149,7 +149,7 @@ Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
             return null;
         }
 
-        const Component = itemControlQuestionItemComponents[itemControl?.coding?.[0]?.code!];
+        const Component = itemControlQuestionItemComponents[itemControl?.coding?.[0]?.code!]!;
 
         return <Component context={context} parentPath={parentPath} questionItem={questionItem} />;
     }
@@ -165,13 +165,13 @@ Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
             return null;
         }
 
-        const Component = customWidgets[linkId];
+        const Component = customWidgets[linkId]!;
 
         return <Component context={context} parentPath={parentPath} questionItem={questionItem} />;
     }
 
     if (type in questionItemComponents) {
-        const Component = questionItemComponents[type];
+        const Component = questionItemComponents[type]!;
 
         return <Component context={context} parentPath={parentPath} questionItem={questionItem} />;
     }
