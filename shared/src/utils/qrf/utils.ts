@@ -424,7 +424,10 @@ export function getChecker(
 
     if (operator === 'exists') {
         return (values, answerValue) => {
-            const answersLength = _.reject(values, (value) => _.isEmpty(value.value)).length;
+            const answersLength = _.reject(
+                values,
+                (value) => _.isEmpty(value.value) || _.every(_.mapValues(value.value, _.isEmpty)),
+            ).length;
             const answer = answerValue?.boolean ?? true;
             return answersLength > 0 === answer;
         };
