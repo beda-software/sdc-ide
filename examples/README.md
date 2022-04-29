@@ -11,16 +11,8 @@
 
 ## Development
 
-### amd64
-
 ```
 docker-compose -f docker-compose.dev.yaml up
-```
-
-### amr64 (MAC m1)
-
-```
-docker-compose -f docker-compose.dev.yaml -f docker-compose.dev.m1.yaml up
 ```
 
 ### Load demo data

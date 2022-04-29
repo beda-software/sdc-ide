@@ -14,12 +14,7 @@ if [ -z "${AIDBOX_LICENSE_ID_TESTS}" ]; then
     exit 1
 fi
 
-M1=`uname -a | grep -o arm64`
-if [ -z "${M1}" ]; then
-    COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.tests.local.yaml"
-else
-    COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.tests.local.yaml -f docker-compose.tests.m1.yaml"
-fi
+COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.tests.local.yaml"
 
 docker-compose $COMPOSE_FILES pull
 docker-compose $COMPOSE_FILES up -d

@@ -2,9 +2,10 @@ version: '3.1'
 services:
   backend:
     image: bedasoftware/aidbox-sdc:latest
-    command: ["wait-for-it.sh", "devbox:8080", "--strict", "--timeout=0", "--", "pipenv", "run", "gunicorn", "main:create_app", "--worker-class", "aiohttp.worker.GunicornWebWorker", "-b", "0.0.0.0:8081", "--reload"]
     depends_on:
-      - devbox
+      devbox-healthcheck:
+        condition:
+          service_healthy
     links:
       - devbox
     env_file:
@@ -12,9 +13,20 @@ services:
       - .env
     volumes:
       - ./config:/var/config:cached
-      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
     # Colored logs
     tty: true
+  devbox-healthcheck:
+    image: curlimages/curl
+    entrypoint: /bin/sleep 10000
+    links:
+      - devbox
+    depends_on:
+      - devbox
+    healthcheck:
+      test: curl --fail http://devbox:8080 || exit 1
+      interval: 1s
+      timeout: 20s
+      retries: 100
   devbox:
     image: healthsamurai/devbox:edge
     depends_on:
@@ -25,7 +37,6 @@ services:
       - .env.base
       - .env
     volumes:
-      - ./wait-for-it.sh:/usr/local/bin/wait-for-it.sh:cached
       - ./config:/var/config:cached
     ports:
       - 9000:8080
