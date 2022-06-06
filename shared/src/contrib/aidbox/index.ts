@@ -14029,7 +14029,7 @@ export interface QuestionnaireItem {
     /** NOTE: from extension */
     itemContext?: Expression;
     /** Unique id for item in questionnaire */
-    linkId?: string;
+    linkId: string;
     /** No more than this many characters */
     maxLength?: integer;
     /** Extensions that cannot be ignored even if unrecognized */
@@ -14050,6 +14050,8 @@ export interface QuestionnaireItem {
     type: code;
     /** NOTE: from extension */
     variable?: Expression[];
+    itemControl?: CodeableConcept;
+    calculatedExpression?: Expression;
 }
 
 export interface QuestionnaireItemAnswerOption {

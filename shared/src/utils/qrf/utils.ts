@@ -65,8 +65,7 @@ export function getBranchItems(
     questionnaire: Questionnaire,
     questionnaireResponse: QuestionnaireResponse,
 ): { qItem: QuestionnaireItem; qrItems: QuestionnaireResponseItem[] } {
-    let qrItem: QuestionnaireResponseItem | QuestionnaireResponse | undefined =
-        questionnaireResponse;
+    let qrItem: QuestionnaireResponseItem | QuestionnaireResponse | undefined = questionnaireResponse;
     let qItem: QuestionnaireItem | Questionnaire = questionnaire;
 
     // TODO: check for question with sub items
@@ -128,12 +127,7 @@ export function compareValue(firstAnswerValue: AnswerValue, secondAnswerValue: A
     if (firstValueType !== secondValueType) {
         throw new Error('Enable when must be used for the same type');
     }
-    if (
-        !_.includes(
-            ['string', 'date', 'dateTime', 'time', 'uri', 'boolean', 'integer', 'decimal'],
-            firstValueType,
-        )
-    ) {
+    if (!_.includes(['string', 'date', 'dateTime', 'time', 'uri', 'boolean', 'integer', 'decimal'], firstValueType)) {
         throw new Error('Impossible to compare non-primitive type');
     }
 
@@ -265,8 +259,7 @@ function mapResponseToFormRecursive(
             return acc;
         }
 
-        const qrItems =
-            questionnaireResponseItems.filter((qrItem) => qrItem.linkId === linkId) ?? [];
+        const qrItems = questionnaireResponseItems.filter((qrItem) => qrItem.linkId === linkId) ?? [];
 
         if (qrItems.length && isGroup(question)) {
             if (repeats) {
@@ -275,10 +268,7 @@ function mapResponseToFormRecursive(
                     [linkId]: {
                         question: text,
                         items: qrItems.map((qrItem) => {
-                            return mapResponseToFormRecursive(
-                                qrItem.item ?? [],
-                                question.item ?? [],
-                            );
+                            return mapResponseToFormRecursive(qrItem.item ?? [], question.item ?? []);
                         }),
                     },
                 };
@@ -287,10 +277,7 @@ function mapResponseToFormRecursive(
                     ...acc,
                     [linkId]: {
                         question: text,
-                        items: mapResponseToFormRecursive(
-                            qrItems[0]?.item ?? [],
-                            question.item ?? [],
-                        ),
+                        items: mapResponseToFormRecursive(qrItems[0]?.item ?? [], question.item ?? []),
                     },
                 };
             }
@@ -376,7 +363,7 @@ export function findAnswersForQuestion<T = any>(
 
     // Go up
     while (p.length) {
-        const part = p.pop();
+        const part = p.pop()!;
 
         if (part === 'items') {
             if (_.has(_.get(values, [...p, part]), linkId)) {
@@ -409,17 +396,13 @@ export function isValueEqual(firstValue: AnswerValue, secondValue: AnswerValue) 
     return _.isEqual(firstValue, secondValue);
 }
 
-export function getChecker(
-    operator: string,
-): (values: Array<{ value: any }>, answerValue: any) => boolean {
+export function getChecker(operator: string): (values: Array<{ value: any }>, answerValue: any) => boolean {
     if (operator === '=') {
-        return (values, answerValue) =>
-            _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) !== -1;
+        return (values, answerValue) => _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) !== -1;
     }
 
     if (operator === '!=') {
-        return (values, answerValue) =>
-            _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) === -1;
+        return (values, answerValue) => _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) === -1;
     }
 
     if (operator === 'exists') {
@@ -496,10 +479,7 @@ function isQuestionEnabled(qItem: QuestionnaireItem, parentPath: string[], value
     });
 }
 
-export function removeDisabledAnswers(
-    questionnaireItems: QuestionnaireItem[],
-    values: FormItems,
-): FormItems {
+export function removeDisabledAnswers(questionnaireItems: QuestionnaireItem[], values: FormItems): FormItems {
     return removeDisabledAnswersRecursive(questionnaireItems, [], values, {});
 }
 
@@ -585,11 +565,7 @@ function removeDisabledAnswersRecursive(
     }, {} as any);
 }
 
-export function getEnabledQuestions(
-    questionnaireItems: QuestionnaireItem[],
-    parentPath: string[],
-    values: FormItems,
-) {
+export function getEnabledQuestions(questionnaireItems: QuestionnaireItem[], parentPath: string[], values: FormItems) {
     return _.filter(questionnaireItems, (qItem) => {
         const { linkId } = qItem;
 
@@ -614,10 +590,7 @@ export function calcInitialContext(
         ...qrfDataContext.launchContextParameters.reduce(
             (acc, { name, value, resource }) => ({
                 ...acc,
-                [name]:
-                    value && isPlainObject(value)
-                        ? value[Object.keys(value)[0] as keyof AnswerValue]
-                        : resource,
+                [name]: value && isPlainObject(value) ? value[Object.keys(value)[0] as keyof AnswerValue] : resource,
             }),
             {},
         ),
