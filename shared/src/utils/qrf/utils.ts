@@ -365,9 +365,13 @@ export function findAnswersForQuestion<T = any>(
     while (p.length) {
         const part = p.pop()!;
 
-        if (part === 'items') {
-            if (_.has(_.get(values, [...p, part]), linkId)) {
-                return _.get(values, [...p, part, linkId]);
+        // Find answers in parent groups (including repeatable)
+        // They might have either 'items' of the group or number of the repeatable group in path
+        if (part === 'items' || !isNaN(part as any)) {
+            const parentGroup = _.get(values, [...p, part]);
+
+            if (typeof parentGroup === 'object' && linkId in parentGroup) {
+                return parentGroup[linkId];
             }
         }
     }
@@ -472,7 +476,6 @@ function isQuestionEnabled(qItem: QuestionnaireItem, parentPath: string[], value
 
             return check(parentAnswer ? [parentAnswer] : [], answer);
         }
-
         const answers = findAnswersForQuestion(question, parentPath, values);
 
         return check(_.compact(answers), answer);
