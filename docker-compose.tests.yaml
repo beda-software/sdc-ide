@@ -3,7 +3,7 @@ services:
   backend:
     image: "bedasoftware/aidbox-sdc:latest"
     env_file:
-    - env_tests
+      - env_tests
     depends_on:
       devbox-healthcheck:
         condition:
@@ -12,7 +12,6 @@ services:
       - devbox
     healthcheck:
       test: curl --fail http://devbox:8080/healthcheck || exit 1
-      interval: 1s
       timeout: 20s
       retries: 100
   devbox-healthcheck:
@@ -24,7 +23,6 @@ services:
       - devbox
     healthcheck:
       test: curl --fail http://devbox:8080/__healthcheck || exit 1
-      interval: 1s
       timeout: 20s
       retries: 100
   devbox:

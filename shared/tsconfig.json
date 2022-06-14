@@ -10,7 +10,7 @@
         "jsx": "react",
         "target": "es5",
         "module": "commonjs",
-	"lib": ["es2019"]
+	    "lib": ["es2019", "DOM"]
     },
     "exclude": [
         "lib",

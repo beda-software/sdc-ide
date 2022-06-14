@@ -26,6 +26,7 @@
         "js-yaml": "^3.14.0",
         "lodash": "^4.17.20",
         "node-sass": "^4.14.1",
+        "query-string": "^7.0.1",
         "react": "16.13.1",
         "react-app-rewired": "^2.1.6",
         "react-codemirror2": "^7.2.1",

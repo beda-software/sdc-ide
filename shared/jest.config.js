@@ -9,7 +9,7 @@ module.exports = {
     coverageDirectory: 'coverage',
 
     // The test environment that will be used for testing
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
 
     testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
 
@@ -17,5 +17,7 @@ module.exports = {
         '^.+\\.tsx?$': 'ts-jest',
     },
 
-    transformIgnorePatterns: ['node_modules/(?!@react-native-community/datetimepicker|axios|react-native)$'],
+    transformIgnorePatterns: [
+        'node_modules/(?!@react-native-community/datetimepicker|axios|react-native)$',
+    ],
 };
