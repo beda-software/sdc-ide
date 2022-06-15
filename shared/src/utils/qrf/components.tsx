@@ -4,8 +4,8 @@ import { useContext, useMemo } from 'react';
 import * as React from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
-
-import { getByPath, setByPath } from 'web/src/utils/path';
+import { usePreviousValue } from 'shared/src/hooks/previous-value';
+import { getByPath, setByPath } from 'shared/src/utils/path';
 
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
@@ -17,7 +17,6 @@ import {
     wrapAnswerValue,
     removeDisabledAnswers,
 } from './utils';
-import { usePreviousValue } from 'shared/src/hooks/previous-value';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;

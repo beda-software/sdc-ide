@@ -3,7 +3,6 @@ import _ from 'lodash';
 import isArray from 'lodash/isArray';
 import isPlainObject from 'lodash/isPlainObject';
 import queryString from 'query-string';
-import { setByPath } from 'web/src/utils/path';
 
 import {
     Questionnaire,
@@ -13,6 +12,7 @@ import {
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
+import { setByPath } from 'shared/src/utils/path';
 
 import {
     AnswerValue,

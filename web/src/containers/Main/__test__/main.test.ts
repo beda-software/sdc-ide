@@ -67,9 +67,13 @@ test('questionnaire in FHIR format is loaded', async () => {
     const questionnaire = ensure(result.current.questionnaireFHIRRD);
     expect(questionnaire.id).toBe(questionnaireIdInitial);
     const mappingFromQuestionnaire = getMappingExtension(questionnaire);
-    const mappingFromQuestionnaireFHIRExpected = getMappingExtension(EXPECTED_RESOURCES.questionnaireFHIR);
+    const mappingFromQuestionnaireFHIRExpected = getMappingExtension(
+        EXPECTED_RESOURCES.questionnaireFHIR,
+    );
     expect(mappingFromQuestionnaire!.valueReference).toBeDefined();
-    expect(mappingFromQuestionnaire!.valueReference).toEqual(mappingFromQuestionnaireFHIRExpected!.valueReference);
+    expect(mappingFromQuestionnaire!.valueReference).toEqual(
+        mappingFromQuestionnaireFHIRExpected!.valueReference,
+    );
 });
 
 test('questionnaireResponseRD', async () => {
