@@ -62,7 +62,9 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     const loadOptions = React.useCallback(
         async (searchText: string) => {
             const response = await getFHIRResources(resourceType, { _ilike: `%${searchText}%` });
-            const prepared = mapSuccess(response, (bundle) => (bundle.entry ?? []).map((e) => e.resource!));
+            const prepared = mapSuccess(response, (bundle) =>
+                (bundle.entry ?? []).map((e) => e.resource!),
+            );
             if (isSuccess(prepared)) {
                 return prepared.data;
             }
@@ -71,19 +73,24 @@ export function RemoteResourceSelect<R extends AidboxResource>({
         [resourceType],
     );
 
-    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: R[]) => void) => {
-        (async () => callback(await loadOptions(searchText)))();
-    }, 500);
+    const debouncedLoadOptions = _.debounce(
+        (searchText: string, callback: (options: R[]) => void) => {
+            (async () => callback(await loadOptions(searchText)))();
+        },
+        500,
+    );
 
     return (
-        <AsyncSelect<R>
-            loadOptions={debouncedLoadOptions}
-            defaultOptions
-            getOptionLabel={display ?? getId}
-            getOptionValue={_.identity}
-            onChange={onChange}
-            value={value}
-        />
+        <div className={s.reactResourceSelect}>
+            <AsyncSelect<R>
+                loadOptions={debouncedLoadOptions}
+                defaultOptions
+                getOptionLabel={display ?? getId}
+                getOptionValue={_.identity}
+                onChange={onChange}
+                value={value}
+            />
+        </div>
     );
 }
 

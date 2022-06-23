@@ -11,7 +11,7 @@ import {
     isValueEqual,
     mapFormToResponse,
     mapResponseToForm,
-} from 'src/utils/questionnaire';
+} from 'shared/src/utils/qrf/questionnaire';
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 import { Button } from 'src/components/Button';
 import { InputField } from 'src/components/InputField';
@@ -99,39 +99,52 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                         <div>
                             <div>{text}</div>
 
-                            {_.map(input.value.length ? input.value : [{}], (elem, index: number) => {
-                                if (index > 0 && !input.value[index]) {
-                                    return null;
-                                }
+                            {_.map(
+                                input.value.length ? input.value : [{}],
+                                (elem, index: number) => {
+                                    if (index > 0 && !input.value[index]) {
+                                        return null;
+                                    }
 
-                                return (
-                                    <div key={index} className="d-flex">
-                                        <div className="flex-grow-1">
-                                            {renderAnswer(questionItem, parentPath, formParams, index)}
-                                        </div>
-                                        {index > 0 ? (
-                                            <div
-                                                style={{ width: 40, height: 40 }}
-                                                className="d-flex align-items-center justify-content-center"
-                                                onClick={() =>
-                                                    input.onChange(
-                                                        _.filter(
-                                                            input.value,
-                                                            (val, valIndex: number) => valIndex !== index,
-                                                        ),
-                                                    )
-                                                }
-                                            >
-                                                Delete{' '}
+                                    return (
+                                        <div key={index} className="d-flex">
+                                            <div className="flex-grow-1">
+                                                {renderAnswer(
+                                                    questionItem,
+                                                    parentPath,
+                                                    formParams,
+                                                    index,
+                                                )}
                                             </div>
-                                        ) : (
-                                            <div style={{ width: 40 }} />
-                                        )}
-                                    </div>
-                                );
-                            })}
+                                            {index > 0 ? (
+                                                <div
+                                                    style={{ width: 40, height: 40 }}
+                                                    className="d-flex align-items-center justify-content-center"
+                                                    onClick={() =>
+                                                        input.onChange(
+                                                            _.filter(
+                                                                input.value,
+                                                                (val, valIndex: number) =>
+                                                                    valIndex !== index,
+                                                            ),
+                                                        )
+                                                    }
+                                                >
+                                                    Delete{' '}
+                                                </div>
+                                            ) : (
+                                                <div style={{ width: 40 }} />
+                                            )}
+                                        </div>
+                                    );
+                                },
+                            )}
                             <Button
-                                onClick={() => input.onChange(input.value.length ? [...input.value, {}] : [{}, {}])}
+                                onClick={() =>
+                                    input.onChange(
+                                        input.value.length ? [...input.value, {}] : [{}, {}],
+                                    )
+                                }
                             >
                                 Add another answer
                             </Button>
@@ -189,12 +202,31 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
-    public renderAnswerChoice(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
-        const { linkId, text, answerOption, repeats = false, required, answerValueSet, hidden } = questionItem;
+    public renderAnswerChoice(
+        questionItem: QuestionnaireItem,
+        parentPath: string[],
+        _formParams: FormRenderProps,
+    ) {
+        const {
+            linkId,
+            text,
+            answerOption,
+            repeats = false,
+            required,
+            answerValueSet,
+            hidden,
+        } = questionItem;
         if (answerValueSet) {
             const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0'])];
             const fieldName = fieldPath.join('.');
-            return <TerminologyField repeats={repeats} name={fieldName} label={text!} valueSetId={answerValueSet} />;
+            return (
+                <TerminologyField
+                    repeats={repeats}
+                    name={fieldName}
+                    label={text!}
+                    valueSetId={answerValueSet}
+                />
+            );
         }
 
         const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0']), 'value', 'string'];
@@ -234,7 +266,11 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
-    public renderBoolean(questionItem: QuestionnaireItem, parentPath: string[], _formParams: FormRenderProps) {
+    public renderBoolean(
+        questionItem: QuestionnaireItem,
+        parentPath: string[],
+        _formParams: FormRenderProps,
+    ) {
         const { linkId, text, repeats } = questionItem;
         const fieldPath = [...parentPath, linkId, ...(repeats ? [] : ['0']), 'value', 'boolean'];
         const fieldName = fieldPath.join('.');
@@ -262,28 +298,44 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                                     <p className={s.questLabel}>{text}</p>
                                     <div className={s.repeatsGroupItemsContainer}>
                                         {_.map(
-                                            input.value.items && input.value.items.length ? input.value.items : [{}],
+                                            input.value.items && input.value.items.length
+                                                ? input.value.items
+                                                : [{}],
                                             (_elem, index: number) => {
                                                 if (index > 0 && !input.value.items[index]) {
                                                     return null;
                                                 }
                                                 return (
-                                                    <div key={index} className={s.repeatsGroupItemTitle}>
+                                                    <div
+                                                        key={index}
+                                                        className={s.repeatsGroupItemTitle}
+                                                    >
                                                         <div className={s.repeatsGroupItemHeader}>
-                                                            <span className={s.repeatsGroupItemTitle}>{`${
-                                                                questionItem.text
-                                                            } #${index + 1}`}</span>
+                                                            <span
+                                                                className={s.repeatsGroupItemTitle}
+                                                            >{`${questionItem.text} #${
+                                                                index + 1
+                                                            }`}</span>
                                                             <div
                                                                 onClick={() => {
                                                                     const filteredArray = _.filter(
                                                                         input.value.items,
-                                                                        (_val, valIndex: number) => valIndex !== index,
+                                                                        (_val, valIndex: number) =>
+                                                                            valIndex !== index,
                                                                     );
-                                                                    input.onChange({ items: [...filteredArray] });
+                                                                    input.onChange({
+                                                                        items: [...filteredArray],
+                                                                    });
                                                                 }}
-                                                                className={s.repeatsGroupRemoveItemButton}
+                                                                className={
+                                                                    s.repeatsGroupRemoveItemButton
+                                                                }
                                                             >
-                                                                <span className={s.repeatsGroupRemoveItemButtonTitle}>
+                                                                <span
+                                                                    className={
+                                                                        s.repeatsGroupRemoveItemButtonTitle
+                                                                    }
+                                                                >
                                                                     Remove
                                                                 </span>
                                                             </div>
@@ -291,7 +343,12 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                                                         <div className={s.repeatsGroupItemBody}>
                                                             {this.renderQuestions(
                                                                 item,
-                                                                [...parentPath, linkId!, 'items', index.toString()],
+                                                                [
+                                                                    ...parentPath,
+                                                                    linkId!,
+                                                                    'items',
+                                                                    index.toString(),
+                                                                ],
                                                                 formParams,
                                                             )}
                                                         </div>
@@ -308,7 +365,9 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
                                             input.onChange(updatedInput);
                                         }}
                                     >
-                                        <p className={s.repeatsGroupAddItemButtonTitle}>{`+ Add another ${text}`}</p>
+                                        <p
+                                            className={s.repeatsGroupAddItemButtonTitle}
+                                        >{`+ Add another ${text}`}</p>
                                     </div>
                                 </div>
                             );
@@ -327,7 +386,11 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         return null;
     }
 
-    public renderAnswer(rawQuestionItem: QuestionnaireItem, parentPath: string[], formParams: FormRenderProps): any {
+    public renderAnswer(
+        rawQuestionItem: QuestionnaireItem,
+        parentPath: string[],
+        formParams: FormRenderProps,
+    ): any {
         const questionItem = {
             ...rawQuestionItem,
             text: interpolateAnswers(rawQuestionItem.text!, parentPath, formParams.values),
@@ -335,12 +398,28 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         // const { linkId, type, item, text } = questionItem;
         const { type } = questionItem;
 
-        if (type === 'string' || type === 'text' || type === 'email' || type === 'phone' || type === 'password') {
-            return this.renderRepeatsAnswer(this.renderAnswerText, questionItem, parentPath, formParams);
+        if (
+            type === 'string' ||
+            type === 'text' ||
+            type === 'email' ||
+            type === 'phone' ||
+            type === 'password'
+        ) {
+            return this.renderRepeatsAnswer(
+                this.renderAnswerText,
+                questionItem,
+                parentPath,
+                formParams,
+            );
         }
 
         if (type === 'date' || type === 'dateTime') {
-            return this.renderRepeatsAnswer(this.renderAnswerDateTime, questionItem, parentPath, formParams);
+            return this.renderRepeatsAnswer(
+                this.renderAnswerDateTime,
+                questionItem,
+                parentPath,
+                formParams,
+            );
         }
 
         if (type === 'choice') {
@@ -368,7 +447,11 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
         );
     }
 
-    public renderQuestions(items: QuestionnaireItem[], parentPath: string[], formParams: FormRenderProps) {
+    public renderQuestions(
+        items: QuestionnaireItem[],
+        parentPath: string[],
+        formParams: FormRenderProps,
+    ) {
         return _.map(getEnabledQuestions(items, parentPath, formParams.values), (item, index) => (
             <div key={index}>{this.renderAnswer(item, parentPath, formParams)}</div>
         ));

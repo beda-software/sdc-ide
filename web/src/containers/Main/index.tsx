@@ -84,6 +84,7 @@ export function Main() {
                             questionnaireRD={questionnaireRD}
                             questionnaireResponseRD={questionnaireResponseRD}
                             saveQuestionnaireResponse={saveQuestionnaireResponse}
+                            launchContextParameters={launchContext.parameter}
                         />
                     </ExpandableElement>
                 </ExpandableRow>
@@ -121,7 +122,10 @@ export function Main() {
                             />
                         </div>
                     </ExpandableElement>
-                    <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
+                    <ExpandableElement
+                        title="Patient batch request"
+                        cssClass={s.patientBatchRequestBox}
+                    >
                         <div>
                             <ResourceCodeDisplay resourceResponse={batchRequestRD} />
                             <Button onClick={applyMappings}>Apply</Button>

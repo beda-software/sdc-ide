@@ -1,16 +1,23 @@
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useState } from 'react';
 import _ from 'lodash';
 
-import { ResourceSelect, RemoteResourceSelect } from 'src/components/ResourceSelect';
+import { RemoteResourceSelect } from 'src/components/ResourceSelect';
 import { useMenu } from 'src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
 import { Arrow } from 'src/components/Icon/Arrow';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { Questionnaire, QuestionnaireLaunchContext, Parameters, ParametersParameter } from 'shared/src/contrib/aidbox';
+import {
+    Questionnaire,
+    QuestionnaireLaunchContext,
+    Parameters,
+    ParametersParameter,
+} from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
 import { version } from 'src/version';
+import classNames from 'classnames';
+import Select from 'react-select';
 
 interface MenuProps {
     launchContext: Parameters;
@@ -21,8 +28,16 @@ interface MenuProps {
     setFhirMode: (flag: boolean) => void;
 }
 
-export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, launchContext, dispatch }: MenuProps) {
+export function Menu({
+    questionnaireId,
+    fhirMode,
+    setFhirMode,
+    questionnaireRD,
+    launchContext,
+    dispatch,
+}: MenuProps) {
     const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
+    const [isChecked, setIsChecked] = useState(false);
     return (
         <>
             <div className={s.control} onClick={toggleMenu}>
@@ -31,65 +46,100 @@ export function Menu({ questionnaireId, fhirMode, setFhirMode, questionnaireRD, 
                 </span>
             </div>
             <div className={s.box} style={getMenuStyle}>
-                <div className={s.menuItem}>Questionnaire</div>
                 <div className={s.menuItem}>
-                    <ResourceSelect
-                        value={questionnaireId}
-                        bundleResponse={questionnairesRD}
-                        onChange={(id) => {
-                            window.location.hash = id;
-                        }}
-                        display={({ id }) => id!}
-                    />
+                    <div className={s.header}>Questionnaire</div>
+                    <RenderRemoteData remoteData={questionnairesRD}>
+                        {(questionnaires) => (
+                            <div className={s.reactResourceSelect}>
+                                <Select
+                                    value={{
+                                        value: questionnaireId,
+                                        label: questionnaireId,
+                                    }}
+                                    options={questionnaires.map((questionnaire) => ({
+                                        value: questionnaire.id,
+                                        label: questionnaire.id,
+                                    }))}
+                                    onChange={(option) => {
+                                        window.location.hash = option ? option.value! : '';
+                                    }}
+                                />
+                            </div>
+                        )}
+                    </RenderRemoteData>
                 </div>
-                <RenderRemoteData remoteData={questionnaireRD}>
-                    {(questionnaire) => (
-                        <EditLaunchContext
-                            parameters={launchContext}
-                            launchContext={questionnaire.launchContext ?? []}
-                            dispatch={dispatch}
-                        />
-                    )}
-                </RenderRemoteData>
                 <div className={s.menuItem}>
-                    <label htmlFor="fhir-mode">FhirMode</label>
+                    <RenderRemoteData remoteData={questionnaireRD}>
+                        {(questionnaire) => (
+                            <EditLaunchContext
+                                parameters={launchContext}
+                                launchContext={questionnaire.launchContext ?? []}
+                                dispatch={dispatch}
+                            />
+                        )}
+                    </RenderRemoteData>
                 </div>
                 <div className={s.menuItem}>
-                    <input
-                        name="fhir-mode"
-                        type="checkbox"
-                        checked={fhirMode}
-                        onChange={() => setFhirMode(!fhirMode)}
-                    />
+                    <div className={s.header}>
+                        <label htmlFor="fhir-mode">FhirMode</label>
+                    </div>
+                    <div>
+                        <label>
+                            <input
+                                name="fhir-mode"
+                                type="checkbox"
+                                checked={fhirMode}
+                                onChange={() => {
+                                    setFhirMode(!fhirMode);
+                                    setIsChecked(!isChecked);
+                                }}
+                            />
+                            <span
+                                className={`checkbox ${isChecked ? 'checkbox--active' : ''}`}
+                                aria-hidden="true"
+                            />
+                        </label>
+                    </div>
                 </div>
-                <div className={s.menuItem} />
-                <div className={s.menuItem} />
-                <div className={s.menuItem}>
+                <div className={classNames(s.menuItem, s.categoryHeader)}>
                     <b>Config</b>
                 </div>
-                <div className={s.menuItem} />
                 <div className={s.menuItem}>
-                    <label>Base URL</label>
+                    <div className={s.header}>
+                        <label>Base URL</label>
+                    </div>
+                    <div className={s.input}>
+                        <input
+                            value={configForm.baseUrl}
+                            onChange={(e) => configForm.setBaseUrl(e.target.value)}
+                        />
+                    </div>
                 </div>
                 <div className={s.menuItem}>
-                    <input value={configForm.baseUrl} onChange={(e) => configForm.setBaseUrl(e.target.value)} />
+                    <div className={s.header}>
+                        <label>Username</label>
+                    </div>
+                    <div className={s.input}>
+                        <input
+                            value={configForm.username}
+                            onChange={(e) => configForm.setUsername(e.target.value)}
+                        />
+                    </div>
                 </div>
                 <div className={s.menuItem}>
-                    <label>Username</label>
+                    <div className={s.header}>
+                        <label>Password</label>
+                    </div>
+                    <div className={s.input}>
+                        <input
+                            value={configForm.password}
+                            onChange={(e) => configForm.setPassword(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <div className={s.menuItem}>
-                    <input value={configForm.username} onChange={(e) => configForm.setUsername(e.target.value)} />
-                </div>
-                <div className={s.menuItem}>
-                    <label>Password</label>
-                </div>
-                <div className={s.menuItem}>
-                    <input value={configForm.password} onChange={(e) => configForm.setPassword(e.target.value)} />
-                </div>
-                <div className={s.menuItem} />
-                <div className={s.menuItem}>
-                    <button onClick={configForm.applyConfig}>Apply config</button>
+                <div className={classNames(s.menuItem, s.submitButton)}>
                     <div className={s.version}>{version}</div>
+                    <button onClick={configForm.applyConfig}>Apply config</button>
                 </div>
             </div>
         </>
@@ -111,7 +161,9 @@ function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContex
                         key={index}
                         launchContext={l}
                         value={_.find(parameters.parameter, { name: l.name })}
-                        onChange={(parameter) => dispatch(setResource({ name: l.name!, parameter: parameter! }))}
+                        onChange={(parameter) =>
+                            dispatch(setResource({ name: l.name!, parameter: parameter! }))
+                        }
                     />
                 );
             })}
@@ -128,14 +180,16 @@ interface LaunchContextElementProps {
 function LaunchContextElement({ launchContext, value, onChange }: LaunchContextElementProps) {
     return (
         <>
-            <div className={s.menuItem}>
+            <div className={s.header}>
                 {launchContext.name}
                 <br />
                 <span>{launchContext.description}</span>
             </div>
-            <div className={s.menuItem}>
-                <LaunchContextElementWidget launchContext={launchContext} value={value} onChange={onChange} />
-            </div>
+            <LaunchContextElementWidget
+                launchContext={launchContext}
+                value={value}
+                onChange={onChange}
+            />
         </>
     );
 }
@@ -145,7 +199,9 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
         return (
             <input
                 value={(value as any)?.value?.string}
-                onChange={(e) => onChange({ value: { string: e.target.value }, name: launchContext.name! })}
+                onChange={(e) =>
+                    onChange({ value: { string: e.target.value }, name: launchContext.name! })
+                }
             />
         );
     }

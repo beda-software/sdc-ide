@@ -1,8 +1,8 @@
-@import "../../styles/colors.scss";
+@import '../../styles/colors.scss';
 
 .resourceSelect {
-    font-family: "Poppins", sans-serif;
-    height: 32px;
+    font-family: 'Poppins', sans-serif;
+    height: 38px;
     caret-color: $primary-color;
     color: $base-dark-color;
     font-size: 12px;
@@ -10,7 +10,23 @@
     padding: 6px 5px 6px;
     border: none;
     border-bottom: 2px solid $base-surface-color;
+    width: 100%;
     &:focus {
         border-bottom: 2px solid $primary-color;
+    }
+}
+
+.reactResourceSelect {
+    width: 100%;
+    max-width: 50%;
+    > div > div {
+        border-radius: 1px;
+        font-size: 12px;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: $primary-color;
+        }
     }
 }

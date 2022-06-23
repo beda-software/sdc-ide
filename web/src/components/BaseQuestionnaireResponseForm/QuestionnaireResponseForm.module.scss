@@ -1,0 +1,64 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+
+.groupWrapper {
+    background-color: #77ee77;
+}
+
+.groupLabel {
+    @include base-text-12-bold;
+}
+
+.questLabel {
+    @include base-text-12-bold;
+}
+
+.repeatsGroupItemsContainer {
+    margin-bottom: 10px;
+}
+
+.repeatsGroupItemTitle {
+    @include base-text-10-bold;
+    color: lighten($base-dark-color, 60%);
+}
+
+.repeatsGroupItemTitle {
+}
+
+.repeatsGroupItemHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.repeatsGroupRemoveItemButton {
+    text-align: right;
+}
+
+.repeatsGroupRemoveItemButtonTitle {
+    @include base-text-10-bold;
+    color: $danger-color;
+}
+
+.repeatsGroupRemoveItemButtonTitle:hover {
+    color: darken($danger-color, 20%);
+}
+
+.repeatsGroupItemBody {
+}
+
+.repeatsGroupAddItemButton {
+    margin-bottom: 20px;
+}
+
+.repeatsGroupAddItemButtonTitle {
+    @include base-text-10-bold;
+    color: $primary-color;
+}
+
+.repeatsGroupAddItemButtonTitle:hover {
+    color: darken($primary-color, 20%);
+}
+
+.questLabel {
+}

@@ -17,6 +17,7 @@ import {
     wrapAnswerValue,
     removeDisabledAnswers,
 } from './utils';
+import classNames from 'classnames';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
@@ -27,12 +28,14 @@ export function QuestionItems(props: QuestionItemsProps) {
         <>
             {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
                 return (
-                    <QuestionItem
-                        key={index}
-                        questionItem={item}
-                        context={context}
-                        parentPath={parentPath}
-                    />
+                    <div className={classNames('questionFormItem', item.linkId)}>
+                        <QuestionItem
+                            key={index}
+                            questionItem={item}
+                            context={context}
+                            parentPath={parentPath}
+                        />
+                    </div>
                 );
             })}
         </>
