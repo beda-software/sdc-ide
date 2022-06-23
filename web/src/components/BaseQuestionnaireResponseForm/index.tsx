@@ -59,7 +59,6 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                                 parentPath={[]}
                                 context={calcInitialContext(formData.context, values)}
                             />
-                            {!readOnly && <button type="submit">Submit</button>}
                         </>
                     </QuestionnaireResponseFormProvider>
                 </form>

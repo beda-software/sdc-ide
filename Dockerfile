@@ -1,4 +1,4 @@
-FROM node:12.16.1 as builder
+FROM node:16.15.1 as builder
 
 RUN mkdir -p /app/web
 RUN mkdir -p /app/mobile
