@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { Arrow } from '../Icon/Arrow';
 
 import s from './ExpandableRow.module.scss';
-import { Arrow } from 'src/components/Icon/Arrow';
 
 interface ExpandableRowProps {
     cssClass: string;

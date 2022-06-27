@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
+import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 import { Questionnaire, QuestionnaireResponse, Parameters } from 'shared/src/contrib/aidbox';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import _ from 'lodash';

@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import 'src/services/initialize.develop';
+import 'web/src/services/initialize.develop';
 
-import { App } from 'src/containers/App';
-import 'src/styles/index.scss';
+import 'web/src/styles/index.scss';
 
 import * as serviceWorker from './serviceWorker';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { getData } from 'src/services/localStorage';
+import { getData } from 'web/src/services/localStorage';
+import { App } from './containers/App';
 
 const { client, secret, baseUrl } = getData('connection');
 

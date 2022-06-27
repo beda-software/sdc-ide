@@ -2,12 +2,12 @@ import React from 'react';
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { InputField } from 'src/components/InputField';
-import { Button } from 'src/components/Button';
-import { ExpressionModalInfo } from 'src/containers/Main/types';
-import { useExpressionModal } from 'src/components/ModalExpression/hooks';
-import { CodeEditor } from 'src/components/CodeEditor';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
+import { InputField } from 'web/src/components/InputField';
+import { Button } from 'web/src/components/Button';
+import { ExpressionModalInfo } from 'web/src/containers/Main/types';
+import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
+import { CodeEditor } from 'web/src/components/CodeEditor';
+import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {
@@ -19,13 +19,20 @@ interface ModalExpressionProps {
 }
 
 export function ModalExpression(props: ModalExpressionProps) {
-    const { launchContext, questionnaireResponseRD, expressionModalInfo, closeExpressionModal, setExpression } = props;
-    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } = useExpressionModal(
-        expressionModalInfo,
+    const {
         launchContext,
         questionnaireResponseRD,
+        expressionModalInfo,
         closeExpressionModal,
-    );
+        setExpression,
+    } = props;
+    const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } =
+        useExpressionModal(
+            expressionModalInfo,
+            launchContext,
+            questionnaireResponseRD,
+            closeExpressionModal,
+        );
 
     return (
         <div className={s.wrapper}>
@@ -111,13 +118,20 @@ function InputData({
                     }}
                 />
             );
-        } else if (isSuccess(questionnaireResponseRD) && parameterName === 'QuestionnaireResponse'.slice(1)) {
+        } else if (
+            isSuccess(questionnaireResponseRD) &&
+            parameterName === 'QuestionnaireResponse'.slice(1)
+        ) {
             return <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />;
         } else {
             return (
                 <div>
                     {Object.keys(fullLaunchContext).map((key: string) => (
-                        <p className={s.parameterName} key={key} onClick={() => setExpression('%' + key)}>
+                        <p
+                            className={s.parameterName}
+                            key={key}
+                            onClick={() => setExpression('%' + key)}
+                        >
                             %{key}
                         </p>
                     ))}

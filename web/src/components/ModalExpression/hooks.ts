@@ -4,8 +4,8 @@ import yaml from 'js-yaml';
 import YAML, { visitor } from 'yaml';
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { AidboxResource, Parameters, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-import { ExpressionModalInfo, ExpressionResultOutput } from 'src/containers/Main/types';
-import { extractParameterName } from 'src/components/ModalExpression/utils';
+import { ExpressionModalInfo, ExpressionResultOutput } from 'web/src/containers/Main/types';
+import { extractParameterName } from 'web/src/components/ModalExpression/utils';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { service } from 'aidbox-react/lib/services/service';
 
@@ -15,7 +15,8 @@ export function useExpressionModal(
     questionnaireResponseRD: RemoteData<AidboxResource>,
     closeExpressionModal: () => void,
 ) {
-    const [expressionResultOutput, setExpressionResultOutput] = useState<ExpressionResultOutput | null>(null);
+    const [expressionResultOutput, setExpressionResultOutput] =
+        useState<ExpressionResultOutput | null>(null);
     const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
 
     const [fullLaunchContextRD] = useService(async () => {
@@ -42,7 +43,13 @@ export function useExpressionModal(
             return fullLaunchContext[parameterName];
         }
         return launchContext.parameter?.map((item) => item.name);
-    }, [expressionModalInfo.type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
+    }, [
+        expressionModalInfo.type,
+        launchContext.parameter,
+        fullLaunchContext,
+        parameterName,
+        questionnaireResponseRD,
+    ]);
 
     const saveExpression = () => {
         const doc = expressionModalInfo.doc;
@@ -67,8 +74,15 @@ export function useExpressionModal(
 
     useEffect(() => {
         try {
-            const evaluate = fhirpath.evaluate(setContextData(), expressionModalInfo.expression, fullLaunchContext);
-            setExpressionResultOutput({ type: 'success', result: yaml.dump(JSON.parse(JSON.stringify(evaluate))) });
+            const evaluate = fhirpath.evaluate(
+                setContextData(),
+                expressionModalInfo.expression,
+                fullLaunchContext,
+            );
+            setExpressionResultOutput({
+                type: 'success',
+                result: yaml.dump(JSON.parse(JSON.stringify(evaluate))),
+            });
         } catch (e) {
             setExpressionResultOutput({ type: 'error', result: String(e) });
         }

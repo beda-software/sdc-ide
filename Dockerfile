@@ -1,4 +1,4 @@
-FROM node:16.15.1 as builder
+FROM node:14.19.3 as builder
 
 RUN mkdir -p /app/web
 RUN mkdir -p /app/mobile
@@ -16,7 +16,7 @@ ADD tsconfig.base.json tsconfig.base.json
 
 ADD shared /app/shared
 
-RUN yarn --network-concurrency=1
+RUN yarn
 RUN yarn global add serve
 
 ADD . /app

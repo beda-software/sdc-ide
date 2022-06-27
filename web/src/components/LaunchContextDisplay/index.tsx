@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
+import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { Parameters } from 'shared/src/contrib/aidbox';
 import { success } from 'aidbox-react/lib/libs/remoteData';
 
@@ -24,7 +24,11 @@ export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) 
     return (
         <>
             {params.length > 0 && (
-                <Tab params={params} activeTabName={activeTabName} setActiveTabName={setActiveTabName} />
+                <Tab
+                    params={params}
+                    activeTabName={activeTabName}
+                    setActiveTabName={setActiveTabName}
+                />
             )}
             <ResourceCodeDisplay resourceResponse={success(active!)} />
         </>

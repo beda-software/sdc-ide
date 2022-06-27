@@ -1,5 +1,5 @@
 import { OperationOutcome, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
-import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
@@ -151,8 +151,7 @@ const mappingDemo1 = {
         entry: [
             {
                 request: {
-                    url:
-                        '$ "/Patient/" + fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'patientId\').answer.children().string").0',
+                    url: '$ "/Patient/" + fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'patientId\').answer.children().string").0',
                     method: 'PATCH',
                 },
                 resource: {
@@ -162,14 +161,12 @@ const mappingDemo1 = {
                                 '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'first-name\').answer.value.string").0',
                                 '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'middle-name\').answer.value.string").0',
                             ],
-                            family:
-                                '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'last-name\').answer.value.string").0',
+                            family: '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'last-name\').answer.value.string").0',
                         },
                     ],
                     birthDate:
                         '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'date-of-birth\').answer.value.date").0',
-                    gender:
-                        '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'gender\').answer.value.string").0',
+                    gender: '$ fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'gender\').answer.value.string").0',
                     resourceType: 'Patient',
                 },
             },
@@ -186,8 +183,7 @@ const mappingDemo1New = {
         entry: [
             {
                 request: {
-                    url:
-                        '$ "/Patient/" + fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'patientId\').answer.children().string").0',
+                    url: '$ "/Patient/" + fhirpath("QuestionnaireResponse.repeat(item).where(linkId=\'patientId\').answer.children().string").0',
                     method: 'PATCH',
                 },
                 resource: {
@@ -216,7 +212,11 @@ const batchRequestDemo1 = {
     resourceType: 'Bundle',
 };
 
-const idExtractionIssue = { expression: ['Questionnaire.mapping.2'], code: 'invalid', severity: 'fatal' };
+const idExtractionIssue = {
+    expression: ['Questionnaire.mapping.2'],
+    code: 'invalid',
+    severity: 'fatal',
+};
 const idExtractionResource: Questionnaire = {
     mapping: [
         { id: 'demo-1', resourceType: 'Mapping' },

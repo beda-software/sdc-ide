@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorButton } from 'src/components/ErrorButton';
+import { ErrorButton } from 'web/src/components/ErrorButton';
 import { Title, TitleWithErrorManager } from 'src/containers/Main/types';
 
 interface Props {

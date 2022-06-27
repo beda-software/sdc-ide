@@ -7,12 +7,12 @@ import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import { service } from 'aidbox-react/lib/services/service';
 
-import { idExtraction, showToast, useMain } from 'src/containers/Main/hooks';
+import { idExtraction, showToast, useMain } from 'web/src/containers/Main/hooks';
 
-import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
+import { EXPECTED_RESOURCES } from 'web/src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { setData } from 'src/services/localStorage';
+import { setData } from 'web/src/services/localStorage';
 
 const questionnaireIdInitial = 'demo-1';
 

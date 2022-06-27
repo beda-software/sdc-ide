@@ -13,13 +13,13 @@ import {
     mapResponseToForm,
 } from 'shared/src/utils/qrf/questionnaire';
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-import { Button } from 'src/components/Button';
-import { InputField } from 'src/components/InputField';
-import { DateTimePickerField } from 'src/components/DateTimePickerField';
+import { Button } from 'web/src/components/Button';
+import { InputField } from 'web/src/components/InputField';
+import { DateTimePickerField } from 'web/src/components/DateTimePickerField';
 import { FormApi, Unsubscribe } from 'final-form';
-import { ChoiceField } from 'src/components/ChoiceField';
-import { BooleanField } from 'src/components/BooleanField';
-import { TerminologyField } from 'src/components/TerminologyField';
+import { ChoiceField } from 'web/src/components/ChoiceField';
+import { BooleanField } from 'web/src/components/BooleanField';
+import { TerminologyField } from 'web/src/components/TerminologyField';
 
 import s from './QuestionnaireResponseForm.module.scss';
 

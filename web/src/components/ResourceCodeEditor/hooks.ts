@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import YAML, { visitor, visitorFn } from 'yaml';
 import { Pair } from 'yaml/types';
-import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'src/containers/Main/types';
-import { hasOwnProperty } from 'src/utils/common';
+import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'web/src/containers/Main/types';
+import { hasOwnProperty } from 'web/src/utils/common';
 
 interface QuestionnaireVisitor {
     Pair?: visitorFn<Pair>;
@@ -12,7 +12,9 @@ interface QuestionnaireVisitor {
 type Path = readonly any[];
 
 export function useExpressionModal() {
-    const [expressionModalInfo, setExpressionModalInfo] = useState<ExpressionModalInfo | null>(null);
+    const [expressionModalInfo, setExpressionModalInfo] = useState<ExpressionModalInfo | null>(
+        null,
+    );
 
     const openExpressionModal = (contextMenuInfo: ContextMenuInfo) => {
         let modalType: ModalType | undefined;
@@ -34,7 +36,10 @@ export function useExpressionModal() {
                         choosenExpression = pair.value.value;
                         return YAML.visit.BREAK;
                     }
-                    if (pair.key.value === 'localRef' && path[length - 3].key.value === 'sourceQueries') {
+                    if (
+                        pair.key.value === 'localRef' &&
+                        path[length - 3].key.value === 'sourceQueries'
+                    ) {
                         modalType = 'SourceQueries';
                         choosenExpression = pair.value.value.split('#')[1];
                         return YAML.visit.BREAK;

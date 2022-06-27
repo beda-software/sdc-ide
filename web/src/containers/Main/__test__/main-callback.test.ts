@@ -3,7 +3,7 @@ import { ensure } from 'aidbox-react/lib/utils/tests';
 
 import { service } from 'aidbox-react/lib/services/service';
 
-import { useMain } from 'src/containers/Main/hooks';
+import { useMain } from 'web/src/containers/Main/hooks';
 
 import { Mapping, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
@@ -17,7 +17,7 @@ import questionnaireResponseNew from './resources/QuestionnaireResponse/demo-1-n
 import questionnaireDemo1 from './resources/Questionnaire/demo-1.json';
 import mappingDemo1 from './resources/Mapping/demo-1.json';
 import patientDemo1 from './resources/Patient/demo-1.json';
-import { setData } from 'src/services/localStorage';
+import { setData } from 'web/src/services/localStorage';
 import { EXPECTED_RESOURCES } from './resources';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
@@ -109,7 +109,10 @@ test('saveNewMapping', async () => {
     const { result } = renderHook(() => useMain('test-1'));
 
     expect(
-        result.current.saveNewMapping(EXPECTED_RESOURCES.mappingIdListEmpty, EXPECTED_RESOURCES.mappingInfoList),
+        result.current.saveNewMapping(
+            EXPECTED_RESOURCES.mappingIdListEmpty,
+            EXPECTED_RESOURCES.mappingInfoList,
+        ),
     ).toBeUndefined();
 
     const responseBefore = await getFHIRResource<Mapping>({
@@ -123,7 +126,10 @@ test('saveNewMapping', async () => {
     }
 
     await act(async () => {
-        result.current.saveNewMapping(EXPECTED_RESOURCES.mappingIdList, EXPECTED_RESOURCES.mappingInfoList);
+        result.current.saveNewMapping(
+            EXPECTED_RESOURCES.mappingIdList,
+            EXPECTED_RESOURCES.mappingInfoList,
+        );
     });
 
     const responseAfter = await getFHIRResource<Mapping>({

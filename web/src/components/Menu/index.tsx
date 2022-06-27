@@ -1,11 +1,11 @@
 import React, { Dispatch, useState } from 'react';
 import _ from 'lodash';
 
-import { RemoteResourceSelect } from 'src/components/ResourceSelect';
-import { useMenu } from 'src/components/Menu/hooks';
+import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
+import { useMenu } from 'web/src/components/Menu/hooks';
 
 import s from './Menu.module.scss';
-import { Arrow } from 'src/components/Icon/Arrow';
+
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import {
     Questionnaire,
@@ -14,10 +14,11 @@ import {
     ParametersParameter,
 } from 'shared/src/contrib/aidbox';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { Action, setResource } from 'src/containers/Main/hooks/launchContextHook';
-import { version } from 'src/version';
+import { Action, setResource } from 'web/src/containers/Main/hooks/launchContextHook';
+import { version } from 'web/src/version';
 import classNames from 'classnames';
 import Select from 'react-select';
+import { Arrow } from '../Icon/Arrow';
 
 interface MenuProps {
     launchContext: Parameters;

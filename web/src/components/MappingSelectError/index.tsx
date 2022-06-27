@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorButton } from 'src/components/ErrorButton';
+import { ErrorButton } from 'web/src/components/ErrorButton';
 import { MappingErrorManager } from 'src/containers/Main/types';
 
 interface Props {
@@ -12,7 +12,10 @@ export function MappingSelectError({ mappingErrorManager, id }: Props) {
         return (
             <>
                 {id}
-                <ErrorButton count={mappingErrorManager.errorCount} showError={mappingErrorManager.showError} />
+                <ErrorButton
+                    count={mappingErrorManager.errorCount}
+                    showError={mappingErrorManager.showError}
+                />
             </>
         );
     } else return <>{id}</>;

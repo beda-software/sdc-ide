@@ -1,4 +1,4 @@
-FROM amd64/node:16.15.1
+FROM node:14.19.3
 
 RUN yarn global add serve
 RUN mkdir /app

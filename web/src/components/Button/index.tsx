@@ -4,7 +4,10 @@ import classNames from 'classnames';
 import './styles.scss';
 
 interface ButtonProps
-    extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+    extends React.DetailedHTMLProps<
+        React.ButtonHTMLAttributes<HTMLButtonElement>,
+        HTMLButtonElement
+    > {
     variant?: 'primary' | 'secondary';
 }
 

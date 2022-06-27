@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
+import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { AidboxResource } from 'shared/src/contrib/aidbox';
-import { CodeEditor } from 'src/components/CodeEditor';
+import { CodeEditor } from 'web/src/components/CodeEditor';
 
 interface ResourceDisplayBoxProps {
     resourceResponse: RemoteData<AidboxResource>;

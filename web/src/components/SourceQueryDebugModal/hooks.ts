@@ -3,7 +3,7 @@ import { Bundle, Parameters, Resource } from 'shared/src/contrib/aidbox/index';
 import { useService } from 'aidbox-react/lib/hooks/service';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 import { failure, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { showToast, updateQuestionnaire } from 'src/containers/Main/hooks';
+import { showToast, updateQuestionnaire } from 'web/src/containers/Main/hooks';
 import _ from 'lodash';
 
 export interface Props {
@@ -21,7 +21,9 @@ export function useSourceQueryDebugModal(props: Props) {
         async (resource) => {
             const newResource = { ...resource };
             if (newResource && newResource.contained && rawSourceQuery) {
-                const indexOfContainedId = newResource.contained.findIndex((res: Resource) => res.id === sourceQueryId);
+                const indexOfContainedId = newResource.contained.findIndex(
+                    (res: Resource) => res.id === sourceQueryId,
+                );
                 newResource.contained[indexOfContainedId] = rawSourceQuery;
                 const response = await updateQuestionnaire(newResource, fhirMode);
                 if (isSuccess(response)) {
@@ -42,7 +44,10 @@ export function useSourceQueryDebugModal(props: Props) {
             url: 'Questionnaire/$context',
             data: launchContext,
         });
-        isSuccess(response) && setRawSourceQuery(_.find(response.data.Questionnaire?.contained, { id: sourceQueryId }));
+        isSuccess(response) &&
+            setRawSourceQuery(
+                _.find(response.data.Questionnaire?.contained, { id: sourceQueryId }),
+            );
         return response;
     }, [launchContext, sourceQueryId]);
 

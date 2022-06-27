@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from 'src/components/Button';
-import { InputField } from 'src/components/InputField';
-import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+import { Button } from 'web/src/components/Button';
+import { InputField } from 'web/src/components/InputField';
+import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 
 import s from './ModalCreateMapper.module.scss';
 
@@ -11,7 +11,11 @@ interface ModalCreateMapperProps {
     mapperInfoList: MapperInfo[];
 }
 
-export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }: ModalCreateMapperProps) {
+export function ModalCreateMapper({
+    saveNewMapping,
+    closeModal,
+    mapperInfoList,
+}: ModalCreateMapperProps) {
     const [mapperIdList, setMapperIdList] = useState<string[]>([]);
     const [isRenamedMappingId, setIsRenamedMappingId] = useState(false);
 

@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { commands, Editor } from 'codemirror';
-import { ContextMenu, ContextMenuInfo, ReloadType, ValueObject } from 'src/containers/Main/types';
-import { hasOwnProperty } from 'src/utils/common';
+import {
+    ContextMenu,
+    ContextMenuInfo,
+    ReloadType,
+    ValueObject,
+} from 'web/src/containers/Main/types';
+import { hasOwnProperty } from 'web/src/utils/common';
 
 interface Props {
     valueObject: ValueObject;
@@ -29,7 +34,9 @@ export function useContextMenu({ valueObject, openExpressionModal, reload }: Pro
         : undefined;
 
     const reloadOption =
-        reload && isMappingOrQuestionnaire() ? () => reload(isMappingOrQuestionnaire() as ReloadType) : undefined;
+        reload && isMappingOrQuestionnaire()
+            ? () => reload(isMappingOrQuestionnaire() as ReloadType)
+            : undefined;
 
     const undo = () => {
         contextMenuInfo?.editor.undo();
@@ -86,7 +93,8 @@ export function useContextMenu({ valueObject, openExpressionModal, reload }: Pro
         });
     };
 
-    const close = () => setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
+    const close = () =>
+        setContextMenuInfo(contextMenuInfo && { ...contextMenuInfo, showContextMenu: false });
 
     const copySelectedText = () => {
         const selectedText = contextMenuInfo?.editor.getSelection();

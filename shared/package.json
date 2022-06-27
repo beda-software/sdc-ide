@@ -14,7 +14,13 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
-        "moment": "^2.29.1"
+        "ajv": "^6.12.6",
+        "ajv-errors": "^1.0.1",
+        "ajv-keywords": "^3.5.2",
+        "aidbox-react": "^1.4.0",
+        "js-base64": "^3.6.0",
+        "moment": "^2.29.1",
+        "react-native-device-info": "^8.4.5"
     },
     "devDependencies": {
         "@babel/core": "^7.16.0",
@@ -22,8 +28,8 @@
         "@babel/preset-typescript": "^7.16.0",
         "@types/jest": "^26.0.24",
         "babel-jest": "^26.6.3",
-        "jest": "^26.6.3",
-        "ts-jest": "^26.5.6",
+        "jest": "^28.1.1",
+        "ts-jest": "^28.0.5",
         "typescript": "^4.1.2"
     }
 }

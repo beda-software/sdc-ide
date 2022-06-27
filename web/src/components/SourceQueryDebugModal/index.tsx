@@ -2,9 +2,9 @@ import React from 'react';
 
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
 
-import { CodeEditor } from 'src/components/CodeEditor';
-import { Button } from 'src/components/Button';
-import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
+import { CodeEditor } from 'web/src/components/CodeEditor';
+import { Button } from 'web/src/components/Button';
+import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
 
 import s from './SourceQueryDebugModal.module.scss';
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
@@ -19,12 +19,13 @@ interface Props {
 
 export function SourceQueryDebugModal(props: Props) {
     const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
-    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } = useSourceQueryDebugModal({
-        launchContext,
-        sourceQueryId,
-        closeExpressionModal,
-        fhirMode,
-    });
+    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } =
+        useSourceQueryDebugModal({
+            launchContext,
+            sourceQueryId,
+            closeExpressionModal,
+            fhirMode,
+        });
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
@@ -45,7 +46,11 @@ export function SourceQueryDebugModal(props: Props) {
                     <div className={s.inputData}>
                         <h2>Raw</h2>
                         {rawSourceQuery && (
-                            <CodeEditor key={sourceQueryId} valueObject={rawSourceQuery} onChange={onChange} />
+                            <CodeEditor
+                                key={sourceQueryId}
+                                valueObject={rawSourceQuery}
+                                onChange={onChange}
+                            />
                         )}
                         <div className={s.separator} />
                         <h2>Prepared</h2>

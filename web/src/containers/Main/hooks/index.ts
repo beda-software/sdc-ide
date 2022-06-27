@@ -1,5 +1,31 @@
+/* eslint-disable no-restricted-imports */
+import _ from 'lodash';
+import React, { useCallback, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
+import {
+    addMappingErrorAction,
+    addQuestionnaireErrorAction,
+    ErrorDebugState,
+    resetMappingErrorAction,
+    resetQuestionnaireErrorAction,
+    useErrorDebug,
+} from 'web/src/containers/Main/hooks/errorDebugHook';
+import { getData, setData } from 'web/src/services/localStorage';
+
 import { useService } from 'aidbox-react/lib/hooks/service';
+import {
+    isSuccess,
+    notAsked,
+    RemoteData,
+    loading,
+    success,
+    isFailure,
+} from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource, saveFHIRResource } from 'aidbox-react/lib/services/fhir';
+import { service, sequenceMap } from 'aidbox-react/lib/services/service';
+import { formatError } from 'aidbox-react/lib/utils/error';
+
 import {
     Bundle,
     Mapping,
@@ -9,35 +35,28 @@ import {
     QuestionnaireResponse,
     Reference,
 } from 'shared/src/contrib/aidbox';
-import { service, sequenceMap } from 'aidbox-react/lib/services/service';
-import { isSuccess, notAsked, RemoteData, loading, success, isFailure } from 'aidbox-react/lib/libs/remoteData';
-import { formatError } from 'aidbox-react/lib/utils/error';
-import React, { useCallback, useEffect, useState } from 'react';
-import _ from 'lodash';
-import { init, useLaunchContext } from './launchContextHook';
-import {
-    addMappingErrorAction,
-    addQuestionnaireErrorAction,
-    ErrorDebugState,
-    resetMappingErrorAction,
-    resetQuestionnaireErrorAction,
-    useErrorDebug,
-} from 'src/containers/Main/hooks/errorDebugHook';
-import { getData, setData } from 'src/services/localStorage';
-import { toast } from 'react-toastify';
-import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+
 import { ReloadType, Title } from 'src/containers/Main/types';
+
+import { init, useLaunchContext } from './launchContextHook';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
-export const idExtraction = (issue: OperationOutcomeIssue, resource: Questionnaire, error: OperationOutcome) => {
+export const idExtraction = (
+    issue: OperationOutcomeIssue,
+    resource: Questionnaire,
+    error: OperationOutcome,
+) => {
     if (
         issue.expression?.[0].slice(0, 21) === 'Questionnaire.mapping' &&
         issue.code === 'invalid' &&
         error.resourceType === 'OperationOutcome'
     ) {
         const index = +issue.expression[0].slice(22);
-        if (resource.mapping?.[index] === undefined || resource.mapping?.[index]?.resourceType !== 'Mapping') {
+        if (
+            resource.mapping?.[index] === undefined ||
+            resource.mapping?.[index]?.resourceType !== 'Mapping'
+        ) {
             return;
         }
         return resource.mapping?.[index].id;
@@ -61,9 +80,9 @@ export const showToast = (type: 'success' | 'error', error?: OperationOutcome, i
             formatError(error, {
                 mapping: { conflict: 'Please reload page' },
                 format: (errorCode, errorDescription) =>
-                    `An error occurred: ${error?.issue[index as number]?.diagnostics || errorDescription} ${
-                        error?.issue[index as number]?.expression?.[0] || ''
-                    } (${errorCode}).`,
+                    `An error occurred: ${
+                        error?.issue[index as number]?.diagnostics || errorDescription
+                    } ${error?.issue[index as number]?.expression?.[0] || ''} (${errorCode}).`,
             }),
         );
     }
@@ -126,7 +145,10 @@ export function useMain(questionnaireId: string) {
             errorDispatch(resetMappingErrorAction());
             setMappingList(sortedMappings);
             const firstMapping = sortedMappings.length ? sortedMappings[0] : undefined;
-            if (prevActiveMappingId && !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))) {
+            if (
+                prevActiveMappingId &&
+                !_.isEmpty(_.filter(sortedMappings, { id: prevActiveMappingId }))
+            ) {
                 setActiveMappingId(prevActiveMappingId);
             } else {
                 setData('prevActiveMappingId', null);
@@ -189,7 +211,8 @@ export function useMain(questionnaireId: string) {
 
     const saveQuestionnaireFHIR = useCallback(
         async (resource: Questionnaire) => {
-            const addError = (error: OperationOutcome) => errorDispatch(addQuestionnaireErrorAction(error));
+            const addError = (error: OperationOutcome) =>
+                errorDispatch(addQuestionnaireErrorAction(error));
             errorDispatch(resetQuestionnaireErrorAction());
             const response = await updateQuestionnaire(resource, fhirMode);
             if (isSuccess(response)) {
@@ -199,7 +222,11 @@ export function useMain(questionnaireId: string) {
             if (response.error.issue?.length > 0) {
                 const mappingInfoList: MapperInfo[] = [];
                 response.error.issue.map((issue, index) => {
-                    const mappingId: string | null | undefined = idExtraction(issue, resource, response.error);
+                    const mappingId: string | null | undefined = idExtraction(
+                        issue,
+                        resource,
+                        response.error,
+                    );
                     const indexOfMapper = Number(issue.expression?.[0].slice(22));
                     if (!mappingId) {
                         addError(response.error);
@@ -222,7 +249,8 @@ export function useMain(questionnaireId: string) {
     );
 
     // QuestionnaireResponse
-    const [questionnaireResponseRD, setQuestionnaireResponseRD] = useState<RemoteData<QuestionnaireResponse>>(loading);
+    const [questionnaireResponseRD, setQuestionnaireResponseRD] =
+        useState<RemoteData<QuestionnaireResponse>>(loading);
 
     const loadQuestionnaireResponse = useCallback(async () => {
         setQuestionnaireResponseRD(notAsked);
@@ -375,7 +403,11 @@ export function useMain(questionnaireId: string) {
             if (title === 'Questionnaire FHIR Resource' && errorState?.showQuestionnaireErrors) {
                 return errorState.questionnaireErrors.length;
             }
-            if (title === 'Patient JUTE Mapping' && errorState?.showMappingErrors && mappingList?.length === 1) {
+            if (
+                title === 'Patient JUTE Mapping' &&
+                errorState?.showMappingErrors &&
+                mappingList?.length === 1
+            ) {
                 return errorState.mappingErrors.length;
             }
         },
@@ -385,7 +417,9 @@ export function useMain(questionnaireId: string) {
         errorCount: errorState.mappingErrors.length,
         showError: () => showError(errorState, 'Patient JUTE Mapping'),
         isError: (id?: string) => {
-            return errorState?.showMappingErrors && id === activeMappingId && mappingList.length > 1;
+            return (
+                errorState?.showMappingErrors && id === activeMappingId && mappingList.length > 1
+            );
         },
         selectMapping: (id?: string) => {
             if (id !== activeMappingId) {

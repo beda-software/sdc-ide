@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { useOutsideClick } from 'src/components/ContextMenuModal/hooks';
-import { ContextMenu, ContextMenuPosition } from 'src/containers/Main/types';
+import { useOutsideClick } from 'web/src/components/ContextMenuModal/hooks';
+import { ContextMenu, ContextMenuPosition } from 'web/src/containers/Main/types';
 
 import s from './ContextMenuModal.module.scss';
 
@@ -23,12 +23,22 @@ export function ContextMenuModal({ contextMenuPosition, contextMenu }: ContextMe
     }
 
     return (
-        <div style={{ top: position.top, left: position.left }} className={s.wrapper} ref={wrapperRef}>
+        <div
+            style={{ top: position.top, left: position.left }}
+            className={s.wrapper}
+            ref={wrapperRef}
+        >
             <>
-                <div className={contextMenu.debugger ? s.button : s.buttonDisable} onClick={contextMenu.debugger}>
+                <div
+                    className={contextMenu.debugger ? s.button : s.buttonDisable}
+                    onClick={contextMenu.debugger}
+                >
                     - Debugger
                 </div>
-                <div className={contextMenu.reload ? s.button : s.buttonDisable} onClick={contextMenu.reload}>
+                <div
+                    className={contextMenu.reload ? s.button : s.buttonDisable}
+                    onClick={contextMenu.reload}
+                >
                     - Reload
                 </div>
                 <div className={s.separater}>-------------</div>

@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import _ from 'lodash';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
-import { CodeEditor } from 'src/components/CodeEditor';
+import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
+import { CodeEditor } from 'web/src/components/CodeEditor';
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { ModalExpression } from 'src/components/ModalExpression';
-import { useExpressionModal } from 'src/components/ResourceCodeEditor/hooks';
-import { SourceQueryDebugModal } from 'src/components/SourceQueryDebugModal';
-import { ReloadType } from 'src/containers/Main/types';
+import { ModalExpression } from 'web/src/components/ModalExpression';
+import { useExpressionModal } from 'web/src/components/ResourceCodeEditor/hooks';
+import { SourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal';
+import { ReloadType } from 'web/src/containers/Main/types';
 
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;
@@ -28,7 +28,8 @@ export function ResourceCodeEditor<R extends AidboxResource>({
 }: ResourceCodeEditorProps<R>) {
     const onChange = useCallback(_.debounce(onSave, 1000), [onSave]);
 
-    const { expressionModalInfo, closeExpressionModal, setExpression, openExpressionModal } = useExpressionModal();
+    const { expressionModalInfo, closeExpressionModal, setExpression, openExpressionModal } =
+        useExpressionModal();
 
     return (
         <>

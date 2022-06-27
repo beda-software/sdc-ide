@@ -5,9 +5,9 @@ import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { saveFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
-import { setData } from 'src/services/localStorage';
-import { useSourceQueryDebugModal } from 'src/components/SourceQueryDebugModal/hooks';
-import { updateQuestionnaire } from 'src/containers/Main/hooks';
+import { setData } from 'web/src/services/localStorage';
+import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
+import { updateQuestionnaire } from 'web/src/containers/Main/hooks';
 import {
     nutritionorderData,
     patientData,
