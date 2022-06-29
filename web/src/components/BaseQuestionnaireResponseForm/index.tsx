@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import React from 'react';
+import { useRef } from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
+
 import {
     calcInitialContext,
     FormItems,
@@ -22,7 +23,7 @@ interface Props {
 type FormValues = FormItems;
 
 export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, onChange }: Props) {
-    const previousValues = React.useRef<FormValues | null>(null);
+    const previousValues = useRef<FormValues | null>(null);
 
     const onFormChange = (values: FormValues) => {
         if (_.isEqual(values, previousValues.current)) {

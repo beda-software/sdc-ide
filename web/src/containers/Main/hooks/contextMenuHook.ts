@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { commands, Editor } from 'codemirror';
+import { useState } from 'react';
 import {
     ContextMenu,
     ContextMenuInfo,

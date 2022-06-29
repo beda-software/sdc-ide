@@ -1,5 +1,5 @@
-import { Questionnaire, QuestionnaireResponse } from '../../../contrib/aidbox';
 import { mapFormToResponse, mapResponseToForm } from '../';
+import { Questionnaire, QuestionnaireResponse } from '../../../contrib/aidbox';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {
@@ -161,7 +161,9 @@ test('Transform with initial values', () => {
         item: [
             {
                 linkId: 'root-group',
-                item: [{ linkId: 'answer-with-initial', answer: [{ value: { string: 'initial' } }] }],
+                item: [
+                    { linkId: 'answer-with-initial', answer: [{ value: { string: 'initial' } }] },
+                ],
             },
         ],
     };

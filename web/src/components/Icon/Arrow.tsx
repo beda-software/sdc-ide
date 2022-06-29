@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type ArrowDirections = 'up' | 'down';
 
 interface ArrowProps {

@@ -1,10 +1,11 @@
-import { OperationOutcome, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
     questionnaireFHIR,
-} from 'src/containers/Main/__test__/resources/questionnaireFHIRExpected';
+} from 'web/src/containers/Main/__test__/resources/questionnaireFHIRExpected';
+
+import { OperationOutcome, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
 const patient: Patient = {
     name: [

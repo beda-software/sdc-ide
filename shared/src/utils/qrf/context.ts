@@ -1,5 +1,5 @@
-import * as React from 'react';
+import { createContext } from 'react';
 
 import { QRFContextData } from './types';
 
-export const QRFContext = React.createContext<QRFContextData>({} as any);
+export const QRFContext = createContext<QRFContextData>({} as any);

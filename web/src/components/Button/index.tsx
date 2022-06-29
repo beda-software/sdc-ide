@@ -1,20 +1,17 @@
-import React from 'react';
 import classNames from 'classnames';
+import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from 'react';
 
 import './styles.scss';
 
 interface ButtonProps
-    extends React.DetailedHTMLProps<
-        React.ButtonHTMLAttributes<HTMLButtonElement>,
-        HTMLButtonElement
-    > {
+    extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
     variant?: 'primary' | 'secondary';
 }
 
 export function Button(props: ButtonProps) {
     const { variant = 'primary', className, onClick, disabled: originalDisabled, ...other } = props;
 
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const disabled = originalDisabled || isLoading;
 

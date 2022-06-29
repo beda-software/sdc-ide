@@ -7,7 +7,7 @@
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "jsx": "react",
+        "jsx": "react-jsx",
         "target": "ES5",
         "module": "commonjs",
 	    "lib": ["DOM", "ES5", "DOM.Iterable"],

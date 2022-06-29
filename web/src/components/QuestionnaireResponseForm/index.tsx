@@ -1,8 +1,14 @@
-import _ from 'lodash';
-import * as React from 'react';
-import { Field, Form as FinalForm, FormRenderProps } from 'react-final-form';
+import { FormApi, Unsubscribe } from 'final-form';
 import arrayMutators from 'final-form-arrays';
-
+import _ from 'lodash';
+import { Component, ReactNode } from 'react';
+import { Field, Form as FinalForm, FormRenderProps } from 'react-final-form';
+import { BooleanField } from 'web/src/components/BooleanField';
+import { Button } from 'web/src/components/Button';
+import { ChoiceField } from 'web/src/components/ChoiceField';
+import { DateTimePickerField } from 'web/src/components/DateTimePickerField';
+import { InputField } from 'web/src/components/InputField';
+import { TerminologyField } from 'web/src/components/TerminologyField';
 import {
     FormAnswerItems,
     FormItems,
@@ -11,15 +17,9 @@ import {
     isValueEqual,
     mapFormToResponse,
     mapResponseToForm,
-} from 'shared/src/utils/qrf/questionnaire';
+} from 'web/src/utils/questionnaire';
+
 import { Questionnaire, QuestionnaireItem, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
-import { Button } from 'web/src/components/Button';
-import { InputField } from 'web/src/components/InputField';
-import { DateTimePickerField } from 'web/src/components/DateTimePickerField';
-import { FormApi, Unsubscribe } from 'final-form';
-import { ChoiceField } from 'web/src/components/ChoiceField';
-import { BooleanField } from 'web/src/components/BooleanField';
-import { TerminologyField } from 'web/src/components/TerminologyField';
 
 import s from './QuestionnaireResponseForm.module.scss';
 
@@ -33,7 +33,7 @@ interface Props {
             questionItem: QuestionnaireItem,
             fieldPath: string[],
             formParams: FormRenderProps,
-        ) => React.ReactNode;
+        ) => ReactNode;
     };
     readOnly?: boolean;
 }
@@ -44,7 +44,7 @@ interface State {
 
 type FormValues = FormItems;
 
-export class QuestionnaireResponseForm extends React.Component<Props, State> {
+export class QuestionnaireResponseForm extends Component<Props, State> {
     public state = { activeTab: 0 };
 
     public onSave = async (values: FormValues) => {
@@ -76,7 +76,7 @@ export class QuestionnaireResponseForm extends React.Component<Props, State> {
             parentPath: string[],
             formParams: FormRenderProps,
             index: number,
-        ) => React.ReactNode,
+        ) => ReactNode,
         questionItem: QuestionnaireItem,
         parentPath: string[],
         formParams: FormRenderProps,

@@ -1,6 +1,8 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+// eslint-disable-next-line import/order
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
 
+// eslint-disable-next-line import/order
 import { ContextMenuInfo, ReloadType, ValueObject } from 'web/src/containers/Main/types';
 
 // import 'codemirror/lib/codemirror.css';

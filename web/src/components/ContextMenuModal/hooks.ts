@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ContextMenu } from 'src/containers/Main/types';
+import { ContextMenu } from 'web/src/containers/Main/types';
 
 export function useOutsideClick(ref: any, contextMenu: ContextMenu) {
     // TODO ref and event types

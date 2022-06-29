@@ -1,7 +1,7 @@
+import classNames from 'classnames';
 import fhirpath from 'fhirpath';
 import isEqual from 'lodash/isEqual';
-import { useContext, useMemo } from 'react';
-import * as React from 'react';
+import { ReactChild, useEffect, useContext, useMemo } from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { usePreviousValue } from 'shared/src/hooks/previous-value';
@@ -17,7 +17,6 @@ import {
     wrapAnswerValue,
     removeDisabledAnswers,
 } from './utils';
-import classNames from 'classnames';
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
@@ -70,7 +69,7 @@ export function QuestionItem(props: QuestionItemProps) {
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
     const prevAnswers = usePreviousValue(getByPath(formValues, fieldPath));
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
             // TODO:
             if (calculatedExpression.language === 'text/fhirpath') {
@@ -187,7 +186,7 @@ Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
 export function QuestionnaireResponseFormProvider({
     children,
     ...props
-}: QRFContextData & { children: React.ReactChild }) {
+}: QRFContextData & { children: ReactChild }) {
     return <QRFContext.Provider value={props}>{children}</QRFContext.Provider>;
 }
 

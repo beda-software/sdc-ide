@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { FieldInputProps, FieldMetaState } from 'react-final-form';
 
-import s from './DateTimePickerField.module.scss';
 import { dateTime } from 'shared/src/contrib/aidbox';
+
+import s from './DateTimePickerField.module.scss';
 
 interface InputFieldProps {
     input: FieldInputProps<dateTime>;

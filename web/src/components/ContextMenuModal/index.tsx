@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useOutsideClick } from 'web/src/components/ContextMenuModal/hooks';
 import { ContextMenu, ContextMenuPosition } from 'web/src/containers/Main/types';
 

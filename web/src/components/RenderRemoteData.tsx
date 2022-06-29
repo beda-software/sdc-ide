@@ -1,13 +1,22 @@
-import * as React from 'react';
-import { isFailure, isLoading, isNotAsked, isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+ 
+
+import { ReactElement } from 'react';
+
+import {
+    isFailure,
+    isLoading,
+    isNotAsked,
+    isSuccess,
+    RemoteData,
+} from 'aidbox-react/lib/libs/remoteData';
 import { formatError } from 'aidbox-react/lib/utils/error';
 
 interface RenderRemoteDataProps<S, E = any> {
     remoteData: RemoteData<S, E>;
-    children: (data: S) => React.ReactElement;
-    renderFailure?: (error: E) => React.ReactElement;
-    renderLoading?: () => React.ReactElement;
-    renderNotAsked?: () => React.ReactElement;
+    children: (data: S) => ReactElement;
+    renderFailure?: (error: E) => ReactElement;
+    renderLoading?: () => ReactElement;
+    renderNotAsked?: () => ReactElement;
 }
 
 function renderFailureDefault<E>(error: E) {

@@ -1,5 +1,6 @@
+import { Props } from 'web/src/components/SourceQueryDebugModal/hooks';
+
 import { Bundle, NutritionOrder, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
-import { Props } from 'src/components/SourceQueryDebugModal/hooks';
 
 const bundleArray = [
     {

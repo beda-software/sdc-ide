@@ -19,8 +19,8 @@ const isLocalhost = Boolean(
 );
 
 type Config = {
-    onSuccess?: (registration: ServiceWorkerRegistration) => void; // eslint-disable-line
-    onUpdate?: (registration: ServiceWorkerRegistration) => void; // eslint-disable-line
+    onSuccess?: (registration: ServiceWorkerRegistration) => void;  
+    onUpdate?: (registration: ServiceWorkerRegistration) => void;  
 };
 
 export function register(config?: Config) {

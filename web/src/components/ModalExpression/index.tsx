@@ -1,13 +1,16 @@
-import React from 'react';
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
-import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
-import { InputField } from 'web/src/components/InputField';
 import { Button } from 'web/src/components/Button';
-import { ExpressionModalInfo } from 'web/src/containers/Main/types';
-import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { CodeEditor } from 'web/src/components/CodeEditor';
+import { InputField } from 'web/src/components/InputField';
+import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
+import { ExpressionModalInfo } from 'web/src/containers/Main/types';
+
+ 
+import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+
+import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
+
 import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {

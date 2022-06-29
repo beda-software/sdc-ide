@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Arrow } from '../Icon/Arrow';
+import { ReactElement, useState } from 'react';
 
+import { Arrow } from '../Icon/Arrow';
 import s from './ExpandableRow.module.scss';
 
 interface ExpandableRowProps {
     cssClass: string;
-    children: Array<React.ReactElement>;
+    children: Array<ReactElement>;
 }
 
 export function ExpandableRow(props: ExpandableRowProps) {

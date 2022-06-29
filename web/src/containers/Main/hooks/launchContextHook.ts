@@ -1,15 +1,18 @@
+ 
 import _ from 'lodash';
+import { useReducer } from 'react';
+import { getData, setData } from 'web/src/services/localStorage';
+
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
 import { mapSuccess, resolveMap } from 'aidbox-react/lib/services/service';
-import { useReducer } from 'react';
+
 import {
     AidboxResource,
     Parameters as ParametersBase,
     ParametersParameter,
     Questionnaire,
 } from 'shared/src/contrib/aidbox';
-import { getData, setData } from 'web/src/services/localStorage';
 
 type Parameters = ParametersBase & Required<Pick<ParametersBase, 'parameter'>>;
 

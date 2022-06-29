@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import YAML, { visitor, visitorFn } from 'yaml';
-import { Pair } from 'yaml/types';
 import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'web/src/containers/Main/types';
 import { hasOwnProperty } from 'web/src/utils/common';
+import YAML, { visitor, visitorFn } from 'yaml';
+import { Pair } from 'yaml/types';
 
 interface QuestionnaireVisitor {
     Pair?: visitorFn<Pair>;

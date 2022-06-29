@@ -1,7 +1,6 @@
-import React from 'react';
 import { Route, Switch, HashRouter, Redirect } from 'react-router-dom';
-
 import { history } from 'web/src/services/history';
+
 import { Main } from '../Main';
 
 export function App() {

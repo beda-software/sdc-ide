@@ -1,13 +1,13 @@
-import React from 'react';
+import { Button } from 'web/src/components/Button';
+import { CodeEditor } from 'web/src/components/CodeEditor';
+import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
+
+ 
+import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
 
-import { CodeEditor } from 'web/src/components/CodeEditor';
-import { Button } from 'web/src/components/Button';
-import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
-
 import s from './SourceQueryDebugModal.module.scss';
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 interface Props {
     sourceQueryId: string;

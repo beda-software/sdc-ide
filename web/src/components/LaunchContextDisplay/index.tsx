@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
-import { Parameters } from 'shared/src/contrib/aidbox';
+
 import { success } from 'aidbox-react/lib/libs/remoteData';
+
+import { Parameters } from 'shared/src/contrib/aidbox';
 
 import s from './LaunchContextDisplay.module.scss';
 
@@ -11,7 +13,10 @@ interface LaunchContextDisplayProps {
 }
 
 export function LaunchContextDisplay({ parameters }: LaunchContextDisplayProps) {
-    const params = parameters.parameter?.filter((p) => p.name !== 'Questionnaire') || [];
+    const params = useMemo(
+        () => parameters.parameter?.filter((p) => p.name !== 'Questionnaire') || [],
+        [parameters.parameter],
+    );
     const defaultName = params[0]?.name;
     const [activeTabName, setActiveTabName] = useState(defaultName);
 

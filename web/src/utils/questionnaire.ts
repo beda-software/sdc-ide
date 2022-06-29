@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import { getByPath, setByPath } from 'shared/src/utils/path';
-
 import {
     AidboxReference,
     Observation,
@@ -11,6 +9,8 @@ import {
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
+import { getByPath, setByPath } from 'shared/src/utils/path';
+
 
 // TODO: Write own type
 type AnswerValue = Required<QuestionnaireResponseItemAnswer>['value'] &

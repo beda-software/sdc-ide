@@ -1,5 +1,7 @@
-import { ParametersParameter } from 'shared/src/contrib/aidbox';
 import _ from 'lodash';
+
+import { ParametersParameter } from 'shared/src/contrib/aidbox';
+
 import config from './config.json';
 
 interface StorageData {

@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResources, getMainResources } from 'aidbox-react/lib/services/fhir';
 import { ArrowDirections } from 'web/src/components/Icon/Arrow';
 import { getData, setData } from 'web/src/services/localStorage';
-import { Questionnaire } from 'shared/src/contrib/aidbox';
+
+import { useService } from 'aidbox-react/lib/hooks/service';
+import { getFHIRResources, getMainResources } from 'aidbox-react/lib/services/fhir';
 import { applyDataTransformer } from 'aidbox-react/lib/services/service';
+
+import { Questionnaire } from 'shared/src/contrib/aidbox';
 
 function useConfigForm() {
     const [baseUrl, setBaseUrl] = useState('');

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { ComponentType } from 'react';
 
 import {
     Observation,
@@ -10,8 +10,8 @@ import {
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
 
-export type GroupItemComponent = React.ComponentType<GroupItemProps>;
-export type QuestionItemComponent = React.ComponentType<QuestionItemProps>;
+export type GroupItemComponent = ComponentType<GroupItemProps>;
+export type QuestionItemComponent = ComponentType<QuestionItemProps>;
 
 export type CustomWidgetsMapping = {
     // [linkId: QuestionnaireItem['linkId']]: QuestionItemComponent;

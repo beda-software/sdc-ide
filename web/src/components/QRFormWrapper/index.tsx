@@ -1,11 +1,14 @@
-import React, { useCallback } from 'react';
-import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
-import { Questionnaire, QuestionnaireResponse, Parameters } from 'shared/src/contrib/aidbox';
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import _ from 'lodash';
+import { useCallback } from 'react';
+import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
+
+import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { sequenceMap } from 'aidbox-react/lib/services/service';
-import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
+
+import { Questionnaire, QuestionnaireResponse, Parameters } from 'shared/src/contrib/aidbox';
 import { mapFormToResponse, mapResponseToForm } from 'shared/src/utils/qrf';
+
+import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 import s from './QRFormWrapper.module.scss';
 
 interface QRFormWrapperProps {
@@ -21,6 +24,7 @@ export function QRFormWrapper({
     saveQuestionnaireResponse,
     launchContextParameters,
 }: QRFormWrapperProps) {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [
         saveQuestionnaireResponse,
     ]);

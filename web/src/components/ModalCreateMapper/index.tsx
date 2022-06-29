@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Button } from 'web/src/components/Button';
 import { InputField } from 'web/src/components/InputField';
 import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
@@ -79,8 +79,8 @@ function useInputField(
 ) {
     const [mappingIdInputValue, setMappingIdInputValue] = useState(mappingId);
 
-    const onMappingIdChange = (e: React.ChangeEvent<any>) => {
-        // TODO HTMLInputElement type in React.ChangeEvent
+    const onMappingIdChange = (e: ChangeEvent<any>) => {
+        // TODO HTMLInputElement type in ChangeEvent
         const newMapperIdList = [...mapperIdList];
         newMapperIdList[index] = e.target.value;
         setMapperIdList(newMapperIdList);

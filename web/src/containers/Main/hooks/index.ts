@@ -1,6 +1,5 @@
-/* eslint-disable no-restricted-imports */
 import _ from 'lodash';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 import {
@@ -11,6 +10,8 @@ import {
     resetQuestionnaireErrorAction,
     useErrorDebug,
 } from 'web/src/containers/Main/hooks/errorDebugHook';
+import { init, useLaunchContext } from 'web/src/containers/Main/hooks/launchContextHook';
+import { Title, ReloadType } from 'web/src/containers/Main/types';
 import { getData, setData } from 'web/src/services/localStorage';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -35,10 +36,6 @@ import {
     QuestionnaireResponse,
     Reference,
 } from 'shared/src/contrib/aidbox';
-
-import { ReloadType, Title } from 'src/containers/Main/types';
-
-import { init, useLaunchContext } from './launchContextHook';
 
 const prevActiveMappingId = getData('prevActiveMappingId');
 
@@ -343,7 +340,7 @@ export function useMain(questionnaireId: string) {
     );
 
     // BatchRequest
-    const [batchRequestRD, setBatchRequestRD] = React.useState<RemoteData<Bundle<any>>>(notAsked);
+    const [batchRequestRD, setBatchRequestRD] = useState<RemoteData<Bundle<any>>>(notAsked);
 
     useEffect(() => {
         (async function () {

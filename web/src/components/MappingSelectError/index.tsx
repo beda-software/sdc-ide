@@ -1,6 +1,5 @@
-import React from 'react';
 import { ErrorButton } from 'web/src/components/ErrorButton';
-import { MappingErrorManager } from 'src/containers/Main/types';
+import { MappingErrorManager } from 'web/src/containers/Main/types';
 
 interface Props {
     mappingErrorManager: MappingErrorManager;
