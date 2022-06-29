@@ -1,7 +1,6 @@
 FROM node:14.19.3 as builder
 
 RUN mkdir -p /app/web
-RUN mkdir -p /app/mobile
 RUN mkdir -p /app/shared
 
 WORKDIR /app
@@ -10,7 +9,6 @@ ADD lerna.json lerna.json
 
 ADD package.json package.json
 ADD web/package.json web/package.json
-ADD mobile/package.json mobile/package.json
 ADD yarn.lock yarn.lock
 ADD tsconfig.base.json tsconfig.base.json
 
