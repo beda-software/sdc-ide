@@ -1,6 +1,6 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-// import { act } from 'react-dom/test-utils';
+import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
+import { act } from 'react-dom/test-utils';
 import { EXPECTED_RESOURCES } from 'web/src/containers/Main/__test__/resources';
 import { idExtraction, showToast, useMain } from 'web/src/containers/Main/hooks';
 import { setData } from 'web/src/services/localStorage';

@@ -2,7 +2,6 @@ import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
 
- 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
@@ -17,15 +16,14 @@ interface Props {
     fhirMode: boolean;
 }
 
-export function SourceQueryDebugModal(props: Props) {
+export async function SourceQueryDebugModal(props: Props) {
     const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
-    const { rawSourceQuery, preparedSourceQueryRD, bundleResultRD, onChange, onSave } =
-        useSourceQueryDebugModal({
-            launchContext,
-            sourceQueryId,
-            closeExpressionModal,
-            fhirMode,
-        });
+    const { rawSourceQuery, response, onChange, onSave } = useSourceQueryDebugModal({
+        launchContext,
+        sourceQueryId,
+        closeExpressionModal,
+        fhirMode,
+    });
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
@@ -42,43 +40,39 @@ export function SourceQueryDebugModal(props: Props) {
                         </Button>
                     </div>
                 </div>
-                <div className={s.data}>
-                    <div className={s.inputData}>
-                        <h2>Raw</h2>
-                        {rawSourceQuery && (
-                            <CodeEditor
-                                key={sourceQueryId}
-                                valueObject={rawSourceQuery}
-                                onChange={onChange}
-                            />
-                        )}
-                        <div className={s.separator} />
-                        <h2>Prepared</h2>
-                        <RenderRemoteData remoteData={preparedSourceQueryRD}>
-                            {(resource) => (
+                <RenderRemoteData remoteData={response}>
+                    {({ bundleResult, preparedSourceQuery }) => (
+                        <div className={s.data}>
+                            <div className={s.inputData}>
+                                <h2>Raw</h2>
+                                {rawSourceQuery && (
+                                    <CodeEditor
+                                        key={sourceQueryId}
+                                        valueObject={rawSourceQuery}
+                                        onChange={onChange}
+                                    />
+                                )}
+                                <div className={s.separator} />
+                                <h2>Prepared</h2>
                                 <CodeEditor
-                                    key={resource.id}
-                                    valueObject={resource}
+                                    key={preparedSourceQuery.id}
+                                    valueObject={preparedSourceQuery}
                                     options={{
                                         readOnly: true,
                                     }}
                                 />
-                            )}
-                        </RenderRemoteData>
-                    </div>
-                    <div className={s.outputData}>
-                        <RenderRemoteData remoteData={bundleResultRD}>
-                            {(resource) => (
+                            </div>
+                            <div className={s.outputData}>
                                 <CodeEditor
-                                    valueObject={resource}
+                                    valueObject={bundleResult}
                                     options={{
                                         readOnly: true,
                                     }}
                                 />
-                            )}
-                        </RenderRemoteData>
-                    </div>
-                </div>
+                            </div>
+                        </div>
+                    )}
+                </RenderRemoteData>
             </div>
         </div>
     );

@@ -8,8 +8,6 @@ import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 import { ensure } from 'aidbox-react/lib/utils/tests';
 
-
-
 import { Mapping, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { EXPECTED_RESOURCES } from './resources';
@@ -23,7 +21,6 @@ import questionnaireDemo1 from './resources/Questionnaire/demo-1.json';
 import questionnaireTest1FHIRNew from './resources/Questionnaire/test-1-fhir-new.json';
 import questionnaireTest1 from './resources/Questionnaire/test-1.json';
 import questionnaireResponseNew from './resources/QuestionnaireResponse/demo-1-new.json';
-
 
 async function setup() {
     return service({
