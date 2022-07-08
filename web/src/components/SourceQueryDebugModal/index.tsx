@@ -16,7 +16,7 @@ interface Props {
     fhirMode: boolean;
 }
 
-export async function SourceQueryDebugModal(props: Props) {
+export function SourceQueryDebugModal(props: Props) {
     const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
     const { rawSourceQuery, response, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
