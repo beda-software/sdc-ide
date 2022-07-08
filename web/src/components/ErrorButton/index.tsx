@@ -1,4 +1,3 @@
-import React from 'react';
 import s from './ErrorButton.module.scss';
 
 interface ErrorButtonProps {

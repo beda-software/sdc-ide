@@ -1,4 +1,8 @@
-import { axiosInstance, resetInstanceToken, setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
+import {
+    axiosInstance,
+    resetInstanceToken,
+    setInstanceBaseURL,
+} from 'aidbox-react/lib/services/instance';
 import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
 declare const process: any;

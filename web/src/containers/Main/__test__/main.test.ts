@@ -1,26 +1,24 @@
-import { renderHook, act } from '@testing-library/react-hooks';
-// import { act } from 'react-dom/test-utils';
+import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
+import { act } from 'react-dom/test-utils';
+import { EXPECTED_RESOURCES } from 'web/src/containers/Main/__test__/resources';
+import { idExtraction, showToast, useMain } from 'web/src/containers/Main/hooks';
+import { setData } from 'web/src/services/localStorage';
 
-import { Extension } from 'shared/src/contrib/aidbox';
-import { ensure } from 'aidbox-react/lib/utils/tests';
-
-import { service } from 'aidbox-react/lib/services/service';
-
-import { idExtraction, showToast, useMain } from 'src/containers/Main/hooks';
-
-import { EXPECTED_RESOURCES } from 'src/containers/Main/__test__/resources';
 import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { setData } from 'src/services/localStorage';
+import { service } from 'aidbox-react/lib/services/service';
+import { ensure } from 'aidbox-react/lib/utils/tests';
+
+import { Extension } from 'shared/src/contrib/aidbox';
 
 const questionnaireIdInitial = 'demo-1';
 
-import questionnaireDemo1 from './resources/Questionnaire/demo-1.json';
-import questionnaireDemo3 from './resources/Questionnaire/demo-3.json';
 import mappingDemo1 from './resources/Mapping/demo-1.json';
 import mappingDemo2 from './resources/Mapping/demo-2.json';
 import patientDemo1 from './resources/Patient/demo-1.json';
+import questionnaireDemo1 from './resources/Questionnaire/demo-1.json';
+import questionnaireDemo3 from './resources/Questionnaire/demo-3.json';
 
 async function setup() {
     return service({
@@ -67,9 +65,13 @@ test('questionnaire in FHIR format is loaded', async () => {
     const questionnaire = ensure(result.current.questionnaireFHIRRD);
     expect(questionnaire.id).toBe(questionnaireIdInitial);
     const mappingFromQuestionnaire = getMappingExtension(questionnaire);
-    const mappingFromQuestionnaireFHIRExpected = getMappingExtension(EXPECTED_RESOURCES.questionnaireFHIR);
+    const mappingFromQuestionnaireFHIRExpected = getMappingExtension(
+        EXPECTED_RESOURCES.questionnaireFHIR,
+    );
     expect(mappingFromQuestionnaire!.valueReference).toBeDefined();
-    expect(mappingFromQuestionnaire!.valueReference).toEqual(mappingFromQuestionnaireFHIRExpected!.valueReference);
+    expect(mappingFromQuestionnaire!.valueReference).toEqual(
+        mappingFromQuestionnaireFHIRExpected!.valueReference,
+    );
 });
 
 test('questionnaireResponseRD', async () => {

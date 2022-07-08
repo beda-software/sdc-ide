@@ -2,15 +2,15 @@
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "noEmit": true,
-        "rootDir": "src",
+        "rootDir": ".",
         "outDir": "lib",
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "jsx": "react",
-        "target": "es5",
+        "jsx": "react-jsx",
+        "target": "ES5",
         "module": "commonjs",
-	"lib": ["es2019"]
+	    "lib": ["DOM", "ES5", "DOM.Iterable"],
     },
     "exclude": [
         "lib",

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from 'src/components/Button';
-import { InputField } from 'src/components/InputField';
-import { MapperInfo } from 'src/components/ModalCreateMapper/types';
+import { ChangeEvent, useState } from 'react';
+import { Button } from 'web/src/components/Button';
+import { InputField } from 'web/src/components/InputField';
+import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 
 import s from './ModalCreateMapper.module.scss';
 
@@ -11,7 +11,11 @@ interface ModalCreateMapperProps {
     mapperInfoList: MapperInfo[];
 }
 
-export function ModalCreateMapper({ saveNewMapping, closeModal, mapperInfoList }: ModalCreateMapperProps) {
+export function ModalCreateMapper({
+    saveNewMapping,
+    closeModal,
+    mapperInfoList,
+}: ModalCreateMapperProps) {
     const [mapperIdList, setMapperIdList] = useState<string[]>([]);
     const [isRenamedMappingId, setIsRenamedMappingId] = useState(false);
 
@@ -75,8 +79,8 @@ function useInputField(
 ) {
     const [mappingIdInputValue, setMappingIdInputValue] = useState(mappingId);
 
-    const onMappingIdChange = (e: React.ChangeEvent<any>) => {
-        // TODO HTMLInputElement type in React.ChangeEvent
+    const onMappingIdChange = (e: ChangeEvent<any>) => {
+        // TODO HTMLInputElement type in ChangeEvent
         const newMapperIdList = [...mapperIdList];
         newMapperIdList[index] = e.target.value;
         setMapperIdList(newMapperIdList);

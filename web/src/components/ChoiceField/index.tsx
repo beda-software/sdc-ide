@@ -1,4 +1,3 @@
-import * as React from 'react';
 import _ from 'lodash';
 import { Field, FieldProps } from 'react-final-form';
 
@@ -35,7 +34,11 @@ export function ChoiceField<T = any>({
                         >
                             {_.map(options, (option) => {
                                 return (
-                                    <option key={option.value} value={option.value} className={s.option}>
+                                    <option
+                                        key={option.value}
+                                        value={option.value}
+                                        className={s.option}
+                                    >
                                         {option.label}
                                     </option>
                                 );

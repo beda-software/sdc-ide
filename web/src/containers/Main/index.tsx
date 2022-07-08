@@ -1,20 +1,21 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { useMain } from 'src/containers/Main/hooks';
-import { Menu } from 'src/components/Menu';
-import { Logo } from 'src/components/Logo';
-import { ExpandableRow } from 'src/components/ExpandableRow';
-import { ExpandableElement } from 'src/components/ExpandableElement';
-import { ResourceCodeDisplay } from 'src/components/ResourceCodeDisplay';
-import { LaunchContextDisplay } from 'src/components/LaunchContextDisplay';
-import { MappingSelect } from 'src/components/MappingSelect';
-import { QRFormWrapper } from 'src/components/QRFormWrapper';
-import { Button } from 'src/components/Button';
-import { ResourceCodeEditor } from 'src/components/ResourceCodeEditor';
-import { ModalCreateMapper } from 'src/components/ModalCreateMapper';
+import { Button } from 'web/src/components/Button';
+import { ExpandableElement } from 'web/src/components/ExpandableElement';
+import { ExpandableRow } from 'web/src/components/ExpandableRow';
+import { LaunchContextDisplay } from 'web/src/components/LaunchContextDisplay';
+import { Logo } from 'web/src/components/Logo';
+import { MappingSelect } from 'web/src/components/MappingSelect';
+import { Menu } from 'web/src/components/Menu';
+import { ModalCreateMapper } from 'web/src/components/ModalCreateMapper';
+import { QRFormWrapper } from 'web/src/components/QRFormWrapper';
+import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
+import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
+import { TitleWithErrors } from 'web/src/components/TitleWithErrors';
+import { useMain } from 'web/src/containers/Main/hooks';
+
 import { Mapping, Questionnaire } from 'shared/src/contrib/aidbox';
-import { TitleWithErrors } from 'src/components/TitleWithErrors';
+
 import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
 
@@ -84,6 +85,7 @@ export function Main() {
                             questionnaireRD={questionnaireRD}
                             questionnaireResponseRD={questionnaireResponseRD}
                             saveQuestionnaireResponse={saveQuestionnaireResponse}
+                            launchContextParameters={launchContext.parameter}
                         />
                     </ExpandableElement>
                 </ExpandableRow>
@@ -121,7 +123,10 @@ export function Main() {
                             />
                         </div>
                     </ExpandableElement>
-                    <ExpandableElement title="Patient batch request" cssClass={s.patientBatchRequestBox}>
+                    <ExpandableElement
+                        title="Patient batch request"
+                        cssClass={s.patientBatchRequestBox}
+                    >
                         <div>
                             <ResourceCodeDisplay resourceResponse={batchRequestRD} />
                             <Button onClick={applyMappings}>Apply</Button>

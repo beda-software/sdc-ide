@@ -1,7 +1,7 @@
+import classNames from 'classnames';
 import fhirpath from 'fhirpath';
 import isEqual from 'lodash/isEqual';
-import { useContext, useMemo } from 'react';
-import * as React from 'react';
+import { ReactChild, useEffect, useContext, useMemo } from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { usePreviousValue } from 'shared/src/hooks/previous-value';
@@ -27,12 +27,14 @@ export function QuestionItems(props: QuestionItemsProps) {
         <>
             {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
                 return (
-                    <QuestionItem
-                        key={index}
-                        questionItem={item}
-                        context={context}
-                        parentPath={parentPath}
-                    />
+                    <div className={classNames('questionFormItem', item.linkId)}>
+                        <QuestionItem
+                            key={index}
+                            questionItem={item}
+                            context={context}
+                            parentPath={parentPath}
+                        />
+                    </div>
                 );
             })}
         </>
@@ -67,7 +69,7 @@ export function QuestionItem(props: QuestionItemProps) {
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
     const prevAnswers = usePreviousValue(getByPath(formValues, fieldPath));
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
             // TODO:
             if (calculatedExpression.language === 'text/fhirpath') {
@@ -78,7 +80,7 @@ export function QuestionItem(props: QuestionItemProps) {
                 );
                 const newAnswers = newValues.length
                     ? repeats
-                        ? newValues.map((answer) => ({ value: wrapAnswerValue(type, answer) }))
+                        ? newValues.map((answer: any) => ({ value: wrapAnswerValue(type, answer) }))
                         : [{ value: wrapAnswerValue(type, newValues[0]) }]
                     : undefined;
 
@@ -184,7 +186,7 @@ Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
 export function QuestionnaireResponseFormProvider({
     children,
     ...props
-}: QRFContextData & { children: React.ReactChild }) {
+}: QRFContextData & { children: ReactChild }) {
     return <QRFContext.Provider value={props}>{children}</QRFContext.Provider>;
 }
 

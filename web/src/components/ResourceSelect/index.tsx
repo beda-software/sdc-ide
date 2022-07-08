@@ -1,16 +1,17 @@
-import React from 'react';
-import AsyncSelect from 'react-select/async';
-import _ from 'lodash';
+ 
 import classNames from 'classnames';
+import _ from 'lodash';
+import { useCallback } from 'react';
+import AsyncSelect from 'react-select/async';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { AidboxResource, Bundle, Resource } from 'shared/src/contrib/aidbox';
 
 import s from './ResourceSelect.module.scss';
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 interface ResourceSelectProps<R extends AidboxResource> {
     cssClass?: string;
@@ -59,10 +60,12 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     onChange,
     display,
 }: RemoteResourceSelectProps<R>) {
-    const loadOptions = React.useCallback(
+    const loadOptions = useCallback(
         async (searchText: string) => {
             const response = await getFHIRResources(resourceType, { _ilike: `%${searchText}%` });
-            const prepared = mapSuccess(response, (bundle) => (bundle.entry ?? []).map((e) => e.resource!));
+            const prepared = mapSuccess(response, (bundle) =>
+                (bundle.entry ?? []).map((e) => e.resource!),
+            );
             if (isSuccess(prepared)) {
                 return prepared.data;
             }
@@ -71,19 +74,24 @@ export function RemoteResourceSelect<R extends AidboxResource>({
         [resourceType],
     );
 
-    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: R[]) => void) => {
-        (async () => callback(await loadOptions(searchText)))();
-    }, 500);
+    const debouncedLoadOptions = _.debounce(
+        (searchText: string, callback: (options: R[]) => void) => {
+            (async () => callback(await loadOptions(searchText)))();
+        },
+        500,
+    );
 
     return (
-        <AsyncSelect<R>
-            loadOptions={debouncedLoadOptions}
-            defaultOptions
-            getOptionLabel={display ?? getId}
-            getOptionValue={_.identity}
-            onChange={onChange}
-            value={value}
-        />
+        <div className={s.reactResourceSelect}>
+            <AsyncSelect<R>
+                loadOptions={debouncedLoadOptions}
+                defaultOptions
+                getOptionLabel={display ?? getId}
+                getOptionValue={_.identity}
+                onChange={onChange}
+                value={value}
+            />
+        </div>
     );
 }
 

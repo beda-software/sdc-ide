@@ -1,40 +1,44 @@
 {
     "private": true,
-    "resolutions": {
-        "**/@typescript-eslint/eslint-plugin": "^4.1.1",
-        "**/@typescript-eslint/parser": "^4.1.1"
-    },
     "scripts": {
         "clean": "lerna clean",
         "bootstrap": "lerna bootstrap",
         "test": "lerna run test --stream --concurrency=1 --",
         "test:web": "lerna run test --stream --concurrency=1 --scope web --",
-        "test:mobile": "lerna run test --stream --concurrency=1 --scope mobile --",
         "start": "lerna run --parallel start",
         "start:web": "lerna run start --parallel --scope web",
-        "start:mobile": "lerna run start --parallel --scope mobile",
         "build": "lerna run --parallel build",
         "typecheck": "lerna run --parallel typecheck"
     },
     "devDependencies": {
-        "@react-native-community/eslint-config": "^2.0.0",
-        "@types/node": "^14.14.2",
-        "@typescript-eslint/eslint-plugin": "^4.5.0",
-        "@typescript-eslint/parser": "^4.5.0",
-        "eslint-config-prettier": "^6.14.0",
-        "eslint-plugin-prettier": "^3.1.4",
-        "eslint-plugin-unused-imports": "^0.1.3",
-        "husky": "^4.3.0",
-        "lerna": "^3.22.1",
-        "lint-staged": "^10.4.2",
-        "prettier": "^2.1.2",
+        "@babel/preset-env": "^7.16.0",
+        "@babel/preset-react": "^7.16.0",
+        "@lingui/babel-preset-react": "^2.9.2",
+        "@lingui/cli": "^3.12.1",
+        "@lingui/macro": "^3.12.1",
+        "@react-native-community/eslint-config": "^3.0.1",
+        "@types/faker": "^5.5.9",
+        "@types/node": "^16.11.6",
+        "@typescript-eslint/eslint-plugin": "^5.29.0",
+        "@typescript-eslint/parser": "^5.29.0",
+        "eslint": "^8.18.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-unused-imports": "^2.0.0",
+        "faker": "^5.5.3",
+        "husky": "^7.0.4",
+        "husky-init": "^8.0.0",
+        "lerna": "^4.0.0",
+        "lint-staged": "^11.2.6",
+        "prettier": "^2.4.1",
         "rimraf": "^3.0.2",
-        "typescript": "^4.4.3"
+        "typescript": "^4.4.4"
     },
     "workspaces": {
         "packages": [
             "web",
-            "mobile",
             "shared"
         ],
         "nohoist": [
@@ -46,11 +50,10 @@
     },
     "lint-staged": {
         "*.{js,jsx,ts,tsx}": "eslint --fix",
-        "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
+        "*.{js,jsx,ts,tsx,css,scss,md}": "prettier --write"
     },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
+    "dependencies": {
+        "@lingui/react": "^3.8.10",
+        "caniuse-lite": "^1.0.30001279"
     }
 }

@@ -1,10 +1,14 @@
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { mapSuccess, service } from 'aidbox-react/lib/services/service';
+ 
 import _ from 'lodash';
-import * as React from 'react';
+import { useCallback } from 'react';
 import { Field } from 'react-final-form';
 import AsyncSelect from 'react-select/async';
+
+import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
+import { mapSuccess, service } from 'aidbox-react/lib/services/service';
+
 import { Coding, ValueSet } from 'shared/src/contrib/aidbox';
+
 import s from './TerminologyField.module.scss';
 
 interface TerminologyFieldProps {
@@ -29,7 +33,7 @@ function getOptionValue({ value }: Option) {
 }
 
 export function TerminologyField({ label, name, valueSetId, repeats }: TerminologyFieldProps) {
-    const loadOptions = React.useCallback(
+    const loadOptions = useCallback(
         async (searchText: string) => {
             const response = mapSuccess(
                 await service<ValueSet>({
@@ -66,9 +70,12 @@ export function TerminologyField({ label, name, valueSetId, repeats }: Terminolo
         [valueSetId],
     );
 
-    const debouncedLoadOptions = _.debounce((searchText: string, callback: (options: Option[]) => void) => {
-        (async () => callback(await loadOptions(searchText)))();
-    }, 500);
+    const debouncedLoadOptions = _.debounce(
+        (searchText: string, callback: (options: Option[]) => void) => {
+            (async () => callback(await loadOptions(searchText)))();
+        },
+        500,
+    );
 
     return (
         <Field name={name}>

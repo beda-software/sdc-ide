@@ -1,9 +1,11 @@
-import React from 'react';
+import { memo } from 'react';
+import { CodeEditor } from 'web/src/components/CodeEditor';
+import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 
-import { RenderRemoteData } from 'src/components/RenderRemoteData';
+ 
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
+
 import { AidboxResource } from 'shared/src/contrib/aidbox';
-import { CodeEditor } from 'src/components/CodeEditor';
 
 interface ResourceDisplayBoxProps {
     resourceResponse: RemoteData<AidboxResource>;
@@ -24,4 +26,4 @@ function ResourceCodeDisplayRaw({ resourceResponse }: ResourceDisplayBoxProps) {
     );
 }
 
-export const ResourceCodeDisplay = React.memo(ResourceCodeDisplayRaw);
+export const ResourceCodeDisplay = memo(ResourceCodeDisplayRaw);

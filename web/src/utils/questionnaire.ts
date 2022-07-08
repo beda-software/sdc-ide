@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import { getByPath, setByPath } from './path';
-
 import {
     AidboxReference,
     Observation,
@@ -11,9 +9,12 @@ import {
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
+import { getByPath, setByPath } from 'shared/src/utils/path';
+
 
 // TODO: Write own type
-type AnswerValue = Required<QuestionnaireResponseItemAnswer>['value'] & Required<Observation>['value'];
+type AnswerValue = Required<QuestionnaireResponseItemAnswer>['value'] &
+    Required<Observation>['value'];
 
 export function getDisplay(value: AnswerValue): string {
     const valueType = _.keys(value)[0];
@@ -58,7 +59,9 @@ export function getValueCoding(answer: QuestionnaireResponseItemAnswer): string 
     return answer?.value?.Coding?.code;
 }
 
-export function getValueReference(answer: QuestionnaireResponseItemAnswer): AidboxReference<any> | undefined {
+export function getValueReference(
+    answer: QuestionnaireResponseItemAnswer,
+): AidboxReference<any> | undefined {
     return answer?.value?.Reference;
 }
 
@@ -249,7 +252,11 @@ function mapFormToResponseRecursive(
                 return _.reduce(
                     answers.items,
                     (newAcc, answer, index) => {
-                        const value = mapFormToResponseRecursive(answer as any, question, checkQuestionEnabled);
+                        const value = mapFormToResponseRecursive(
+                            answer as any,
+                            question,
+                            checkQuestionEnabled,
+                        );
                         return setByPath(newAcc, [...answerPath, 'answer', index], value);
                     },
                     acc,
@@ -270,7 +277,11 @@ function mapFormToResponseRecursive(
                         return setByPath(newAcc, [...answerPath, index], {
                             value: answer.value,
                             ...(hasSubAnswerItems(answer.items)
-                                ? mapFormToResponseRecursive(answer.items, question, checkQuestionEnabled)
+                                ? mapFormToResponseRecursive(
+                                      answer.items,
+                                      question,
+                                      checkQuestionEnabled,
+                                  )
                                 : {}),
                         });
                     },
@@ -282,14 +293,22 @@ function mapFormToResponseRecursive(
     );
 }
 
-export function mapFormToResponse(answersItems: FormItems, questionnaire: QuestionnaireItems): ResponseItems {
+export function mapFormToResponse(
+    answersItems: FormItems,
+    questionnaire: QuestionnaireItems,
+): ResponseItems {
     const checkQuestionEnabled = (question: QuestionnaireItem) =>
-        question.enableWhen ? isQuestionEnabled(question.enableWhen, question.enableBehavior, [], answersItems) : true;
+        question.enableWhen
+            ? isQuestionEnabled(question.enableWhen, question.enableBehavior, [], answersItems)
+            : true;
 
     return mapFormToResponseRecursive(answersItems, questionnaire, checkQuestionEnabled);
 }
 
-export function mapResponseToForm(resource: ResponseItems, questionnaire: QuestionnaireItems): FormItems {
+export function mapResponseToForm(
+    resource: ResponseItems,
+    questionnaire: QuestionnaireItems,
+): FormItems {
     return _.reduce(
         questionnaire.item,
         (acc, item) => {
@@ -302,10 +321,9 @@ export function mapResponseToForm(resource: ResponseItems, questionnaire: Questi
             const answerPath = preparePathForAnswers(path, []);
             const questionPath = preparePathForQuestion(path);
             const question = getByPath(questionnaire, questionPath);
-            const answers: QuestionnaireResponseItemAnswer | QuestionnaireResponseItemAnswer[] = getByPath(
-                resource,
-                answerPath,
-            );
+            const answers:
+                | QuestionnaireResponseItemAnswer
+                | QuestionnaireResponseItemAnswer[] = getByPath(resource, answerPath);
 
             if (typeof answers === 'undefined') {
                 if (initial) {
@@ -336,11 +354,14 @@ export function mapResponseToForm(resource: ResponseItems, questionnaire: Questi
             } else {
                 return {
                     ...acc,
-                    [linkId]: _.map(answers && answers.length > 0 ? answers : question.initial, (answer) => ({
-                        question: question.text,
-                        value: answer?.value ?? '',
-                        items: mapResponseToForm(answer, question),
-                    })),
+                    [linkId]: _.map(
+                        answers && answers.length > 0 ? answers : question.initial,
+                        (answer) => ({
+                            question: question.text,
+                            value: answer?.value ?? '',
+                            items: mapResponseToForm(answer, question),
+                        }),
+                    ),
                 };
             }
         },
@@ -400,13 +421,17 @@ function findAnswersForQuestion(linkId: string, parentPath: string[], values: Fo
     return answers ? answers : [];
 }
 
-function getChecker(operator: string): (values: Array<{ value: any }>, answerValue: any) => boolean {
+function getChecker(
+    operator: string,
+): (values: Array<{ value: any }>, answerValue: any) => boolean {
     if (operator === '=') {
-        return (values, answerValue) => _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) !== -1;
+        return (values, answerValue) =>
+            _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) !== -1;
     }
 
     if (operator === '!=') {
-        return (values, answerValue) => _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) === -1;
+        return (values, answerValue) =>
+            _.findIndex(values, ({ value }) => isValueEqual(value, answerValue)) === -1;
     }
 
     if (operator === 'exists') {
@@ -450,7 +475,11 @@ function isQuestionEnabled(
     });
 }
 
-export function getEnabledQuestions(items: QuestionnaireItem[], parentPath: string[], values: FormItems) {
+export function getEnabledQuestions(
+    items: QuestionnaireItem[],
+    parentPath: string[],
+    values: FormItems,
+) {
     return _.filter(items, (item) => {
         const { enableWhen, enableBehavior } = item;
 
@@ -464,7 +493,11 @@ export function getEnabledQuestions(items: QuestionnaireItem[], parentPath: stri
     });
 }
 
-export function interpolateAnswers(text: string | undefined, parentPath: string[], values: FormItems) {
+export function interpolateAnswers(
+    text: string | undefined,
+    parentPath: string[],
+    values: FormItems,
+) {
     if (typeof text === 'undefined') {
         return text;
     }
@@ -496,7 +529,10 @@ export function interpolateAnswers(text: string | undefined, parentPath: string[
     return text;
 }
 
-export function extractAnswers(questionnaireResponse: QuestionnaireResponse, predicate: (tree: any) => boolean) {
+export function extractAnswers(
+    questionnaireResponse: QuestionnaireResponse,
+    predicate: (tree: any) => boolean,
+) {
     const answers: Array<{ path: any[]; answer: any }> = [];
 
     function walk(tree: any, path: any[]) {
@@ -519,7 +555,10 @@ export function extractAnswers(questionnaireResponse: QuestionnaireResponse, pre
     return answers;
 }
 
-export function extractQuestionByLinkId(questionnaire: QuestionnaireItems, linkId: string): QuestionnaireItem {
+export function extractQuestionByLinkId(
+    questionnaire: QuestionnaireItems,
+    linkId: string,
+): QuestionnaireItem {
     const path = getPathForLinkId(questionnaire, linkId);
     const questionPath = preparePathForQuestion(path);
 
@@ -536,6 +575,11 @@ export function extractAnswersByLinkId(
     );
 }
 
-export function extractAnswersDisplay(questionnaireResponse: QuestionnaireResponse, linkId: string) {
-    return extractAnswersByLinkId(questionnaireResponse, linkId).map(({ value }) => getDisplay(value!));
+export function extractAnswersDisplay(
+    questionnaireResponse: QuestionnaireResponse,
+    linkId: string,
+) {
+    return extractAnswersByLinkId(questionnaireResponse, linkId).map(({ value }) =>
+        getDisplay(value!),
+    );
 }

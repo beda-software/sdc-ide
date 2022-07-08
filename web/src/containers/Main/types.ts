@@ -1,4 +1,5 @@
 import { Position, Editor, Doc } from 'codemirror';
+
 import { ParametersParameterValue, Resource } from 'shared/src/contrib/aidbox';
 
 export interface ExpressionModalInfo {

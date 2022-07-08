@@ -1,8 +1,9 @@
-import React from 'react';
 import _ from 'lodash';
+import { MappingSelectError } from 'web/src/components/MappingSelectError';
+import { MappingErrorManager, Title } from 'web/src/containers/Main/types';
+
 import { Mapping, Reference } from 'shared/src/contrib/aidbox';
-import { MappingSelectError } from 'src/components/MappingSelectError';
-import { MappingErrorManager, Title } from 'src/containers/Main/types';
+
 import s from './MappingSelect.module.scss';
 
 interface MappingSelectProps {

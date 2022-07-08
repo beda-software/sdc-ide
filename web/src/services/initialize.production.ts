@@ -1,8 +1,9 @@
 import * as Sentry from '@sentry/browser';
 
+import { setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
+
 import { baseURL } from 'shared/src/constants.production';
 
-import { setInstanceBaseURL } from 'aidbox-react/lib/services/instance';
 
 Sentry.init({
     dsn: '__DSN__',

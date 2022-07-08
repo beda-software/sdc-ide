@@ -1,48 +1,47 @@
 version: '3.1'
 services:
-  backend:
-    image: "bedasoftware/aidbox-sdc:latest"
-    env_file:
-    - env_tests
-    depends_on:
-      devbox-healthcheck:
-        condition:
-          service_healthy
-    links:
-      - devbox
-    healthcheck:
-      test: curl --fail http://devbox:8080/healthcheck || exit 1
-      interval: 1s
-      timeout: 20s
-      retries: 100
-  devbox-healthcheck:
-    image: curlimages/curl
-    entrypoint: /bin/sleep 10000
-    links:
-      - devbox
-    depends_on:
-      - devbox
-    healthcheck:
-      test: curl --fail http://devbox:8080/__healthcheck || exit 1
-      interval: 1s
-      timeout: 20s
-      retries: 100
-  devbox:
-    image: healthsamurai/devbox:stable
-    depends_on:
-      - devbox-db
-    links:
-      - "devbox-db:database"
-    env_file:
-      - env_tests
-    environment:
-      AIDBOX_LICENSE_ID: ${AIDBOX_LICENSE_ID_TESTS}
-      AIDBOX_LICENSE_KEY: ${AIDBOX_LICENSE_KEY_TESTS}
-    ports:
-      - 8181:8080
-  devbox-db:
-    image: healthsamurai/aidboxdb:13.2
-    environment:
-      POSTGRES_USER:     postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB:       devbox
+    backend:
+        image: 'bedasoftware/aidbox-sdc:latest'
+        env_file:
+            - env_tests
+        depends_on:
+            devbox-healthcheck:
+                condition: service_healthy
+        links:
+            - devbox
+        healthcheck:
+            test: curl --fail http://backend:8081/live || exit 1
+            interval: 1s
+            timeout: 20s
+            retries: 100
+    devbox-healthcheck:
+        image: curlimages/curl
+        entrypoint: /bin/sleep 10000
+        links:
+            - devbox
+        depends_on:
+            - devbox
+        healthcheck:
+            test: curl --fail http://devbox:8080/__healthcheck || exit 1
+            interval: 1s
+            timeout: 20s
+            retries: 100
+    devbox:
+        image: healthsamurai/devbox:2112
+        depends_on:
+            - devbox-db
+        links:
+            - 'devbox-db:database'
+        env_file:
+            - env_tests
+        environment:
+            AIDBOX_LICENSE_ID: ${AIDBOX_LICENSE_ID_TESTS}
+            AIDBOX_LICENSE_KEY: ${AIDBOX_LICENSE_KEY_TESTS}
+        ports:
+            - 8181:8080
+    devbox-db:
+        image: healthsamurai/aidboxdb:13.2
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: devbox

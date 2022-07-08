@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ArrowDirections } from 'web/src/components/Icon/Arrow';
+import { getData, setData } from 'web/src/services/localStorage';
+
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { ArrowDirections } from 'src/components/Icon/Arrow';
-import { getData, setData } from 'src/services/localStorage';
+import { getFHIRResources, getMainResources } from 'aidbox-react/lib/services/fhir';
+import { applyDataTransformer } from 'aidbox-react/lib/services/service';
+
+import { Questionnaire } from 'shared/src/contrib/aidbox';
 
 function useConfigForm() {
     const [baseUrl, setBaseUrl] = useState('');
@@ -43,9 +47,14 @@ export function useMenu() {
         setShowMenu(!showMenu);
     };
 
-    const getMenuStyle = showMenu ? { display: 'grid' } : { display: 'none' };
+    const getMenuStyle = showMenu ? { display: 'flex' } : { display: 'none' };
 
-    const [questionnairesRD] = useService(() => getFHIRResources('Questionnaire', { _sort: 'id' }));
+    const [questionnairesRD] = useService(async () =>
+        applyDataTransformer(
+            getFHIRResources<Questionnaire>('Questionnaire', { _sort: 'id' }),
+            (bundle) => getMainResources<Questionnaire>(bundle, 'Questionnaire'),
+        ),
+    );
 
     const direction: ArrowDirections = showMenu ? 'up' : 'down';
 

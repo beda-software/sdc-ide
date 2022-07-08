@@ -1,9 +1,7 @@
-import React from 'react';
 import { Route, Switch, HashRouter, Redirect } from 'react-router-dom';
+import { history } from 'web/src/services/history';
 
-import { history } from 'src/services/history';
-
-import { Main } from 'src/containers/Main';
+import { Main } from '../Main';
 
 export function App() {
     return (

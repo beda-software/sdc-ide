@@ -1,12 +1,15 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+// eslint-disable-next-line import/order
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
-import { displayToObject, objectToDisplay } from 'src/utils/yaml';
-import { ContextMenuInfo, ReloadType, ValueObject } from 'src/containers/Main/types';
+
+// eslint-disable-next-line import/order
+import { ContextMenuInfo, ReloadType, ValueObject } from 'web/src/containers/Main/types';
 
 // import 'codemirror/lib/codemirror.css';
 import './styles.css';
-import { ContextMenuModal } from 'src/components/ContextMenuModal';
-import { useContextMenu } from 'src/containers/Main/hooks/contextMenuHook';
+import { ContextMenuModal } from 'web/src/components/ContextMenuModal';
+import { useContextMenu } from 'web/src/containers/Main/hooks/contextMenuHook';
+import { displayToObject, objectToDisplay } from 'web/src/utils/yaml';
 
 require('codemirror/mode/yaml/yaml');
 
@@ -38,10 +41,15 @@ export function CodeEditor(props: CodeEditorProps) {
                     ...options,
                 }}
                 onChange={(_editor, _change, value) => onChange && onChange(displayToObject(value))}
-                onContextMenu={(_editor, event) => openContextMenu && openContextMenu(_editor, event, valueObject)}
+                onContextMenu={(_editor, event) =>
+                    openContextMenu && openContextMenu(_editor, event, valueObject)
+                }
             />
             {contextMenuInfo?.showContextMenu && (
-                <ContextMenuModal contextMenuPosition={contextMenuInfo.menuPosition} contextMenu={contextMenu} />
+                <ContextMenuModal
+                    contextMenuPosition={contextMenuInfo.menuPosition}
+                    contextMenu={contextMenu}
+                />
             )}
         </>
     );
