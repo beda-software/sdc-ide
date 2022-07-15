@@ -1,0 +1,19 @@
+{
+    "extends": "../tsconfig.base.json",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "lib": ["DOM", "ES5", "DOM.Iterable"],
+        "baseUrl": "./src",
+        "sourceMap": true,
+        "outDir": "./lib",
+        "declaration": true,
+        "allowJs": true,
+        "jsx": "react-jsx",
+        "moduleResolution": "node",
+        "noEmit": false,
+        "importHelpers": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules", "tests"]
+}

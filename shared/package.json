@@ -8,7 +8,8 @@
     "scripts": {
         "prepare": "tsc -p tsconfig.json",
         "start": "tsc -p tsconfig.json -w",
-        "test": "jest"
+        "test": "jest",
+        "typecheck": "tsc"
     },
     "keywords": [],
     "author": "",

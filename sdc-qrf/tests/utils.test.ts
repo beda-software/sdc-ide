@@ -1,5 +1,6 @@
-import { mapFormToResponse, mapResponseToForm } from '../';
-import { Questionnaire, QuestionnaireResponse } from '../../../contrib/aidbox';
+import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+
+import { mapFormToResponse, mapResponseToForm } from '../src';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {

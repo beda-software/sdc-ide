@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import { useCallback } from 'react';
+import { mapFormToResponse, mapResponseToForm } from 'sdc-qrf/src';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 import { sequenceMap } from 'aidbox-react/lib/services/service';
 
 import { Questionnaire, QuestionnaireResponse, Parameters } from 'shared/src/contrib/aidbox';
-import { mapFormToResponse, mapResponseToForm } from 'shared/src/utils/qrf';
 
 import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 import s from './QRFormWrapper.module.scss';

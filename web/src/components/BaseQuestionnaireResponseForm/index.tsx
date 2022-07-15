@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import { useRef } from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
-
 import {
     calcInitialContext,
     FormItems,
@@ -11,7 +10,7 @@ import {
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
     useQuestionnaireResponseFormContext,
-} from 'shared/src/utils/qrf';
+} from 'sdc-qrf/src';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
