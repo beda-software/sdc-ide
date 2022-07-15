@@ -13,6 +13,7 @@ ADD yarn.lock yarn.lock
 ADD tsconfig.base.json tsconfig.base.json
 
 ADD shared /app/shared
+ADD sdc-qrf /app/sdc-qrf
 
 RUN yarn
 RUN yarn global add serve
