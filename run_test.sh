@@ -14,15 +14,20 @@ if [ -z "${AIDBOX_LICENSE_ID_TESTS}" ]; then
     exit 1
 fi
 
-COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.tests.local.yaml"
 
-docker-compose $COMPOSE_FILES pull
-docker-compose $COMPOSE_FILES up -d
 curl -u root:secret 'http://localhost:8181/$load'  -H 'content-type: application/json' --request POST --data '{"source":"https://sdc.beda.software/demo-data.ndjson.gz"}'
 
 if [ -z "$CI" ]; then
+    COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.tests.local.yaml"
+
+    docker-compose $COMPOSE_FILES pull
+    docker-compose $COMPOSE_FILES up -d
     yarn test $@ --runInBand --passWithNoTests
 else
-    docker-compose -f docker-compose.tests.yaml -f docker-compose.ci.yaml up --exit-code-from frontend frontend
+    COMPOSE_FILES="-f docker-compose.tests.yaml -f docker-compose.ci.yaml"
+
+    docker-compose $COMPOSE_FILES pull
+    docker-compose $COMPOSE_FILES up -d
+    docker-compose $COMPOSE_FILES up --exit-code-from frontend frontend
 fi
 exit $?
