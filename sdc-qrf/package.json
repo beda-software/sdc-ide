@@ -1,6 +1,7 @@
 {
     "name": "sdc-qrf",
-    "version": "0.0.1",
+    "license": "MIT",
+    "version": "0.0.2",
     "scripts": {
         "build": "tsc",
         "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
@@ -32,7 +33,9 @@
     },
     "files": [
         "lib/**/*",
-        "src/**/*"
+        "src/**/*",
+	"README.md",
+	"LICENSE"
     ],
     "main": "./lib/index.js"
 }
