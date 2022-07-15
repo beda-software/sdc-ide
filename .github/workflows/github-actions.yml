@@ -34,7 +34,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
-            # - run: ./run_test.sh
+            - run: ./run_test.sh
     Deploy:
         needs: Test
         runs-on: ubuntu-latest

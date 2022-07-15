@@ -1,15 +1,14 @@
 version: '3.1'
 services:
-  frontend:
-    image: $BUILD_IMAGE
-    command: ["yarn", "test", "--runInBand", "--passWithNoTests", "--coverage"]
-    depends_on:
-      backend:
-        condition:
-            service_healthy
-    links:
-      - backend
-    volumes:
-      - ./htmlcov:/app/htmlcov
-    environment:
-      CI: "true"
+    frontend:
+        image: $BUILD_IMAGE
+        command: ['yarn', 'test:shared', '--runInBand', '--passWithNoTests', '--coverage']
+        depends_on:
+            backend:
+                condition: service_healthy
+        links:
+            - backend
+        volumes:
+            - ./htmlcov:/app/htmlcov
+        environment:
+            CI: 'true'

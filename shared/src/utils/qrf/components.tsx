@@ -1,11 +1,10 @@
 import classNames from 'classnames';
 import fhirpath from 'fhirpath';
+import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import { ReactChild, useEffect, useContext, useMemo } from 'react';
+import { ReactChild, useEffect, useContext, useMemo, useRef } from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
-import { usePreviousValue } from 'shared/src/hooks/previous-value';
-import { getByPath, setByPath } from 'shared/src/utils/path';
 
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
@@ -17,6 +16,20 @@ import {
     wrapAnswerValue,
     removeDisabledAnswers,
 } from './utils';
+
+export function usePreviousValue<T = any>(value: T) {
+    const prevValue = useRef<T>();
+
+    useEffect(() => {
+        prevValue.current = value;
+
+        return () => {
+            prevValue.current = undefined;
+        };
+    });
+
+    return prevValue.current;
+}
 
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
@@ -67,11 +80,11 @@ export function QuestionItem(props: QuestionItemProps) {
                   calcContext(initialContext, variable, branchItems.qItem, curQRItem),
               )
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
-    const prevAnswers = usePreviousValue(getByPath(formValues, fieldPath));
+    const prevAnswers = usePreviousValue(_.get(formValues, fieldPath));
 
     useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
-            // TODO:
+            // TODO: Add support for x-fhir-query
             if (calculatedExpression.language === 'text/fhirpath') {
                 const newValues = fhirpath.evaluate(
                     context.context || {},
@@ -85,7 +98,7 @@ export function QuestionItem(props: QuestionItemProps) {
                     : undefined;
 
                 if (!isEqual(newAnswers, prevAnswers)) {
-                    setFormValues(setByPath(formValues, fieldPath, newAnswers));
+                    setFormValues(_.set(_.cloneDeep(formValues), fieldPath, newAnswers));
                 }
             }
         }

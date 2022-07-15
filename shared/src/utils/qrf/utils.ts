@@ -12,7 +12,6 @@ import {
     QuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
-import { setByPath } from 'shared/src/utils/path';
 
 import {
     AnswerValue,
@@ -65,10 +64,8 @@ export function getBranchItems(
     questionnaire: Questionnaire,
     questionnaireResponse: QuestionnaireResponse,
 ): { qItem: QuestionnaireItem; qrItems: QuestionnaireResponseItem[] } {
-    let qrItem:
-        | QuestionnaireResponseItem
-        | QuestionnaireResponse
-        | undefined = questionnaireResponse;
+    let qrItem: QuestionnaireResponseItem | QuestionnaireResponse | undefined =
+        questionnaireResponse;
     let qItem: QuestionnaireItem | Questionnaire = questionnaire;
 
     // TODO: check for question with sub items
@@ -515,7 +512,7 @@ function removeDisabledAnswersRecursive(
     initialValues: FormItems,
 ): FormItems {
     return questionnaireItems.reduce((acc, questionnaireItem) => {
-        const values = parentPath.length ? setByPath(initialValues, parentPath, acc) : acc;
+        const values = parentPath.length ? _.set(_.cloneDeep(initialValues), parentPath, acc) : acc;
 
         const { linkId } = questionnaireItem;
         const answers = answersItems[linkId!];
