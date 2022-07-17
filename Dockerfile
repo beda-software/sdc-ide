@@ -11,6 +11,7 @@ ADD package.json package.json
 ADD web/package.json web/package.json
 ADD yarn.lock yarn.lock
 ADD tsconfig.base.json tsconfig.base.json
+ADD tsconfig.json tsconfig.json
 
 ADD shared /app/shared
 ADD sdc-qrf /app/sdc-qrf

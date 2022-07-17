@@ -1,7 +1,7 @@
 {
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "target": "es5",
+        "target": "es6",
         "module": "commonjs",
         "lib": ["DOM", "ES5", "DOM.Iterable"],
         "baseUrl": "./src",

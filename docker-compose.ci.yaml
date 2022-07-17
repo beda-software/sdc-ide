@@ -2,7 +2,7 @@ version: '3.1'
 services:
     frontend:
         image: $BUILD_IMAGE
-        command: ['yarn', 'test:shared', '--runInBand', '--passWithNoTests', '--coverage']
+        command: ['bash', '-c', 'cd /app && yarn test:sdc-qrf --runInBand --passWithNoTests --coverage']
         depends_on:
             backend:
                 condition: service_healthy
