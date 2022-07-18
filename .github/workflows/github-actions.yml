@@ -33,7 +33,7 @@ jobs:
                   password: ${{ secrets.DOCKER_HUB_TOKEN }}
             - run: >-
                   docker buildx build --platform linux/arm64,linux/amd64
-                  --push -t ${{ env.BUILD_IMAGE }}
+                  --push -t ${{ env.BUILD_IMAGE }} .
     Deploy:
         needs: Release
         runs-on: ubuntu-latest
