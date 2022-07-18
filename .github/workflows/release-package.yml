@@ -10,7 +10,7 @@ jobs:
     permissions:
       packages: write
       contents: read
-   steps:
+    steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -21,4 +21,3 @@ jobs:
       - run: cd sdc-qrf && npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
-
