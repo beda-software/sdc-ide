@@ -1,5 +1,5 @@
 name: github-actions
-on: [push, pull_request]
+on: [push]
 jobs:
     Build:
         runs-on: ubuntu-latest
@@ -12,9 +12,13 @@ jobs:
             BASE_URL: https://aidbox.sdc.beda.software
         steps:
             - uses: actions/checkout@v2
+            - name: Set up Docker Buildx
+              id: buildx
+              uses: docker/setup-buildx-action@v1
             - run: docker pull ${{ env.CACHE_IMAGE }} || true
             - run: >-
-                  docker build --cache-from ${{ env.CACHE_IMAGE }}
+                  docker buildx build --platform linux/arm64,linux/amd64
+                  --cache-from ${{ env.CACHE_IMAGE }}
                   --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
                   --build-arg BASE_URL=${{ env.BASE_URL }}
                   -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
@@ -23,6 +27,7 @@ jobs:
               with:
                   username: ${{ secrets.DOCKER_HUB_USERNAME }}
                   password: ${{ secrets.DOCKER_HUB_TOKEN }}
+            - run: docker push ${{ env.CACHE_IMAGE }}
             - run: docker push ${{ env.BUILD_IMAGE }}
     Test:
         needs: Build
