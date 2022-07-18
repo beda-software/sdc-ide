@@ -37,7 +37,7 @@ jobs:
                   --build-arg BASE_URL=${{ env.BASE_URL }}
                   -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
     Deploy:
-        needs: Test
+        needs: Build-Test-Release
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/master'
         steps:
