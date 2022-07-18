@@ -5,7 +5,7 @@ services:
     - "80:80"
     - "443:443"
     volumes:
-    - ./nginx:/etc/nginx/user.conf.d:ro
+    - ./nginx:/etc/nginx/user_conf.d:ro
     - ./letsencrypt:/etc/letsencrypt
     environment:
       CERTBOT_EMAIL: ir4y.ix@gmail.com
