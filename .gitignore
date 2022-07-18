@@ -11,3 +11,4 @@ examples/.env
 */src/services/initialize.ts
 sentry.properties
 .env.test.local
+sdc-qrf/lib/
