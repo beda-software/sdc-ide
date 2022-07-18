@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          registry-url: 'https://registry.npmjs.org'
       - run: yarn
       - run: yarn run build:sdc-qrf
       - run: cd sdc-qrf && npm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
