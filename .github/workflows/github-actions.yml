@@ -2,6 +2,7 @@ name: github-actions
 on: [push]
 jobs:
     Test:
+        runs-on: ubuntu-latest
         env:
             AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
             AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
@@ -14,7 +15,6 @@ jobs:
           run: yarn
         - run: ./run_test.sh
         - run: yarn build:web
-        runs-on: ubuntu-latest
     Release:
         needs: Test
         runs-on: ubuntu-latest
