@@ -65,8 +65,5 @@ jobs:
                       cd /root/sdc-demo
                       echo -n $ENV_FILE|base64 -d > .env
                       docker compose -f docker-compose.production.yaml pull
-                      docker compose -f docker-compose.production.yaml up -d devbox devbox-db backend frontend
-                      docker compose -f docker-compose.production.yaml up --exit-code-from dockerize dockerize
-                      docker compose -f docker-compose.production.yaml stop nginx
-                      docker compose -f docker-compose.production.yaml up -d nginx
+                      docker compose -f docker-compose.production.yaml up -d
                       echo Current branch is ${{ github.ref }}
