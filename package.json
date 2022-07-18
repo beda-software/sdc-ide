@@ -11,6 +11,7 @@
         "start:web": "lerna run start --parallel --scope web",
         "build": "lerna run --parallel build",
         "build:web": "lerna run --parallel build --scope web",
+        "build:sdc-qrf": "lerna run --parallel build --scope sdc-qrf",
         "typecheck": "lerna run --parallel typecheck"
     },
     "devDependencies": {
