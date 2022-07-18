@@ -16,7 +16,7 @@ ADD tsconfig.json tsconfig.json
 ADD shared /app/shared
 ADD sdc-qrf /app/sdc-qrf
 
-RUN yarn
+RUN yarn --network-concurrency=1
 RUN yarn global add serve
 
 ADD . /app
