@@ -4067,7 +4067,7 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/react@^18.2.0":
+"@types/react@^18.0.15":
   version "18.0.15"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.15.tgz#d355644c26832dc27f3e6cbf0c4f4603fc4ab7fe"
   integrity sha512-iz3BtLuIYH1uWdsv6wXYdhozhqj20oD4/Hk2DNXIn1kFsmp9x8d9QB6FnPhfkbhd2PgEONt9Q1x/ebkwjfFLow==
@@ -12336,17 +12336,6 @@ schema-utils@^4.0.0:
     ajv "^8.8.0"
     ajv-formats "^2.1.1"
     ajv-keywords "^5.0.0"
-
-sdc-qrf@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.0.1.tgz#6372960a69bef42915be749aee4c7f1729d34932"
-  integrity sha512-MwLXurAdQkpYn3gJmkrej1B1IHhs6gYmQHQJyIoMm6/XhY5cMapR6Bx6YdQtTLVwgjjzJoZIj/0dHC8gsfJ9CA==
-  dependencies:
-    classnames "^2.3.1"
-    fhirpath "^2.14.5"
-    lodash "^4.17.15"
-    query-string "^7.1.1"
-    tslib "^2.4.0"
 
 select-hose@^2.0.0:
   version "2.0.0"
