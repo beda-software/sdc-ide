@@ -15,7 +15,7 @@ jobs:
         - run: ./run_test.sh
         - run: yarn build:web
         runs-on: ubuntu-latest
-    Build-Release:
+    Release:
         needs: Test
         runs-on: ubuntu-latest
         env:
@@ -37,7 +37,7 @@ jobs:
                   --cache-from ${{ env.CACHE_IMAGE }}
                   -t ${{ env.BUILD_IMAGE }}
     Deploy:
-        needs: Test-Release
+        needs: Release
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/master'
         steps:
