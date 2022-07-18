@@ -3,9 +3,6 @@ on: [push]
 jobs:
     Test:
         runs-on: ubuntu-latest
-        env:
-            AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
-            AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
         steps:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v3
@@ -13,7 +10,10 @@ jobs:
             node-version: 16
         - name: Install deps
           run: yarn
-        - run: ./run_test.sh
+        - run: |
+            export AIDBOX_LICENSE_KEY_TESTS=${{ secrets.AIDBOX_LICENSE_KEY_TESTS }} &&\
+            export AIDBOX_LICENSE_ID_TESTS=${{ secrets.AIDBOX_LICENSE_ID_TESTS }} &&\
+            ./run_test.sh
         - run: yarn build:web
     Release:
         needs: Test
