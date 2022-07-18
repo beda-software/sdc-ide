@@ -9,7 +9,7 @@ import { ReloadType } from 'web/src/containers/Main/types';
 
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
-import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
+import { AidboxResource, Parameters, Questionnaire } from 'shared/src/contrib/aidbox';
 
 interface ResourceCodeEditorProps<R> {
     resourceRD: RemoteData<R>;
@@ -55,7 +55,7 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                                 sourceQueryId={expressionModalInfo?.expression || ''}
                                 closeExpressionModal={closeExpressionModal}
                                 launchContext={launchContext}
-                                resource={resource}
+                                resource={resource as any as Questionnaire}
                                 fhirMode={fhirMode}
                             />
                         )}

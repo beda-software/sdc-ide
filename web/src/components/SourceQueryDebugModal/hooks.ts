@@ -6,7 +6,7 @@ import { useService } from 'aidbox-react/lib/hooks/service';
 import { isFailure, success, isSuccess } from 'aidbox-react/lib/libs/remoteData';
 import { mapSuccess, service } from 'aidbox-react/lib/services/service';
 
-import { Bundle, Parameters, Resource } from 'shared/src/contrib/aidbox/index';
+import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
 
 export interface Props {
     launchContext: Parameters;
@@ -20,7 +20,7 @@ export function useSourceQueryDebugModal(props: Props) {
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
     const onSave = useCallback(
-        async (resource) => {
+        async (resource:Questionnaire) => {
             const newResource = { ...resource };
             if (newResource && newResource.contained && rawSourceQuery) {
                 const indexOfContainedId = newResource.contained.findIndex(

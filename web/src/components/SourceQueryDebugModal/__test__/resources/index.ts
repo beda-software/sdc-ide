@@ -525,7 +525,7 @@ export const resourceFailure = {
     id: 'health-and-lifestyle',
 };
 
-export const resourceSuccess = {
+export const resourceSuccess: Questionnaire = {
     launchContext: [
         {
             name: 'LaunchPatient',
@@ -655,7 +655,7 @@ export const resourceSuccess = {
                 },
             ],
             resourceType: 'Bundle',
-        },
+        } as Bundle,
         {
             id: 'AllergiesAndAdverseReactions',
             type: 'batch',
@@ -668,7 +668,7 @@ export const resourceSuccess = {
                 },
             ],
             resourceType: 'Bundle',
-        },
+        } as Bundle,
         {
             id: 'Immunizations',
             type: 'batch',
@@ -681,7 +681,7 @@ export const resourceSuccess = {
                 },
             ],
             resourceType: 'Bundle',
-        },
+        } as Bundle,
         {
             id: 'IAmPregnant',
             type: 'batch',
@@ -694,7 +694,7 @@ export const resourceSuccess = {
                 },
             ],
             resourceType: 'Bundle',
-        },
+        } as Bundle,
         {
             id: 'IAmBreastfeeding',
             type: 'batch',
@@ -707,7 +707,7 @@ export const resourceSuccess = {
                 },
             ],
             resourceType: 'Bundle',
-        },
+        } as Bundle,
     ],
     sourceQueries: [
         {
@@ -725,7 +725,7 @@ export const resourceSuccess = {
         {
             localRef: 'Bundle#IAmBreastfeeding',
         },
-    ],
+    ] as any,
     status: 'active',
     id: 'health-and-lifestyle',
 };

@@ -4,7 +4,7 @@ import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugMod
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 
-import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox/index';
+import { Parameters, Questionnaire } from 'shared/src/contrib/aidbox/index';
 
 import s from './SourceQueryDebugModal.module.scss';
 
@@ -12,7 +12,7 @@ interface Props {
     sourceQueryId: string;
     closeExpressionModal: () => void;
     launchContext: Parameters;
-    resource: AidboxResource;
+    resource: Questionnaire;
     fhirMode: boolean;
 }
 
