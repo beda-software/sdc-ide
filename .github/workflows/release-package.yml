@@ -18,7 +18,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: yarn
       - run: yarn run build:sdc-qrf
-      - run: cd sdc-qrf && npm config set '//registry.npmjs.org/:_authToken' "${NPM_AUTH_TOKEN}"
       - run: cd sdc-qrf && npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
