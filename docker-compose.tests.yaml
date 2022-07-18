@@ -45,3 +45,8 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: devbox
+    ready:
+        image: hello-world
+        depends_on:
+            backend:
+                condition: service_healthy

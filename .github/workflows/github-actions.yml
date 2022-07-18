@@ -1,29 +1,31 @@
 name: github-actions
 on: [push]
 jobs:
-    Build-Test-Release:
+    Test:
+        env:
+            AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
+            AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
+        steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 16
+        - name: Install deps
+          run: yarn
+        - run: ./run_test.sh
+        - run: yarn build:web
+        runs-on: ubuntu-latest
+    Build-Release:
+        needs: Test
         runs-on: ubuntu-latest
         env:
             BUILD_IMAGE: bedasoftware/sdc-ide:master
-            CACHE_IMAGE: bedasoftware/sdc-ide:latest
-            AIDBOX_LICENSE_KEY_TESTS: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
-            AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
-            BASE_URL: https://aidbox.sdc.beda.software
         steps:
             - uses: actions/checkout@v2
             - name: Set up Docker Buildx
               id: buildx
               uses: docker/setup-buildx-action@v1
             - run: docker run --rm --privileged tonistiigi/binfmt --install all
-            - run: docker pull ${{ env.CACHE_IMAGE }} || true
-            - run: >-
-                  docker buildx build --platform linux/arm64,linux/amd64
-                  --cache-from ${{ env.CACHE_IMAGE }}
-                  --build-arg TIER=production
-                  --build-arg BASE_URL=${{ env.BASE_URL }}
-                  -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
-            - run: docker run --rm ${{ env.BUILD_IMAGE }} yarn typecheck
-            - run: ./run_test.sh
             - name: Login to Docker Hub
               uses: docker/login-action@v1
               with:
@@ -33,11 +35,9 @@ jobs:
                   docker buildx build --platform linux/arm64,linux/amd64
                   --push
                   --cache-from ${{ env.CACHE_IMAGE }}
-                  --build-arg TIER=${{ env.BRANCH_NAME == 'master' && 'production' || 'develop' }}
-                  --build-arg BASE_URL=${{ env.BASE_URL }}
-                  -t ${{ env.BUILD_IMAGE }} -t ${{ env.CACHE_IMAGE }} .
+                  -t ${{ env.BUILD_IMAGE }}
     Deploy:
-        needs: Build-Test-Release
+        needs: Test-Release
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/master'
         steps:
