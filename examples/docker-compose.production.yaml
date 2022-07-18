@@ -18,8 +18,8 @@ services:
           service_healthy
   frontend:
     image: bedasoftware/sdc-ide:master
-    env:
-      BASE_URL: "https:\/\/aidbox.sdc.beda.software\/"
+    environment:
+      BASE_URL: "https:\\/\\/aidbox.sdc.beda.software\\/"
   frontend-healthcheck:
     image: curlimages/curl
     entrypoint: /bin/sleep 10000
