@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
@@ -40,14 +39,12 @@ export function QuestionItems(props: QuestionItemsProps) {
         <>
             {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
                 return (
-                    <div className={classNames('questionFormItem', item.linkId)}>
-                        <QuestionItem
-                            key={index}
-                            questionItem={item}
-                            context={context}
-                            parentPath={parentPath}
-                        />
-                    </div>
+                    <QuestionItem
+                        key={index}
+                        questionItem={item}
+                        context={context}
+                        parentPath={parentPath}
+                    />
                 );
             })}
         </>
