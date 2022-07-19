@@ -1,7 +1,7 @@
 {
     "name": "sdc-qrf",
     "license": "MIT",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "scripts": {
         "build": "tsc",
         "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
