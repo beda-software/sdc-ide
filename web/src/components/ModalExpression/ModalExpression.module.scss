@@ -1,3 +1,6 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+
 .wrapper {
     position: fixed;
     top: 0;
@@ -11,53 +14,53 @@
     z-index: 700;
 
     .window {
-        width: 95%;
-        height: 100%;
+        width: calc(100% - 60px);
+        height: calc(100% - 60px);
         z-index: 2;
-        background-color: #ffffff;
+        background-color: $base-light-color;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        border: 2px solid $primary-color;
+        overflow: hidden;
 
         .header {
-            height: 80px;
-            width: 100%;
-            background-color: #f2f2f2;
+            min-height: 80px;
+            max-height: 80px;
+            flex: 100%;
+            background-color: $base-surface-color;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+            padding: 0px 12px;
 
             .inputPath {
-                width: inherit;
-                margin-left: 8px;
+                flex: 1;
             }
 
             .save {
                 width: 60px;
-                margin-left: 8px;
             }
 
             .close {
                 width: 60px;
-                margin: 0 8px;
                 background-color: #ffffff;
             }
         }
 
         .data {
-            height: calc(100vmin - 100px);
-            width: 95vw;
+            height: calc(100% - 105px);
+            width: 100%;
             display: flex;
             flex-direction: row;
-            background-color: #ffffff;
+            background-color: $base-light-color;
 
             .inputData {
                 height: 100%;
                 width: 100%;
-                padding: 10px;
-                overflow-x: scroll;
-                overflow-y: scroll;
+                padding: 10px 16px 16px;
+                position: relative;
 
                 .parameterName {
                     font-family: 'Fira Code', monospace;
@@ -77,8 +80,9 @@
                 height: 100%;
                 width: 100%;
                 padding: 10px;
-                overflow-x: scroll;
-                overflow-y: scroll;
+                border-left: 2px solid $base-surface-color;
+                padding: 10px 16px 16px;
+                position: relative;
 
                 .error {
                     font-family: 'Fira Code', monospace;
@@ -88,4 +92,16 @@
             }
         }
     }
+}
+
+.dataHeader {
+    @include base-text-12-bold;
+    opacity: 0.5;
+    margin-bottom: 10px;
+}
+
+.codemirror {
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
 }

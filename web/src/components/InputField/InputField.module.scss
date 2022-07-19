@@ -1,31 +1,36 @@
-@import "src/styles/colors";
+@import 'src/styles/colors';
 @import 'src/styles/fonts';
 
 .wrapper {
-  margin-top: 10px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
 }
 
 .label {
-  @include base-text-12-bold;
+    @include base-text-12-bold;
 }
 
 .input {
-  font-family: Poppins, serif;
-  font-size: 12px;
-  line-height: 18px;
-  color: $base-dark-color;
-  border-width: 0;
-  height: 32px;
-  padding: 0 8px 0 8px;
-  caret-color: $primary-color;
+    font-family: Fira Code, monospace;
+    font-size: 13px;
+    line-height: 16px;
+    color: $base-dark-color;
+    min-height: 36px;
+    padding: 0 8px 0 10px;
+    border: 2px solid $base-light-color;
+    caret-color: $primary-color;
+    transition: border-color 0.2s;
+    border-radius: 1px;
+}
+
+.input:hover {
+    border: 2px solid $primary-color;
 }
 
 .input:focus {
-  outline: none;
-  background: #FFFFFF;
-  box-shadow: inset 0px -2px 0px $primary-color;
+    outline: none;
+    border-color: $primary-color;
 }

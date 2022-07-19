@@ -6,7 +6,6 @@ import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { ExpressionModalInfo } from 'web/src/containers/Main/types';
 
- 
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
 import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
@@ -65,21 +64,26 @@ export function ModalExpression(props: ModalExpressionProps) {
                 </div>
                 <div className={s.data}>
                     <div className={s.inputData}>
+                        <div className={s.dataHeader}>Input data</div>
                         {launchContext || questionnaireResponseRD ? (
-                            <InputData
-                                expressionModalInfo={expressionModalInfo}
-                                questionnaireResponseRD={questionnaireResponseRD}
-                                fullLaunchContext={fullLaunchContext}
-                                parameterName={parameterName}
-                                setExpression={setExpression}
-                            />
+                            <div className={s.codemirror}>
+                                <InputData
+                                    expressionModalInfo={expressionModalInfo}
+                                    questionnaireResponseRD={questionnaireResponseRD}
+                                    fullLaunchContext={fullLaunchContext}
+                                    parameterName={parameterName}
+                                    setExpression={setExpression}
+                                />
+                            </div>
                         ) : (
                             <div>Error: no data</div>
                         )}
                     </div>
                     <div className={s.outputData}>
+                        <div className={s.dataHeader}>Output data</div>
                         {expressionResultOutput?.type === 'success' && (
                             <CodeMirror
+                                className={s.codemirror}
                                 value={expressionResultOutput.result}
                                 options={{
                                     readOnly: true,

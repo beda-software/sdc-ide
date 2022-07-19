@@ -11,8 +11,8 @@
     z-index: 700;
 
     .window {
-        width: 95%;
-        height: 100%;
+        width: calc(100% - 60px);
+        height: calc(100% - 60px);
         z-index: 2;
         background-color: #ffffff;
         display: flex;
