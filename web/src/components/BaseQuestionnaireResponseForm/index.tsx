@@ -83,7 +83,7 @@ function Group({ parentPath, questionItem, context }: GroupItemProps) {
 
 export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly } = questionItem;
+    const { linkId, text, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'string'];
     const fieldName = fieldPath.join('.');
 
@@ -92,7 +92,11 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
             {({ input, meta }) => (
                 <div>
                     <label>{text}</label>
-                    <input type="text" {...input} readOnly={qrfContext.readOnly || readOnly} />
+                    <input
+                        type="text"
+                        {...input}
+                        readOnly={qrfContext.readOnly || readOnly || hidden}
+                    />
                     {meta.touched && meta.error && <span>{meta.error}</span>}
                 </div>
             )}

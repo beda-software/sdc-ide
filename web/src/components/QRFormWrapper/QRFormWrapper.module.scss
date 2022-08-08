@@ -36,5 +36,11 @@
         input:focus {
             border-color: #597ef7;
         }
+
+        input:read-only {
+            background-color: #e5e5e5;
+            border-color: #e5e5e5;
+            color: #888888;
+        }
     }
 }
