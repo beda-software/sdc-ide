@@ -1,36 +1,40 @@
 @import 'src/styles/colors';
 
-:global .patientForm {
-}
-
-:global .questionFormItem > div {
+:global form > div {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
 
-    b {
-        font-size: 14px;
-    }
+    & div {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
 
-    label {
-        font-size: 12px;
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
+        b {
+            font-size: 14px;
+        }
 
-    input {
-        border-radius: 1px;
-        border: 2px solid white;
-        padding: 8px 12px;
-        outline: none;
-        transition: all 0.3s ease;
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-            'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        font-size: 12px;
-    }
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
 
-    input:hover,
-    input:focus {
-        border-color: #597ef7;
+        input {
+            border-radius: 1px;
+            border: 2px solid white;
+            padding: 8px 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+                'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            font-size: 12px;
+        }
+
+        input:hover,
+        input:focus {
+            border-color: #597ef7;
+        }
     }
 }
