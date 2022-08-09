@@ -20,7 +20,7 @@ export function objectToDisplay(resource: object) {
 
 export function displayToObject(yamlString: string) {
     try {
-        const obj = yaml.safeLoad(yamlString);
+        const obj = yaml.load(yamlString);
         return obj;
     } catch (e) {
         console.log(e);

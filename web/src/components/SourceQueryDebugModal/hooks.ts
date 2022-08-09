@@ -20,7 +20,7 @@ export function useSourceQueryDebugModal(props: Props) {
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
     const onSave = useCallback(
-        async (resource:Questionnaire) => {
+        async (resource: Questionnaire) => {
             const newResource = { ...resource };
             if (newResource && newResource.contained && rawSourceQuery) {
                 const indexOfContainedId = newResource.contained.findIndex(
