@@ -42,7 +42,7 @@
         "react-final-form-listeners": "^1.0.3",
         "react-router-dom": "^5.3.0",
         "react-scripts": "5.0.1",
-        "react-select": "^3.1.1",
+        "react-select": "^5.4.0",
         "sass": "^1.50.0",
         "shared": "0.0.1",
         "sdc-qrf": "*",

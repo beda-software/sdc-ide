@@ -5,7 +5,7 @@
     flex-direction: column;
     margin-top: 10px;
 
-    & div {
+    > div {
         display: flex;
         flex-direction: column;
         margin-top: 10px;
@@ -41,5 +41,22 @@
         background-color: #e5e5e5;
         border-color: #e5e5e5;
         color: #888888;
+    }
+
+    > div > div {
+        > div {
+            border-radius: 1px !important;
+            border: 2px solid white !important;
+            transition: all 0.3s ease !important;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+                'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            font-size: 12px;
+            box-shadow: none !important;
+        }
+        > div:hover,
+        > div:focus {
+            border-color: #597ef7 !important;
+        }
     }
 }

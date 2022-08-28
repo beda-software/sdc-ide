@@ -1,6 +1,8 @@
 import _ from 'lodash';
-import { useRef } from 'react';
+import { useRef, useCallback, useMemo } from 'react';
 import { Field, Form, FormSpy } from 'react-final-form';
+import Select from 'react-select';
+import { StateManagerProps } from 'react-select/dist/declarations/src/stateManager';
 import {
     calcInitialContext,
     FormItems,
@@ -42,7 +44,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                 <form onSubmit={handleSubmit}>
                     <FormSpy
                         subscription={{ values: true }}
-                        onChange={(formState) => onFormChange(formState.values)}
+                        onChange={(formState) => {
+                            return onFormChange(formState.values);
+                        }}
                     />
                     <QuestionnaireResponseFormProvider
                         formValues={values}
@@ -50,6 +54,9 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                         groupItemComponent={Group}
                         questionItemComponents={{
                             string: QuestionString,
+                        }}
+                        itemControlQuestionItemComponents={{
+                            select: QuestionSelect,
                         }}
                         readOnly={readOnly}
                     >
@@ -100,6 +107,54 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
                     {meta.touched && meta.error && <span>{meta.error}</span>}
                 </div>
             )}
+        </Field>
+    );
+}
+
+export function QuestionSelectWrapper({ value, onChange, options }: StateManagerProps<any>) {
+    const newValue = useMemo(() => {
+        if (value.Coding) {
+            return { label: value.Coding?.display };
+        }
+        return { label: value.label };
+    }, [value]);
+    const newOnChange = useCallback(
+        (values: any, option: any) => {
+            onChange && onChange(values.value, option);
+        },
+        [onChange],
+    );
+
+    return (
+        <Select
+            options={options?.map((c: any) => {
+                return {
+                    label: c.value?.Coding.display,
+                    value: c.value,
+                };
+            })}
+            onChange={newOnChange}
+            value={newValue}
+        />
+    );
+}
+
+function QuestionSelect({ parentPath, questionItem }: QuestionItemProps) {
+    const { linkId, text, answerOption } = questionItem;
+    const fieldPath = [...parentPath, linkId, 0, 'value'];
+    const fieldName = fieldPath.join('.');
+    const children = answerOption ? answerOption : [];
+
+    return (
+        <Field name={fieldName}>
+            {({ input }) => {
+                return (
+                    <div>
+                        <label>{text}</label>
+                        <QuestionSelectWrapper options={children} {...input} />
+                    </div>
+                );
+            }}
         </Field>
     );
 }
