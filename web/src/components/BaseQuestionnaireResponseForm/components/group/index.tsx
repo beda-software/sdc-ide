@@ -89,7 +89,7 @@ export function Group({ parentPath, questionItem, context }: GroupItemProps) {
             );
         }
         return (
-            <div style={{ paddingBottom: 10 }}>
+            <div className={s.group}>
                 <p className={s.questLabel}>{text}</p>
                 <QuestionItems questionItems={item!} parentPath={[...parentPath, linkId, 'items']} context={context[0]} />
             </div>
@@ -97,3 +97,5 @@ export function Group({ parentPath, questionItem, context }: GroupItemProps) {
     }
     return null;
 }
+
+export {Row,Col} from './flex';

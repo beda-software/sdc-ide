@@ -1,6 +1,21 @@
 @import "src/styles/colors";
 @import 'src/styles/fonts';
 
+.group {
+    paddingBottom: 10
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    display: flex;
+    flex-direction: column;
+}
+
+
 .groupWrapper {
     background-color: #77ee77;
 }

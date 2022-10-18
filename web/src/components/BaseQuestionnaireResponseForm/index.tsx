@@ -9,7 +9,7 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf/src';
 
-import { Group, QuestionBoolean, QuestionChoice, QuestionDate, QuestionDisplay, QuestionString } from './components';
+import { Col, Group, QuestionBoolean, QuestionChoice, QuestionDate, QuestionDisplay, QuestionString, Row } from './components';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -49,6 +49,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                         formValues={values}
                         setFormValues={(newValues) => form.change('', newValues)}
                         groupItemComponent={Group}
+                        itemControlGroupItemComponents={{'col': Col, 'row': Row}}
                         questionItemComponents={{
                             date: QuestionDate,
                             string: QuestionString,
