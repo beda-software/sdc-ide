@@ -88,6 +88,7 @@ export function Menu({
                     <div>
                         <label>
                             <input
+                                className={s.fhirModeCheck}
                                 name="fhir-mode"
                                 type="checkbox"
                                 checked={fhirMode}
