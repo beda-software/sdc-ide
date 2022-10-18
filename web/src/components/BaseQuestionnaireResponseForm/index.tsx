@@ -9,7 +9,7 @@ import {
     QuestionnaireResponseFormProvider,
 } from 'sdc-qrf/src';
 
-import { Col, Group, QuestionBoolean, QuestionChoice, QuestionDate, QuestionDisplay, QuestionString, Row } from './components';
+import { Col, Group, QuestionBoolean, QuestionChoice, QuestionDate, QuestionDecimal, QuestionDisplay, QuestionString, Row } from './components';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -57,6 +57,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                             choice: QuestionChoice,
                             boolean: QuestionBoolean,
                             display: QuestionDisplay,
+                            decimal: QuestionDecimal,
                         }}
                         readOnly={readOnly}
                     >
