@@ -4,7 +4,6 @@ import { Form, FormSpy } from 'react-final-form';
 import {
     calcInitialContext,
     FormItems,
-    GroupItemProps,
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,

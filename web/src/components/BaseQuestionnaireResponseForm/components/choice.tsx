@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { Field } from "react-final-form";
 import Select from 'react-select';
 import { QuestionItemProps } from "sdc-qrf/src";
+
 import { QuestionnaireItemAnswerOptionValue } from "shared/src/contrib/aidbox";
 
 function toSelectValue(value: QuestionnaireItemAnswerOptionValue){

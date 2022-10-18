@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { Field } from "react-final-form";
 import { GroupItemProps, QuestionItems } from "sdc-qrf/src";
+
 import s from './Group.module.scss';
 
 export function Group({ parentPath, questionItem, context }: GroupItemProps) {
