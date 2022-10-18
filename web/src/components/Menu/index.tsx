@@ -59,8 +59,8 @@ export function Menu({
                                         label: questionnaireId,
                                     }}
                                     options={questionnaires.map((questionnaire) => ({
-                                        value: questionnaire.id,
-                                        label: questionnaire.id,
+                                        value: questionnaire.id!,
+                                        label: questionnaire.id!,
                                     }))}
                                     onChange={(option) => {
                                         window.location.hash = option ? option.value! : '';
