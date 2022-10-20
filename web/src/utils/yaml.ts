@@ -3,7 +3,7 @@ import _ from 'lodash';
 const yaml = require('js-yaml');
 
 export function objectToDisplay(resource: object) {
-    const preparedResource = _.omit(resource, 'meta');
+    const preparedResource = resource;
 
     if (_.isEmpty(resource)) {
         return '';
