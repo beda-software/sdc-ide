@@ -84,7 +84,7 @@ export function QuestionItem(props: QuestionItemProps) {
             // TODO: Add support for x-fhir-query
             if (calculatedExpression.language === 'text/fhirpath') {
                 const newValues = fhirpath.evaluate(
-                    context.context || {},
+                    context.resource || {},
                     calculatedExpression.expression!,
                     context as ItemContext,
                 );
