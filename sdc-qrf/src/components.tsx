@@ -1,4 +1,3 @@
-import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
 import { ReactChild, useEffect, useContext, useMemo, useRef } from 'react';
@@ -14,6 +13,7 @@ import {
     getEnabledQuestions,
     wrapAnswerValue,
     removeDisabledAnswers,
+    evaluateExpression,
 } from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
@@ -83,10 +83,10 @@ export function QuestionItem(props: QuestionItemProps) {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
             // TODO: Add support for x-fhir-query
             if (calculatedExpression.language === 'text/fhirpath') {
-                const newValues = fhirpath.evaluate(
-                    context.resource || {},
+                const newValues = evaluateExpression(
+                    context.resource,
                     calculatedExpression.expression!,
-                    context as ItemContext,
+                    context,
                 );
                 const newAnswers = newValues.length
                     ? repeats

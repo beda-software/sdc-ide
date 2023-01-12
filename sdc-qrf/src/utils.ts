@@ -674,3 +674,11 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
 
     return [resourceType, searchParams];
 }
+
+export function evaluateExpression(
+    resource: QuestionnaireResponse | undefined,
+    expression: string,
+    context: ItemContext,
+) {
+    return fhirpath.evaluate(resource || {}, expression, context);
+}
