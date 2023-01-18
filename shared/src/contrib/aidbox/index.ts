@@ -14052,6 +14052,7 @@ export interface QuestionnaireItem {
     variable?: Expression[];
     itemControl?: CodeableConcept;
     calculatedExpression?: Expression;
+    enableWhenExpression?: Expression;
 }
 
 export interface QuestionnaireItemAnswerOption {
