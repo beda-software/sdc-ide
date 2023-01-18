@@ -97,9 +97,9 @@ export const showError = (errorState: ErrorDebugState, title: Title) => {
 export function useMain(questionnaireId: string) {
     const [fhirMode, setFhirMode_] = useState<boolean>(getData('fhirMode'));
 
-    const setFhirMode = useCallback((fhirMode: boolean) => {
-        setFhirMode_(fhirMode);
-        setData('fhirMode', fhirMode);
+    const setFhirMode = useCallback((currentFhirMode: boolean) => {
+        setFhirMode_(currentFhirMode);
+        setData('fhirMode', currentFhirMode);
     }, []);
     const [launchContext, dispatch] = useLaunchContext();
 
