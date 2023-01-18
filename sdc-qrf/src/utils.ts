@@ -242,13 +242,9 @@ function mapFormToResponseRecursive(
 export function mapFormToResponse(
     values: FormItems,
     questionnaire: Questionnaire,
-    keepDisabledAnswers?: boolean,
 ): Pick<QuestionnaireResponse, 'item'> {
     return {
-        item: mapFormToResponseRecursive(
-            keepDisabledAnswers ? values : removeDisabledAnswers(questionnaire.item ?? [], values),
-            questionnaire.item ?? [],
-        ),
+        item: mapFormToResponseRecursive(values, questionnaire.item ?? []),
     };
 }
 
