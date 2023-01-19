@@ -1,6 +1,6 @@
 import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-import { mapFormToResponse, mapResponseToForm } from '../src';
+import { mapFormToResponse, mapResponseToForm, removeDisabledAnswers } from '../src';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {
@@ -274,7 +274,12 @@ test('enableWhen logic for non-repeatable groups', () => {
         ],
     };
     const formItems = mapResponseToForm(qr, questionnaire);
-    const actualQR = { ...qr, ...mapFormToResponse(formItems, questionnaire) };
+    const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+        questionnaire,
+        resource: qr,
+        context: qr,
+    });
+    const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
     expect(actualQR).toEqual(expectedQR);
 });
@@ -410,7 +415,12 @@ test('enableWhen logic for repeatable groups', () => {
         ],
     };
     const formItems = mapResponseToForm(qr, questionnaire);
-    const actualQR = { ...qr, ...mapFormToResponse(formItems, questionnaire) };
+    const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+        questionnaire,
+        resource: qr,
+        context: qr,
+    });
+    const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
     expect(actualQR).toEqual(expectedQR);
 });
