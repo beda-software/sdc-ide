@@ -1,6 +1,11 @@
 import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-import { mapFormToResponse, mapResponseToForm } from '../src';
+import {
+    getEnabledQuestions,
+    mapFormToResponse,
+    mapResponseToForm,
+    removeDisabledAnswers,
+} from '../src';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {
@@ -274,7 +279,12 @@ test('enableWhen logic for non-repeatable groups', () => {
         ],
     };
     const formItems = mapResponseToForm(qr, questionnaire);
-    const actualQR = { ...qr, ...mapFormToResponse(formItems, questionnaire) };
+    const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+        questionnaire,
+        resource: qr,
+        context: qr,
+    });
+    const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
     expect(actualQR).toEqual(expectedQR);
 });
@@ -410,7 +420,131 @@ test('enableWhen logic for repeatable groups', () => {
         ],
     };
     const formItems = mapResponseToForm(qr, questionnaire);
-    const actualQR = { ...qr, ...mapFormToResponse(formItems, questionnaire) };
+    const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+        questionnaire,
+        resource: qr,
+        context: qr,
+    });
+    const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
+
+    expect(actualQR).toEqual(expectedQR);
+});
+
+test('enableWhenExpression logic', () => {
+    const questionnaire: Questionnaire = {
+        resourceType: 'Questionnaire',
+        status: 'active',
+        item: [
+            {
+                linkId: 'root-group',
+                type: 'group',
+                text: 'Root group',
+                item: [
+                    {
+                        linkId: 'non-repeatable-group',
+                        type: 'group',
+                        text: 'Non Repeatable group',
+                        item: [
+                            { linkId: 'condition', text: 'Condition', type: 'boolean' },
+                            {
+                                linkId: 'question-for-yes',
+                                text: 'Question for yes',
+                                type: 'text',
+                                enableWhenExpression: {
+                                    language: 'text/fhirpath',
+                                    expression:
+                                        "%resource.repeat(item).where(linkId = 'condition').answer.children().boolean = true",
+                                },
+                            },
+                            {
+                                linkId: 'question-for-no',
+                                text: 'Question for no',
+                                type: 'text',
+                                enableWhenExpression: {
+                                    language: 'text/fhirpath',
+                                    expression:
+                                        "%resource.repeat(item).where(linkId = 'condition').answer.children().boolean = false",
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
+
+    const qr: QuestionnaireResponse = {
+        resourceType: 'QuestionnaireResponse',
+        status: 'completed',
+        item: [
+            {
+                linkId: 'root-group',
+                item: [
+                    {
+                        linkId: 'non-repeatable-group',
+                        item: [
+                            {
+                                linkId: 'condition',
+                                answer: [{ value: { boolean: true } }],
+                            },
+                            {
+                                linkId: 'question-for-yes',
+                                answer: [{ value: { string: 'yes' } }],
+                            },
+                            {
+                                linkId: 'question-for-no',
+                                answer: [{ value: { string: 'no' } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
+    const expectedQR: QuestionnaireResponse = {
+        resourceType: 'QuestionnaireResponse',
+        status: 'completed',
+        item: [
+            {
+                linkId: 'root-group',
+                item: [
+                    {
+                        linkId: 'non-repeatable-group',
+                        item: [
+                            {
+                                linkId: 'condition',
+                                answer: [{ value: { boolean: true } }],
+                            },
+                            {
+                                linkId: 'question-for-yes',
+                                answer: [{ value: { string: 'yes' } }],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    };
+    const formItems = mapResponseToForm(qr, questionnaire);
+    const enabledQuestionsLinkIds = getEnabledQuestions(
+        questionnaire.item?.[0].item?.[0].item ?? [],
+        ['items', 'root-group', 'items'],
+        formItems,
+        {
+            questionnaire,
+            resource: qr,
+            context: qr,
+        },
+    ).map((questionnaireItem) => questionnaireItem.linkId);
+
+    expect(enabledQuestionsLinkIds).toStrictEqual(['condition', 'question-for-yes']);
+
+    const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+        questionnaire,
+        resource: qr,
+        context: qr,
+    });
+    const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
     expect(actualQR).toEqual(expectedQR);
 });

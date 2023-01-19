@@ -4,13 +4,8 @@ if [ -f ".env.test.local" ]; then
     export `cat .env.test.local`
 fi
 
-if [ -z "${AIDBOX_LICENSE_KEY_TESTS}" ]; then
-    echo "AIDBOX_LICENSE_KEY_TESTS is required to run tests"
-    exit 1
-fi
-
-if [ -z "${AIDBOX_LICENSE_ID_TESTS}" ]; then
-    echo "AIDBOX_LICENSE_ID_TESTS is required to run tests"
+if [ -z "${AIDBOX_LICENSE}" ]; then
+    echo "AIDBOX_LICENSE is required to run tests"
     exit 1
 fi
 

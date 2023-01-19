@@ -27,7 +27,7 @@ services:
             timeout: 20s
             retries: 100
     devbox:
-        image: healthsamurai/devbox:2112
+        image: healthsamurai/aidboxone:edge
         depends_on:
             - devbox-db
         links:
@@ -35,12 +35,11 @@ services:
         env_file:
             - env_tests
         environment:
-            AIDBOX_LICENSE_ID: ${AIDBOX_LICENSE_ID_TESTS}
-            AIDBOX_LICENSE_KEY: ${AIDBOX_LICENSE_KEY_TESTS}
+            AIDBOX_LICENSE: ${AIDBOX_LICENSE}
         ports:
             - 8181:8080
     devbox-db:
-        image: healthsamurai/aidboxdb:13.2
+        image: healthsamurai/aidboxdb:14.5
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres

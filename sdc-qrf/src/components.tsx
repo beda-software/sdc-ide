@@ -13,7 +13,6 @@ import {
     getBranchItems,
     getEnabledQuestions,
     wrapAnswerValue,
-    removeDisabledAnswers,
 } from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
@@ -33,20 +32,21 @@ export function usePreviousValue<T = any>(value: T) {
 export function QuestionItems(props: QuestionItemsProps) {
     const { questionItems, parentPath, context } = props;
     const { formValues } = useQuestionnaireResponseFormContext();
-    const cleanValues = removeDisabledAnswers(context.questionnaire.item!, formValues);
 
     return (
         <>
-            {getEnabledQuestions(questionItems, parentPath, cleanValues).map((item, index) => {
-                return (
-                    <QuestionItem
-                        key={index}
-                        questionItem={item}
-                        context={context}
-                        parentPath={parentPath}
-                    />
-                );
-            })}
+            {getEnabledQuestions(questionItems, parentPath, formValues, context).map(
+                (item, index) => {
+                    return (
+                        <QuestionItem
+                            key={index}
+                            questionItem={item}
+                            context={context}
+                            parentPath={parentPath}
+                        />
+                    );
+                },
+            )}
         </>
     );
 }
