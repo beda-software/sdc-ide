@@ -70,6 +70,6 @@ jobs:
                   script: |
                       cd /root/sdc-demo
                       echo -n $ENV_FILE|base64 -d > .env
-                      docker compose -f docker-compose.production.yaml pull
+                      docker compose -f docker-compose.production.yaml pull --quiet
                       docker compose -f docker-compose.production.yaml up -d
                       echo Current branch is ${{ github.ref }}
