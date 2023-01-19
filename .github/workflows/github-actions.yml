@@ -46,30 +46,15 @@ jobs:
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/master'
         steps:
-            - uses: actions/checkout@v2
-            - name: Deploy to Server
-              uses: easingthemes/ssh-deploy@v2.1.1
-              env:
-                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-                  ARGS: '-rltgoDzvO'
-                  SOURCE: './examples/'
-                  REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-                  REMOTE_USER: ${{ secrets.REMOTE_USER }}
-                  TARGET: '/root/sdc-demo'
             - name: Restart
               uses: appleboy/ssh-action@master
-              env:
-                  ENV_FILE: ${{ secrets.ENV_FILE }}
               with:
                   host: ${{ secrets.REMOTE_HOST }}
                   username: ${{ secrets.REMOTE_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   port: 22
-                  envs: ENV_FILE
                   script_stop: true
                   script: |
-                      cd /root/sdc-demo
-                      echo -n $ENV_FILE|base64 -d > .env
-                      docker compose -f docker-compose.production.yaml pull --quiet
-                      docker compose -f docker-compose.production.yaml up -d
+                      cd ~/web
+                      make restart
                       echo Current branch is ${{ github.ref }}
