@@ -6,7 +6,7 @@ import s from './BooleanField.module.scss';
 export function QuestionBoolean({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, hidden } = questionItem;
-    const fieldPath = [...parentPath, linkId, 0, 'value', 'string'];
+    const fieldPath = [...parentPath, linkId, 0, 'value', 'boolean'];
     const fieldName = fieldPath.join('.');
     return (
         <Field name={fieldName}>
