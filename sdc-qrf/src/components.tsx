@@ -95,7 +95,12 @@ export function QuestionItem(props: QuestionItemProps) {
                     : undefined;
 
                 if (!isEqual(newAnswers, prevAnswers)) {
-                    setFormValues(_.set(_.cloneDeep(formValues), fieldPath, newAnswers));
+                    const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
+                    setFormValues(
+                        allValues,
+                        fieldPath,
+                        newAnswers,
+                    );
                 }
             }
         }
