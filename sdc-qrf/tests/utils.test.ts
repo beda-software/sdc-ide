@@ -571,7 +571,8 @@ test('mapFormToResponse cut empty answers', () => {
         ],
     };
 
-    const result = mapFormToResponse(formValues, allergiesQuestionnaire)
-    const answersLinkIds = result.item?.map((answerItem) => answerItem.linkId) ?? []
-    expect(answersLinkIds.includes('reaction')).not.toBe(true)
+    const result = mapFormToResponse(formValues, allergiesQuestionnaire);
+    const answersLinkIds = result.item?.map((answerItem) => answerItem.linkId) ?? [];
+    expect(answersLinkIds.includes('reaction')).not.toBe(true);
+    expect(answersLinkIds).toEqual(expect.arrayContaining(['type', 'notes']));
 });
