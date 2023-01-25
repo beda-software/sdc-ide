@@ -12,7 +12,8 @@
         "jsx": "react-jsx",
         "moduleResolution": "node",
         "noEmit": false,
-        "importHelpers": true
+        "importHelpers": true,
+        "noUncheckedIndexedAccess": true
     },
     "include": ["src"],
     "exclude": ["node_modules", "tests"]
