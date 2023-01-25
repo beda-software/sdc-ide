@@ -8,12 +8,7 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
 import { ItemContext, QRFContextData, QuestionItemProps, QuestionItemsProps } from './types';
-import {
-    calcContext,
-    getBranchItems,
-    getEnabledQuestions,
-    wrapAnswerValue,
-} from './utils';
+import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
     const prevValue = useRef<T>();
@@ -96,11 +91,7 @@ export function QuestionItem(props: QuestionItemProps) {
 
                 if (!isEqual(newAnswers, prevAnswers)) {
                     const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
-                    setFormValues(
-                        allValues,
-                        fieldPath,
-                        newAnswers,
-                    );
+                    setFormValues(allValues, fieldPath, newAnswers);
                 }
             }
         }
@@ -126,8 +117,14 @@ export function QuestionItem(props: QuestionItemProps) {
                 console.warn(`QRF: Unsupported group itemControl '${itemControl?.coding?.[0]
                     ?.code!}'. 
                 Please define 'itemControlGroupWidgets' for '${itemControl?.coding?.[0]?.code!}'`);
-
-                return null;
+                const DefaultComponent = groupItemComponent;
+                return DefaultComponent ? (
+                    <DefaultComponent
+                        context={context}
+                        parentPath={parentPath}
+                        questionItem={questionItem}
+                    />
+                ) : null;
             }
 
             const Component = itemControlGroupItemComponents[itemControl?.coding?.[0]?.code!]!;
@@ -163,7 +160,14 @@ export function QuestionItem(props: QuestionItemProps) {
 Please define 'itemControlWidgets' for '${itemControl?.coding?.[0]?.code!}'`,
             );
 
-            return null;
+            const DefaultComponent = questionItemComponents[questionItem.type];
+            return DefaultComponent ? (
+                <DefaultComponent
+                    context={context}
+                    parentPath={parentPath}
+                    questionItem={questionItem}
+                />
+            ) : null;
         }
 
         const Component = itemControlQuestionItemComponents[itemControl?.coding?.[0]?.code!]!;
