@@ -6,6 +6,7 @@ import {
     mapResponseToForm,
     removeDisabledAnswers,
 } from '../src';
+import { allergiesQuestionnaire } from './resources/questionnaire';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {
@@ -547,4 +548,31 @@ test('enableWhenExpression logic', () => {
     const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
     expect(actualQR).toEqual(expectedQR);
+});
+
+test('mapFormToResponse cut empty answers', () => {
+    const formValues = {
+        type: [
+            {
+                value: {
+                    Coding: {
+                        code: '418634005',
+                        system: 'http://snomed.ct',
+                        display: 'Drug',
+                    },
+                },
+            },
+        ],
+        reaction: undefined,
+        notes: [
+            {
+                value: {},
+            },
+        ],
+    };
+
+    const result = mapFormToResponse(formValues, allergiesQuestionnaire);
+    const answersLinkIds = result.item?.map((answerItem) => answerItem.linkId) ?? [];
+    expect(answersLinkIds.includes('reaction')).not.toBe(true);
+    expect(answersLinkIds).toEqual(expect.arrayContaining(['type', 'notes']));
 });

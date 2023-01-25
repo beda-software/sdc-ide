@@ -93,7 +93,7 @@ export interface FormAnswerItems<T = any> {
     items?: FormItems;
 }
 
-export type FormItems = Record<string, FormGroupItems | FormAnswerItems[]>;
+export type FormItems = Record<string, FormGroupItems | FormAnswerItems[] | undefined>;
 
 export interface QuestionnaireResponseFormData {
     formValues: FormItems;

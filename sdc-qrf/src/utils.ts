@@ -184,6 +184,10 @@ function mapFormToResponseRecursive(
             return acc;
         }
 
+        if (!answers) {
+            return acc;
+        }
+
         const question = questionnaireItems.filter((qItem) => qItem.linkId === linkId)[0];
 
         if (!question) {
@@ -327,6 +331,10 @@ export function findAnswersForQuestionsRecursive(linkId: string, values?: FormIt
         values,
         (acc, v) => {
             if (acc) {
+                return acc;
+            }
+
+            if (!v) {
                 return acc;
             }
 
@@ -506,8 +514,7 @@ function isQuestionEnabled(args: IsQuestionEnabledArgs) {
             `);
         }
 
-        return expressionResult
-
+        return expressionResult;
     }
 
     const iterFn = enableBehavior === 'any' ? _.some : _.every;
