@@ -15,6 +15,7 @@ import {
     QuestionBoolean,
     QuestionChoice,
     QuestionDate,
+    QuestionDateTime,
     QuestionDecimal,
     QuestionDisplay,
     QuestionString,
@@ -63,6 +64,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                         itemControlGroupItemComponents={{ col: Col, row: Row }}
                         questionItemComponents={{
                             date: QuestionDate,
+                            dateTime: QuestionDateTime,
                             string: QuestionString,
                             text: QuestionString,
                             choice: QuestionChoice,
