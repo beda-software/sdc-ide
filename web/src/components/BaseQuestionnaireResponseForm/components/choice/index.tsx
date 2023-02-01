@@ -1,45 +1,11 @@
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf/src";
+import { getAnswerCode, getAnswerDisplay } from "web/src/utils/questionnaire";
 
-import { QuestionnaireItemAnswerOption, QuestionnaireResponseItemAnswerValue } from "shared/src/contrib/aidbox";
+import { QuestionnaireItemAnswerOption } from "shared/src/contrib/aidbox";
+
 
 import { useAnswerChoice } from "./hook";
 import { AsyncSelectField } from "./select";
-
-export function getAnswerDisplay(
-    o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswerValue,
-) {
-    if (o?.Coding) {
-        return o.Coding.display!;
-    }
-    if (o?.string) {
-        return o.string;
-    }
-
-    if (o?.Reference) {
-        return o.Reference.display ?? '';
-    }
-
-    return JSON.stringify(o);
-}
-
-export function getAnswerCode(
-    o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswerValue,
-) {
-    if (o?.Coding) {
-        return o.Coding.code!;
-    }
-    if (o?.string) {
-        return o.string;
-    }
-
-    if (o?.Reference) {
-        return o.Reference.id;
-    }
-
-    return JSON.stringify(o);
-}
-
-
 
 export function QuestionChoice(props: QuestionItemProps) {
     const { questionItem } = props;

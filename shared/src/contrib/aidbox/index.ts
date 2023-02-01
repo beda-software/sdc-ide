@@ -14000,11 +14000,17 @@ export interface QuestionnaireAssembleContext {
 }
 
 export interface QuestionnaireItem {
+    /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression */
+    /** An expression (FHIRPath, CQL or FHIR Query) that resolves to a list of permitted answers for the question item or that establishes context for a group item. */
+    answerExpression?: Expression;
     /** Permitted answer */
     answerOption?: QuestionnaireItemAnswerOption[];
     /** Valueset containing permitted answers */
     answerValueSet?: canonical;
     /** Corresponding concept for this item in a terminology */
+    /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn */
+    /** Guide for rendering multi-column choices */
+    choiceColumn?: QuestionnaireItemChoiceColumn[];
     code?: Coding[];
     /** NOTE: from extension */
     constraint?: QuestionnaireItemConstraint[];
@@ -14042,6 +14048,9 @@ export interface QuestionnaireItem {
     repeats?: boolean;
     /** Whether the item must be included in data results */
     required?: boolean;
+    /** NOTE: from extension http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-shortText */
+    /** The short text for the item. */
+    shortText?: string;
     /** NOTE: from extension */
     subQuestionnaire?: canonical;
     /** Primary text for the item */
@@ -14075,6 +14084,21 @@ export interface QuestionnaireItemAnswerOptionValue {
     Reference?: AidboxReference<any>;
     string?: string;
     time?: time;
+}
+
+export interface QuestionnaireItemChoiceColumn {
+    /** NOTE: from extension forDisplay */
+    /** Use for display ? */
+    forDisplay?: boolean;
+    /** NOTE: from extension label */
+    /** Column label */
+    label?: string;
+    /** NOTE: from extension path */
+    /** Column path */
+    path: string;
+    /** NOTE: from extension width */
+    /** Width of column */
+    width?: Quantity;
 }
 
 export interface QuestionnaireItemConstraint {

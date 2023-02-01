@@ -18,6 +18,7 @@ interface Props<T> {
     getOptionLabel: (option: T) => string;
     getOptionValue: (option: T) => string;
     isMulti?: boolean;
+    testId?: string;
 }
 
 export function AsyncSelectField<T>(props: Props<T>) {
