@@ -29,7 +29,7 @@ export function QuestionDate({ parentPath, questionItem }: QuestionItemProps) {
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, text, readOnly, hidden } = questionItem;
-    const fieldPath = [...parentPath, linkId, 0, 'value', 'date'];
+    const fieldPath = [...parentPath, linkId, 0, 'value', 'dateTime'];
     const fieldName = fieldPath.join('.');
 
     return (
