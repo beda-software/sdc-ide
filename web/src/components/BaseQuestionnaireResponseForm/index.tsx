@@ -21,6 +21,7 @@ import {
     QuestionString,
     Row,
 } from './components';
+import { QuestionInteger } from './components/integer';
 import { QuestionReference } from './components/reference';
 
 interface Props {
@@ -72,6 +73,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                             display: QuestionDisplay,
                             decimal: QuestionDecimal,
                             reference: QuestionReference,
+                            integer: QuestionInteger,
                         }}
                         readOnly={readOnly}
                     >
