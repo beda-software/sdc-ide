@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 
 import 'web/src/services/initialize.develop';
 import 'web/src/styles/index.scss';
-import { getData } from 'web/src/services/localStorage';
+// import { getData } from 'web/src/services/localStorage';
 
  
 import { axiosInstance } from 'aidbox-react/lib/services/instance';
@@ -12,14 +12,13 @@ import { axiosInstance } from 'aidbox-react/lib/services/instance';
 import { App } from './containers/App';
 import * as serviceWorker from './serviceWorker';
 
-const { client, secret, baseUrl } = getData('connection');
+console.log('axiosInstance', axiosInstance.defaults);
 
-axiosInstance.defaults.auth = {
-    username: client,
-    password: secret,
-};
 
-axiosInstance.defaults.baseURL = baseUrl;
+// const { baseUrl } = getData('connection');
+
+
+// axiosInstance.defaults.baseURL = baseUrl;
 
 ReactDOM.render(
     <StrictMode>
