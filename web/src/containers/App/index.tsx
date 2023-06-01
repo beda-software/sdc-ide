@@ -22,8 +22,6 @@ export function App() {
         return appToken ? restoreUserSession(appToken) : success(null);
     });
 
-    console.log('userResponse', userResponse);
-    
     return (
         <RenderRemoteData remoteData={userResponse}>
             {(user) => (
@@ -45,6 +43,12 @@ export function App() {
                             <>
                                 <Route path="/auth" render={() => <Auth />} />
                                 <Route path="/signin" render={() => <SignIn />} />
+                                <Redirect
+                                    to={{
+                                        pathname: '/signin',
+                                        state: { referrer: history.location.pathname },
+                                    }}
+                                />
                             </>
                         )}
                     </Switch>
