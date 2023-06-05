@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ArrowDirections } from 'web/src/components/Icon/Arrow';
-import { getData, setData } from 'web/src/services/localStorage';
+import { getData } from 'web/src/services/localStorage';
 
 import { useService } from 'aidbox-react/lib/hooks/service';
-import { getFHIRResources, getMainResources } from 'aidbox-react/lib/services/fhir';
-import { applyDataTransformer } from 'aidbox-react/lib/services/service';
+import { extractBundleResources, getFHIRResources } from 'aidbox-react/lib/services/fhir';
+import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { Questionnaire } from 'shared/src/contrib/aidbox';
 
@@ -12,20 +13,12 @@ function useConfigForm() {
     const [baseUrl, setBaseUrl] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const applyConfig = useCallback(() => {
-        setData('connection', {
-            client: username,
-            secret: password,
-            baseUrl,
-        });
-        window.location.reload();
-    }, [baseUrl, username, password]);
 
     useEffect(() => {
-        const { client, secret, baseUrl } = getData('connection');
+        const { client, secret, baseUrl: configBaseUrl } = getData('connection');
         setUsername(client);
         setPassword(secret);
-        setBaseUrl(baseUrl);
+        setBaseUrl(configBaseUrl);
     }, []);
 
     return {
@@ -35,14 +28,13 @@ function useConfigForm() {
         setUsername,
         password,
         setPassword,
-        applyConfig,
     };
 }
 
 export function useMenu() {
     const configForm = useConfigForm();
     const [showMenu, setShowMenu] = useState<boolean>(false);
-
+    const history = useHistory()
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
@@ -50,13 +42,13 @@ export function useMenu() {
     const getMenuStyle = showMenu ? { display: 'flex' } : { display: 'none' };
 
     const [questionnairesRD] = useService(async () =>
-        applyDataTransformer(
-            getFHIRResources<Questionnaire>('Questionnaire', { _sort: 'id' }),
-            (bundle) => getMainResources<Questionnaire>(bundle, 'Questionnaire'),
+        mapSuccess(
+            await getFHIRResources<Questionnaire>('Questionnaire', { _sort: 'id' }),
+            (bundle) => extractBundleResources(bundle).Questionnaire,
         ),
     );
 
     const direction: ArrowDirections = showMenu ? 'up' : 'down';
 
-    return { questionnairesRD, toggleMenu, getMenuStyle, direction, configForm };
+    return { questionnairesRD, toggleMenu, getMenuStyle, direction, configForm, history };
 }

@@ -7,7 +7,6 @@ import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { Action, setResource } from 'web/src/containers/Main/hooks/launchContextHook';
 import { version } from 'web/src/version';
 
- 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
 
@@ -38,7 +37,7 @@ export function Menu({
     launchContext,
     dispatch,
 }: MenuProps) {
-    const { toggleMenu, getMenuStyle, questionnairesRD, direction, configForm } = useMenu();
+    const { toggleMenu, getMenuStyle, questionnairesRD, direction, history } = useMenu();
     const [isChecked, setIsChecked] = useState(false);
     return (
         <>
@@ -59,11 +58,13 @@ export function Menu({
                                         label: questionnaireId,
                                     }}
                                     options={questionnaires.map((questionnaire) => ({
-                                        value: questionnaire.id!,
-                                        label: questionnaire.id!,
+                                        value: questionnaire.id,
+                                        label: questionnaire.title ?? questionnaire.id,
                                     }))}
                                     onChange={(option) => {
-                                        window.location.hash = option ? option.value! : '';
+                                        if (option) {
+                                            history.push(option.value);
+                                        }
                                     }}
                                 />
                             </div>
@@ -104,45 +105,8 @@ export function Menu({
                         </label>
                     </div>
                 </div>
-                <div className={classNames(s.menuItem, s.categoryHeader)}>
-                    <b>Config</b>
-                </div>
-                <div className={s.menuItem}>
-                    <div className={s.header}>
-                        <label>Base URL</label>
-                    </div>
-                    <div className={s.input}>
-                        <input
-                            value={configForm.baseUrl}
-                            onChange={(e) => configForm.setBaseUrl(e.target.value)}
-                        />
-                    </div>
-                </div>
-                <div className={s.menuItem}>
-                    <div className={s.header}>
-                        <label>Username</label>
-                    </div>
-                    <div className={s.input}>
-                        <input
-                            value={configForm.username}
-                            onChange={(e) => configForm.setUsername(e.target.value)}
-                        />
-                    </div>
-                </div>
-                <div className={s.menuItem}>
-                    <div className={s.header}>
-                        <label>Password</label>
-                    </div>
-                    <div className={s.input}>
-                        <input
-                            value={configForm.password}
-                            onChange={(e) => configForm.setPassword(e.target.value)}
-                        />
-                    </div>
-                </div>
                 <div className={classNames(s.menuItem, s.submitButton)}>
                     <div className={s.version}>{version}</div>
-                    <button onClick={configForm.applyConfig}>Apply config</button>
                 </div>
             </div>
         </>
