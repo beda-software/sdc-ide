@@ -23,7 +23,10 @@ function loadStorageData(): StorageData {
             : {
                   client: 'root',
                   secret: 'secret',
-                  baseUrl: (window as any).BASE_URL ?? 'http://localhost:8080',
+                  baseUrl:
+                      (window as any).BASE_URL !== '{{BASE_URL}}'
+                          ? (window as any).BASE_URL
+                          : 'http://localhost:8080',
               },
         fhirMode: storageData.getItem('fhirMode') === 'true',
         prevActiveMappingId: storageData.getItem('prevActiveMappingId'),

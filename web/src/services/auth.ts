@@ -12,9 +12,6 @@ export function getUserInfo() {
         connection: { baseUrl },
     } = getData();
 
-    console.log('baseUrlbaseUrl', baseUrl);
-    
-
     return service<User>({
         baseURL: baseUrl,
         method: 'GET',
@@ -48,20 +45,17 @@ export function formatOAuthState(state: OAuthState) {
     return btoa(JSON.stringify(state));
 }
 
-export function getAuthorizeUrl(state?: OAuthState) {
+export function getAuthorizeUrl(clientId: string, state?: OAuthState) {
     const stateStr = state ? `&state=${formatOAuthState(state)}` : '';
     const {
-        connection: { baseUrl, client },
+        connection: { baseUrl },
     } = getData();
 
-    console.log('baseUrl', baseUrl);
-    
-
-    return `${baseUrl}/auth/authorize?client_id=${client}&response_type=token${stateStr}`;
+    return `${baseUrl}/auth/authorize?client_id=${clientId}&response_type=token${stateStr}`;
 }
 
-export function authorize(state?: OAuthState) {
-    window.location.href = getAuthorizeUrl(state);
+export function authorize(clientId: string, state?: OAuthState) {
+    window.location.href = getAuthorizeUrl(clientId, state);
 }
 
 export function setToken(token: string) {

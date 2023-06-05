@@ -1,30 +1,22 @@
 import { StrictMode } from 'react';
-// eslint-disable-next-line import/order
-import ReactDOM from 'react-dom';
-
-import 'web/src/services/initialize.develop';
-import 'web/src/styles/index.scss';
-// import { getData } from 'web/src/services/localStorage';
-
- 
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { App } from './containers/App';
 import * as serviceWorker from './serviceWorker';
 
-console.log('axiosInstance', axiosInstance.defaults);
+import 'web/src/services/initialize.develop';
+import 'web/src/styles/index.scss';
 
+const container = document.getElementById('root');
+const root = createRoot(container!);
 
-// const { baseUrl } = getData('connection');
-
-
-// axiosInstance.defaults.baseURL = baseUrl;
-
-ReactDOM.render(
+root.render(
     <StrictMode>
-        <App />
+        <Router>
+            <App />
+        </Router>
     </StrictMode>,
-    document.getElementById('root'),
 );
 
 // If you want your app to work offline and load faster, you can change
