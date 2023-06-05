@@ -1,6 +1,6 @@
 import queryString from 'query-string';
-import { useEffect } from 'react';
-import { Route, Switch, Redirect, Router, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -21,45 +21,56 @@ export function App() {
         const appToken = getToken();
         return appToken ? restoreUserSession(appToken) : success(null);
     });
+    const location = useLocation();
+    const clientId = new URLSearchParams(location.search).get('client');
+    if (clientId) {
+        localStorage.setItem('clientId', clientId);
+    }
+
+    const originPathRef = useRef(location.pathname);
 
     return (
         <RenderRemoteData remoteData={userResponse}>
-            {(user) => (
-                <Router history={history}>
+            {(user) =>
+                user ? (
                     <Switch>
-                        {user ? (
-                            <>
-                                <Route path="/:questionnaireId" exact>
-                                    <Main />
-                                </Route>
-                                <Redirect
-                                    to={{
-                                        pathname: 'demo-1',
-                                        state: { referrer: history.location.pathname },
-                                    }}
-                                />
-                            </>
-                        ) : (
-                            <>
-                                <Route path="/auth" render={() => <Auth />} />
-                                <Route path="/signin" render={() => <SignIn />} />
-                                <Redirect
-                                    to={{
-                                        pathname: '/signin',
-                                        state: { referrer: history.location.pathname },
-                                    }}
-                                />
-                            </>
-                        )}
+                        <Route path="/:questionnaireId" exact>
+                            <Main />
+                        </Route>
+                        <Redirect
+                            to={{
+                                pathname: 'demo-1',
+                                state: { referrer: history.location.pathname },
+                            }}
+                        />
                     </Switch>
-                </Router>
-            )}
+                ) : (
+                    <Switch>
+                        <Route path="/auth" render={() => <Auth />} />
+                        <Route
+                            path="/signin"
+                            render={() => <SignIn originPathName={originPathRef.current} />}
+                        />
+                        <Redirect to={{ pathname: '/signin' }} />
+                    </Switch>
+                )
+            }
         </RenderRemoteData>
     );
 }
 
-function SignIn() {
-    authorize();
+interface SignInProps {
+    originPathName?: string;
+}
+
+function SignIn(props: SignInProps) {
+    const clientId = localStorage.getItem('clientId');
+    if (clientId) {
+        authorize(clientId, { nextUrl: props.originPathName });
+    } else {
+        console.error('Client ID is not specified');
+    }
+
     return null;
 }
 
