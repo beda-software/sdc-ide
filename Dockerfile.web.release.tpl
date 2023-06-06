@@ -7,4 +7,4 @@ WORKDIR /app
 
 EXPOSE 5000
 ENV PORT="5000"
-CMD serve -n -l tcp://0.0.0.0:5000
+CMD serve -n -l -s tcp://0.0.0.0:5000
