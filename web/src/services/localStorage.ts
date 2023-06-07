@@ -5,8 +5,8 @@ import { ParametersParameter } from 'shared/src/contrib/aidbox';
 interface StorageData {
     connection: {
         client: string;
-        secret: string;
         baseUrl: string;
+        secret?: string;
     };
     fhirMode: boolean;
     prevActiveMappingId: string | null;
@@ -24,9 +24,9 @@ function loadStorageData(): StorageData {
                   client: 'root',
                   secret: 'secret',
                   baseUrl:
-                      (window as any).BASE_URL !== '{{BASE_URL}}'
-                          ? (window as any).BASE_URL
-                          : 'http://localhost:8080',
+                      (window as any).BASE_URL === '{{BASE_URL}}'
+                          ? 'http://localhost:8080'
+                          : (window as any).BASE_URL,
               },
         fhirMode: storageData.getItem('fhirMode') === 'true',
         prevActiveMappingId: storageData.getItem('prevActiveMappingId'),

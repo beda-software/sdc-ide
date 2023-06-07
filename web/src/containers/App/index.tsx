@@ -1,6 +1,7 @@
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
+import { setData } from 'web/src/services/localStorage';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { useService } from 'aidbox-react/lib/hooks/service';
@@ -24,6 +25,13 @@ export function App() {
     const clientId = new URLSearchParams(location.search).get('client');
     if (clientId) {
         localStorage.setItem('clientId', clientId);
+        setData('connection', {
+            client: clientId,
+            baseUrl:
+                (window as any).BASE_URL === '{{BASE_URL}}'
+                    ? 'http://localhost:8080'
+                    : (window as any).BASE_URL,
+        });
     }
 
     const originPathRef = useRef(location.pathname);

@@ -1,5 +1,6 @@
-const { override, babelInclude } = require('customize-cra');
 const path = require('path');
+
+const { override, babelInclude } = require('customize-cra');
 
 module.exports = override(
     babelInclude([
