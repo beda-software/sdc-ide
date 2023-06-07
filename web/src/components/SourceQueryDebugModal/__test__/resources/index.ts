@@ -117,7 +117,7 @@ export const patientData: Patient = {
     resourceType: 'Patient',
 };
 
-export const nutritionorderData: NutritionOrder = {
+export const nutritionOrderData: NutritionOrder = {
     resourceType: 'NutritionOrder',
     status: 'active',
     intent: 'order',

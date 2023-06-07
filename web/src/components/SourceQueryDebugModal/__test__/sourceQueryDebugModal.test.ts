@@ -12,7 +12,7 @@ import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
 import { updateQuestionnaire } from 'src/containers/Main/hooks';
 
 import {
-    nutritionorderData,
+    nutritionOrderData,
     patientData,
     props,
     resourceSuccess,
@@ -21,9 +21,9 @@ import {
 
 async function setup() {
     const patient = ensure(await saveFHIRResource<Patient>(patientData));
-    const nutritionorder = ensure(await saveFHIRResource<NutritionOrder>(nutritionorderData));
+    const nutritionOrder = ensure(await saveFHIRResource<NutritionOrder>(nutritionOrderData));
     ensure(await saveFHIRResource(resourceSuccess));
-    return { patient, nutritionorder };
+    return { patient, nutritionOrder };
 }
 
 beforeEach(async () => {
@@ -47,14 +47,14 @@ test('preparedSourceQueryRD', async () => {
 });
 
 test('bundleResultRD', async () => {
-    const { nutritionorder } = await setup();
+    const { nutritionOrder } = await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
 
     await waitFor(() => isSuccess(result.current.response));
     const bundleResponse = ensure(result.current.response);
     const bundleResultData = bundleResponse.bundleResult;
 
-    expect(bundleResultData.entry?.[0].resource.entry?.[0].resource).toStrictEqual(nutritionorder);
+    expect(bundleResultData.entry?.[0].resource.entry?.[0].resource).toStrictEqual(nutritionOrder);
 }, 30000);
 
 test('onSave', async () => {
