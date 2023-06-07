@@ -13,7 +13,6 @@ import {
     restoreUserSession,
     setToken,
 } from '../../services/auth';
-import { history } from '../../services/history';
 import { Main } from '../Main';
 
 export function App() {
@@ -40,7 +39,6 @@ export function App() {
                         <Redirect
                             to={{
                                 pathname: 'demo-1',
-                                state: { referrer: history.location.pathname },
                             }}
                         />
                     </Switch>
