@@ -83,7 +83,13 @@ export interface Account {
     /** The entity that caused the expenses */
     subject?: Array<
         AidboxReference<
-            Patient | Device | Practitioner | PractitionerRole | Location | HealthcareService | Organization
+            | Patient
+            | Device
+            | Practitioner
+            | PractitionerRole
+            | Location
+            | HealthcareService
+            | Organization
         >
     >;
     /** Text summary of the resource, for human interpretation */
@@ -383,7 +389,13 @@ export interface AdverseEventSuspectEntity {
     id?: string;
     /** Refers to the specific entity that caused the adverse event */
     instance: AidboxReference<
-        Immunization | Procedure | Substance | Medication | MedicationAdministration | MedicationStatement | Device
+        | Immunization
+        | Procedure
+        | Substance
+        | Medication
+        | MedicationAdministration
+        | MedicationStatement
+        | Device
     >;
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
@@ -745,7 +757,9 @@ export interface Appointment {
     /** Coded reason this appointment is scheduled */
     reasonCode?: CodeableConcept[];
     /** Reason the appointment is to take place (resource) */
-    reasonReference?: Array<AidboxReference<Condition | Procedure | Observation | ImmunizationRecommendation>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Procedure | Observation | ImmunizationRecommendation>
+    >;
     /** Potential date/time interval(s) requested to allocate the appointment within */
     requestedPeriod?: Period[];
     /** A broad categorization of the service that is to be performed during this appointment */
@@ -769,7 +783,13 @@ export interface Appointment {
 export interface AppointmentParticipant {
     /** Person, Location/HealthcareService or Device */
     actor?: AidboxReference<
-        Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
+        | Patient
+        | Practitioner
+        | PractitionerRole
+        | RelatedPerson
+        | Device
+        | HealthcareService
+        | Location
     >;
     /** Additional content defined by implementations */
     extension?: Extension[];
@@ -794,7 +814,13 @@ export interface AppointmentResponse {
     meta?: Meta;
     /** Person, Location, HealthcareService, or Device */
     actor?: AidboxReference<
-        Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
+        | Patient
+        | Practitioner
+        | PractitionerRole
+        | RelatedPerson
+        | Device
+        | HealthcareService
+        | Location
     >;
     /** Appointment this response relates to */
     appointment: AidboxReference<Appointment>;
@@ -980,7 +1006,9 @@ export interface AuditEventAgent {
     /** How agent participated */
     type?: CodeableConcept;
     /** Identifier of who */
-    who?: AidboxReference<PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson>;
+    who?: AidboxReference<
+        PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson
+    >;
 }
 
 export interface AuditEventAgentNetwork {
@@ -1049,7 +1077,9 @@ export interface AuditEventSource {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** The identity of source detecting the event */
-    observer: AidboxReference<PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson>;
+    observer: AidboxReference<
+        PractitionerRole | Practitioner | Organization | Device | Patient | RelatedPerson
+    >;
     /** Logical source location within the enterprise */
     site?: string;
     /** The type of source where event originated */
@@ -1132,7 +1162,9 @@ export interface Basic {
     id?: id;
     meta?: Meta;
     /** Who created */
-    author?: AidboxReference<Practitioner | PractitionerRole | Patient | RelatedPerson | Organization>;
+    author?: AidboxReference<
+        Practitioner | PractitionerRole | Patient | RelatedPerson | Organization
+    >;
     /** Kind of Resource */
     code: CodeableConcept;
     /** Contained, inline Resources */
@@ -1492,7 +1524,15 @@ export interface CarePlan {
     contained?: Resource[];
     /** Who provided the content of the care plan */
     contributor?: Array<
-        AidboxReference<Patient | Practitioner | PractitionerRole | Device | RelatedPerson | Organization | CareTeam>
+        AidboxReference<
+            | Patient
+            | Practitioner
+            | PractitionerRole
+            | Device
+            | RelatedPerson
+            | Organization
+            | CareTeam
+        >
     >;
     /** Date record was first recorded */
     created?: dateTime;
@@ -1612,7 +1652,9 @@ export interface CarePlanActivityDetail {
     /** Why activity should be done or why activity was prohibited */
     reasonCode?: CodeableConcept[];
     /** Why activity is needed */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** When activity is to occur */
     scheduled?: CarePlanActivityDetailScheduled;
     /** not-started | scheduled | in-progress | on-hold | completed | cancelled | stopped | unknown | entered-in-error */
@@ -1683,7 +1725,9 @@ export interface CareTeamParticipant {
     /** Unique id for inter-element referencing */
     id?: string;
     /** Who is involved */
-    member?: AidboxReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Organization | CareTeam>;
+    member?: AidboxReference<
+        Practitioner | PractitionerRole | RelatedPerson | Patient | Organization | CareTeam
+    >;
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Organization of the practitioner */
@@ -1788,7 +1832,9 @@ export interface ChargeItem {
     /** Date the charge item was entered */
     enteredDate?: dateTime;
     /** Individual who was entering */
-    enterer?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson>;
+    enterer?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson
+    >;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Factor overriding the associated rules */
@@ -2275,7 +2321,9 @@ export interface ClaimPayee {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Recipient reference */
-    party?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson>;
+    party?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson
+    >;
     /** Category of recipient */
     type: CodeableConcept;
 }
@@ -3100,7 +3148,9 @@ export interface Communication {
     /** Indication for message */
     reasonCode?: CodeableConcept[];
     /** Why was communication done? */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** When received */
     received?: dateTime;
     /** Message recipient */
@@ -3119,7 +3169,13 @@ export interface Communication {
     >;
     /** Message sender */
     sender?: AidboxReference<
-        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson | HealthcareService
+        | Device
+        | Organization
+        | Patient
+        | Practitioner
+        | PractitionerRole
+        | RelatedPerson
+        | HealthcareService
     >;
     /** When sent */
     sent?: dateTime;
@@ -3196,7 +3252,9 @@ export interface CommunicationRequest {
     /** Why is communication needed? */
     reasonCode?: CodeableConcept[];
     /** Why is communication needed? */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** Message recipient */
     recipient?: Array<
         AidboxReference<
@@ -3214,10 +3272,18 @@ export interface CommunicationRequest {
     /** Request(s) replaced by this request */
     replaces?: Array<AidboxReference<CommunicationRequest>>;
     /** Who/what is requesting service */
-    requester?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
+    requester?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
+    >;
     /** Message sender */
     sender?: AidboxReference<
-        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson | HealthcareService
+        | Device
+        | Organization
+        | Patient
+        | Practitioner
+        | PractitionerRole
+        | RelatedPerson
+        | HealthcareService
     >;
     /** draft | active | suspended | cancelled | completed | entered-in-error | unknown */
     status: code;
@@ -3321,7 +3387,11 @@ export interface Composition {
     /** Attests to accuracy of composition */
     attester?: CompositionAttester[];
     /** Who and/or what authored the composition */
-    author: Array<AidboxReference<Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization>>;
+    author: Array<
+        AidboxReference<
+            Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization
+        >
+    >;
     /** Categorization of Composition */
     category?: CodeableConcept[];
     /** As defined by affinity domain */
@@ -3372,7 +3442,9 @@ export interface CompositionAttester {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who attested the composition */
-    party?: AidboxReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Organization>;
+    party?: AidboxReference<
+        Patient | RelatedPerson | Practitioner | PractitionerRole | Organization
+    >;
     /** When the composition was attested */
     time?: dateTime;
 }
@@ -3412,7 +3484,11 @@ export interface CompositionRelatesToTarget {
 
 export interface CompositionSection {
     /** Who and/or what authored the section */
-    author?: Array<AidboxReference<Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization>>;
+    author?: Array<
+        AidboxReference<
+            Practitioner | PractitionerRole | Device | Patient | RelatedPerson | Organization
+        >
+    >;
     /** Classification of section (recommended) */
     code?: CodeableConcept;
     /** Why the section is empty */
@@ -3739,7 +3815,9 @@ export interface Consent {
     /** Who the consent applies to */
     patient?: AidboxReference<Patient>;
     /** Who is agreeing to the policy and rules */
-    performer?: Array<AidboxReference<Organization | Patient | Practitioner | RelatedPerson | PractitionerRole>>;
+    performer?: Array<
+        AidboxReference<Organization | Patient | Practitioner | RelatedPerson | PractitionerRole>
+    >;
     /** Policies covered by this consent */
     policy?: ConsentPolicy[];
     /** Regulation that this consents to */
@@ -3811,7 +3889,14 @@ export interface ConsentProvisionActor {
     modifierExtension?: Extension[];
     /** Resource for the actor (or group, by role) */
     reference: AidboxReference<
-        Device | Group | CareTeam | Organization | Patient | Practitioner | RelatedPerson | PractitionerRole
+        | Device
+        | Group
+        | CareTeam
+        | Organization
+        | Patient
+        | Practitioner
+        | RelatedPerson
+        | PractitionerRole
     >;
     /** How the actor is involved */
     role: CodeableConcept;
@@ -4047,7 +4132,9 @@ export interface ContractSigner {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Contract Signatory Party */
-    party: AidboxReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
+    party: AidboxReference<
+        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
+    >;
     /** Contract Documentation Signature */
     signature: Signature[];
     /** Contract Signatory Role */
@@ -4135,12 +4222,25 @@ export interface ContractTermAction {
     /** Why is action (not) needed? */
     reasonReference?: Array<
         AidboxReference<
-            Condition | Observation | DiagnosticReport | DocumentReference | Questionnaire | QuestionnaireResponse
+            | Condition
+            | Observation
+            | DiagnosticReport
+            | DocumentReference
+            | Questionnaire
+            | QuestionnaireResponse
         >
     >;
     /** Who asked for action */
     requester?: Array<
-        AidboxReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
+        AidboxReference<
+            | Patient
+            | RelatedPerson
+            | Practitioner
+            | PractitionerRole
+            | Device
+            | Group
+            | Organization
+        >
     >;
     /** Pointer to specific item */
     requesterLinkId?: string[];
@@ -4169,7 +4269,15 @@ export interface ContractTermActionSubject {
     modifierExtension?: Extension[];
     /** Entity of the action */
     reference: Array<
-        AidboxReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
+        AidboxReference<
+            | Patient
+            | RelatedPerson
+            | Practitioner
+            | PractitionerRole
+            | Device
+            | Group
+            | Organization
+        >
     >;
     /** Role type of the agent */
     role?: CodeableConcept;
@@ -4257,9 +4365,13 @@ export interface ContractTermAssetValuedItem {
     /** Count of Contract Valued Items */
     quantity?: Quantity;
     /** Who will receive payment */
-    recipient?: AidboxReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
+    recipient?: AidboxReference<
+        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
+    >;
     /** Who will make payment */
-    responsible?: AidboxReference<Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
+    responsible?: AidboxReference<
+        Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
+    >;
     /** Security Labels that define affected terms */
     securityLabelNumber?: unsignedInt[];
     /** Contract Valued Item fee, charge, or cost */
@@ -4335,7 +4447,15 @@ export interface ContractTermOfferParty {
     modifierExtension?: Extension[];
     /** Referenced entity */
     reference: Array<
-        AidboxReference<Patient | RelatedPerson | Practitioner | PractitionerRole | Device | Group | Organization>
+        AidboxReference<
+            | Patient
+            | RelatedPerson
+            | Practitioner
+            | PractitionerRole
+            | Device
+            | Group
+            | Organization
+        >
     >;
     /** Participant engagement type */
     role: CodeableConcept;
@@ -5330,7 +5450,14 @@ export interface DeviceRequest {
     parameter?: DeviceRequestParameter[];
     /** Requested Filler */
     performer?: AidboxReference<
-        Practitioner | PractitionerRole | Organization | CareTeam | HealthcareService | Patient | Device | RelatedPerson
+        | Practitioner
+        | PractitionerRole
+        | Organization
+        | CareTeam
+        | HealthcareService
+        | Patient
+        | Device
+        | RelatedPerson
     >;
     /** Filler role */
     performerType?: CodeableConcept;
@@ -5341,7 +5468,9 @@ export interface DeviceRequest {
     /** Coded Reason for request */
     reasonCode?: CodeableConcept[];
     /** Linked Reason for request */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** Request provenance */
     relevantHistory?: Array<AidboxReference<Provenance>>;
     /** Who/what is requesting diagnostics */
@@ -5434,7 +5563,14 @@ export interface DeviceUseStatement {
     contained?: Resource[];
     /** Supporting information */
     derivedFrom?: Array<
-        AidboxReference<ServiceRequest | Procedure | Claim | Observation | QuestionnaireResponse | DocumentReference>
+        AidboxReference<
+            | ServiceRequest
+            | Procedure
+            | Claim
+            | Observation
+            | QuestionnaireResponse
+            | DocumentReference
+        >
     >;
     /** Reference to device used */
     device: AidboxReference<Device>;
@@ -5453,7 +5589,9 @@ export interface DeviceUseStatement {
     /** Why device was used */
     reasonCode?: CodeableConcept[];
     /** Why was DeviceUseStatement performed? */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference | Media>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference | Media>
+    >;
     /** When statement was recorded */
     recordedOn?: dateTime;
     /** Who made the statement */
@@ -5496,7 +5634,13 @@ export interface DiagnosticReport {
     meta?: Meta;
     /** What was requested */
     basedOn?: Array<
-        AidboxReference<CarePlan | ImmunizationRecommendation | MedicationRequest | NutritionOrder | ServiceRequest>
+        AidboxReference<
+            | CarePlan
+            | ImmunizationRecommendation
+            | MedicationRequest
+            | NutritionOrder
+            | ServiceRequest
+        >
     >;
     /** Service category */
     category?: CodeableConcept[];
@@ -5535,7 +5679,9 @@ export interface DiagnosticReport {
     /** Observations */
     result?: Array<AidboxReference<Observation>>;
     /** Primary result interpreter */
-    resultsInterpreter?: Array<AidboxReference<Practitioner | PractitionerRole | Organization | CareTeam>>;
+    resultsInterpreter?: Array<
+        AidboxReference<Practitioner | PractitionerRole | Organization | CareTeam>
+    >;
     /** Specimens this report is based on */
     specimen?: Array<AidboxReference<Specimen>>;
     /** registered | partial | preliminary | final + */
@@ -5588,7 +5734,11 @@ export interface DocumentManifest {
     id?: id;
     meta?: Meta;
     /** Who and/or what authored the DocumentManifest */
-    author?: Array<AidboxReference<Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson>>;
+    author?: Array<
+        AidboxReference<
+            Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson
+        >
+    >;
     /** Contained, inline Resources */
     contained?: Resource[];
     /** Items in manifest */
@@ -5610,7 +5760,9 @@ export interface DocumentManifest {
     /** Extensions that cannot be ignored */
     modifierExtension?: Extension[];
     /** Intended to get notified about this set of documents */
-    recipient?: Array<AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>>;
+    recipient?: Array<
+        AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>
+    >;
     /** Related things */
     related?: DocumentManifestRelated[];
     /** The source system/application/software */
@@ -5646,7 +5798,11 @@ export interface DocumentReference {
     /** Who/what authenticated the document */
     authenticator?: AidboxReference<Practitioner | PractitionerRole | Organization>;
     /** Who and/or what authored the document */
-    author?: Array<AidboxReference<Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson>>;
+    author?: Array<
+        AidboxReference<
+            Practitioner | PractitionerRole | Organization | Device | Patient | RelatedPerson
+        >
+    >;
     /** Categorization of document */
     category?: CodeableConcept[];
     /** Contained, inline Resources */
@@ -6062,7 +6218,9 @@ export interface Encounter {
     /** Coded reason the encounter takes place */
     reasonCode?: CodeableConcept[];
     /** Reason the encounter takes place (reference) */
-    reasonReference?: Array<AidboxReference<Condition | Procedure | Observation | ImmunizationRecommendation>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Procedure | Observation | ImmunizationRecommendation>
+    >;
     /** The organization (facility) responsible for this encounter */
     serviceProvider?: AidboxReference<Organization>;
     /** Specific type of service */
@@ -7351,7 +7509,9 @@ export interface ExplanationOfBenefitPayee {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Recipient reference */
-    party?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson>;
+    party?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson
+    >;
     /** Category of recipient */
     type?: CodeableConcept;
 }
@@ -7603,7 +7763,12 @@ export interface FamilyMemberHistory {
     /** Why was family member history performed? */
     reasonReference?: Array<
         AidboxReference<
-            Condition | Observation | AllergyIntolerance | QuestionnaireResponse | DiagnosticReport | DocumentReference
+            | Condition
+            | Observation
+            | AllergyIntolerance
+            | QuestionnaireResponse
+            | DiagnosticReport
+            | DocumentReference
         >
     >;
     /** Relationship to the subject */
@@ -7693,7 +7858,14 @@ export interface Flag {
     status: code;
     /** Who/What is flag about? */
     subject: AidboxReference<
-        Patient | Location | Group | Organization | Practitioner | PlanDefinition | Medication | Procedure
+        | Patient
+        | Location
+        | Group
+        | Organization
+        | Practitioner
+        | PlanDefinition
+        | Medication
+        | Procedure
     >;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
@@ -7720,7 +7892,12 @@ export interface Goal {
     /** Issues addressed by this goal */
     addresses?: Array<
         AidboxReference<
-            Condition | Observation | MedicationStatement | NutritionOrder | ServiceRequest | RiskAssessment
+            | Condition
+            | Observation
+            | MedicationStatement
+            | NutritionOrder
+            | ServiceRequest
+            | RiskAssessment
         >
     >;
     /** E.g. Treatment, dietary, behavioral, etc. */
@@ -7942,7 +8119,9 @@ export interface Group {
     /** Language of the resource content */
     language?: code;
     /** Entity that is the custodian of the Group's definition */
-    managingEntity?: AidboxReference<Organization | RelatedPerson | Practitioner | PractitionerRole>;
+    managingEntity?: AidboxReference<
+        Organization | RelatedPerson | Practitioner | PractitionerRole
+    >;
     /** Who or what is in group */
     member?: GroupMember[];
     /** Extensions that cannot be ignored */
@@ -7984,7 +8163,9 @@ export interface GroupCharacteristicValue {
 
 export interface GroupMember {
     /** Reference to the group member */
-    entity: AidboxReference<Patient | Practitioner | PractitionerRole | Device | Medication | Substance | Group>;
+    entity: AidboxReference<
+        Patient | Practitioner | PractitionerRole | Device | Medication | Substance | Group
+    >;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Unique id for inter-element referencing */
@@ -8033,7 +8214,9 @@ export interface GuidanceResponse {
     /** Why guidance is needed */
     reasonCode?: CodeableConcept[];
     /** Why guidance is needed */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** The identifier of the request associated with this response, if any */
     requestIdentifier?: Identifier;
     /** Proposed actions, if any */
@@ -8280,7 +8463,9 @@ export interface ImagingStudy {
     id?: id;
     meta?: Meta;
     /** Request fulfilled */
-    basedOn?: Array<AidboxReference<CarePlan | ServiceRequest | Appointment | AppointmentResponse | Task>>;
+    basedOn?: Array<
+        AidboxReference<CarePlan | ServiceRequest | Appointment | AppointmentResponse | Task>
+    >;
     /** Contained, inline Resources */
     contained?: Resource[];
     /** Institution-generated description */
@@ -8318,7 +8503,9 @@ export interface ImagingStudy {
     /** Why the study was requested */
     reasonCode?: CodeableConcept[];
     /** Why was study performed */
-    reasonReference?: Array<AidboxReference<Condition | Observation | Media | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | Media | DiagnosticReport | DocumentReference>
+    >;
     /** Referring physician */
     referrer?: AidboxReference<Practitioner | PractitionerRole>;
     /** Each study has one or more series of instances */
@@ -9219,7 +9406,9 @@ export interface InvoiceLineItemPriceComponent {
 
 export interface InvoiceParticipant {
     /** Individual who was involved */
-    actor: AidboxReference<Practitioner | Organization | Patient | PractitionerRole | Device | RelatedPerson>;
+    actor: AidboxReference<
+        Practitioner | Organization | Patient | PractitionerRole | Device | RelatedPerson
+    >;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Unique id for inter-element referencing */
@@ -9756,7 +9945,9 @@ export interface MeasureReport {
     /** complete | pending | error */
     status: code;
     /** What individual(s) the report is for */
-    subject?: AidboxReference<Patient | Practitioner | PractitionerRole | Location | Device | RelatedPerson | Group>;
+    subject?: AidboxReference<
+        Patient | Practitioner | PractitionerRole | Location | Device | RelatedPerson | Group
+    >;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
     /** individual | subject-list | summary | data-collection */
@@ -9929,7 +10120,9 @@ export interface Media {
     /** preparation | in-progress | not-done | suspended | aborted | completed | entered-in-error | unknown */
     status: code;
     /** Who/What this Media is a record of */
-    subject?: AidboxReference<Patient | Practitioner | PractitionerRole | Group | Device | Specimen | Location>;
+    subject?: AidboxReference<
+        Patient | Practitioner | PractitionerRole | Group | Device | Specimen | Location
+    >;
     /** Text summary of the resource, for human interpretation */
     text?: Narrative;
     /** Classification of media as image, video, or audio */
@@ -10173,7 +10366,9 @@ export interface MedicationDispenseMedication {
 
 export interface MedicationDispensePerformer {
     /** Individual who was performing */
-    actor: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson>;
+    actor: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | Device | RelatedPerson
+    >;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Who performed the dispense and what they did */
@@ -10537,7 +10732,9 @@ export interface MedicationRequest {
     /** When request was initially authored */
     authoredOn?: dateTime;
     /** What request fulfills */
-    basedOn?: Array<AidboxReference<CarePlan | MedicationRequest | ServiceRequest | ImmunizationRecommendation>>;
+    basedOn?: Array<
+        AidboxReference<CarePlan | MedicationRequest | ServiceRequest | ImmunizationRecommendation>
+    >;
     /** Type of medication usage */
     category?: CodeableConcept[];
     /** Contained, inline Resources */
@@ -10599,7 +10796,9 @@ export interface MedicationRequest {
     /** Reported rather than primary record */
     reported?: MedicationRequestReported;
     /** Who/What requested the Request */
-    requester?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
+    requester?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
+    >;
     /** active | on-hold | cancelled | completed | entered-in-error | stopped | draft | unknown */
     status: code;
     /** Reason for current status */
@@ -10706,7 +10905,9 @@ export interface MedicationStatement {
     /** A set of rules under which this content was created */
     implicitRules?: uri;
     /** Person or organization that provided the information about the taking of this medication */
-    informationSource?: AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Organization>;
+    informationSource?: AidboxReference<
+        Patient | Practitioner | PractitionerRole | RelatedPerson | Organization
+    >;
     /** Language of the resource content */
     language?: code;
     /** What medication was taken */
@@ -10717,7 +10918,13 @@ export interface MedicationStatement {
     note?: Annotation[];
     /** Part of referenced event */
     partOf?: Array<
-        AidboxReference<MedicationAdministration | MedicationDispense | MedicationStatement | Procedure | Observation>
+        AidboxReference<
+            | MedicationAdministration
+            | MedicationDispense
+            | MedicationStatement
+            | Procedure
+            | Observation
+        >
     >;
     /** Reason for why the medication is being/was taken */
     reasonCode?: CodeableConcept[];
@@ -12247,7 +12454,12 @@ export interface Observation {
     /** Fulfills plan, proposal or order */
     basedOn?: Array<
         AidboxReference<
-            CarePlan | DeviceRequest | ImmunizationRecommendation | MedicationRequest | NutritionOrder | ServiceRequest
+            | CarePlan
+            | DeviceRequest
+            | ImmunizationRecommendation
+            | MedicationRequest
+            | NutritionOrder
+            | ServiceRequest
         >
     >;
     /** Observed body part */
@@ -12265,7 +12477,12 @@ export interface Observation {
     /** Related measurements the observation is made from */
     derivedFrom?: Array<
         AidboxReference<
-            DocumentReference | ImagingStudy | Media | QuestionnaireResponse | Observation | MolecularSequence
+            | DocumentReference
+            | ImagingStudy
+            | Media
+            | QuestionnaireResponse
+            | Observation
+            | MolecularSequence
         >
     >;
     /** (Measurement) Device */
@@ -12309,7 +12526,9 @@ export interface Observation {
     >;
     /** Who is responsible for the observation */
     performer?: Array<
-        AidboxReference<Practitioner | PractitionerRole | Organization | CareTeam | Patient | RelatedPerson>
+        AidboxReference<
+            Practitioner | PractitionerRole | Organization | CareTeam | Patient | RelatedPerson
+        >
     >;
     /** Provides guide for interpretation */
     referenceRange?: ObservationReferenceRange[];
@@ -13758,7 +13977,9 @@ export interface ProcedurePerformed {
 
 export interface ProcedurePerformer {
     /** The reference to the practitioner */
-    actor: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
+    actor: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
+    >;
     /** Additional content defined by implementations */
     extension?: Extension[];
     /** Type of performance */
@@ -13868,13 +14089,17 @@ export interface ProvenanceAgent {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who the agent is representing */
-    onBehalfOf?: AidboxReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
+    onBehalfOf?: AidboxReference<
+        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    >;
     /** What the agents role was */
     role?: CodeableConcept[];
     /** How the agent participated */
     type?: CodeableConcept;
     /** Who participated */
-    who: AidboxReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
+    who: AidboxReference<
+        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    >;
 }
 
 export interface ProvenanceEntity {
@@ -14174,7 +14399,7 @@ export interface QuestionnaireLaunchContext {
     /** NOTE: from extension */
     description?: string;
     /** NOTE: from extension */
-    name?: id;
+    name?: Coding;
     /** NOTE: from extension */
     type?: code;
 }
@@ -14185,7 +14410,9 @@ export interface QuestionnaireResponse {
     id?: id;
     meta?: Meta;
     /** Person who received and recorded the answers */
-    author?: AidboxReference<Device | Practitioner | PractitionerRole | Patient | RelatedPerson | Organization>;
+    author?: AidboxReference<
+        Device | Practitioner | PractitionerRole | Patient | RelatedPerson | Organization
+    >;
     /** Date the answers were gathered */
     authored?: dateTime;
     /** Request fulfilled by this QuestionnaireResponse */
@@ -14445,7 +14672,9 @@ export interface RequestGroup {
     /** Why the request group is needed */
     reasonCode?: CodeableConcept[];
     /** Why the request group is needed */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** Request(s) replaced by this request */
     replaces?: Array<AidboxReference<Resource>>;
     /** draft | active | suspended | cancelled | completed | entered-in-error | unknown */
@@ -14478,7 +14707,9 @@ export interface RequestGroupAction {
     /** Extensions that cannot be ignored even if unrecognized */
     modifierExtension?: Extension[];
     /** Who should perform the action */
-    participant?: Array<AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Device>>;
+    participant?: Array<
+        AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Device>
+    >;
     /** yes | no */
     precheckBehavior?: code;
     /** User-visible prefix for the action (e.g. 1. or A.) */
@@ -14961,7 +15192,9 @@ export interface RiskAssessment {
     /** Why the assessment was necessary? */
     reasonCode?: CodeableConcept[];
     /** Why the assessment was necessary? */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** registered | preliminary | final | amended + */
     status: code;
     /** Who/what does assessment apply to? */
@@ -15225,7 +15458,13 @@ export interface Schedule {
     /** Resource(s) that availability information is being provided for */
     actor: Array<
         AidboxReference<
-            Patient | Practitioner | PractitionerRole | RelatedPerson | Device | HealthcareService | Location
+            | Patient
+            | Practitioner
+            | PractitionerRole
+            | RelatedPerson
+            | Device
+            | HealthcareService
+            | Location
         >
     >;
     /** Comments on availability */
@@ -15439,13 +15678,17 @@ export interface ServiceRequest {
     /** Explanation/Justification for procedure or service */
     reasonCode?: CodeableConcept[];
     /** Explanation/Justification for service or service */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** Request provenance */
     relevantHistory?: Array<AidboxReference<Provenance>>;
     /** What request replaces */
     replaces?: Array<AidboxReference<ServiceRequest>>;
     /** Who/what is requesting service */
-    requester?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
+    requester?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
+    >;
     /** Composite Request ID */
     requisition?: Identifier;
     /** Procedure Samples */
@@ -15505,7 +15748,9 @@ export interface Signature {
     /** Unique id for inter-element referencing */
     id?: string;
     /** The party represented */
-    onBehalfOf?: AidboxReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
+    onBehalfOf?: AidboxReference<
+        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    >;
     /** The technical format of the signature */
     sigFormat?: code;
     /** The technical format of the signed resources */
@@ -15515,7 +15760,9 @@ export interface Signature {
     /** When the signature was created */
     when: instant;
     /** Who signed */
-    who: AidboxReference<Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization>;
+    who: AidboxReference<
+        Practitioner | PractitionerRole | RelatedPerson | Patient | Device | Organization
+    >;
 }
 
 /** A fixed quantity (no comparator) */
@@ -17165,9 +17412,13 @@ export interface SupplyRequest {
     /** The reason why the supply item was requested */
     reasonCode?: CodeableConcept[];
     /** The reason why the supply item was requested */
-    reasonReference?: Array<AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>>;
+    reasonReference?: Array<
+        AidboxReference<Condition | Observation | DiagnosticReport | DocumentReference>
+    >;
     /** Individual making the request */
-    requester?: AidboxReference<Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device>;
+    requester?: AidboxReference<
+        Practitioner | PractitionerRole | Organization | Patient | RelatedPerson | Device
+    >;
     /** draft | active | suspended + */
     status?: code;
     /** Who is intended to fulfill the request */
@@ -17264,7 +17515,14 @@ export interface Task {
     output?: TaskOutput[];
     /** Responsible individual */
     owner?: AidboxReference<
-        Practitioner | PractitionerRole | Organization | CareTeam | HealthcareService | Patient | Device | RelatedPerson
+        | Practitioner
+        | PractitionerRole
+        | Organization
+        | CareTeam
+        | HealthcareService
+        | Patient
+        | Device
+        | RelatedPerson
     >;
     /** Composite task */
     partOf?: Array<AidboxReference<Task>>;
@@ -17279,7 +17537,9 @@ export interface Task {
     /** Key events in history of the Task */
     relevantHistory?: Array<AidboxReference<Provenance>>;
     /** Who is asking for task to be done */
-    requester?: AidboxReference<Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson>;
+    requester?: AidboxReference<
+        Device | Organization | Patient | Practitioner | PractitionerRole | RelatedPerson
+    >;
     /** Constraints on fulfillment tasks */
     restriction?: TaskRestriction;
     /** draft | requested | received | accepted | + */
@@ -17431,7 +17691,9 @@ export interface TaskRestriction {
     period?: Period;
     /** For whom is fulfillment sought? */
     recipient?: Array<
-        AidboxReference<Patient | Practitioner | PractitionerRole | RelatedPerson | Group | Organization>
+        AidboxReference<
+            Patient | Practitioner | PractitionerRole | RelatedPerson | Group | Organization
+        >
     >;
     /** How many times to repeat */
     repetitions?: positiveInt;

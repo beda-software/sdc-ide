@@ -131,7 +131,7 @@ export const nutritionorderData: NutritionOrder = {
 const questionnaire: Questionnaire = {
     launchContext: [
         {
-            name: 'LaunchPatient',
+            name: { code: 'LaunchPatient' },
             type: 'Patient',
             description: 'The patient that is to be used to pre-populate the form',
         },
@@ -528,7 +528,7 @@ export const resourceFailure = {
 export const resourceSuccess: Questionnaire = {
     launchContext: [
         {
-            name: 'LaunchPatient',
+            name: { code: 'LaunchPatient' },
             type: 'Patient',
             description: 'The patient that is to be used to pre-populate the form',
         },

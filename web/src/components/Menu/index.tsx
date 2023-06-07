@@ -122,14 +122,19 @@ interface LaunchContextProps {
 function EditLaunchContext({ launchContext, parameters, dispatch }: LaunchContextProps) {
     return (
         <>
-            {launchContext.map((l, index) => {
+            {launchContext.map((launchContextItem, index) => {
                 return (
                     <LaunchContextElement
-                        key={index}
-                        launchContext={l}
-                        value={_.find(parameters.parameter, { name: l.name })}
+                        key={`${launchContextItem.name?.code}-${index}`}
+                        launchContext={launchContextItem}
+                        value={_.find(parameters.parameter, { name: launchContextItem.name?.code })}
                         onChange={(parameter) =>
-                            dispatch(setResource({ name: l.name!, parameter: parameter! }))
+                            dispatch(
+                                setResource({
+                                    name: launchContextItem.name?.code!,
+                                    parameter: parameter!,
+                                }),
+                            )
                         }
                     />
                 );
@@ -148,7 +153,7 @@ function LaunchContextElement({ launchContext, value, onChange }: LaunchContextE
     return (
         <>
             <div className={s.header}>
-                {launchContext.name}
+                {launchContext.name?.code}
                 <br />
                 <span>{launchContext.description}</span>
             </div>
@@ -167,7 +172,7 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
             <input
                 value={(value as any)?.value?.string}
                 onChange={(e) =>
-                    onChange({ value: { string: e.target.value }, name: launchContext.name! })
+                    onChange({ value: { string: e.target.value }, name: launchContext.name?.code! })
                 }
             />
         );
@@ -176,7 +181,9 @@ function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchCo
         <RemoteResourceSelect
             resourceType={launchContext.type as any}
             value={value?.resource}
-            onChange={(resource) => onChange({ resource: resource!, name: launchContext.name! })}
+            onChange={(resource) =>
+                onChange({ resource: resource!, name: launchContext.name?.code! })
+            }
         />
     );
 }

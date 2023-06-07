@@ -1,4 +1,3 @@
- 
 import _ from 'lodash';
 import { useReducer } from 'react';
 import { getData, setData } from 'web/src/services/localStorage';
@@ -48,15 +47,15 @@ export async function init(questionnaire: Questionnaire): Promise<InitAction> {
     let primitives: Array<ParametersParameter> = [];
 
     (questionnaire.launchContext ?? []).forEach(({ name }) => {
-        if (name) {
-            const saved = getData('launchContextParameters')[name];
+        if (name && name.code) {
+            const saved = getData('launchContextParameters')[name.code];
             if (typeof saved === 'undefined' || saved === null) {
-                empty.push({ name });
+                empty.push({ name: name.code });
                 return;
             }
             const isResource = typeof saved.resource !== 'undefined';
             if (isResource) {
-                resourcesRD[name] = getFHIRResource({
+                resourcesRD[name.code] = getFHIRResource({
                     resourceType: saved.resource!.resourceType!,
                     id: saved.resource!.id!,
                 });
@@ -66,8 +65,11 @@ export async function init(questionnaire: Questionnaire): Promise<InitAction> {
         }
     });
 
-    const resolved = mapSuccess(await resolveMap(resourcesRD), (resources) => {
-        return _.map(resources, (resource, name) => ({ name, resource } as ParametersParameter));
+    const resolved = mapSuccess(await resolveMap(resourcesRD), (resolvedResources) => {
+        return _.map(
+            resolvedResources,
+            (resource, name) => ({ name, resource } as ParametersParameter),
+        );
     });
 
     if (isSuccess(resolved)) {
