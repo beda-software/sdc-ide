@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import _ from 'lodash';
 import { Dispatch, useState } from 'react';
-import Select from 'react-select';
 import { useMenu } from 'web/src/components/Menu/hooks';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { Action, setResource } from 'web/src/containers/Main/hooks/launchContextHook';
@@ -15,9 +14,11 @@ import {
     QuestionnaireLaunchContext,
     Parameters,
     ParametersParameter,
+    Resource,
 } from 'shared/src/contrib/aidbox';
 
 import { Arrow } from '../Icon/Arrow';
+import { Select } from '../Select';
 import s from './Menu.module.scss';
 
 interface MenuProps {
@@ -41,7 +42,7 @@ export function Menu({
     const [isChecked, setIsChecked] = useState(false);
     return (
         <>
-            <div className={s.control} onClick={toggleMenu}>
+            <div className={s.arrow} onClick={toggleMenu}>
                 <span className={s.symbol}>
                     <Arrow direction={direction} fill="white" />
                 </span>
@@ -51,7 +52,7 @@ export function Menu({
                     <div className={s.header}>Questionnaire</div>
                     <RenderRemoteData remoteData={questionnairesRD}>
                         {(questionnaires) => (
-                            <div className={s.reactResourceSelect}>
+                            <div className={s.control}>
                                 <Select
                                     value={{
                                         value: questionnaireId,
@@ -63,7 +64,9 @@ export function Menu({
                                     }))}
                                     onChange={(option) => {
                                         if (option) {
-                                            history.push(option.value);
+                                            history.push(
+                                                (option as { value: string; label: string }).value,
+                                            );
                                         }
                                     }}
                                 />
@@ -71,17 +74,15 @@ export function Menu({
                         )}
                     </RenderRemoteData>
                 </div>
-                <div className={s.menuItem}>
-                    <RenderRemoteData remoteData={questionnaireRD}>
-                        {(questionnaire) => (
-                            <EditLaunchContext
-                                parameters={launchContext}
-                                launchContext={questionnaire.launchContext ?? []}
-                                dispatch={dispatch}
-                            />
-                        )}
-                    </RenderRemoteData>
-                </div>
+                <RenderRemoteData remoteData={questionnaireRD}>
+                    {(questionnaire) => (
+                        <EditLaunchContext
+                            parameters={launchContext}
+                            launchContext={questionnaire.launchContext ?? []}
+                            dispatch={dispatch}
+                        />
+                    )}
+                </RenderRemoteData>
                 <div className={s.menuItem}>
                     <div className={s.header}>
                         <label htmlFor="fhir-mode">FhirMode</label>
@@ -151,39 +152,83 @@ interface LaunchContextElementProps {
 
 function LaunchContextElement({ launchContext, value, onChange }: LaunchContextElementProps) {
     return (
-        <>
+        <div className={s.menuItem}>
             <div className={s.header}>
                 {launchContext.name?.code}
                 <br />
                 <span>{launchContext.description}</span>
             </div>
-            <LaunchContextElementWidget
-                launchContext={launchContext}
-                value={value}
-                onChange={onChange}
-            />
-        </>
+            <div className={s.control}>
+                <LaunchContextElementWidget
+                    launchContext={launchContext}
+                    value={value}
+                    onChange={onChange}
+                />
+            </div>
+        </div>
     );
 }
 
 function LaunchContextElementWidget({ launchContext, value, onChange }: LaunchContextElementProps) {
-    if (launchContext.type === 'string') {
+    const [currentType, setCurrentType] = useState<string | undefined>(
+        value?.resource?.resourceType,
+    );
+
+    const renderResourceSelect = (type: string) => {
+        if (type === 'string') {
+            return (
+                <input
+                    value={(value as any)?.value?.string}
+                    onChange={(e) =>
+                        onChange({
+                            value: { string: e.target.value },
+                            name: launchContext.name?.code!,
+                        })
+                    }
+                />
+            );
+        }
+
         return (
-            <input
-                value={(value as any)?.value?.string}
-                onChange={(e) =>
-                    onChange({ value: { string: e.target.value }, name: launchContext.name?.code! })
-                }
+            <RemoteResourceSelect
+                key={type}
+                resourceType={type}
+                value={value?.resource}
+                onChange={(resource) => {
+                    if (resource && Array.isArray(resource) === false) {
+                        onChange({
+                            resource: resource as Resource,
+                            name: launchContext.name?.code!,
+                        });
+                    }
+                }}
             />
         );
+    };
+
+    if (launchContext.type.length > 1) {
+        return (
+            <>
+                <Select
+                    value={{
+                        value: currentType,
+                        label: currentType,
+                    }}
+                    options={launchContext.type.map((resourceType) => ({
+                        value: resourceType,
+                        label: resourceType,
+                    }))}
+                    onChange={(option) => {
+                        if (option) {
+                            setCurrentType((option as { value: string; label: string }).value);
+                            onChange(null);
+                        }
+                    }}
+                />
+                {currentType && renderResourceSelect(currentType)}
+            </>
+        );
     }
-    return (
-        <RemoteResourceSelect
-            resourceType={launchContext.type as any}
-            value={value?.resource}
-            onChange={(resource) =>
-                onChange({ resource: resource!, name: launchContext.name?.code! })
-            }
-        />
-    );
+
+    return renderResourceSelect(launchContext.type[0]);
 }
