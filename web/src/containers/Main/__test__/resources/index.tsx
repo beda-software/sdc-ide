@@ -328,7 +328,7 @@ const mappingInfoList: MapperInfo[] = [
             launchContext: [
                 {
                     name: { code: 'LaunchPatient' },
-                    type: 'Patient',
+                    type: ['Patient'],
                     description: 'The patient that is to be used to pre-populate the form',
                 },
             ],

@@ -1,7 +1,7 @@
 @import 'src/styles/colors';
 @import 'src/styles/fonts';
 
-.control {
+.arrow {
     height: 20px;
     width: 20px;
     position: absolute;
@@ -12,7 +12,7 @@
     text-align: center;
 }
 
-.control:hover {
+.arrow:hover {
     background-color: darken($primary-color, 10%);
 }
 
@@ -74,21 +74,6 @@
         outline: none;
         padding: 0px 8px;
         position: static;
-    }
-}
-
-.reactResourceSelect {
-    width: 100%;
-    max-width: 50%;
-    > div > div {
-        border-radius: 1px;
-        font-size: 12px;
-        font-family: 'Poppins', sans-serif;
-        transition: all 0.2s;
-
-        &:hover {
-            border-color: $primary-color;
-        }
     }
 }
 
@@ -183,6 +168,13 @@
     max-width: 30%;
     font-size: 14px;
     max-height: 38px;
+}
+
+.control {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .link {

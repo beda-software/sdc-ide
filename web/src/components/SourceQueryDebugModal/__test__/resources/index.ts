@@ -132,7 +132,7 @@ const questionnaire: Questionnaire = {
     launchContext: [
         {
             name: { code: 'LaunchPatient' },
-            type: 'Patient',
+            type: ['Patient'],
             description: 'The patient that is to be used to pre-populate the form',
         },
     ],
@@ -529,7 +529,7 @@ export const resourceSuccess: Questionnaire = {
     launchContext: [
         {
             name: { code: 'LaunchPatient' },
-            type: 'Patient',
+            type: ['Patient'],
             description: 'The patient that is to be used to pre-populate the form',
         },
     ],

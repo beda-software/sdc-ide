@@ -1,8 +1,7 @@
- 
 import classNames from 'classnames';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import AsyncSelect from 'react-select/async';
+import { MultiValue, SingleValue } from 'react-select';
 
 import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
 import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
@@ -11,6 +10,7 @@ import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 import { AidboxResource, Bundle, Resource } from 'shared/src/contrib/aidbox';
 
+import { AsyncSelect } from '../Select';
 import s from './ResourceSelect.module.scss';
 
 interface ResourceSelectProps<R extends AidboxResource> {
@@ -49,7 +49,7 @@ export function ResourceSelect<R extends AidboxResource>({
 
 interface RemoteResourceSelectProps<R extends AidboxResource> {
     value: R | null | undefined;
-    onChange: (resource: R | null | undefined) => void;
+    onChange: (resource: MultiValue<R> | SingleValue<R> | null | undefined) => void;
     display?: (resource: R) => string;
     resourceType: R['resourceType'];
 }
@@ -82,16 +82,14 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     );
 
     return (
-        <div className={s.reactResourceSelect}>
-            <AsyncSelect<R>
-                loadOptions={debouncedLoadOptions}
-                defaultOptions
-                getOptionLabel={display ?? getId}
-                getOptionValue={_.identity}
-                onChange={onChange}
-                value={value}
-            />
-        </div>
+        <AsyncSelect<R>
+            loadOptions={debouncedLoadOptions}
+            defaultOptions
+            getOptionLabel={display ?? getId}
+            getOptionValue={_.identity}
+            onChange={onChange}
+            value={value}
+        />
     );
 }
 

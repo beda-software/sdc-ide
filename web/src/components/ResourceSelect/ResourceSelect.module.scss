@@ -15,18 +15,3 @@
         border-bottom: 2px solid $primary-color;
     }
 }
-
-.reactResourceSelect {
-    width: 100%;
-    max-width: 50%;
-    > div > div {
-        border-radius: 1px;
-        font-size: 12px;
-        font-family: 'Poppins', sans-serif;
-        transition: all 0.2s;
-
-        &:hover {
-            border-color: $primary-color;
-        }
-    }
-}
