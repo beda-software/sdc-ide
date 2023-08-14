@@ -16,6 +16,7 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'eslint-config-prettier',
     ],
+    ignorePatterns: ['.eslintrc.cjs'],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         project: 'tsconfig.json',
@@ -33,10 +34,12 @@ module.exports = {
     rules: {
         'react-refresh/only-export-components': 'warn',
         '@typescript-eslint/no-explicit-any': 'warn',
+        '@typescript-eslint/no-unused-vars': 'warn',
+        'prefer-const': 'warn',
         'react/jsx-uses-react': 'off',
         'react/react-in-jsx-scope': 'off',
         '@typescript-eslint/no-non-null-assertion': 'off',
-        "@typescript-eslint/ban-ts-comment": 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
         'import/no-unresolved': [
             2,
             {

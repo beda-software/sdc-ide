@@ -29,6 +29,7 @@
         "babel-plugin-import": "^1.13.3",
         "classnames": "^2.3.1",
         "codemirror": "^6.65.7",
+        "fhir-react": "https://github.com/beda-software/fhir-react.git",
         "fhirpath": "^3.5.0",
         "final-form": "^4.20.4",
         "final-form-arrays": "^3.0.2",
