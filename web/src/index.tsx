@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { App } from './containers/App';
 import * as serviceWorker from './serviceWorker';
 
-import 'web/src/services/initialize.develop';
+import 'web/src/services/initialize';
 import 'web/src/styles/index.scss';
 
 const container = document.getElementById('root');
