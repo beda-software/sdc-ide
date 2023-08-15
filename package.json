@@ -3,7 +3,7 @@
     "scripts": {
         "clean": "lerna clean",
         "bootstrap": "lerna bootstrap",
-        "test": "lerna run test --stream --concurrency=1 --",
+        "test": "lerna run test --stream",
         "test:web": "lerna run test --stream --concurrency=1 --scope web --",
         "test:shared": "lerna run test --stream --concurrency=1 --scope shared --",
         "test:sdc-qrf": "lerna run test --stream --concurrency=1 --scope sdc-qrf --",

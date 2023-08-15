@@ -9,7 +9,7 @@
     "scripts": {
         "prepare": "tsc -p tsconfig.json",
         "start": "tsc -p tsconfig.json -w",
-        "test": "jest",
+        "test": "vitest --no-threads --passWithNoTests",
         "typecheck": "tsc"
     },
     "keywords": [],

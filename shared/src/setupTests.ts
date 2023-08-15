@@ -11,7 +11,6 @@ import {
 } from 'fhir-react/lib/services/instance';
 
 beforeAll(async () => {
-    jest.useFakeTimers();
     setAidboxInstanceBaseURL('http://localhost:8181');
     setFHIRInstanceBaseURL('http://localhost:8181/fhir');
 });
@@ -41,8 +40,4 @@ afterEach(async () => {
             data: { query: `select drop_before_all(${txId});` },
         });
     });
-});
-
-afterAll(() => {
-    jest.clearAllTimers();
 });
