@@ -1,0 +1,60 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+
+.tabs {
+    display: flex;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: 8px;
+}
+
+.tab {
+    background-color: $base-light-color;
+    border: 0;
+    outline: none;
+    font-family: 'Poppins';
+    font-weight: 400;
+    font-size: 12px;
+    flex: 1;
+    padding: 2px 2px 2px;
+    text-align: center;
+
+    &:hover {
+        background-color: $base-surface-color;
+    }
+
+    &:global(._active) {
+        border-bottom: $primary-color solid 2px;
+
+        &:hover {
+            background-color: $base-surface-color;
+        }
+    }
+}
+
+.tabContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 0 20px;
+}
+
+button.remove {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    width: auto;
+    font-size: 12px;
+    line-height: 8px;
+    padding: 4px 8px;
+    height: auto;
+    z-index: 2;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+
+    .tabContent:hover & {
+        opacity: 1;
+    }
+}

@@ -1,13 +1,18 @@
 import {
     axiosInstance,
-    resetInstanceToken,
-    setInstanceBaseURL,
+    resetInstanceToken as resetAidboxInstanceToken,
+    setInstanceBaseURL as setAidboxInstanceBaseURL,
 } from 'aidbox-react/lib/services/instance';
 import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceBaseURL as setFHIRInstanceBaseURL,
+} from 'fhir-react/lib/services/instance';
+
 beforeAll(async () => {
-    jest.useFakeTimers();
-    setInstanceBaseURL('http://localhost:8181');
+    setAidboxInstanceBaseURL('http://localhost:8181');
+    setFHIRInstanceBaseURL('http://localhost:8181/fhir');
 });
 
 let txId: string;
@@ -26,7 +31,8 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-    resetInstanceToken();
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
     await withRootAccess(async () => {
         await axiosInstance({
             method: 'POST',
@@ -34,8 +40,4 @@ afterEach(async () => {
             data: { query: `select drop_before_all(${txId});` },
         });
     });
-});
-
-afterAll(() => {
-    jest.clearAllTimers();
 });

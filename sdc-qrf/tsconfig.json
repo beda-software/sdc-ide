@@ -1,5 +1,5 @@
 {
-    "extends": "../tsconfig.base.json",
+    "extends": "../tsconfig.json",
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
@@ -13,7 +13,8 @@
         "moduleResolution": "node",
         "noEmit": false,
         "importHelpers": true,
-        "noUncheckedIndexedAccess": true
+        "noUncheckedIndexedAccess": true,
+        "allowImportingTsExtensions": false,
     },
     "include": ["src"],
     "exclude": ["node_modules", "tests"]

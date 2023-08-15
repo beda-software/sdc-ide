@@ -1,11 +1,11 @@
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import { setData } from 'web/src/services/localStorage';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { success } from 'fhir-react/lib/libs/remoteData';
 
 import {
     authorize,
@@ -40,25 +40,33 @@ export function App() {
         <RenderRemoteData remoteData={userResponse}>
             {(user) =>
                 user ? (
-                    <Switch>
-                        <Route path="/:questionnaireId" exact>
-                            <Main />
-                        </Route>
-                        <Redirect
-                            to={{
-                                pathname: 'demo-1',
-                            }}
+                    <Routes>
+                        <Route path="/:questionnaireId" element={<Main />} />
+                        <Route
+                            path="*"
+                            element={
+                                <>
+                                    <Navigate to="/demo-1" />
+                                </>
+                            }
                         />
-                    </Switch>
+                    </Routes>
                 ) : (
-                    <Switch>
-                        <Route path="/auth" render={() => <Auth />} />
+                    <Routes>
+                        <Route path="/auth" element={<Auth />} />
                         <Route
                             path="/signin"
-                            render={() => <SignIn originPathName={originPathRef.current} />}
+                            element={<SignIn originPathName={originPathRef.current} />}
                         />
-                        <Redirect to={{ pathname: '/signin' }} />
-                    </Switch>
+                        <Route
+                            path="*"
+                            element={
+                                <>
+                                    <Navigate to="/signin" replace={true} />
+                                </>
+                            }
+                        />
+                    </Routes>
                 )
             }
         </RenderRemoteData>

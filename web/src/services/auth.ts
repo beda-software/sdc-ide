@@ -1,7 +1,15 @@
-import { isFailure, success } from 'aidbox-react/lib/libs/remoteData';
-import { resetInstanceToken, setInstanceToken } from 'aidbox-react/lib/services/instance';
-import { service } from 'aidbox-react/lib/services/service';
-import { extractErrorCode } from 'aidbox-react/lib/utils/error';
+import {
+    resetInstanceToken as resetAidboxInstanceToken,
+    setInstanceToken as setAidboxInstanceToken,
+} from 'aidbox-react/lib/services/instance';
+
+import { isFailure, success } from 'fhir-react/lib/libs/remoteData';
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceToken as setFHIRInstanceToken,
+} from 'fhir-react/lib/services/instance';
+import { service } from 'fhir-react/lib/services/service';
+import { extractErrorCode } from 'fhir-react/lib/utils/error';
 
 import { User } from 'shared/src/contrib/aidbox';
 
@@ -24,12 +32,14 @@ export function getToken() {
 }
 
 export async function restoreUserSession(token: string) {
-    setInstanceToken({ access_token: token, token_type: 'Bearer' });
+    setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
+    setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const userResponse = await getUserInfo();
 
     if (isFailure(userResponse) && extractErrorCode(userResponse.error) !== 'network_error') {
-        resetInstanceToken();
+        resetAidboxInstanceToken();
+        resetFHIRInstanceToken();
 
         return success(null);
     }
@@ -65,7 +75,9 @@ export function setToken(token: string) {
 export function parseOAuthState(state?: string): OAuthState {
     try {
         return state ? JSON.parse(atob(state)) : {};
-    } catch {}
+    } catch (e) {
+        console.log(e);
+    }
 
     return {};
 }

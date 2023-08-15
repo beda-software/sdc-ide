@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.actions {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+button.action {
+    width: auto;
+    font-size: 12px;
+    line-height: 8px;
+    padding: 4px 8px;
+    height: auto;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+
+    .container:hover & {
+        opacity: 1;
+    }
+
+    &:global(._active) {
+        opacity: 1;
+    }
+}

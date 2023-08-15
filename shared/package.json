@@ -1,6 +1,7 @@
 {
     "name": "shared",
-    "version": "0.0.1",
+    "type": "module",
+    "version": "0.0.2",
     "description": "",
     "files": [
         "lib/**/*"
@@ -8,7 +9,7 @@
     "scripts": {
         "prepare": "tsc -p tsconfig.json",
         "start": "tsc -p tsconfig.json -w",
-        "test": "jest",
+        "test": "vitest --no-threads --passWithNoTests",
         "typecheck": "tsc"
     },
     "keywords": [],
@@ -30,7 +31,6 @@
         "@types/jest": "^27.5.1",
         "babel-jest": "^27.5.1",
         "jest": "^27.5.1",
-        "ts-jest": "^27.1.5",
-        "typescript": "^4.1.2"
+        "ts-jest": "^27.1.5"
     }
 }

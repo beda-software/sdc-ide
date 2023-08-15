@@ -5,12 +5,31 @@
     margin-bottom: 3px;
 }
 
-.formBox {
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     transition: all 0.2s;
+    overflow-x: auto;
 
     &:hover .expandButton {
         opacity: 1;
     }
+
+    &:nth-child(even) {
+        background-color: $base-surface-color;
+    }
+
+    &:nth-child(odd) {
+        background-color: $base-light-color;
+    }
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 .boxHeader {

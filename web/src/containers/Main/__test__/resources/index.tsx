@@ -1,11 +1,10 @@
+import { OperationOutcome, Patient, Questionnaire } from 'fhir/r4b';
 import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
 import {
     newQuestionnaireFHIR,
     newQuestionnaireFHIRItem,
     questionnaireFHIR,
 } from 'web/src/containers/Main/__test__/resources/questionnaireFHIRExpected';
-
-import { OperationOutcome, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
 const patient: Patient = {
     name: [
@@ -340,8 +339,6 @@ const mappingInfoList: MapperInfo[] = [
     },
 ];
 
-const showToastType: 'error' = 'error';
-
 const showToastError: OperationOutcome = {
     resourceType: 'OperationOutcome',
     text: {
@@ -386,7 +383,6 @@ export const EXPECTED_RESOURCES = {
     mappingIdList,
     mappingInfoList,
     mappingIdListEmpty,
-    showToastType,
     showToastError,
     showToastIndex,
 };

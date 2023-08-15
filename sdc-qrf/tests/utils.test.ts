@@ -1,12 +1,12 @@
 import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
+import { allergiesQuestionnaire } from './resources/questionnaire';
 import {
     getEnabledQuestions,
     mapFormToResponse,
     mapResponseToForm,
     removeDisabledAnswers,
 } from '../src';
-import { allergiesQuestionnaire } from './resources/questionnaire';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
     const questionnaire: Questionnaire = {
@@ -528,7 +528,7 @@ test('enableWhenExpression logic', () => {
     };
     const formItems = mapResponseToForm(qr, questionnaire);
     const enabledQuestionsLinkIds = getEnabledQuestions(
-        questionnaire.item?.[0].item?.[0].item ?? [],
+        questionnaire.item?.[0]?.item?.[0]?.item ?? [],
         ['items', 'root-group', 'items'],
         formItems,
         {

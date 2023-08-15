@@ -3,16 +3,15 @@ import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf/src';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { ResourcesMap } from 'aidbox-react/lib/services/fhir';
-import { buildQueryParams } from 'aidbox-react/lib/services/instance';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { ResourcesMap } from 'fhir-react/lib/services/fhir';
+import { buildQueryParams } from 'fhir-react/lib/services/instance';
 
 import {
     QuestionnaireItemAnswerOption,
     QuestionnaireResponseItemAnswer,
     Resource,
 } from 'shared/src/contrib/aidbox';
-
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
@@ -30,7 +29,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
     const { linkId, repeats, required, answerExpression, choiceColumn } = questionItem;
     const getDisplay =
         overrideGetDisplay ??
-        ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path, context)[0]);
+        ((resource: R) => fhirpath.evaluate(resource, choiceColumn![0]!.path!, context)[0]);
 
     const rootFieldPath = [...parentPath, linkId];
     const fieldPath = [...rootFieldPath, ...(repeats ? [] : ['0'])];
@@ -44,7 +43,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         context,
     );
 
-    const loadOptions = async (searchText: string) => {
+    const loadOptions = async (searchText: string): Promise<QuestionnaireItemAnswerOption[]> => {
         const response = await loadResourceOptions(
             resourceType as any,
             { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
@@ -52,7 +51,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         );
 
         if (isSuccess(response)) {
-            return response.data;
+            return response.data as QuestionnaireItemAnswerOption[];
         }
 
         return [];

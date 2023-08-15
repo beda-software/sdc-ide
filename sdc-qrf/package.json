@@ -5,7 +5,7 @@
     "scripts": {
         "build": "tsc",
         "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
-        "test": "jest",
+        "test": "vitest --no-threads",
         "prepare": "npm run build",
         "typecheck": "tsc"
     },
@@ -28,8 +28,7 @@
         "jest": "^27.5.1",
         "ts-jest": "^27.1.5",
         "react": "^18.2.0",
-        "react-test-renderer": "^18.2.0",
-        "typescript": "^4.1.2"
+        "react-test-renderer": "^18.2.0"
     },
     "files": [
         "lib/**/*",

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { ContextMenuInfo, ExpressionModalInfo, ModalType } from 'web/src/containers/Main/types';
 import { hasOwnProperty } from 'web/src/utils/common';
-import YAML, { visitor, visitorFn } from 'yaml';
-import { Pair } from 'yaml/types';
+import YAML, { Pair, visitor, visitorFn } from 'yaml';
 
 interface QuestionnaireVisitor {
-    Pair?: visitorFn<Pair>;
+    Pair?: visitorFn<Pair<any, any>>;
 }
 
 // no more strict type

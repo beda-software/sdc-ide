@@ -1,6 +1,6 @@
 @import 'src/styles/colors';
 
-.mainContainer {
+.editor {
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -9,13 +9,6 @@
 %rowContainer {
     overflow: auto;
     display: flex;
-}
-
-%element {
-    padding: 20px 20px 0px 20px;
-    flex: 1;
-    overflow-x: scroll;
-    overflow-y: scroll;
 }
 
 .upperRowContainer {
@@ -32,38 +25,8 @@
     display: flex;
 }
 
-.patientFHIRResourceBox {
-    @extend %element;
-    background-color: $base-surface-color;
-}
-
 .resourceSelect {
     margin-left: 10px;
-}
-
-.questFHIRResourceBox {
-    @extend %element;
-    background-color: $base-light-color;
-}
-
-.patientFormBox {
-    @extend %element;
-    background-color: $base-surface-color;
-    padding-bottom: 20px;
-}
-
-.patientBatchRequestBox {
-    @extend %element;
-    background-color: $base-surface-color;
-}
-
-.questionnaireResponseFHIRResourceBox {
-    @extend %element;
-    background-color: $base-surface-color;
-}
-
-.patientMapperBox {
-    @extend %element;
 }
 
 h2 {
@@ -82,4 +45,17 @@ h2 {
 
 :global(.Toastify__toast--error) {
     background: #ff6b6c;
+}
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 0 16px 12px;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
 }

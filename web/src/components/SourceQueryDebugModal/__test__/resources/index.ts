@@ -1,6 +1,5 @@
+import { Bundle, NutritionOrder, Patient, Questionnaire } from 'fhir/r4b';
 import { Props } from 'web/src/components/SourceQueryDebugModal/hooks';
-
-import { Bundle, NutritionOrder, Patient, Questionnaire } from 'shared/src/contrib/aidbox';
 
 const bundleArray = [
     {
@@ -95,7 +94,7 @@ export const patientData: Patient = {
             family: 'Smith',
         },
     ],
-    gender: 'Female',
+    gender: 'female',
     telecom: [
         {
             use: 'Mobile',
@@ -285,7 +284,6 @@ export const props: Props = {
     },
     sourceQueryId: 'DietAndNutrition',
     closeExpressionModal: () => {},
-    fhirMode: false,
 };
 
 export const expectedPreparedSourceQueryData = {

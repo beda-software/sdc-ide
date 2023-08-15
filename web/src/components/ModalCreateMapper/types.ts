@@ -1,4 +1,4 @@
-import { Questionnaire } from 'shared/src/contrib/aidbox';
+import { Questionnaire } from 'fhir/r4b';
 
 export interface MapperInfo {
     mappingId: string;

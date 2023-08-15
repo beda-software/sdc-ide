@@ -1,22 +1,22 @@
+import { Questionnaire, Parameters, Bundle, Resource } from 'fhir/r4b';
 import * as _ from 'lodash';
 import { useCallback, useState } from 'react';
-import { showToast, updateQuestionnaire } from 'web/src/containers/Main/hooks/index';
+import { toast } from 'react-toastify';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isFailure, success, isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { mapSuccess, service } from 'aidbox-react/lib/services/service';
-
-import { Bundle, Parameters, Questionnaire, Resource } from 'shared/src/contrib/aidbox/index';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isFailure, success, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { mapSuccess, service } from 'fhir-react/lib/services/service';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 export interface Props {
     launchContext: Parameters;
     sourceQueryId: string;
     closeExpressionModal: () => void;
-    fhirMode: boolean;
 }
 
 export function useSourceQueryDebugModal(props: Props) {
-    const { launchContext, sourceQueryId, closeExpressionModal, fhirMode } = props;
+    const { launchContext, sourceQueryId, closeExpressionModal } = props;
     const [rawSourceQuery, setRawSourceQuery] = useState<Bundle>();
 
     const onSave = useCallback(
@@ -27,15 +27,16 @@ export function useSourceQueryDebugModal(props: Props) {
                     (res: Resource) => res.id === sourceQueryId,
                 );
                 newResource.contained[indexOfContainedId] = rawSourceQuery;
-                const response = await updateQuestionnaire(newResource, fhirMode);
+                const response = await saveFHIRResource(newResource);
+
                 if (isSuccess(response)) {
                     closeExpressionModal();
                 } else {
-                    showToast('error', response.error);
+                    toast.error('An error occurred: ' + formatError(response.error));
                 }
             }
         },
-        [closeExpressionModal, fhirMode, rawSourceQuery, sourceQueryId],
+        [closeExpressionModal, rawSourceQuery, sourceQueryId],
     );
 
     const onChange = _.debounce(setRawSourceQuery, 1000);

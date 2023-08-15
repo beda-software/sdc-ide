@@ -1,13 +1,10 @@
 .logo {
-  height: 24px;
-  width: 52px;
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background-image: url("./images/BS-Logo.png");
-  z-index: 500;
+    display: block;
+    height: 24px;
+    width: 52px;
+    background-image: url('./images/BS-Logo.png');
 }
 
 .logo:hover {
-  background-image: url("./images/BS-Logo-color.png");
+    background-image: url('./images/BS-Logo-color.png');
 }

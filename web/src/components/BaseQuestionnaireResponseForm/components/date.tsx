@@ -2,7 +2,7 @@ import moment from 'moment';
 import { Field } from 'react-final-form';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
 
-import { FHIRDateTimeFormat } from 'aidbox-react/lib/utils/date';
+import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 
 export function QuestionDate({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
@@ -56,4 +56,3 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
         </Field>
     );
 }
-

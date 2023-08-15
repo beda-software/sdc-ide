@@ -1,148 +1,114 @@
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { Button } from 'web/src/components/Button';
 import { ExpandableElement } from 'web/src/components/ExpandableElement';
 import { ExpandableRow } from 'web/src/components/ExpandableRow';
-import { LaunchContextDisplay } from 'web/src/components/LaunchContextDisplay';
+import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
 import { Logo } from 'web/src/components/Logo';
-import { MappingSelect } from 'web/src/components/MappingSelect';
-import { Menu } from 'web/src/components/Menu';
-import { ModalCreateMapper } from 'web/src/components/ModalCreateMapper';
+import 'react-toastify/dist/ReactToastify.css';
 import { QRFormWrapper } from 'web/src/components/QRFormWrapper';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
-import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
-import { TitleWithErrors } from 'web/src/components/TitleWithErrors';
-import { useMain } from 'web/src/containers/Main/hooks';
+import { version } from 'web/src/version';
 
-import { Mapping, Questionnaire } from 'shared/src/contrib/aidbox';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
-import 'react-toastify/dist/ReactToastify.css';
 import s from './Main.module.scss';
+import { MappingEditor } from './MappingEditor';
+import { QuestionnaireEditor } from './QuestionnaireEditor';
+import { useMain } from './useMain';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const {
         launchContext,
-        dispatch,
-        fhirMode,
-        setFhirMode,
-        questionnaireRD,
-        questionnaireFHIRRD,
-        saveQuestionnaireFHIR,
+        originalQuestionnaireRD,
+        assembledQuestionnaireRD,
         questionnaireResponseRD,
-        saveQuestionnaireResponse,
-        mappingList,
-        activeMappingId,
-        setActiveMappingId,
         mappingRD,
-        saveMapping,
-        batchRequestRD,
-        applyMappings,
-        showModal,
-        saveNewMapping,
-        closeModal,
-        mapperInfoList,
-        reload,
-        mappingErrorManager,
-        titleWithErrorManager,
-    } = useMain(questionnaireId);
+        extractRD,
+        manager,
+    } = useMain(questionnaireId!);
 
     return (
         <>
-            {showModal && mapperInfoList && (
-                <ModalCreateMapper
-                    saveNewMapping={saveNewMapping}
-                    closeModal={closeModal}
-                    mapperInfoList={mapperInfoList}
-                />
-            )}
-            <div className={s.mainContainer}>
+            <div className={s.editor}>
                 <ToastContainer />
-                <ExpandableRow cssClass={s.upperRowContainer}>
-                    <ExpandableElement title="Launch Context" cssClass={s.patientFHIRResourceBox}>
-                        <LaunchContextDisplay parameters={launchContext} />
+                <ExpandableRow className={s.upperRowContainer}>
+                    <ExpandableElement title="Launch Context" className={s.patientFHIRResourceBox}>
+                        <RenderRemoteData remoteData={originalQuestionnaireRD}>
+                            {(resource) => (
+                                <LaunchContextEditor
+                                    questionnaire={resource}
+                                    launchContext={launchContext}
+                                    onChange={manager.setLaunchContext}
+                                    onRemove={manager.removeLaunchContext}
+                                />
+                            )}
+                        </RenderRemoteData>
                     </ExpandableElement>
                     <ExpandableElement
-                        title={
-                            <TitleWithErrors
-                                title={'Questionnaire FHIR Resource'}
-                                titleWithErrorManager={titleWithErrorManager}
-                            />
-                        }
-                        cssClass={s.questFHIRResourceBox}
+                        title={'Questionnaire FHIR Resource'}
+                        // title={
+                        //     <TitleWithErrors
+                        //         title={'Questionnaire FHIR Resource'}
+                        //         titleWithErrorManager={titleWithErrorManager}
+                        //     />
+                        // }
                     >
-                        <ResourceCodeEditor<Questionnaire>
-                            resourceRD={questionnaireFHIRRD}
-                            onSave={saveQuestionnaireFHIR}
+                        <QuestionnaireEditor
+                            questionnaireRD={originalQuestionnaireRD}
+                            onSave={manager.saveQuestionnaire}
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
-                            fhirMode={fhirMode}
-                            reload={reload}
+                            reload={manager.reloadQuestionnaire}
                         />
                     </ExpandableElement>
-                    <ExpandableElement title="Patient Form" cssClass={s.patientFormBox}>
+                    <ExpandableElement title="Patient Form">
                         <QRFormWrapper
-                            questionnaireRD={questionnaireRD}
+                            questionnaireRD={assembledQuestionnaireRD}
                             questionnaireResponseRD={questionnaireResponseRD}
-                            saveQuestionnaireResponse={saveQuestionnaireResponse}
+                            saveQuestionnaireResponse={manager.setQuestionnaireResponse}
                             launchContextParameters={launchContext.parameter}
                         />
                     </ExpandableElement>
                 </ExpandableRow>
-                <ExpandableRow cssClass={s.lowerRowContainer}>
-                    <ExpandableElement
-                        title="QuestionnaireResponse FHIR resource"
-                        cssClass={s.questionnaireResponseFHIRResourceBox}
-                    >
+                <ExpandableRow className={s.lowerRowContainer}>
+                    <ExpandableElement title="QuestionnaireResponse FHIR resource">
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
                     <ExpandableElement
-                        title={
-                            <TitleWithErrors
-                                title={'Patient JUTE Mapping'}
-                                titleWithErrorManager={titleWithErrorManager}
-                            />
-                        }
-                        cssClass={s.patientMapperBox}
+                        title={'Patient JUTE Mapping'}
+                        // title={
+                        //     <TitleWithErrors
+                        //         title={'Patient JUTE Mapping'}
+                        //         titleWithErrorManager={titleWithErrorManager}
+                        //     />
+                        // }
                     >
-                        <div>
-                            <MappingSelect
-                                mappingList={mappingList}
-                                activeMappingId={activeMappingId}
-                                setActiveMappingId={setActiveMappingId}
-                                title="Patient JUTE Mapping"
-                                mappingErrorManager={mappingErrorManager}
-                            />
-                            <ResourceCodeEditor<Mapping>
-                                resourceRD={mappingRD}
-                                onSave={saveMapping}
-                                launchContext={launchContext}
-                                questionnaireResponseRD={questionnaireResponseRD}
-                                fhirMode={fhirMode}
-                                reload={reload}
-                            />
-                        </div>
+                        <MappingEditor
+                            mappingRD={mappingRD}
+                            questionnaireRD={originalQuestionnaireRD}
+                            onSave={() => {
+                                console.log('onSave');
+                            }}
+                            onChange={manager.setMapping}
+                            launchContext={launchContext}
+                            questionnaireResponseRD={questionnaireResponseRD}
+                            reload={manager.reloadMapping}
+                            addMapping={manager.addMapping}
+                        />
                     </ExpandableElement>
-                    <ExpandableElement
-                        title="Patient batch request"
-                        cssClass={s.patientBatchRequestBox}
-                    >
+                    <ExpandableElement title="Patient batch request">
                         <div>
-                            <ResourceCodeDisplay resourceResponse={batchRequestRD} />
-                            <Button onClick={applyMappings}>Apply</Button>
+                            <ResourceCodeDisplay resourceResponse={extractRD} />
+                            {/* <Button onClick={applyMappings}>Apply</Button> */}
                         </div>
                     </ExpandableElement>
                 </ExpandableRow>
             </div>
-            <Menu
-                launchContext={launchContext}
-                dispatch={dispatch}
-                questionnaireId={questionnaireId}
-                fhirMode={fhirMode}
-                setFhirMode={setFhirMode}
-                questionnaireRD={questionnaireRD}
-            />
-            <Logo />
+            <div className={s.footer}>
+                <div className={s.version}>{`v${version}`}</div>
+                <Logo />
+            </div>
         </>
     );
 }

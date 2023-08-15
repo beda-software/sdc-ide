@@ -1,16 +1,11 @@
 {
-    "extends": "../tsconfig.base.json",
+    "extends": "../tsconfig.json",
     "compilerOptions": {
-        "noEmit": true,
-        "rootDir": ".",
+        "baseUrl": "./src",
         "outDir": "lib",
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "jsx": "react-jsx",
-        "target": "ES5",
-        "module": "commonjs",
-	    "lib": ["DOM", "ES5", "DOM.Iterable"],
     },
     "exclude": [
         "lib",
@@ -18,6 +13,7 @@
         "coverage",
         "config",
         "src/**/*.test.ts",
-        "src/**/*.test.tsx"
+        "src/**/*.test.tsx",
+        "../web/**/__test__" // Temporary exclude tests from typecheck
     ]
 }

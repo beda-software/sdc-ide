@@ -1,0 +1,61 @@
+@import 'src/styles/colors.scss';
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 40px;
+    width: 100%;
+
+    border: 0;
+
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    line-height: 20px;
+    font-weight: 600;
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        color 0.2s;
+
+    &:global(._primary) {
+        color: $base-light-color;
+        background-color: $primary-color;
+    }
+
+    &:global(._primary):disabled {
+        opacity: 0.5;
+    }
+
+    &:global(._primary):hover:not(:disabled) {
+        background-color: darken($primary-color, 10%);
+    }
+
+    &:global(._secondary) {
+        border: 2px solid $primary-color;
+        color: $primary-color;
+        background-color: white;
+    }
+
+    &:global(._secondary):disabled {
+        opacity: 0.5;
+    }
+
+    &._secondary:hover:not(:disabled) {
+        color: darken($primary-color, 10%);
+        border-color: darken($primary-color, 10%);
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+        cursor: pointer;
+        outline: none;
+    }
+
+    &:disabled {
+        cursor: default;
+    }
+}

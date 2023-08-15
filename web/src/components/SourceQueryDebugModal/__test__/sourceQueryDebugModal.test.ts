@@ -1,15 +1,11 @@
 import { act, renderHook } from '@testing-library/react-hooks';
+import { NutritionOrder, Patient } from 'fhir/r4b';
 import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
-import { setData } from 'web/src/services/localStorage';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { saveFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { ensure } from 'aidbox-react/lib/utils/tests';
-
-import { NutritionOrder, Patient } from 'shared/src/contrib/aidbox';
-
-import { updateQuestionnaire } from 'src/containers/Main/hooks';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { axiosInstance } from 'fhir-react/lib/services/instance';
+import { ensure } from 'fhir-react/lib/utils/tests';
 
 import {
     nutritionOrderData,
@@ -27,7 +23,6 @@ async function setup() {
 }
 
 beforeEach(async () => {
-    setData('fhirMode', false);
     axiosInstance.defaults.auth = {
         username: 'root',
         password: 'secret',
@@ -63,7 +58,7 @@ test('onSave', async () => {
     await waitFor(() => isSuccess(result.current.response));
 
     await act(() => result.current.onSave(resourceSuccess));
-    const responseMustBeSuccess = await updateQuestionnaire(resourceSuccess as any, false);
+    const responseMustBeSuccess = await saveFHIRResource(resourceSuccess as any);
     expect(isSuccess(responseMustBeSuccess)).toBeTruthy();
 
     // await act(() => result.current.onSave(resourceFailure));

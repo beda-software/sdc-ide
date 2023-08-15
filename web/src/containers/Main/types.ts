@@ -1,6 +1,5 @@
 import { Position, Editor, Doc } from 'codemirror';
-
-import { ParametersParameterValue, Resource } from 'shared/src/contrib/aidbox';
+import { Resource, ParametersParameter } from 'fhir/r4b';
 
 export interface ExpressionModalInfo {
     type: ModalType;
@@ -49,7 +48,7 @@ export interface TitleWithErrorManager {
     errorCount: (title: Title) => number | undefined;
 }
 
-export type ValueObject = Resource | ParametersParameterValue;
+export type ValueObject = Resource | ParametersParameter;
 
 export type ModalType = 'LaunchContext' | 'QuestionnaireResponse' | 'SourceQueries';
 
