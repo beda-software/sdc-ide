@@ -26,7 +26,7 @@ export function Main() {
         mappingRD,
         extractRD,
         manager,
-    } = useMain(questionnaireId);
+    } = useMain(questionnaireId!);
 
     return (
         <>
@@ -87,7 +87,9 @@ export function Main() {
                         <MappingEditor
                             mappingRD={mappingRD}
                             questionnaireRD={originalQuestionnaireRD}
-                            onSave={() => {}}
+                            onSave={() => {
+                                console.log('onSave');
+                            }}
                             onChange={manager.setMapping}
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { Select } from 'web/src/components/Select';
@@ -24,39 +24,49 @@ export function QuestionnaireEditor(props: Props) {
     const { onSave, questionnaireRD, questionnaireResponseRD } = props;
     const { questionnairesRD } = useQuestionnaireEditor();
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
-    const history = useHistory();
-    const [showSelect, setShowSelect] = useState(false);
+    const navigate = useNavigate();
+    const [showSelect, setShowSelect] = useState(isFailure(questionnaireResponseRD));
     const [updatedResource, setUpdatedResource] = useState<Questionnaire | undefined>();
 
     useEffect(() => {
-        if (isFailure(questionnaireResponseRD) || isLoading(questionnaireResponseRD)) {
+        if (isLoading(questionnaireRD)) {
             setShowSelect(false);
         }
-    }, [questionnaireResponseRD]);
+        if (isFailure(questionnaireRD)) {
+            setShowSelect(true);
+        }
+    }, [questionnaireRD]);
 
     return (
         <div className={s.container}>
             {showSelect ? (
                 <RenderRemoteData remoteData={questionnairesRD}>
                     {(questionnaires) => (
-                        <Select
-                            value={{
-                                value: questionnaireId,
-                                label: questionnaireId,
-                            }}
-                            options={questionnaires.map((questionnaire) => ({
-                                value: questionnaire.id,
-                                label: questionnaire.title ?? questionnaire.id,
-                            }))}
-                            onChange={(option) => {
-                                if (option) {
-                                    setShowSelect(false);
-                                    history.push(
-                                        (option as { value: string; label: string }).value,
-                                    );
-                                }
-                            }}
-                        />
+                        <>
+                            <Select
+                                value={{
+                                    value: questionnaireId,
+                                    label: questionnaireId,
+                                }}
+                                options={questionnaires.map((questionnaire) => ({
+                                    value: questionnaire.id,
+                                    label: questionnaire.title ?? questionnaire.id,
+                                }))}
+                                onChange={(option) => {
+                                    if (option) {
+                                        setShowSelect(false);
+                                        navigate(
+                                            `/${
+                                                (option as { value: string; label: string }).value
+                                            }`,
+                                        );
+                                    }
+                                }}
+                            />
+                            <RenderRemoteData remoteData={questionnaireRD}>
+                                {() => <></>}
+                            </RenderRemoteData>
+                        </>
                     )}
                 </RenderRemoteData>
             ) : (
