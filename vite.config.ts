@@ -21,9 +21,7 @@ export const getBaseConfig = ({ plugins = [], build = {}, test = {} }) =>
             }),
             ...plugins,
         ],
-        define: {
-            global: {},
-        },
+        define: command === 'build' ? {} : { global: {} },
         build: {
             commonjsOptions: {
                 defaultIsModuleExports(id) {
