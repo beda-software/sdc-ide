@@ -26,7 +26,6 @@ export function ModalCreateMapper({ saveMapping, closeModal, mappings }: ModalCr
                 ) : null}
                 <InputField
                     input={{
-                        name: 'mappingId',
                         value: mappingId,
                         onChange: (e) => setMappingId(e.target.value),
                         onBlur: () => {},

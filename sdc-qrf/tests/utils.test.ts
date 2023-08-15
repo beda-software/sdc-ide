@@ -528,7 +528,7 @@ test('enableWhenExpression logic', () => {
     };
     const formItems = mapResponseToForm(qr, questionnaire);
     const enabledQuestionsLinkIds = getEnabledQuestions(
-        questionnaire.item?.[0].item?.[0].item ?? [],
+        questionnaire.item?.[0]?.item?.[0]?.item ?? [],
         ['items', 'root-group', 'items'],
         formItems,
         {
