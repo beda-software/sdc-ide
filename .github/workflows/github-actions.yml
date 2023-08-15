@@ -11,8 +11,6 @@ jobs:
         - uses: actions/setup-node@v3
           with:
             node-version: 16
-        - name: Prepare index.html
-          run: cp index.html public/index.html
         - name: Install deps
           run: yarn install --network-concurrency 1
         - run: yarn run typecheck
@@ -28,8 +26,6 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                 node-version: 16
-            - name: Prepare index.html
-              run: cp index.html public/index.html
             - name: Install deps
               run: yarn install --network-concurrency 1
             - run: yarn build:web
