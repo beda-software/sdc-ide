@@ -1,11 +1,10 @@
- 
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { Field } from 'react-final-form';
 import AsyncSelect from 'react-select/async';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { mapSuccess, service } from 'aidbox-react/lib/services/service';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { mapSuccess, service } from 'fhir-react/lib/services/service';
 
 import { Coding, ValueSet } from 'shared/src/contrib/aidbox';
 

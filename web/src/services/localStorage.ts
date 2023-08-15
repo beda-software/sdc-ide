@@ -1,22 +1,16 @@
 import _ from 'lodash';
 
-import { ParametersParameter } from 'shared/src/contrib/aidbox';
-
 interface StorageData {
     connection: {
         client: string;
         baseUrl: string;
         secret?: string;
     };
-    fhirMode: boolean;
-    prevActiveMappingId: string | null;
-    launchContextParameters: Record<string, ParametersParameter | null | undefined>;
 }
 
 function loadStorageData(): StorageData {
     const storageData = window.localStorage;
     const connection = storageData.getItem('connection');
-    const launchContextParameters = storageData.getItem('launchContextParameters');
     return {
         connection: connection
             ? JSON.parse(connection)
@@ -28,9 +22,6 @@ function loadStorageData(): StorageData {
                           ? 'http://localhost:8080'
                           : (window as any).BASE_URL,
               },
-        fhirMode: storageData.getItem('fhirMode') === 'true',
-        prevActiveMappingId: storageData.getItem('prevActiveMappingId'),
-        launchContextParameters: launchContextParameters ? JSON.parse(launchContextParameters) : {},
     };
 }
 
@@ -53,10 +44,6 @@ export function setData<T extends keyof StorageData>(key: T, value: StorageData[
 
 function flush() {
     _.forEach(data, (value, key) => {
-        if (key === 'prevActiveMappingId' || key === 'fhirMode') {
-            window.localStorage[key] = value;
-        } else {
-            window.localStorage[key] = JSON.stringify(value);
-        }
+        window.localStorage[key] = JSON.stringify(value);
     });
 }

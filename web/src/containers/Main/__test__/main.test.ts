@@ -2,13 +2,13 @@ import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
 import { act } from 'react-dom/test-utils';
 import { EXPECTED_RESOURCES } from 'web/src/containers/Main/__test__/resources';
-import { idExtraction, showToast, useMain } from 'web/src/containers/Main/hooks';
+import { useMain } from 'web/src/containers/Main/useMain';
 import { setData } from 'web/src/services/localStorage';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { service } from 'aidbox-react/lib/services/service';
-import { ensure } from 'aidbox-react/lib/utils/tests';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { axiosInstance } from 'fhir-react/lib/services/instance';
+import { service } from 'fhir-react/lib/services/service';
+import { ensure } from 'fhir-react/lib/utils/tests';
 
 import { Extension } from 'shared/src/contrib/aidbox';
 
@@ -29,7 +29,6 @@ async function setup() {
 }
 
 beforeEach(async () => {
-    setData('fhirMode', false);
     axiosInstance.defaults.auth = {
         username: 'root',
         password: 'secret',
@@ -106,7 +105,6 @@ test('mappingList demo-3', async () => {
 
     await waitFor(() => {
         const mappingList = result.current.mappingList;
-        console.log('mappingList', mappingList);
         expect(mappingList).toEqual(EXPECTED_RESOURCES.mappingListDemo3);
     });
 });
@@ -166,39 +164,4 @@ test.skip('applyMappings', async () => {
         expect(batchRequest.entry?.[0].resource.birthDate).toEqual('1980-01-01');
     });
     // TODO: finish this test
-});
-
-test('idExtraction', () => {
-    expect(
-        idExtraction(
-            EXPECTED_RESOURCES.idExtractionIssue,
-            EXPECTED_RESOURCES.idExtractionResource,
-            EXPECTED_RESOURCES.idExtractionError,
-        ),
-    ).toBe('foobar');
-    expect(
-        idExtraction(
-            EXPECTED_RESOURCES.idExtractionIssue,
-            EXPECTED_RESOURCES.idExtractionResourceUndefined,
-            EXPECTED_RESOURCES.idExtractionError,
-        ),
-    ).toBeUndefined();
-    expect(
-        idExtraction(
-            EXPECTED_RESOURCES.idExtractionIssue,
-            EXPECTED_RESOURCES.idExtractionResource,
-            EXPECTED_RESOURCES.idExtractionErrorUndefined,
-        ),
-    ).toBeUndefined();
-});
-
-test('showToast', async () => {
-    expect(
-        showToast(
-            EXPECTED_RESOURCES.showToastType,
-            EXPECTED_RESOURCES.showToastError,
-            EXPECTED_RESOURCES.showToastIndex,
-        ),
-    ).toBeTruthy();
-    expect(showToast('success')).toBeTruthy();
 });

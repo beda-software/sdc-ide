@@ -1,11 +1,10 @@
+import { Questionnaire, Parameters } from 'fhir/r4b';
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
-import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
-import { Parameters, Questionnaire } from 'shared/src/contrib/aidbox/index';
-
+import { useSourceQueryDebugModal } from './hooks';
 import s from './SourceQueryDebugModal.module.scss';
 
 interface Props {
@@ -13,16 +12,14 @@ interface Props {
     closeExpressionModal: () => void;
     launchContext: Parameters;
     resource: Questionnaire;
-    fhirMode: boolean;
 }
 
 export function SourceQueryDebugModal(props: Props) {
-    const { sourceQueryId, closeExpressionModal, launchContext, resource, fhirMode } = props;
+    const { sourceQueryId, closeExpressionModal, launchContext, resource } = props;
     const { rawSourceQuery, response, onChange, onSave } = useSourceQueryDebugModal({
         launchContext,
         sourceQueryId,
         closeExpressionModal,
-        fhirMode,
     });
     return (
         <div className={s.wrapper}>

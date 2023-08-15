@@ -1,65 +1,49 @@
-import _ from 'lodash';
-import { useCallback } from 'react';
+import { Questionnaire, Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 import { ModalExpression } from 'web/src/components/ModalExpression';
-import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 import { useExpressionModal } from 'web/src/components/ResourceCodeEditor/hooks';
 import { SourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal';
-import { ReloadType } from 'web/src/containers/Main/types';
 
-import { RemoteData } from 'aidbox-react/lib/libs/remoteData';
+import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
-import { AidboxResource, Parameters, Questionnaire } from 'shared/src/contrib/aidbox';
+import s from './ResourceCodeEditor.module.scss';
 
 interface ResourceCodeEditorProps<R> {
-    resourceRD: RemoteData<R>;
-    onSave: (resource: R) => void;
+    resource: R;
+    onChange: (resource: R) => void;
     launchContext: Parameters;
-    questionnaireResponseRD: RemoteData<AidboxResource>;
-    fhirMode: boolean;
-    reload: (type: ReloadType) => void;
+    questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
+    reload: () => void;
 }
 
-export function ResourceCodeEditor<R extends AidboxResource>({
-    resourceRD,
-    onSave,
+export function ResourceCodeEditor<R extends Resource>({
+    resource,
+    onChange,
     launchContext,
     questionnaireResponseRD,
-    fhirMode,
     reload,
 }: ResourceCodeEditorProps<R>) {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const onChange = useCallback(_.debounce(onSave, 1000), [onSave]);
-
     const { expressionModalInfo, closeExpressionModal, setExpression, openExpressionModal } =
         useExpressionModal();
 
     return (
-        <>
-            <RenderRemoteData remoteData={resourceRD}>
-                {(resource) => (
-                    <CodeEditor
-                        key={resource.id}
-                        valueObject={resource}
-                        onChange={onChange}
-                        openExpressionModal={openExpressionModal}
-                        reload={reload}
-                    />
-                )}
-            </RenderRemoteData>
+        <div className={s.content}>
+            <CodeEditor
+                key={JSON.stringify(resource)}
+                valueObject={resource}
+                onChange={(r) => onChange(r)}
+                openExpressionModal={openExpressionModal}
+                reload={reload}
+                options={{ readOnly: false }}
+            />
             {expressionModalInfo &&
                 (expressionModalInfo.type === 'SourceQueries' ? (
-                    <RenderRemoteData remoteData={resourceRD}>
-                        {(resource) => (
-                            <SourceQueryDebugModal
-                                sourceQueryId={expressionModalInfo?.expression || ''}
-                                closeExpressionModal={closeExpressionModal}
-                                launchContext={launchContext}
-                                resource={resource as any as Questionnaire}
-                                fhirMode={fhirMode}
-                            />
-                        )}
-                    </RenderRemoteData>
+                    <SourceQueryDebugModal
+                        sourceQueryId={expressionModalInfo?.expression || ''}
+                        closeExpressionModal={closeExpressionModal}
+                        launchContext={launchContext}
+                        resource={resource as any as Questionnaire}
+                    />
                 ) : (
                     <ModalExpression
                         expressionModalInfo={expressionModalInfo}
@@ -69,6 +53,6 @@ export function ResourceCodeEditor<R extends AidboxResource>({
                         setExpression={setExpression}
                     />
                 ))}
-        </>
+        </div>
     );
 }

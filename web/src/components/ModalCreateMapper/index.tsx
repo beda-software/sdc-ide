@@ -1,128 +1,67 @@
-import { ChangeEvent, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
 import { InputField } from 'web/src/components/InputField';
-import { MapperInfo } from 'web/src/components/ModalCreateMapper/types';
+
+import { Mapping } from 'shared/src/contrib/aidbox';
 
 import s from './ModalCreateMapper.module.scss';
 
 interface ModalCreateMapperProps {
-    saveNewMapping: (mapperIdList: string[], mapperInfoList: MapperInfo[]) => void;
-    closeModal: (status: 'save' | 'cancel', isRenamedMappingId?: boolean) => void;
-    mapperInfoList: MapperInfo[];
+    saveMapping: (mappingId: string) => void;
+    closeModal: () => void;
+    mappings: Mapping[];
 }
 
-export function ModalCreateMapper({
-    saveNewMapping,
-    closeModal,
-    mapperInfoList,
-}: ModalCreateMapperProps) {
-    const [mapperIdList, setMapperIdList] = useState<string[]>([]);
-    const [isRenamedMappingId, setIsRenamedMappingId] = useState(false);
-
-    if (mapperIdList.length === 0) {
-        const mappingIdList: string[] = [];
-        mapperInfoList.map((mapperInfo) => mappingIdList.push(mapperInfo.mappingId));
-        setMapperIdList(mappingIdList);
-    }
+export function ModalCreateMapper({ saveMapping, closeModal, mappings }: ModalCreateMapperProps) {
+    const mappingIds = useMemo(() => mappings.map((m) => m.id), [mappings]);
+    const [mappingId, setMappingId] = useState(mappingIds[0] || '');
 
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
                 <div>Do you want to add a new mapper?</div>
-                <div className={s.input}>
-                    {mapperIdList.map((mappingId, index) => {
-                        return (
-                            <Input
-                                key={index}
-                                index={index}
-                                mappingId={mappingId}
-                                mapperIdList={mapperIdList}
-                                setMapperIdList={setMapperIdList}
-                                setIsRenamedMappingId={setIsRenamedMappingId}
-                            />
-                        );
-                    })}
-                </div>
-                <div>
-                    <div className={s.button}>
-                        <Button
-                            onClick={() => {
-                                saveNewMapping(mapperIdList, mapperInfoList);
-                                closeModal('save', isRenamedMappingId);
-                            }}
-                        >
-                            Save
-                        </Button>
-                    </div>
-                    <div className={s.button}>
-                        <Button
-                            variant="secondary"
-                            onClick={() => {
-                                closeModal('cancel');
-                            }}
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
+                {mappingIds.length ? (
+                    <div style={{ fontSize: 12 }}>Mapping id in use: {mappingIds.join(', ')}</div>
+                ) : null}
+                <InputField
+                    input={{
+                        name: 'mappingId',
+                        value: mappingId,
+                        onChange: (e) => setMappingId(e.target.value),
+                        onBlur: () => {},
+                        onFocus: () => {},
+                    }}
+                    label="Mapping id"
+                />
+                <Button
+                    onClick={() => {
+                        if (mappingIds.includes(mappingId)) {
+                            toast.error(
+                                `The id ${mappingId} is already in use for Mapping. Please use another id.`,
+                            );
+
+                            return;
+                        }
+
+                        if (mappingId) {
+                            console.log('---', mappingId);
+                            saveMapping(mappingId);
+                            closeModal();
+                        }
+                    }}
+                >
+                    Save
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={() => {
+                        closeModal();
+                    }}
+                >
+                    Cancel
+                </Button>
             </div>
         </div>
     );
 }
-
-function useInputField(
-    index: number,
-    mappingId: string,
-    mapperIdList: string[],
-    setMapperIdList: (newMapperIdList: string[]) => void,
-    setIsRenamedMappingId: (isRenamed: boolean) => void,
-) {
-    const [mappingIdInputValue, setMappingIdInputValue] = useState(mappingId);
-
-    const onMappingIdChange = (e: ChangeEvent<any>) => {
-        // TODO HTMLInputElement type in ChangeEvent
-        const newMapperIdList = [...mapperIdList];
-        newMapperIdList[index] = e.target.value;
-        setMapperIdList(newMapperIdList);
-        setMappingIdInputValue(e.target.value);
-        setIsRenamedMappingId(true);
-    };
-
-    return {
-        mappingIdInputValue,
-        onMappingIdChange,
-    };
-}
-
-interface InputType {
-    index: number;
-    mappingId: string;
-    mapperIdList: string[];
-    setMapperIdList: (newMapperIdList: string[]) => void;
-    setIsRenamedMappingId: (isRenamed: boolean) => void;
-}
-
-const Input = (props: InputType) => {
-    const { index, mappingId, mapperIdList, setMapperIdList, setIsRenamedMappingId } = props;
-    const { mappingIdInputValue, onMappingIdChange } = useInputField(
-        index,
-        mappingId,
-        mapperIdList,
-        setMapperIdList,
-        setIsRenamedMappingId,
-    );
-
-    return (
-        <InputField
-            input={{
-                name: 'mappingId',
-                value: mappingIdInputValue,
-                onChange: onMappingIdChange,
-                onBlur: () => {},
-                onFocus: () => {},
-            }}
-            meta="testmeta"
-            label="mapper id"
-        />
-    );
-};

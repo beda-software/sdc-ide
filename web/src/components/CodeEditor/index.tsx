@@ -3,25 +3,27 @@ import { useRef } from 'react';
 import { IUnControlledCodeMirror, UnControlled as CodeMirror } from 'react-codemirror2';
 
 // eslint-disable-next-line import/order
+import { ContextMenuModal } from 'web/src/components/ContextMenuModal';
 import { ContextMenuInfo, ReloadType, ValueObject } from 'web/src/containers/Main/types';
+import { displayToObject, objectToDisplay } from 'web/src/utils/yaml';
 
 // import 'codemirror/lib/codemirror.css';
 import './styles.css';
-import { ContextMenuModal } from 'web/src/components/ContextMenuModal';
-import { useContextMenu } from 'web/src/containers/Main/hooks/contextMenuHook';
-import { displayToObject, objectToDisplay } from 'web/src/utils/yaml';
+
+import s from './CodeEditor.module.scss';
+import { useContextMenu } from './contextMenuHook';
 
 require('codemirror/mode/yaml/yaml');
 
 interface CodeEditorProps extends IUnControlledCodeMirror {
-    valueObject?: ValueObject;
+    valueObject: ValueObject;
     onChange?: (object: any) => void; // TODO check for more strict type
     openExpressionModal?: (contextMenuInfo: ContextMenuInfo) => void;
     reload?: (type: ReloadType) => void;
 }
 
 export function CodeEditor(props: CodeEditorProps) {
-    const { valueObject = {}, options, onChange, openExpressionModal, reload } = props;
+    const { valueObject, options, onChange, openExpressionModal, reload } = props;
 
     const { contextMenuInfo, contextMenu, openContextMenu } = useContextMenu({
         openExpressionModal,
@@ -40,10 +42,13 @@ export function CodeEditor(props: CodeEditorProps) {
                     mode: 'yaml',
                     ...options,
                 }}
-                onChange={(_editor, _change, value) => onChange && onChange(displayToObject(value))}
+                onChange={(_editor, _change, value) => {
+                    onChange && onChange(displayToObject(value));
+                }}
                 onContextMenu={(_editor, event) =>
                     openContextMenu && openContextMenu(_editor, event, valueObject)
                 }
+                className={s.editor}
             />
             {contextMenuInfo?.showContextMenu && (
                 <ContextMenuModal

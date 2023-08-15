@@ -1,6 +1,5 @@
+import yaml from 'js-yaml';
 import _ from 'lodash';
-
-const yaml = require('js-yaml');
 
 export function objectToDisplay(resource: object) {
     const preparedResource = resource;

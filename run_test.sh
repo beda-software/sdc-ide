@@ -15,4 +15,4 @@ docker-compose $COMPOSE_FILES pull
 docker-compose $COMPOSE_FILES up -d
 curl -u root:secret 'http://localhost:8181/$load'  -H 'content-type: application/json' --request POST --data '{"source":"https://sdc.beda.software/demo-data.ndjson.gz"}'
 
-yarn test $@ --runInBand --passWithNoTests
+yarn test $@

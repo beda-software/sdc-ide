@@ -1,6 +1,5 @@
 {
     "packages": ["web", "shared", "sdc-qrf"],
     "npmClient": "yarn",
-    "useWorkspaces": true,
     "version": "independent"
 }

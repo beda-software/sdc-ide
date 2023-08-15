@@ -1,14 +1,15 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { useMain } from 'web/src/containers/Main/hooks';
+import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { useMain } from 'web/src/containers/Main/useMain';
 import { setData } from 'web/src/services/localStorage';
 
-import { isSuccess } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResource } from 'aidbox-react/lib/services/fhir';
-import { axiosInstance } from 'aidbox-react/lib/services/instance';
-import { service } from 'aidbox-react/lib/services/service';
-import { ensure } from 'aidbox-react/lib/utils/tests';
+import { isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResource } from 'fhir-react/lib/services/fhir';
+import { axiosInstance } from 'fhir-react/lib/services/instance';
+import { service } from 'fhir-react/lib/services/service';
+import { ensure } from 'fhir-react/lib/utils/tests';
 
-import { Mapping, Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { EXPECTED_RESOURCES } from './resources';
 import mappingDemo1 from './resources/Mapping/demo-1.json';
@@ -39,7 +40,6 @@ async function setup() {
 }
 
 beforeEach(async () => {
-    setData('fhirMode', false);
     axiosInstance.defaults.auth = {
         username: 'root',
         password: 'secret',
@@ -119,8 +119,7 @@ test('saveNewMapping', async () => {
         id: notFoundMappingId,
     });
 
-    if (isSuccess(responseBefore)) {
-    } else {
+    if (isFailure(responseBefore)) {
         expect(responseBefore.error.id).toBe('not-found');
     }
 

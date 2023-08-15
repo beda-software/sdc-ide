@@ -1,6 +1,5 @@
+import { Patient } from 'fhir/r4b';
 import _ from 'lodash';
-
-import { Patient } from 'shared/src/contrib/aidbox';
 
 export function getPatientFullName(resource: Patient) {
     const name = _.get(resource, 'name.0.given', []).join(' ');

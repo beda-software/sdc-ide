@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from 'react';
 
-import './styles.scss';
+import s from './Button.module.scss';
 
 interface ButtonProps
     extends DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
@@ -18,7 +18,7 @@ export function Button(props: ButtonProps) {
     return (
         <button
             type="button"
-            className={classNames('app-button', `_${variant}`, className)}
+            className={classNames(s.button, `_${variant}`, className)}
             disabled={disabled}
             onClick={async (event) => {
                 if (!onClick) {

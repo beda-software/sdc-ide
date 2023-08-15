@@ -1,5 +1,3 @@
- 
-
 import { ReactElement } from 'react';
 
 import {
@@ -8,8 +6,8 @@ import {
     isNotAsked,
     isSuccess,
     RemoteData,
-} from 'aidbox-react/lib/libs/remoteData';
-import { formatError } from 'aidbox-react/lib/utils/error';
+} from 'fhir-react/lib/libs/remoteData';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 interface RenderRemoteDataProps<S, E = any> {
     remoteData: RemoteData<S, E>;

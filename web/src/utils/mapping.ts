@@ -1,8 +1,11 @@
-import { service } from 'aidbox-react/lib/services/service';
+import { QuestionnaireResponse } from 'fhir/r4b';
 
-import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { service } from 'fhir-react/lib/services/service';
 
-export const applyMapping = async (mappingId: string, questionnaireResponse: QuestionnaireResponse) => {
+export const applyMapping = async (
+    mappingId: string,
+    questionnaireResponse: QuestionnaireResponse,
+) => {
     await service({
         method: 'POST',
         url: `/Mapping/${mappingId}/$apply`,

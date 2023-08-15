@@ -1,19 +1,18 @@
 import classNames from 'classnames';
+import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { getFHIRResources } from 'aidbox-react/lib/services/fhir';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { mapSuccess } from 'fhir-react/lib/services/service';
 
-import { AidboxResource, Bundle, Resource } from 'shared/src/contrib/aidbox';
-
-import { AsyncSelect } from '../Select';
 import s from './ResourceSelect.module.scss';
+import { AsyncSelect } from '../Select';
 
-interface ResourceSelectProps<R extends AidboxResource> {
+interface ResourceSelectProps<R extends Resource> {
     cssClass?: string;
     value: string;
     onChange: (resourceId: string) => void;
@@ -21,7 +20,7 @@ interface ResourceSelectProps<R extends AidboxResource> {
     bundleResponse: RemoteData<Bundle<R>>;
 }
 
-export function ResourceSelect<R extends AidboxResource>({
+export function ResourceSelect<R extends Resource>({
     cssClass,
     value,
     bundleResponse,
@@ -47,14 +46,14 @@ export function ResourceSelect<R extends AidboxResource>({
     );
 }
 
-interface RemoteResourceSelectProps<R extends AidboxResource> {
+interface RemoteResourceSelectProps<R extends Resource> {
     value: R | null | undefined;
     onChange: (resource: MultiValue<R> | SingleValue<R> | null | undefined) => void;
     display?: (resource: R) => string;
-    resourceType: R['resourceType'];
+    resourceType: string;
 }
 
-export function RemoteResourceSelect<R extends AidboxResource>({
+export function RemoteResourceSelect<R extends Resource>({
     value,
     resourceType,
     onChange,
@@ -75,7 +74,7 @@ export function RemoteResourceSelect<R extends AidboxResource>({
     );
 
     const debouncedLoadOptions = _.debounce(
-        (searchText: string, callback: (options: R[]) => void) => {
+        (searchText: string, callback: (options: WithId<Resource>[]) => void) => {
             (async () => callback(await loadOptions(searchText)))();
         },
         500,

@@ -1,5 +1,16 @@
-.title {
-  position: absolute;
-  left: 6px;
-  cursor: pointer;
+.arrow {
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+    z-index: 1;
+    padding: 0;
+    margin: 0;
+    background: 0;
+    outline: none;
+    border: 0;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

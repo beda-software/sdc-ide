@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import { setData } from 'web/src/services/localStorage';
 
-import { RenderRemoteData } from 'aidbox-react/lib/components/RenderRemoteData';
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { success } from 'aidbox-react/lib/libs/remoteData';
+import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { success } from 'fhir-react/lib/libs/remoteData';
 
 import {
     authorize,

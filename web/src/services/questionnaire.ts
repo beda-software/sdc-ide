@@ -3,9 +3,9 @@ import {
     getFHIRResources,
     getReference,
     ResourcesMap,
-} from 'aidbox-react/lib/services/fhir';
-import { SearchParams } from 'aidbox-react/lib/services/search';
-import { mapSuccess } from 'aidbox-react/lib/services/service';
+} from 'fhir-react/lib/services/fhir';
+import { SearchParams } from 'fhir-react/lib/services/search';
+import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import { Resource } from 'shared/src/contrib/aidbox';
 

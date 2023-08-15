@@ -1,3 +1,4 @@
+import { QuestionnaireResponse, Parameters } from 'fhir/r4b';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
@@ -6,15 +7,13 @@ import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { ExpressionModalInfo } from 'web/src/containers/Main/types';
 
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-
-import { AidboxResource, Parameters } from 'shared/src/contrib/aidbox';
+import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import s from './ModalExpression.module.scss';
 
 interface ModalExpressionProps {
     launchContext: Parameters;
-    questionnaireResponseRD: RemoteData<AidboxResource>;
+    questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     expressionModalInfo: ExpressionModalInfo;
     closeExpressionModal: () => void;
     setExpression: (expression: string) => void;
@@ -49,7 +48,6 @@ export function ModalExpression(props: ModalExpressionProps) {
                                 onBlur: () => {},
                                 onFocus: () => {},
                             }}
-                            meta="testmeta"
                             placeholder="FHIRpath expr..."
                         />
                     </div>
@@ -102,7 +100,7 @@ export function ModalExpression(props: ModalExpressionProps) {
 
 interface InputDataProps {
     expressionModalInfo: ExpressionModalInfo;
-    questionnaireResponseRD: RemoteData<AidboxResource>;
+    questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     fullLaunchContext: Record<string, any>;
     parameterName: string;
     setExpression: (expression: string) => void;

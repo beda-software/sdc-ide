@@ -3,16 +3,15 @@ import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
 import { AidboxResource, QuestionnaireItemAnswerOption, Resource } from 'shared/src/contrib/aidbox';
 
-
-import { AsyncSelectField } from '../choice/select';
 import { AnswerReferenceProps, useAnswerReference } from './hooks';
+import { AsyncSelectField } from '../choice/select';
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { questionItem, parentPath } = props;
     const { loadOptions, onChange, deps, validate } = useAnswerReference(props);
-    const { text, repeats, linkId, shortText, readOnly } = questionItem;
+    const { text, repeats, linkId, helpText, readOnly } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
 
     const fieldPath = [...parentPath, questionItem.linkId!];
@@ -30,7 +29,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
             getOptionValue={(option) => getAnswerCode(option.value)}
             onChange={onChange}
             readOnly={qrfContext.readOnly || readOnly}
-            helpText={shortText}
+            helpText={helpText}
             fieldProps={{ validate }}
         />
     );

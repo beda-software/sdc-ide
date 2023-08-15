@@ -5,9 +5,9 @@ import { extractParameterName } from 'web/src/components/ModalExpression/utils';
 import { ExpressionModalInfo, ExpressionResultOutput } from 'web/src/containers/Main/types';
 import YAML, { visitor } from 'yaml';
 
-import { useService } from 'aidbox-react/lib/hooks/service';
-import { isSuccess, RemoteData } from 'aidbox-react/lib/libs/remoteData';
-import { service } from 'aidbox-react/lib/services/service';
+import { useService } from 'fhir-react/lib/hooks/service';
+import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { service } from 'fhir-react/lib/services/service';
 
 import { AidboxResource, Parameters, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 

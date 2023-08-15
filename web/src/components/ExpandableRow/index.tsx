@@ -1,22 +1,20 @@
-import { ReactElement, useState } from 'react';
+import { useState } from 'react';
 
-import { Arrow } from '../Icon/Arrow';
 import s from './ExpandableRow.module.scss';
+import { Arrow } from '../Icon/Arrow';
 
-interface ExpandableRowProps {
-    cssClass: string;
-    children: Array<ReactElement>;
-}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function ExpandableRow(props: ExpandableRowProps) {
+export function ExpandableRow(props: Props) {
+    const { className, children } = props;
     const [expanded, setExpanded] = useState(false);
 
     return (
-        <div className={props.cssClass} style={expanded ? { flex: 4 } : {}}>
-            <h2 className={s.title} onClick={() => setExpanded((f) => !f)}>
+        <div className={className} style={expanded ? { flex: 4 } : {}}>
+            <button className={s.arrow} onClick={() => setExpanded((f) => !f)}>
                 <Arrow direction={expanded ? 'down' : 'up'} />
-            </h2>
-            {props.children}
+            </button>
+            {children}
         </div>
     );
 }
