@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Questionnaire, QuestionnaireResponse, Parameters } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
@@ -19,7 +20,7 @@ interface Props {
     questionnaireRD: RemoteData<Questionnaire>;
     onSave: (resource: WithId<Mapping>) => void;
     onChange: (resource: WithId<Mapping>) => void;
-    mappingRD: RemoteData<Mapping>;
+    mappingRD: RemoteData<WithId<Mapping>>;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
@@ -32,7 +33,7 @@ export function MappingEditor(props: Props) {
     const { mappingsRD } = useMappingEditor(questionnaireRD);
     const [showSelect, setShowSelect] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [updatedResource, setUpdatedResource] = useState<Mapping | undefined>();
+    const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
 
     useEffect(() => {
         if (isFailure(questionnaireResponseRD) || isLoading(questionnaireResponseRD)) {
@@ -86,10 +87,10 @@ export function MappingEditor(props: Props) {
         );
     };
 
-    const renderEditor = (mapping: Mapping) => {
+    const renderEditor = (mapping: WithId<Mapping>) => {
         return (
             <>
-                <ResourceCodeEditor<Mapping>
+                <ResourceCodeEditor<WithId<Mapping>>
                     {...props}
                     resource={mapping}
                     onChange={setUpdatedResource}
@@ -104,20 +105,22 @@ export function MappingEditor(props: Props) {
                     >
                         remove
                     </Button>
-                    {/* <Button
-                        className={classNames(s.action, {
-                            _active: !!updatedResource,
-                        })}
-                        disabled={!!updatedResource}
-                        onClick={() => {
-                            if (updatedResource) {
-                                onSave(updatedResource);
-                                setUpdatedResource(undefined);
-                            }
-                        }}
-                    >
-                        save
-                    </Button> */}
+                    {false && (
+                        <Button
+                            className={classNames(s.action, {
+                                _active: !!updatedResource,
+                            })}
+                            disabled={!!updatedResource}
+                            onClick={() => {
+                                if (updatedResource) {
+                                    onSave(updatedResource);
+                                    setUpdatedResource(undefined);
+                                }
+                            }}
+                        >
+                            save
+                        </Button>
+                    )}
                 </div>
             </>
         );
