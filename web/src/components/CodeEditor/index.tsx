@@ -13,7 +13,7 @@ import './styles.css';
 import s from './CodeEditor.module.scss';
 import { useContextMenu } from './contextMenuHook';
 
-require('codemirror/mode/yaml/yaml');
+import 'codemirror/mode/yaml/yaml';
 
 interface CodeEditorProps extends IUnControlledCodeMirror {
     valueObject: ValueObject;
