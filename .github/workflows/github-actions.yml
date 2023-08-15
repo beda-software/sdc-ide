@@ -12,7 +12,7 @@ jobs:
           with:
             node-version: 16
         - name: Install deps
-          run: yarn
+          run: yarn install --verbose
         - run: yarn run typecheck
         # - run: ./run_test.sh
         - run: yarn build:web
