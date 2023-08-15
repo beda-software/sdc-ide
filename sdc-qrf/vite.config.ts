@@ -9,11 +9,6 @@ export default getBaseConfig({
         setupFiles: 'src/setupTests.ts', //  https://vitest.dev/config/#setupfiles
     },
     build: {
-        lib: {
-            entry: path.resolve(__dirname, 'src/'),
-            name: 'sdc-qrf',
-            fileName: 'sdc-qrf',
-        },
-        outDir: path.resolve(__dirname, 'build'),
+        outDir: path.resolve(__dirname, 'lib'),
     },
 });
