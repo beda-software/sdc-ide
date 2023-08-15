@@ -34,7 +34,8 @@ export function ResourceCodeEditor<R extends Resource>({
                 onChange={(r) => onChange(r)}
                 openExpressionModal={openExpressionModal}
                 reload={reload}
-                options={{ readOnly: false }}
+                // options={{ readOnly: false }}
+                options={{ readOnly: true }}
             />
             {expressionModalInfo &&
                 (expressionModalInfo.type === 'SourceQueries' ? (

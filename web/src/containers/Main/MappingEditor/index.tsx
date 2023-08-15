@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { Questionnaire, QuestionnaireResponse, Parameters } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
@@ -9,6 +8,7 @@ import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { RemoteData, isFailure, isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
@@ -17,8 +17,8 @@ import { useMappingEditor } from './useMappingEditor';
 
 interface Props {
     questionnaireRD: RemoteData<Questionnaire>;
-    onSave: (resource: Mapping) => void;
-    onChange: (resource: Mapping) => void;
+    onSave: (resource: WithId<Mapping>) => void;
+    onChange: (resource: WithId<Mapping>) => void;
     mappingRD: RemoteData<Mapping>;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
@@ -104,7 +104,7 @@ export function MappingEditor(props: Props) {
                     >
                         remove
                     </Button>
-                    <Button
+                    {/* <Button
                         className={classNames(s.action, {
                             _active: !!updatedResource,
                         })}
@@ -117,7 +117,7 @@ export function MappingEditor(props: Props) {
                         }}
                     >
                         save
-                    </Button>
+                    </Button> */}
                 </div>
             </>
         );

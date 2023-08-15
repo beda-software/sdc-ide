@@ -15,8 +15,8 @@ import {
 } from 'aidbox-react/lib/services/fhir';
 
 import { useService } from 'fhir-react/lib/hooks/service';
-import { failure, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
+import { RemoteData, failure, isSuccess, notAsked, success } from 'fhir-react/lib/libs/remoteData';
+import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { service } from 'fhir-react/lib/services/service';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
@@ -52,6 +52,29 @@ export function useLaunchContext() {
 export function useMain(questionnaireId: string) {
     const { launchContext, setLaunchContext, removeLaunchContext } = useLaunchContext();
 
+    const [mappingRD, setMappingRD] = useState<RemoteData<WithId<Mapping>>>(notAsked);
+    const loadMapping = useCallback(async (q: Questionnaire) => {
+        const mappings =
+            getMappings(q)?.map((ext) => ext.valueReference!.reference!.split('/')[1]!) || [];
+
+        const response = await getAidboxFHIRResource<Mapping>({
+            resourceType: 'Mapping',
+            id: mappings[0]!,
+        });
+
+        setMappingRD(response);
+    }, []);
+    const reloadMapping = useCallback(async () => {
+        if (isSuccess(mappingRD)) {
+            const response = await getAidboxFHIRResource<Mapping>({
+                resourceType: 'Mapping',
+                id: mappingRD.data.id,
+            });
+
+            setMappingRD(response);
+        }
+    }, [mappingRD]);
+
     const [originalQuestionnaireRD, originalQuestionnaireRDManager] = useService(async () => {
         const response = await service<Questionnaire>({
             method: 'GET',
@@ -60,6 +83,7 @@ export function useMain(questionnaireId: string) {
 
         if (isSuccess(response)) {
             setLaunchContext({ name: 'questionnaire', resource: response.data });
+            loadMapping(response.data);
         }
 
         return response;
@@ -103,33 +127,6 @@ export function useMain(questionnaireId: string) {
         return response;
     }, [launchContext]);
 
-    const [mappingRD, mappingRDManager] = useService<Mapping>(async () => {
-        if (isSuccess(originalQuestionnaireRD)) {
-            const mappings =
-                getMappings(originalQuestionnaireRD.data)?.map(
-                    (ext) => ext.valueReference!.reference!.split('/')[1]!,
-                ) || [];
-
-            return await getAidboxFHIRResource<Mapping>({
-                resourceType: 'Mapping',
-                id: mappings[0]!,
-            });
-        } else {
-            return await Promise.resolve(
-                failure({
-                    resourceType: 'OperationOutcome',
-                    issue: [
-                        {
-                            severity: 'error',
-                            code: 'provide-questionnaire',
-                            diagnostics: 'Provide Questionnaire to see Mapping',
-                        },
-                    ],
-                }),
-            );
-        }
-    }, [originalQuestionnaireRD]);
-
     const addMapping = useCallback(
         async (mapping: Mapping) => {
             const mappingResponse = await createAidboxFHIRResource(mapping);
@@ -147,11 +144,11 @@ export function useMain(questionnaireId: string) {
 
                 if (isSuccess(qResponse)) {
                     originalQuestionnaireRDManager.set(qResponse.data);
-                    mappingRDManager.set(mapping);
+                    setMappingRD(success(mappingResponse.data));
                 }
             }
         },
-        [originalQuestionnaireRD, mappingRDManager, originalQuestionnaireRDManager],
+        [originalQuestionnaireRD, originalQuestionnaireRDManager],
     );
 
     const [extractRD] = useService<Bundle<FhirResource>>(async () => {
@@ -196,9 +193,9 @@ export function useMain(questionnaireId: string) {
             setQuestionnaireResponse: questionnaireResponseRDManager.set,
             setLaunchContext,
             removeLaunchContext,
-            reloadMapping: mappingRDManager.reload,
+            reloadMapping,
             addMapping,
-            setMapping: mappingRDManager.set,
+            setMapping: (m: WithId<Mapping>) => setMappingRD(success(m)),
         },
     };
 }

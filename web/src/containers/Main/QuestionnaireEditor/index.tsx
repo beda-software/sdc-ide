@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -88,7 +87,7 @@ export function QuestionnaireEditor(props: Props) {
                                 >
                                     remove
                                 </Button>
-                                <Button
+                                {/* <Button
                                     className={classNames(s.action, {
                                         _active: !!updatedResource,
                                     })}
@@ -101,7 +100,7 @@ export function QuestionnaireEditor(props: Props) {
                                     }}
                                 >
                                     save
-                                </Button>
+                                </Button> */}
                             </div>
                         </>
                     )}
