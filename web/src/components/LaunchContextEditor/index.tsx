@@ -26,18 +26,22 @@ interface Param {
 
 function useLaunchContext(questionnaire: Questionnaire) {
     const launchContextParams = groupLaunchContextParams(questionnaire);
+    console.log('LaunchContextEditor useLaunchContext launchContextParams', launchContextParams);
     const allParams = launchContextParams
         .map((ext) => ({
             name: ext.extension?.find((ext) => ext?.url === 'name')?.valueCoding?.code,
             types: ext.extension?.filter((ext) => ext?.url === 'type').map((t) => t.valueCode),
         }))
         .filter(({ name, types }) => typeof name !== 'undefined' || types?.length) as Param[];
+    console.log('LaunchContextEditor useLaunchContext allParams', allParams);
 
     return { allParams };
 }
 
 export function LaunchContextEditor(props: Props) {
     const { questionnaire, launchContext, onChange, onRemove } = props;
+    console.log('LaunchContextEditor questionnaire', questionnaire);
+    console.log('LaunchContextEditor launchContext', launchContext);
     const { allParams } = useLaunchContext(questionnaire);
     const [activeTab, setActiveTab] = useState(allParams[0]);
 
@@ -45,6 +49,7 @@ export function LaunchContextEditor(props: Props) {
         () => launchContext.parameter?.find((p) => p.name === activeTab?.name),
         [launchContext, activeTab],
     );
+    console.log('LaunchContextEditor activeParam', activeParam);
 
     const renderTabContent = () => {
         if (!activeTab) {
