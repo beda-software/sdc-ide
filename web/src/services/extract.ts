@@ -1,4 +1,4 @@
-import { Bundle, Questionnaire, QuestionnaireResponse, Parameters } from 'fhir/r4b';
+import { Bundle, Questionnaire, QuestionnaireResponse, Parameters, FhirResource } from 'fhir/r4b';
 import _ from 'lodash';
 
 import { service } from 'fhir-react/lib/services/service';
@@ -22,7 +22,7 @@ export async function extract(props: Props) {
         .fromPairs()
         .value();
 
-    return await service<Bundle<any>>({
+    return await service<Bundle<FhirResource>>({
         baseURL: juteURL,
         url: `/parse-template`,
         method: 'POST',
@@ -34,5 +34,13 @@ export async function extract(props: Props) {
                 ...params,
             },
         },
+    });
+}
+
+export async function applyMapping(bundle: Bundle<FhirResource>) {
+    return await service({
+        method: 'POST',
+        url: `/`,
+        data: bundle,
     });
 }

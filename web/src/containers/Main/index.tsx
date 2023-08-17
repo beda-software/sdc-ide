@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { Button } from 'web/src/components/Button';
 import { ExpandableElement } from 'web/src/components/ExpandableElement';
 import { ExpandableRow } from 'web/src/components/ExpandableRow';
 import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
@@ -10,6 +11,7 @@ import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { version } from 'web/src/version';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import s from './Main.module.scss';
 import { MappingEditor } from './MappingEditor';
@@ -100,7 +102,16 @@ export function Main() {
                     <ExpandableElement title="Patient batch request">
                         <div>
                             <ResourceCodeDisplay resourceResponse={extractRD} />
-                            {/* <Button onClick={applyMappings}>Apply</Button> */}
+                            <Button
+                                onClick={() => {
+                                    if (isSuccess(extractRD)) {
+                                        manager.applyMapping(extractRD.data);
+                                    }
+                                }}
+                                disabled={!isSuccess(extractRD)}
+                            >
+                                Apply
+                            </Button>
                         </div>
                     </ExpandableElement>
                 </ExpandableRow>

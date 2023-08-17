@@ -7,7 +7,8 @@ import {
     FhirResource,
 } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
-import { extract } from 'web/src/services/extract';
+import { toast } from 'react-toastify';
+import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
 
 import {
     createFHIRResource as createAidboxFHIRResource,
@@ -180,6 +181,14 @@ export function useMain(questionnaireId: string) {
         }
     }, [assembledQuestionnaireRD, questionnaireResponseRD, mappingRD, launchContext]);
 
+    const applyMapping = useCallback(async (bundle: Bundle<FhirResource>) => {
+        const response = await applyMappingService(bundle);
+
+        if (isSuccess(response)) {
+            toast.success(`The Mapping successfully applied`, { autoClose: false });
+        }
+    }, []);
+
     return {
         launchContext,
         originalQuestionnaireRD,
@@ -196,6 +205,7 @@ export function useMain(questionnaireId: string) {
             reloadMapping,
             addMapping,
             setMapping: (m: WithId<Mapping>) => setMappingRD(success(m)),
+            applyMapping,
         },
     };
 }
