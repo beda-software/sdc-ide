@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { Questionnaire, QuestionnaireResponse, Parameters } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
+import { toast } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
 import { ModalCreateMapper } from 'web/src/components/ModalCreateMapper';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
@@ -10,6 +11,7 @@ import { Select } from 'web/src/components/Select';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { RemoteData, isFailure, isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
@@ -24,12 +26,19 @@ interface Props {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
-    addMapping: (mapping: Mapping) => void;
+    addMapping: (mapping: Mapping) => Promise<RemoteData<any>>;
 }
 
 export function MappingEditor(props: Props) {
-    const { onSave, onChange, mappingRD, questionnaireRD, questionnaireResponseRD, addMapping } =
-        props;
+    const {
+        onSave,
+        onChange,
+        mappingRD,
+        questionnaireRD,
+        questionnaireResponseRD,
+        addMapping,
+        reload,
+    } = props;
     const { mappingsRD } = useMappingEditor(questionnaireRD);
     const [showSelect, setShowSelect] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -69,13 +78,20 @@ export function MappingEditor(props: Props) {
                         <Button onClick={() => setShowModal(true)}>Add new</Button>
                         {showModal ? (
                             <ModalCreateMapper
-                                saveMapping={(mappingId) => {
-                                    addMapping({
+                                saveMapping={async (mappingId) => {
+                                    const response = await addMapping({
                                         resourceType: 'Mapping',
                                         id: mappingId,
                                         body: {},
                                     });
-                                    setShowSelect(false);
+
+                                    if (isSuccess(response)) {
+                                        setShowSelect(false);
+                                    }
+
+                                    if (isFailure(response)) {
+                                        toast.error(formatError(response.error));
+                                    }
                                 }}
                                 closeModal={() => setShowModal(false)}
                                 mappings={mappings}
@@ -92,6 +108,10 @@ export function MappingEditor(props: Props) {
             <>
                 <ResourceCodeEditor<WithId<Mapping>>
                     {...props}
+                    reload={() => {
+                        reload();
+                        setUpdatedResource(undefined);
+                    }}
                     resource={mapping}
                     onChange={setUpdatedResource}
                 />
@@ -105,22 +125,20 @@ export function MappingEditor(props: Props) {
                     >
                         remove
                     </Button>
-                    {false && (
-                        <Button
-                            className={classNames(s.action, {
-                                _active: !!updatedResource,
-                            })}
-                            disabled={!!updatedResource}
-                            onClick={() => {
-                                if (updatedResource) {
-                                    onSave(updatedResource);
-                                    setUpdatedResource(undefined);
-                                }
-                            }}
-                        >
-                            save
-                        </Button>
-                    )}
+                    <Button
+                        className={classNames(s.action, {
+                            _active: !!updatedResource,
+                        })}
+                        disabled={!updatedResource}
+                        onClick={() => {
+                            if (updatedResource) {
+                                onSave(updatedResource);
+                                setUpdatedResource(undefined);
+                            }
+                        }}
+                    >
+                        apply changes
+                    </Button>
                 </div>
             </>
         );

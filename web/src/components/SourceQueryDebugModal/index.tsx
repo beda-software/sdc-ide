@@ -1,4 +1,3 @@
-import { Questionnaire, Parameters } from 'fhir/r4b';
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 
@@ -6,21 +5,12 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 
 import { useSourceQueryDebugModal } from './hooks';
 import s from './SourceQueryDebugModal.module.scss';
-
-interface Props {
-    sourceQueryId: string;
-    closeExpressionModal: () => void;
-    launchContext: Parameters;
-    resource: Questionnaire;
-}
+import { Props } from './types';
 
 export function SourceQueryDebugModal(props: Props) {
-    const { sourceQueryId, closeExpressionModal, launchContext, resource } = props;
-    const { rawSourceQuery, response, onChange, onSave } = useSourceQueryDebugModal({
-        launchContext,
-        sourceQueryId,
-        closeExpressionModal,
-    });
+    const { sourceQueryId, closeExpressionModal, resource } = props;
+    const { rawSourceQuery, response, onChange, onSave } = useSourceQueryDebugModal(props);
+
     return (
         <div className={s.wrapper}>
             <div className={s.window}>
@@ -45,7 +35,7 @@ export function SourceQueryDebugModal(props: Props) {
                                 {rawSourceQuery && (
                                     <CodeEditor
                                         key={sourceQueryId}
-                                        valueObject={rawSourceQuery}
+                                        value={rawSourceQuery}
                                         onChange={onChange}
                                     />
                                 )}
@@ -53,19 +43,12 @@ export function SourceQueryDebugModal(props: Props) {
                                 <h2>Prepared</h2>
                                 <CodeEditor
                                     key={preparedSourceQuery.id}
-                                    valueObject={preparedSourceQuery}
-                                    options={{
-                                        readOnly: true,
-                                    }}
+                                    value={preparedSourceQuery}
+                                    readOnly
                                 />
                             </div>
                             <div className={s.outputData}>
-                                <CodeEditor
-                                    valueObject={bundleResult}
-                                    options={{
-                                        readOnly: true,
-                                    }}
-                                />
+                                <CodeEditor value={bundleResult} readOnly />
                             </div>
                         </div>
                     )}

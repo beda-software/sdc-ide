@@ -1,22 +1,29 @@
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { extractParameterName } from 'web/src/components/ModalExpression/utils';
-import { ExpressionModalInfo, ExpressionResultOutput } from 'web/src/containers/Main/types';
+import { ExpressionResultOutput } from 'web/src/containers/Main/types';
 import YAML, { visitor } from 'yaml';
 
 import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { service } from 'fhir-react/lib/services/service';
 
-import { AidboxResource, Parameters, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
+import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-export function useExpressionModal(
-    expressionModalInfo: ExpressionModalInfo,
-    launchContext: Parameters,
-    questionnaireResponseRD: RemoteData<AidboxResource>,
-    closeExpressionModal: () => void,
-) {
+import { ModalExpressionProps } from './types';
+import { CodeEditorContext } from '../CodeEditor/context';
+
+export function useExpressionModal(props: ModalExpressionProps) {
+    const {
+        type,
+        launchContext,
+        expression,
+        questionnaireResponseRD,
+        position,
+        closeExpressionModal,
+    } = props;
+    const { view } = useContext(CodeEditorContext);
     const [expressionResultOutput, setExpressionResultOutput] =
         useState<ExpressionResultOutput | null>(null);
     const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
@@ -35,52 +42,50 @@ export function useExpressionModal(
         }
     }, [fullLaunchContext, fullLaunchContextRD]);
 
-    const parameterName = extractParameterName(expressionModalInfo.expression);
+    const parameterName = extractParameterName(expression);
 
     const setContextData = useCallback(() => {
         if (isSuccess(questionnaireResponseRD)) {
             return questionnaireResponseRD.data;
         }
-        if (expressionModalInfo.type === 'LaunchContext') {
+        if (type === 'LaunchContext') {
             return fullLaunchContext[parameterName];
         }
         return launchContext.parameter?.map((item) => item.name);
-    }, [
-        expressionModalInfo.type,
-        launchContext.parameter,
-        fullLaunchContext,
-        parameterName,
-        questionnaireResponseRD,
-    ]);
+    }, [type, launchContext.parameter, fullLaunchContext, parameterName, questionnaireResponseRD]);
 
     const saveExpression = () => {
-        const doc = expressionModalInfo.doc;
-        const newDoc = YAML.parseDocument(expressionModalInfo.doc.getValue());
-        const index = doc.getEditor()?.indexFromPos(expressionModalInfo.cursorPosition);
+        if (view && position) {
+            const doc = YAML.parseDocument(view.state.doc.toString());
+            const index = view.posAtCoords({ x: position.left, y: position.top })!;
 
-        const questionnaireVisitor: visitor = {
-            Scalar(key, node) {
-                if (index && node.range && index >= node.range[0] && index <= node.range[2]) {
-                    node.value = expressionModalInfo.expression;
-                }
-            },
-        };
+            const questionnaireVisitor: visitor = {
+                Scalar(key, node) {
+                    if (index && node.range && index >= node.range[0] && index <= node.range[2]) {
+                        node.value = expression;
+                    }
+                },
+            };
 
-        if (expressionModalInfo.type === 'LaunchContext') {
-            YAML.visit(newDoc, questionnaireVisitor);
-            doc.setValue(YAML.stringify(newDoc));
+            if (type === 'LaunchContext') {
+                YAML.visit(doc, questionnaireVisitor);
+                const tr = view.state.update({
+                    changes: {
+                        from: 0,
+                        to: view.state.doc.length,
+                        insert: YAML.stringify(doc),
+                    },
+                });
+                view.update([tr]);
+            }
+
+            closeExpressionModal();
         }
-
-        closeExpressionModal();
     };
 
     useEffect(() => {
         try {
-            const evaluate = fhirpath.evaluate(
-                setContextData(),
-                expressionModalInfo.expression,
-                fullLaunchContext,
-            );
+            const evaluate = fhirpath.evaluate(setContextData(), expression, fullLaunchContext);
             setExpressionResultOutput({
                 type: 'success',
                 result: yaml.dump(JSON.parse(JSON.stringify(evaluate))),
@@ -88,7 +93,7 @@ export function useExpressionModal(
         } catch (e) {
             setExpressionResultOutput({ type: 'error', result: String(e) });
         }
-    }, [expressionModalInfo.expression, fullLaunchContext, setContextData]);
+    }, [expression, fullLaunchContext, setContextData]);
 
     return {
         expressionResultOutput,

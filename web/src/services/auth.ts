@@ -2,13 +2,13 @@ import {
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceToken as setAidboxInstanceToken,
 } from 'aidbox-react/lib/services/instance';
+import { service } from 'aidbox-react/lib/services/service';
 
 import { isFailure, success } from 'fhir-react/lib/libs/remoteData';
 import {
     resetInstanceToken as resetFHIRInstanceToken,
     setInstanceToken as setFHIRInstanceToken,
 } from 'fhir-react/lib/services/instance';
-import { service } from 'fhir-react/lib/services/service';
 import { extractErrorCode } from 'fhir-react/lib/utils/error';
 
 import { User } from 'shared/src/contrib/aidbox';

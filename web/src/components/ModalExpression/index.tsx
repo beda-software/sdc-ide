@@ -1,39 +1,27 @@
-import { QuestionnaireResponse, Parameters } from 'fhir/r4b';
-import { UnControlled as CodeMirror } from 'react-codemirror2';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 import { InputField } from 'web/src/components/InputField';
 import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
-import { ExpressionModalInfo } from 'web/src/containers/Main/types';
 
 import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import s from './ModalExpression.module.scss';
-
-interface ModalExpressionProps {
-    launchContext: Parameters;
-    questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
-    expressionModalInfo: ExpressionModalInfo;
-    closeExpressionModal: () => void;
-    setExpression: (expression: string) => void;
-}
+import { ModalExpressionProps } from './types';
+import { ExpressionType } from '../CodeEditor/ContextMenu/types';
 
 export function ModalExpression(props: ModalExpressionProps) {
     const {
         launchContext,
         questionnaireResponseRD,
-        expressionModalInfo,
+        expression,
+        type,
         closeExpressionModal,
         setExpression,
     } = props;
     const { expressionResultOutput, saveExpression, parameterName, fullLaunchContext } =
-        useExpressionModal(
-            expressionModalInfo,
-            launchContext,
-            questionnaireResponseRD,
-            closeExpressionModal,
-        );
+        useExpressionModal(props);
 
     return (
         <div className={s.wrapper}>
@@ -43,7 +31,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                         <InputField
                             input={{
                                 name: 'fhirpath expression',
-                                value: expressionModalInfo.expression,
+                                value: expression,
                                 onChange: (e) => setExpression(e.target.value),
                                 onBlur: () => {},
                                 onFocus: () => {},
@@ -66,7 +54,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                         {launchContext || questionnaireResponseRD ? (
                             <div className={s.codemirror}>
                                 <InputData
-                                    expressionModalInfo={expressionModalInfo}
+                                    type={type}
                                     questionnaireResponseRD={questionnaireResponseRD}
                                     fullLaunchContext={fullLaunchContext}
                                     parameterName={parameterName}
@@ -80,13 +68,7 @@ export function ModalExpression(props: ModalExpressionProps) {
                     <div className={s.outputData}>
                         <div className={s.dataHeader}>Output data</div>
                         {expressionResultOutput?.type === 'success' && (
-                            <CodeMirror
-                                className={s.codemirror}
-                                value={expressionResultOutput.result}
-                                options={{
-                                    readOnly: true,
-                                }}
-                            />
+                            <CodeEditor value={expressionResultOutput.result as any} readOnly />
                         )}
                         {expressionResultOutput?.type === 'error' && (
                             <div className={s.error}>{expressionResultOutput.result}</div>
@@ -99,7 +81,7 @@ export function ModalExpression(props: ModalExpressionProps) {
 }
 
 interface InputDataProps {
-    expressionModalInfo: ExpressionModalInfo;
+    type: ExpressionType;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     fullLaunchContext: Record<string, any>;
     parameterName: string;
@@ -107,22 +89,15 @@ interface InputDataProps {
 }
 
 function InputData({
-    expressionModalInfo,
+    type,
     questionnaireResponseRD,
     fullLaunchContext,
     parameterName,
     setExpression,
 }: InputDataProps) {
-    if (expressionModalInfo.type === 'LaunchContext') {
+    if (type === 'LaunchContext') {
         if (parameterName in fullLaunchContext) {
-            return (
-                <CodeEditor
-                    valueObject={fullLaunchContext[parameterName]}
-                    options={{
-                        readOnly: true,
-                    }}
-                />
-            );
+            return <CodeEditor value={fullLaunchContext[parameterName]} readOnly />;
         } else if (
             isSuccess(questionnaireResponseRD) &&
             parameterName === 'QuestionnaireResponse'.slice(1)

@@ -47,15 +47,7 @@ export function Main() {
                             )}
                         </RenderRemoteData>
                     </ExpandableElement>
-                    <ExpandableElement
-                        title={'Questionnaire FHIR Resource'}
-                        // title={
-                        //     <TitleWithErrors
-                        //         title={'Questionnaire FHIR Resource'}
-                        //         titleWithErrorManager={titleWithErrorManager}
-                        //     />
-                        // }
-                    >
+                    <ExpandableElement title={'Questionnaire FHIR Resource'}>
                         <QuestionnaireEditor
                             questionnaireRD={originalQuestionnaireRD}
                             onSave={manager.saveQuestionnaire}
@@ -77,21 +69,11 @@ export function Main() {
                     <ExpandableElement title="QuestionnaireResponse FHIR resource">
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
-                    <ExpandableElement
-                        title={'Patient JUTE Mapping'}
-                        // title={
-                        //     <TitleWithErrors
-                        //         title={'Patient JUTE Mapping'}
-                        //         titleWithErrorManager={titleWithErrorManager}
-                        //     />
-                        // }
-                    >
+                    <ExpandableElement title={'Patient JUTE Mapping'}>
                         <MappingEditor
                             mappingRD={mappingRD}
                             questionnaireRD={originalQuestionnaireRD}
-                            onSave={() => {
-                                console.log('onSave');
-                            }}
+                            onSave={manager.saveMapping}
                             onChange={manager.setMapping}
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
@@ -102,16 +84,18 @@ export function Main() {
                     <ExpandableElement title="Patient batch request">
                         <div>
                             <ResourceCodeDisplay resourceResponse={extractRD} />
-                            <Button
-                                onClick={() => {
-                                    if (isSuccess(extractRD)) {
-                                        manager.applyMapping(extractRD.data);
-                                    }
-                                }}
-                                disabled={!isSuccess(extractRD)}
-                            >
-                                Apply
-                            </Button>
+                            {isSuccess(extractRD) && (
+                                <Button
+                                    onClick={() => {
+                                        if (isSuccess(extractRD)) {
+                                            manager.applyMapping(extractRD.data);
+                                        }
+                                    }}
+                                    disabled={!isSuccess(extractRD)}
+                                >
+                                    Apply
+                                </Button>
+                            )}
                         </div>
                     </ExpandableElement>
                 </ExpandableRow>

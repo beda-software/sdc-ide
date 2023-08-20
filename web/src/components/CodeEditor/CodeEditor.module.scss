@@ -2,15 +2,18 @@
     position: relative;
     margin: 0 -20px -20px;
 
-    & :global .CodeMirror:nth-child(1) {
-        padding: 0 20px 40px;
+    & :global .cm-editor {
+        outline: none;
     }
 
-    & :global .CodeMirror:nth-child(2) {
-        display: none;
+    & :global .cm-line {
+        font-family: 'Fira Code', monospace;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
     }
 
-    & :global .CodeMirror-code pre:last-child {
-        display: none;
+    & :global .cm-scroller {
+        padding: 0 20px 25px;
     }
 }

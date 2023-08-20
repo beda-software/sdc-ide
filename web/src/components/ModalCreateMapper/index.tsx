@@ -44,7 +44,6 @@ export function ModalCreateMapper({ saveMapping, closeModal, mappings }: ModalCr
                         }
 
                         if (mappingId) {
-                            console.log('---', mappingId);
                             saveMapping(mappingId);
                             closeModal();
                         }

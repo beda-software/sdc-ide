@@ -28,4 +28,10 @@ button.action {
     &:global(._active) {
         opacity: 1;
     }
+
+    &:disabled,
+    .container:hover &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }

@@ -21,7 +21,7 @@ interface Props {
 }
 
 export function QuestionnaireEditor(props: Props) {
-    const { onSave, questionnaireRD, questionnaireResponseRD } = props;
+    const { onSave, questionnaireRD, questionnaireResponseRD, reload } = props;
     const { questionnairesRD } = useQuestionnaireEditor();
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const navigate = useNavigate();
@@ -75,6 +75,10 @@ export function QuestionnaireEditor(props: Props) {
                         <>
                             <ResourceCodeEditor<Questionnaire>
                                 {...props}
+                                reload={() => {
+                                    reload();
+                                    setUpdatedResource(undefined);
+                                }}
                                 resource={questionnaire}
                                 onChange={setUpdatedResource}
                             />
@@ -88,22 +92,20 @@ export function QuestionnaireEditor(props: Props) {
                                 >
                                     remove
                                 </Button>
-                                {false && (
-                                    <Button
-                                        className={classNames(s.action, {
-                                            _active: !!updatedResource,
-                                        })}
-                                        disabled={!!updatedResource}
-                                        onClick={() => {
-                                            if (updatedResource) {
-                                                onSave(updatedResource);
-                                                setUpdatedResource(undefined);
-                                            }
-                                        }}
-                                    >
-                                        save
-                                    </Button>
-                                )}
+                                <Button
+                                    className={classNames(s.action, {
+                                        _active: !!updatedResource,
+                                    })}
+                                    disabled={!updatedResource}
+                                    onClick={() => {
+                                        if (updatedResource) {
+                                            onSave(updatedResource);
+                                            setUpdatedResource(undefined);
+                                        }
+                                    }}
+                                >
+                                    apply changes
+                                </Button>
                             </div>
                         </>
                     )}

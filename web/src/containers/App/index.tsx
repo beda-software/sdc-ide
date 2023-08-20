@@ -7,6 +7,8 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { success } from 'fhir-react/lib/libs/remoteData';
 
+import { User } from 'shared/src/contrib/aidbox';
+
 import {
     authorize,
     getToken,
@@ -17,7 +19,7 @@ import {
 import { Main } from '../Main';
 
 export function App() {
-    const [userResponse] = useService(async () => {
+    const [userResponse] = useService<User | null>(async () => {
         const appToken = getToken();
         return appToken ? restoreUserSession(appToken) : success(null);
     });

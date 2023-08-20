@@ -1,4 +1,4 @@
-import { Questionnaire, Parameters, Bundle, Resource } from 'fhir/r4b';
+import { Questionnaire, Bundle, Resource } from 'fhir/r4b';
 import * as _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -9,11 +9,7 @@ import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { mapSuccess, service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
-export interface Props {
-    launchContext: Parameters;
-    sourceQueryId: string;
-    closeExpressionModal: () => void;
-}
+import { Props } from './types';
 
 export function useSourceQueryDebugModal(props: Props) {
     const { launchContext, sourceQueryId, closeExpressionModal } = props;

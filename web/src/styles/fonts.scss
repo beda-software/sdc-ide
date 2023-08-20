@@ -1,29 +1,30 @@
-@import "src/styles/colors";
+@import 'src/styles/colors';
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
 
 @mixin base-text-bold {
-  font-weight: 600;
-  color: $base-dark-color;
+    font-weight: 600;
+    color: $base-dark-color;
 }
 
 @mixin base-text-normal {
-  font-weight: normal;
-  color: $base-dark-color;
+    font-weight: normal;
+    color: $base-dark-color;
 }
 
 @mixin base-text-12-bold {
-  @include base-text-bold;
-  font-size: 12px;
-  line-height: 18px;
+    @include base-text-bold;
+    font-size: 12px;
+    line-height: 18px;
 }
 
 @mixin base-text-10-bold {
-  @include base-text-bold;
-  font-size: 10px;
-  line-height: 16px;
+    @include base-text-bold;
+    font-size: 10px;
+    line-height: 16px;
 }
 
 @mixin base-text-12-normal {
-  @include base-text-normal;
-  font-size: 12px;
-  line-height: 18px;
+    @include base-text-normal;
+    font-size: 12px;
+    line-height: 18px;
 }

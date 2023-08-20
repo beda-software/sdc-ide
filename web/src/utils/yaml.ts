@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 import _ from 'lodash';
 
-export function objectToDisplay(resource: object) {
+export function toYaml<R>(resource: R): string {
     const preparedResource = resource;
 
     if (_.isEmpty(resource)) {
@@ -17,12 +17,13 @@ export function objectToDisplay(resource: object) {
     }
 }
 
-export function displayToObject(yamlString: string) {
+export function fromYaml<R>(yamlString: string): R | undefined {
     try {
         const obj = yaml.load(yamlString);
-        return obj;
+
+        return obj as R;
     } catch (e) {
         console.log(e);
-        return {};
+        return undefined;
     }
 }

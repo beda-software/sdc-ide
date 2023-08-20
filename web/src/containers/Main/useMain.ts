@@ -13,12 +13,21 @@ import { applyMapping as applyMappingService, extract } from 'web/src/services/e
 import {
     createFHIRResource as createAidboxFHIRResource,
     getFHIRResource as getAidboxFHIRResource,
+    saveFHIRResource as saveAidboxFHIRResource,
 } from 'aidbox-react/lib/services/fhir';
 
 import { useService } from 'fhir-react/lib/hooks/service';
-import { RemoteData, failure, isSuccess, notAsked, success } from 'fhir-react/lib/libs/remoteData';
+import {
+    RemoteData,
+    failure,
+    isFailure,
+    isSuccess,
+    notAsked,
+    success,
+} from 'fhir-react/lib/libs/remoteData';
 import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { service } from 'fhir-react/lib/services/service';
+import { formatError } from 'fhir-react/lib/utils/error';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
@@ -110,12 +119,23 @@ export function useMain(questionnaireId: string) {
 
             if (isSuccess(response)) {
                 originalQuestionnaireRDManager.set(response.data);
+                setLaunchContext({ name: 'questionnaire', resource: response.data });
                 assembledQuestionnaireRDManager.reload();
+
+                toast.success(
+                    `The ${
+                        response.data.title || response.data.id
+                    } Questionnaire successfully updated`,
+                );
+            }
+
+            if (isFailure(response)) {
+                toast.error(formatError(response.error));
             }
 
             return response;
         },
-        [originalQuestionnaireRDManager, assembledQuestionnaireRDManager],
+        [originalQuestionnaireRDManager, assembledQuestionnaireRDManager, setLaunchContext],
     );
 
     const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(async () => {
@@ -147,9 +167,32 @@ export function useMain(questionnaireId: string) {
                     originalQuestionnaireRDManager.set(qResponse.data);
                     setMappingRD(success(mappingResponse.data));
                 }
+
+                return qResponse;
             }
+
+            return mappingResponse;
         },
         [originalQuestionnaireRD, originalQuestionnaireRDManager],
+    );
+
+    const saveMapping = useCallback(
+        async (mapping: Mapping) => {
+            const response = await saveAidboxFHIRResource(mapping);
+
+            if (isSuccess(response)) {
+                setMappingRD(response);
+
+                toast.success(`The ${response.data.id} Mapping successfully updated`);
+            }
+
+            if (isFailure(response)) {
+                toast.error(formatError(response.error));
+            }
+
+            return response;
+        },
+        [setMappingRD],
     );
 
     const [extractRD] = useService<Bundle<FhirResource>>(async () => {
@@ -206,6 +249,7 @@ export function useMain(questionnaireId: string) {
             addMapping,
             setMapping: (m: WithId<Mapping>) => setMappingRD(success(m)),
             applyMapping,
+            saveMapping,
         },
     };
 }
