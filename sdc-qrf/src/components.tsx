@@ -1,7 +1,7 @@
 import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import { ReactChild, useEffect, useContext, useMemo, useRef } from 'react';
+import React, { ReactChild, useEffect, useContext, useMemo, useRef } from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
@@ -29,7 +29,7 @@ export function QuestionItems(props: QuestionItemsProps) {
     const { formValues } = useQuestionnaireResponseFormContext();
 
     return (
-        <>
+        <React.Fragment>
             {getEnabledQuestions(questionItems, parentPath, formValues, context).map(
                 (item, index) => {
                     return (
@@ -42,7 +42,7 @@ export function QuestionItems(props: QuestionItemsProps) {
                     );
                 },
             )}
-        </>
+        </React.Fragment>
     );
 }
 
