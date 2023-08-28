@@ -1,0 +1,79 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px 8px;
+}
+
+.groupHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rowControls {
+    margin-right: -24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removeButton {
+    @include base-text-10-bold;
+    color: $danger-color;
+    background: 0;
+    padding: 0;
+    border: 0;
+
+    &:hover {
+        cursor: pointer;
+        color: darken($danger-color, 20%);
+    }
+}
+
+.removeIconButton {
+    @include base-text-10-bold;
+    color: $danger-color;
+    background: 0;
+    padding: 0;
+    font-family: 'Fira Code', monospace;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid $danger-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(45deg);
+
+    &:hover {
+        cursor: pointer;
+        color: darken($danger-color, 20%);
+    }
+}
+
+.addButton {
+    background: 0;
+    border: 0;
+    padding: 0;
+    @include base-text-10-bold;
+    color: $primary-color;
+
+    &:hover {
+        cursor: pointer;
+        color: darken($primary-color, 20%);
+    }
+}

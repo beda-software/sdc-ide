@@ -1,20 +1,19 @@
 @import '../../styles/colors.scss';
 
-:local .select {
-    :global .react-select__control {
-        border-radius: 1px;
-        font-size: 12px;
-        font-family: 'Poppins', sans-serif;
-        transition: all 0.2s;
+:global .react-select__control {
+    border-radius: 1px !important;
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s;
 
-        &:hover {
-            border-color: $primary-color;
-        }
+    &:hover {
+        border-color: $primary-color;
     }
+}
 
-    :global .react-select__menu {
-        border-radius: 1px;
-        font-size: 12px;
-        font-family: 'Poppins', sans-serif;
-    }
+:global .react-select__menu {
+    border-radius: 1px !important;
+    font-size: 12px;
+    line-height: 16px;
+    font-family: 'Poppins', sans-serif;
 }

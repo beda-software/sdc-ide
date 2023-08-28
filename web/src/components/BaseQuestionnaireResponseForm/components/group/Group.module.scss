@@ -1,80 +1,34 @@
-@import "src/styles/colors";
+@import 'src/styles/colors';
 @import 'src/styles/fonts';
 
 .group {
-    paddingBottom: 10
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .row {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    gap: 12px 8px;
 }
 
 .col {
     display: flex;
     flex-direction: column;
+    gap: 12px;
 }
 
-
-.groupWrapper {
-    background-color: #77ee77;
+.label {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
 }
 
-.groupLabel {
-    @include base-text-12-bold;
-}
-
-.questLabel {
-    @include base-text-12-bold;
-}
-
-.repeatsGroupItemsContainer {
-    margin-bottom: 10px;
-}
-
-.repeatsGroupItemTitle {
-    @include base-text-10-bold;
-}
-
-.repeatsGroupItemTitle {
-}
-
-.repeatsGroupItemHeader {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.repeatsGroupRemoveItemButton {
-    text-align: right;
-}
-
-
-.repeatsGroupRemoveItemButtonTitle {
-    @include base-text-10-bold;
-    color: $danger-color;
-}
-
-.repeatsGroupRemoveItemButtonTitle:hover {
-    color: darken($danger-color, 20%);
-}
-
-.repeatsGroupItemBody {
-}
-
-.repeatsGroupAddItemButton {
-    margin-bottom: 20px;
-}
-
-.repeatsGroupAddItemButtonTitle {
-    @include base-text-10-bold;
-    color: $primary-color;
-}
-
-.repeatsGroupAddItemButtonTitle:hover {
-    color: darken($primary-color, 20%);
-}
-
-.questLabel {
-
+.helpText {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
 }

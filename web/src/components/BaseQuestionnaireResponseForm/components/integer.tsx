@@ -1,19 +1,22 @@
-import { Field } from 'react-final-form';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+
+import { QuestionField } from './field';
+import { QuestionLabel } from './label';
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'integer'];
     const fieldName = fieldPath.join('.');
 
     return (
-        <Field name={fieldName}>
+        <QuestionField name={fieldName}>
             {({ input, meta }) => (
-                <div>
-                    <label>{text}</label>
+                <>
+                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
                     <input
                         type="number"
+                        id={fieldName}
                         {...input}
                         readOnly={qrfContext.readOnly || readOnly || hidden}
                         onChange={(e) => {
@@ -24,8 +27,8 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
                         }}
                     />
                     {meta.touched && meta.error && <span>{meta.error}</span>}
-                </div>
+                </>
             )}
-        </Field>
+        </QuestionField>
     );
 }

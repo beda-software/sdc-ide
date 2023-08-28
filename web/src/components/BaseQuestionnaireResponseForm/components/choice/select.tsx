@@ -1,14 +1,15 @@
 import _ from 'lodash';
-import { Field } from 'react-final-form';
+// eslint-disable-next-line import/named
+import { FieldInputProps } from 'react-final-form';
 import { ActionMeta, PropsValue } from 'react-select';
 import { AsyncSelect } from 'web/src/components/Select';
 
 interface Props<T> {
-    name: string;
     label?: string;
+    id?: string;
     placeholder?: string;
     helpText?: string;
-    fieldProps?: any;
+    input: FieldInputProps<any, HTMLElement>;
     formItemProps?: any;
     loadOptions: (searchText: string) => Promise<T[]>;
     readOnly?: boolean;
@@ -22,9 +23,9 @@ interface Props<T> {
 export function AsyncSelectField<T>(props: Props<T>) {
     const {
         readOnly,
-        name,
+        input,
+        id,
         placeholder = 'Select...',
-        fieldProps,
         getOptionLabel,
         getOptionValue,
         onChange,
@@ -40,30 +41,25 @@ export function AsyncSelectField<T>(props: Props<T>) {
     );
 
     return (
-        <Field name={name} {...fieldProps}>
-            {({ input }) => {
-                return (
-                    <AsyncSelect
-                        defaultOptions
-                        isDisabled={readOnly}
-                        loadOptions={debouncedLoadOptions}
-                        placeholder={placeholder}
-                        getOptionLabel={getOptionLabel}
-                        getOptionValue={getOptionValue}
-                        {...input}
-                        onChange={(value, action) => {
-                            input.onChange(value ?? undefined);
+        <AsyncSelect
+            defaultOptions
+            isDisabled={readOnly}
+            loadOptions={debouncedLoadOptions}
+            placeholder={placeholder}
+            getOptionLabel={getOptionLabel}
+            getOptionValue={getOptionValue}
+            id={id}
+            {...input}
+            onChange={(value, action) => {
+                input.onChange(value ?? undefined);
 
-                            if (onChange) {
-                                onChange(value, action);
-                            }
-                        }}
-                        isMulti={isMulti}
-                        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                        menuPortalTarget={document.body}
-                    />
-                );
+                if (onChange) {
+                    onChange(value, action);
+                }
             }}
-        </Field>
+            isMulti={isMulti}
+            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+            menuPortalTarget={document.body}
+        />
     );
 }

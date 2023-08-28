@@ -23,6 +23,7 @@ import {
 } from './components';
 import { QuestionInteger } from './components/integer';
 import { QuestionReference } from './components/reference';
+import s from './QuestionnaireResponseForm.module.scss';
 
 interface Props {
     formData: QuestionnaireResponseFormData;
@@ -51,7 +52,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
             onSubmit={(values) => onSubmit({ ...formData, formValues: values })}
             initialValues={formData.formValues}
             render={({ handleSubmit, values, form }) => (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className={s.form}>
                     <FormSpy
                         subscription={{ values: true }}
                         onChange={(formState) => {

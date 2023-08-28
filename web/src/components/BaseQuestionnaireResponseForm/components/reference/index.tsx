@@ -5,6 +5,8 @@ import { AidboxResource, QuestionnaireItemAnswerOption, Resource } from 'shared/
 
 import { AnswerReferenceProps, useAnswerReference } from './hooks';
 import { AsyncSelectField } from '../choice/select';
+import { QuestionField } from '../field';
+import { QuestionLabel } from '../label';
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
@@ -17,21 +19,32 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     const fieldPath = [...parentPath, questionItem.linkId!];
     const fieldName = fieldPath.join('.');
 
+    const fieldProps = { validate };
+
     return (
-        <AsyncSelectField<QuestionnaireItemAnswerOption>
-            key={`answer-choice-${deps.join('-')}`}
-            name={fieldName}
-            testId={linkId!}
-            label={text}
-            loadOptions={loadOptions}
-            isMulti={!!repeats}
-            getOptionLabel={(option) => getAnswerDisplay(option.value)}
-            getOptionValue={(option) => getAnswerCode(option.value)}
-            onChange={onChange}
-            readOnly={qrfContext.readOnly || readOnly}
-            helpText={helpText}
-            fieldProps={{ validate }}
-        />
+        <QuestionField name={fieldName} {...fieldProps}>
+            {({ input }) => {
+                return (
+                    <>
+                        <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+                        <AsyncSelectField<QuestionnaireItemAnswerOption>
+                            key={`answer-choice-${deps.join('-')}`}
+                            input={input}
+                            id={fieldName}
+                            testId={linkId!}
+                            label={text}
+                            loadOptions={loadOptions}
+                            isMulti={!!repeats}
+                            getOptionLabel={(option) => getAnswerDisplay(option.value)}
+                            getOptionValue={(option) => getAnswerCode(option.value)}
+                            onChange={onChange}
+                            readOnly={qrfContext.readOnly || readOnly}
+                            helpText={helpText}
+                        />
+                    </>
+                );
+            }}
+        </QuestionField>
     );
 }
 

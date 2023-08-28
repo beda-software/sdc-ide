@@ -1,9 +1,14 @@
-import { QuestionItemProps } from "sdc-qrf/src";
+import { QuestionItemProps } from 'sdc-qrf/src';
+
+import s from '../QuestionnaireResponseForm.module.scss';
 
 export function QuestionDisplay({ questionItem }: QuestionItemProps) {
+    const { text, helpText } = questionItem;
+
     return (
-        <div style={{ marginBottom: 16 }}>
-            <b>{questionItem.text}</b>
+        <div className={s.display}>
+            {text && <p className={s.displayLabel}>{text}</p>}
+            {helpText && <p className={s.helpText}>{helpText}</p>}
         </div>
     );
 }

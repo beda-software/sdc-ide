@@ -1,64 +1,56 @@
 @import 'src/styles/colors';
 @import 'src/styles/fonts';
 
-.groupWrapper {
-    background-color: #77ee77;
-}
-
-.groupLabel {
-    @include base-text-12-bold;
-}
-
-.questLabel {
-    @include base-text-12-bold;
-}
-
-.repeatsGroupItemsContainer {
-    margin-bottom: 10px;
-}
-
-.repeatsGroupItemTitle {
-    @include base-text-10-bold;
-    color: lighten($base-dark-color, 60%);
-}
-
-.repeatsGroupItemTitle {
-}
-
-.repeatsGroupItemHeader {
+.form {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 24px;
+
+    input {
+        width: 100%;
+        box-sizing: border-box;
+    }
 }
 
-.repeatsGroupRemoveItemButton {
-    text-align: right;
+.field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.repeatsGroupRemoveItemButtonTitle {
-    @include base-text-10-bold;
-    color: $danger-color;
+.labelWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-.repeatsGroupRemoveItemButtonTitle:hover {
-    color: darken($danger-color, 20%);
+.label {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 0;
+    cursor: pointer;
+
+    &._readOnly {
+        cursor: default;
+    }
 }
 
-.repeatsGroupItemBody {
+.helpText {
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
 }
 
-.repeatsGroupAddItemButton {
-    margin-bottom: 20px;
+.display {
+    width: 100%;
 }
 
-.repeatsGroupAddItemButtonTitle {
-    @include base-text-10-bold;
-    color: $primary-color;
-}
-
-.repeatsGroupAddItemButtonTitle:hover {
-    color: darken($primary-color, 20%);
-}
-
-.questLabel {
+.displayLabel {
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 0;
 }

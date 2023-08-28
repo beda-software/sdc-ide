@@ -1,11 +1,12 @@
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf/src";
-import { getAnswerCode, getAnswerDisplay } from "web/src/utils/questionnaire";
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
-import { QuestionnaireItemAnswerOption } from "shared/src/contrib/aidbox";
+import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 
-
-import { useAnswerChoice } from "./hook";
-import { AsyncSelectField } from "./select";
+import { useAnswerChoice } from './hook';
+import { AsyncSelectField } from './select';
+import { QuestionField } from '../field';
+import { QuestionLabel } from '../label';
 
 export function QuestionChoice(props: QuestionItemProps) {
     const { questionItem } = props;
@@ -17,20 +18,29 @@ export function QuestionChoice(props: QuestionItemProps) {
         return null;
     }
 
+    const fieldProps = { validate };
+
     return (
-        <AsyncSelectField<QuestionnaireItemAnswerOption>
-            key={`answer-choice-${deps.join('-')}`}
-            data-testid={`choice-${linkId}`}
-            name={fieldName}
-            label={text}
-            loadOptions={loadOptions}
-            isMulti={!!repeats}
-            getOptionLabel={(option) => getAnswerDisplay(option.value)}
-            getOptionValue={(option) => getAnswerCode(option.value)}
-            fieldProps={{
-                validate,
+        <QuestionField name={fieldName} {...fieldProps}>
+            {({ input }) => {
+                return (
+                    <>
+                        <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+                        <AsyncSelectField<QuestionnaireItemAnswerOption>
+                            key={`answer-choice-${deps.join('-')}`}
+                            data-testid={`choice-${linkId}`}
+                            id={fieldName}
+                            input={input}
+                            label={text}
+                            loadOptions={loadOptions}
+                            isMulti={!!repeats}
+                            getOptionLabel={(option) => getAnswerDisplay(option.value)}
+                            getOptionValue={(option) => getAnswerCode(option.value)}
+                            readOnly={qrfContext.readOnly || readOnly}
+                        />
+                    </>
+                );
             }}
-            readOnly={qrfContext.readOnly || readOnly}
-        />
+        </QuestionField>
     );
 }

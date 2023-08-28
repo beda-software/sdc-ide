@@ -1,16 +1,36 @@
+import classNames from 'classnames';
 import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
 
 import s from './Group.module.scss';
+import { GroupLabel } from './label';
+import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
 
-function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { kind?: string }) {
-    const { linkId, item, text, repeats } = questionItem;
-    if (repeats === true) {
-        return <p style={{ color: 'red' }}>Invalid params for Flex {JSON.stringify(item)}</p>;
+function Flex(props: GroupItemProps & { direction?: 'column' | 'row' }) {
+    const { parentPath, questionItem, context, direction } = props;
+    const { linkId, item, repeats } = questionItem;
+
+    if (repeats) {
+        if (direction === 'row') {
+            return (
+                <RepeatableGroups
+                    groupItem={props}
+                    renderGroup={(props) => <RepeatableGroupRow {...props} />}
+                />
+            );
+        }
+
+        return <RepeatableGroups groupItem={props} />;
     }
+
     return (
         <div className={s.group}>
-            <p className={s.questLabel}>{text}</p>
-            <div className={kind}>
+            <GroupLabel questionItem={questionItem} />
+            <div
+                className={classNames({
+                    [s.row as string]: direction === 'row',
+                    [s.col as string]: direction === 'column',
+                })}
+            >
                 {item && (
                     <QuestionItems
                         questionItems={item}
@@ -24,9 +44,9 @@ function Flex({ parentPath, questionItem, context, kind }: GroupItemProps & { ki
 }
 
 export function Col(props: GroupItemProps) {
-    return <Flex {...props} kind={s.col} />;
+    return <Flex {...props} direction="column" />;
 }
 
 export function Row(props: GroupItemProps) {
-    return <Flex {...props} kind={s.row} />;
+    return <Flex {...props} direction="row" />;
 }

@@ -1,28 +1,28 @@
-import { Field } from "react-final-form";
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from "sdc-qrf/src";
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
 
-
+import { QuestionField } from './field';
+import { QuestionLabel } from './label';
 
 export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { linkId, text, readOnly, hidden } = questionItem;
+    const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'string'];
     const fieldName = fieldPath.join('.');
 
     return (
-        <Field name={fieldName}>
+        <QuestionField name={fieldName}>
             {({ input, meta }) => (
-                <div>
-                    <label>{text}</label>
+                <>
+                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
                     <input
                         type="text"
+                        id={fieldName}
                         {...input}
                         readOnly={qrfContext.readOnly || readOnly || hidden}
                     />
                     {meta.touched && meta.error && <span>{meta.error}</span>}
-                </div>
+                </>
             )}
-        </Field>
+        </QuestionField>
     );
 }
-
