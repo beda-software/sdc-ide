@@ -123,7 +123,7 @@ export function MappingEditor(props: Props) {
                             setShowSelect(true);
                         }}
                     >
-                        remove
+                        clear
                     </Button>
                     <Button
                         className={classNames(s.action, {

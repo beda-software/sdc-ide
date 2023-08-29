@@ -145,7 +145,7 @@ function TabContent(props: TabContentProps) {
                         setResourceType(undefined);
                     }}
                 >
-                    remove
+                    clear
                 </Button>
             </div>
         );
