@@ -15,7 +15,7 @@ interface RepeatableGroupsProps {
 export function RepeatableGroups(props: RepeatableGroupsProps) {
     const { groupItem, renderGroup } = props;
     const { parentPath, questionItem } = groupItem;
-    const { linkId, text, required } = questionItem;
+    const { linkId, required } = questionItem;
     const baseFieldPath = [...parentPath, linkId];
     const fieldName = baseFieldPath.join('.');
 
