@@ -28,12 +28,9 @@ export function useCodeEditor<R>(props: Props<R>) {
         if (vu.docChanged && onChange && !vu.transactions.some((tr) => tr.annotation(External))) {
             const doc = vu.state.doc;
             const changedValue = fromYaml<R>(doc.toString());
-            const hasChanges = JSON.stringify(changedValue) !== JSON.stringify(value);
 
             if (changedValue) {
-                if (hasChanges) {
-                    onChange(changedValue, vu);
-                }
+                onChange(changedValue, vu);
             } else {
                 console.warn('Error parsing value from yaml: ', changedValue);
             }

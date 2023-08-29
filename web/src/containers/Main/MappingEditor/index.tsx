@@ -129,7 +129,6 @@ export function MappingEditor(props: Props) {
                         className={classNames(s.action, {
                             _active: !!updatedResource,
                         })}
-                        disabled={!updatedResource}
                         onClick={() => {
                             if (updatedResource) {
                                 onSave(updatedResource);
@@ -137,7 +136,7 @@ export function MappingEditor(props: Props) {
                             }
                         }}
                     >
-                        apply changes
+                        save mapping
                     </Button>
                 </div>
             </>

@@ -96,7 +96,6 @@ export function QuestionnaireEditor(props: Props) {
                                     className={classNames(s.action, {
                                         _active: !!updatedResource,
                                     })}
-                                    disabled={!updatedResource}
                                     onClick={() => {
                                         if (updatedResource) {
                                             onSave(updatedResource);
@@ -104,7 +103,7 @@ export function QuestionnaireEditor(props: Props) {
                                         }
                                     }}
                                 >
-                                    apply changes
+                                    save questionnaire
                                 </Button>
                             </div>
                         </>
