@@ -62,7 +62,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                                     input.onChange(updatedInput);
                                 }}
                             >
-                                {`+ Add another ${text}`}
+                                {`+ Add another answer`}
                             </button>
                         </div>
                     </div>
