@@ -1,8 +1,10 @@
 import classNames from 'classnames';
+import { useContext } from 'react';
 import { useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
+import { GroupContext } from './group/context';
 import s from '../QuestionnaireResponseForm.module.scss';
 
 interface Props
@@ -15,6 +17,11 @@ export function QuestionLabel(props: Props) {
     const { questionItem, ...other } = props;
     const { text, helpText } = questionItem;
     const readOnly = qrfContext.readOnly || questionItem.readOnly || questionItem.hidden;
+    const { type: groupType } = useContext(GroupContext);
+
+    if (groupType === 'gtable') {
+        return null;
+    }
 
     if (!text && !helpText) {
         return null;

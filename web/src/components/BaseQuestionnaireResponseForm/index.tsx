@@ -12,6 +12,7 @@ import {
 import {
     Col,
     Group,
+    GTable,
     QuestionBoolean,
     QuestionChoice,
     QuestionDate,
@@ -63,7 +64,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                         formValues={values}
                         setFormValues={(newValues) => form.change('', newValues)}
                         groupItemComponent={Group}
-                        itemControlGroupItemComponents={{ col: Col, row: Row }}
+                        itemControlGroupItemComponents={{ col: Col, row: Row, gtable: GTable }}
                         questionItemComponents={{
                             date: QuestionDate,
                             dateTime: QuestionDateTime,

@@ -28,4 +28,4 @@ export function Group(props: GroupItemProps) {
     return null;
 }
 
-export { Row, Col } from './flex';
+export { Row, Col, GTable } from './flex';
