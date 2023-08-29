@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import s from './ExpandableElement.module.scss';
 
 interface ExpandableElementProps extends React.HTMLAttributes<HTMLDivElement> {
-    title: string;
+    title?: string;
 }
 
 export function ExpandableElement({ title, className, children }: ExpandableElementProps) {

@@ -56,7 +56,15 @@ export function Main() {
                             reload={manager.reloadQuestionnaire}
                         />
                     </ExpandableElement>
-                    <ExpandableElement title="Patient Form">
+                    <ExpandableElement
+                        title={
+                            isSuccess(originalQuestionnaireRD)
+                                ? originalQuestionnaireRD.data.title ||
+                                  originalQuestionnaireRD.data.name ||
+                                  originalQuestionnaireRD.data.id
+                                : ''
+                        }
+                    >
                         <QRFormWrapper
                             questionnaireRD={assembledQuestionnaireRD}
                             questionnaireResponseRD={questionnaireResponseRD}
