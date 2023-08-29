@@ -1,8 +1,8 @@
-import { history } from '@codemirror/commands';
+import { history, indentWithTab } from '@codemirror/commands';
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import * as yamlMode from '@codemirror/legacy-modes/mode/yaml';
 import { Annotation, EditorState } from '@codemirror/state';
-import { EditorView, ViewUpdate, highlightActiveLine } from '@codemirror/view';
+import { EditorView, ViewUpdate, highlightActiveLine, keymap } from '@codemirror/view';
 import { useEffect, useState } from 'react';
 import { fromYaml, toYaml } from 'web/src/utils/yaml';
 
@@ -51,6 +51,7 @@ export function useCodeEditor<R>(props: Props<R>) {
                     yaml,
                     EditorState.readOnly.of(readOnly),
                     history(),
+                    keymap.of([indentWithTab]),
                 ],
             };
             const newState = EditorState.create(config);
