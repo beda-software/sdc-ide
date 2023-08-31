@@ -9,7 +9,13 @@ import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { RemoteData, isFailure, isLoading, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import {
+    RemoteData,
+    RemoteDataResult,
+    isFailure,
+    isLoading,
+    isSuccess,
+} from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
 import { formatError } from 'fhir-react/lib/utils/error';
 
@@ -17,6 +23,8 @@ import { Mapping } from 'shared/src/contrib/aidbox';
 
 import s from './MappingEditor.module.scss';
 import { useMappingEditor } from './useMappingEditor';
+import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import { PromptForm } from '../PromptForm';
 
 interface Props {
     questionnaireRD: RemoteData<Questionnaire>;
@@ -26,7 +34,8 @@ interface Props {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
-    addMapping: (mapping: Mapping) => Promise<RemoteData<any>>;
+    createMapping: (mapping: Mapping) => Promise<RemoteData<any>>;
+    generateMapping: (prompt: string) => Promise<RemoteDataResult<any>>;
 }
 
 export function MappingEditor(props: Props) {
@@ -36,8 +45,9 @@ export function MappingEditor(props: Props) {
         mappingRD,
         questionnaireRD,
         questionnaireResponseRD,
-        addMapping,
+        createMapping,
         reload,
+        generateMapping,
     } = props;
     const { mappingsRD } = useMappingEditor(questionnaireRD);
     const [showSelect, setShowSelect] = useState(false);
@@ -55,31 +65,55 @@ export function MappingEditor(props: Props) {
             <RenderRemoteData remoteData={mappingsRD}>
                 {(mappings) => (
                     <>
-                        <Select
-                            value={
-                                isSuccess(mappingRD)
-                                    ? {
-                                          value: mappingRD.data,
-                                          label: mappingRD.data.id,
-                                      }
-                                    : undefined
-                            }
-                            options={mappings.map((mapping) => ({
-                                value: mapping,
-                                label: mapping.id,
-                            }))}
-                            onChange={(option) => {
-                                if (option && !Array.isArray(option)) {
-                                    setShowSelect(false);
-                                    onChange((option as SingleValue<any>).value);
+                        <div className={formStyles.field}>
+                            <div className={formStyles.label}>Choose mapper from the list</div>
+                            <Select
+                                value={
+                                    isSuccess(mappingRD)
+                                        ? {
+                                              value: mappingRD.data,
+                                              label: mappingRD.data.id,
+                                          }
+                                        : undefined
                                 }
-                            }}
+                                options={mappings.map((mapping) => ({
+                                    value: mapping,
+                                    label: mapping.id,
+                                }))}
+                                onChange={(option) => {
+                                    if (option && !Array.isArray(option)) {
+                                        setShowSelect(false);
+                                        onChange((option as SingleValue<any>).value);
+                                    }
+                                }}
+                            />
+                        </div>
+                        <div />
+                        <PromptForm
+                            id="mapping"
+                            onSubmit={generateMapping}
+                            goBack={() => setShowSelect(false)}
+                            label="or describe requirements to new mapper"
                         />
-                        <Button onClick={() => setShowModal(true)}>Add new</Button>
+                        <div className={s.actions}>
+                            <Button
+                                className={s.action}
+                                variant="secondary"
+                                onClick={() => {
+                                    setShowSelect(false);
+                                }}
+                            >
+                                cancel
+                            </Button>
+                            <Button className={s.action} onClick={() => setShowModal(true)}>
+                                Add blank mapper
+                            </Button>
+                        </div>
+
                         {showModal ? (
                             <ModalCreateMapper
                                 saveMapping={async (mappingId) => {
-                                    const response = await addMapping({
+                                    const response = await createMapping({
                                         resourceType: 'Mapping',
                                         id: mappingId,
                                         body: {},
@@ -145,9 +179,34 @@ export function MappingEditor(props: Props) {
 
     return (
         <div className={s.container}>
-            <RenderRemoteData remoteData={mappingRD}>
-                {(mapping) => <>{showSelect ? renderSelect() : renderEditor(mapping)}</>}
+            <RenderRemoteData
+                renderFailure={(error) =>
+                    !showSelect ? (
+                        <div>
+                            {formatError(error)}
+                            {error?.id === 'not-found' ? (
+                                <div className={s.actions}>
+                                    <Button
+                                        className={s.action}
+                                        variant="secondary"
+                                        onClick={() => {
+                                            setShowSelect(true);
+                                        }}
+                                    >
+                                        create new
+                                    </Button>
+                                </div>
+                            ) : null}
+                        </div>
+                    ) : (
+                        <div />
+                    )
+                }
+                remoteData={mappingRD}
+            >
+                {(mapping) => <>{!showSelect ? renderEditor(mapping) : null}</>}
             </RenderRemoteData>
+            {showSelect ? renderSelect() : null}
         </div>
     );
 }

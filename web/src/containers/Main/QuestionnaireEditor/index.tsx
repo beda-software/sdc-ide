@@ -7,10 +7,12 @@ import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { RemoteData, isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
+import { RemoteData, RemoteDataResult, isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
 
 import s from './QuestionnaireEditor.module.scss';
 import { useQuestionnaireEditor } from './useQuestionnaireEditor';
+import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import { PromptForm } from '../PromptForm';
 
 interface Props {
     onSave: (resource: Questionnaire) => void;
@@ -18,10 +20,12 @@ interface Props {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
+    generateQuestionnaire: (prompt: string) => Promise<RemoteDataResult<any>>;
 }
 
 export function QuestionnaireEditor(props: Props) {
-    const { onSave, questionnaireRD, questionnaireResponseRD, reload } = props;
+    const { onSave, questionnaireRD, questionnaireResponseRD, reload, generateQuestionnaire } =
+        props;
     const { questionnairesRD } = useQuestionnaireEditor();
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const navigate = useNavigate();
@@ -43,29 +47,50 @@ export function QuestionnaireEditor(props: Props) {
                 <RenderRemoteData remoteData={questionnairesRD}>
                     {(questionnaires) => (
                         <>
-                            <Select
-                                value={{
-                                    value: questionnaireId,
-                                    label: questionnaireId,
-                                }}
-                                options={questionnaires.map((questionnaire) => ({
-                                    value: questionnaire.id,
-                                    label: questionnaire.title ?? questionnaire.id,
-                                }))}
-                                onChange={(option) => {
-                                    if (option) {
-                                        setShowSelect(false);
-                                        navigate(
-                                            `/${
-                                                (option as { value: string; label: string }).value
-                                            }`,
-                                        );
-                                    }
-                                }}
+                            <div className={formStyles.field}>
+                                <div className={formStyles.label}>
+                                    Choose questionnaire from the list
+                                </div>
+                                <Select
+                                    value={{
+                                        value: questionnaireId,
+                                        label: questionnaireId,
+                                    }}
+                                    options={questionnaires.map((questionnaire) => ({
+                                        value: questionnaire.id,
+                                        label: questionnaire.title ?? questionnaire.id,
+                                    }))}
+                                    onChange={(option) => {
+                                        if (option) {
+                                            setShowSelect(false);
+                                            navigate(
+                                                `/${
+                                                    (option as { value: string; label: string })
+                                                        .value
+                                                }`,
+                                            );
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <div />
+                            <PromptForm
+                                id="questionnaire"
+                                onSubmit={generateQuestionnaire}
+                                goBack={() => setShowSelect(false)}
+                                label="or describe requirements to new questionnaire"
                             />
-                            <RenderRemoteData remoteData={questionnaireRD}>
-                                {() => <></>}
-                            </RenderRemoteData>
+                            <div className={s.actions}>
+                                <Button
+                                    className={s.action}
+                                    variant="secondary"
+                                    onClick={() => {
+                                        setShowSelect(false);
+                                    }}
+                                >
+                                    cancel
+                                </Button>
+                            </div>
                         </>
                     )}
                 </RenderRemoteData>

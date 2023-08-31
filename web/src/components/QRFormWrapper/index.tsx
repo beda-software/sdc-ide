@@ -19,7 +19,6 @@ import { formatError } from 'fhir-react/lib/utils/error';
 
 import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-import s from './QRFormWrapper.module.scss';
 import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 
 interface QRFormWrapperProps {
@@ -49,33 +48,31 @@ export function QRFormWrapper({
             }}
         >
             {(data) => (
-                <div className={s.patientForm}>
-                    <BaseQuestionnaireResponseForm
-                        key={data.questionnaireRD.id}
-                        formData={{
-                            context: {
-                                questionnaire: toFirstClassExtension(data.questionnaireRD),
-                                questionnaireResponse: toFirstClassExtension(
-                                    data.questionnaireResponseRD,
-                                ),
-                                launchContextParameters: launchContextParameters ?? [],
-                            },
-                            formValues: mapResponseToForm(
-                                toFirstClassExtension(data.questionnaireResponseRD),
-                                toFirstClassExtension(data.questionnaireRD),
+                <BaseQuestionnaireResponseForm
+                    key={data.questionnaireRD.id}
+                    formData={{
+                        context: {
+                            questionnaire: toFirstClassExtension(data.questionnaireRD),
+                            questionnaireResponse: toFirstClassExtension(
+                                data.questionnaireResponseRD,
                             ),
-                        }}
-                        /* TODO: Move to useMemo */
-                        onSubmit={async () => {}}
-                        onChange={(newFormData) => {
-                            const fceQR: FCEQuestionnaireResponse = {
-                                ...toFirstClassExtension(data.questionnaireResponseRD),
-                                ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
-                            };
-                            onChange(fromFirstClassExtension(fceQR));
-                        }}
-                    />
-                </div>
+                            launchContextParameters: launchContextParameters ?? [],
+                        },
+                        formValues: mapResponseToForm(
+                            toFirstClassExtension(data.questionnaireResponseRD),
+                            toFirstClassExtension(data.questionnaireRD),
+                        ),
+                    }}
+                    /* TODO: Move to useMemo */
+                    onSubmit={async () => {}}
+                    onChange={(newFormData) => {
+                        const fceQR: FCEQuestionnaireResponse = {
+                            ...toFirstClassExtension(data.questionnaireResponseRD),
+                            ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
+                        };
+                        onChange(fromFirstClassExtension(fceQR));
+                    }}
+                />
             )}
         </RenderRemoteData>
     );

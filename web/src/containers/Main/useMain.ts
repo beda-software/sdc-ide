@@ -7,7 +7,9 @@ import {
     FhirResource,
 } from 'fhir/r4b';
 import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
 
 import {
@@ -19,6 +21,7 @@ import {
 import { useService } from 'fhir-react/lib/hooks/service';
 import {
     RemoteData,
+    RemoteDataResult,
     failure,
     isFailure,
     isSuccess,
@@ -49,18 +52,19 @@ export function useLaunchContext() {
         }));
     };
 
-    const removeLaunchContext = (parameter: ParametersParameter) => {
+    const clearLaunchContext = (parameter: ParametersParameter) => {
         setLaunchContext((parameters) => ({
             ...parameters,
             parameter: [...(parameters.parameter?.filter((p) => p.name !== parameter.name) || [])],
         }));
     };
 
-    return { launchContext, setLaunchContext: updateLaunchContext, removeLaunchContext };
+    return { launchContext, setLaunchContext: updateLaunchContext, clearLaunchContext };
 }
 
 export function useMain(questionnaireId: string) {
-    const { launchContext, setLaunchContext, removeLaunchContext } = useLaunchContext();
+    const navigate = useNavigate();
+    const { launchContext, setLaunchContext, clearLaunchContext } = useLaunchContext();
 
     const [mappingRD, setMappingRD] = useState<RemoteData<WithId<Mapping>>>(notAsked);
     const loadMapping = useCallback(async (q: Questionnaire) => {
@@ -114,7 +118,7 @@ export function useMain(questionnaireId: string) {
     }, [originalQuestionnaireRDManager, assembledQuestionnaireRDManager]);
 
     const saveQuestionnaire = useCallback(
-        async (questionnaire: Questionnaire) => {
+        async (questionnaire: Questionnaire): Promise<RemoteDataResult<WithId<Questionnaire>>> => {
             const response = await saveFHIRResource(questionnaire);
 
             if (isSuccess(response)) {
@@ -138,6 +142,43 @@ export function useMain(questionnaireId: string) {
         [originalQuestionnaireRDManager, assembledQuestionnaireRDManager, setLaunchContext],
     );
 
+    const generateQuestionnaire = useCallback(
+        async (prompt: string): Promise<RemoteDataResult<any>> => {
+            const initialQuestionnaire: Questionnaire = {
+                resourceType: 'Questionnaire',
+                status: 'draft',
+                meta: {
+                    profile: ['https://beda.software/beda-emr-questionnaire'],
+                },
+            };
+            const response = await generateQuestionnaireService(
+                prompt,
+                JSON.stringify(initialQuestionnaire),
+            );
+            console.log('generateQuestionnaire response', response);
+
+            if (isSuccess(response)) {
+                const newQuestionnaire = response.data;
+                const qResponse = await saveQuestionnaire(newQuestionnaire);
+
+                if (isSuccess(qResponse)) {
+                    navigate(`/${qResponse.data.id}`);
+                }
+
+                if (isFailure(qResponse)) {
+                    return qResponse;
+                }
+            }
+
+            if (isFailure(response)) {
+                toast.error(formatError(response.error));
+            }
+
+            return response;
+        },
+        [saveQuestionnaire, navigate],
+    );
+
     const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(async () => {
         const response = await service<QuestionnaireResponse>({
             method: 'POST',
@@ -148,7 +189,7 @@ export function useMain(questionnaireId: string) {
         return response;
     }, [launchContext]);
 
-    const addMapping = useCallback(
+    const createMapping = useCallback(
         async (mapping: Mapping) => {
             const mappingResponse = await createAidboxFHIRResource(mapping);
 
@@ -158,7 +199,7 @@ export function useMain(questionnaireId: string) {
                     ...questionnaire,
                     extension: [
                         ...(questionnaire.extension || []),
-                        makeMappingExtension(mapping.id!),
+                        makeMappingExtension(mappingResponse.data.id!),
                     ],
                 };
                 const qResponse = await saveFHIRResource(updatedQuestionnaire);
@@ -174,6 +215,36 @@ export function useMain(questionnaireId: string) {
             return mappingResponse;
         },
         [originalQuestionnaireRD, originalQuestionnaireRDManager],
+    );
+
+    const generateMapping = useCallback(
+        async (prompt: string): Promise<RemoteDataResult<any>> => {
+            if (isSuccess(originalQuestionnaireRD)) {
+                const response = await generateMappingService(
+                    prompt,
+                    JSON.stringify(originalQuestionnaireRD.data),
+                );
+                console.log('generateMapping response', response);
+
+                if (isSuccess(response)) {
+                    const newMapping = response.data;
+                    const mResponse = await createMapping(newMapping);
+
+                    if (isFailure(mResponse)) {
+                        return mResponse;
+                    }
+                }
+
+                if (isFailure(response)) {
+                    toast.error(formatError(response.error));
+                }
+
+                return response;
+            }
+
+            return await Promise.resolve(failure(originalQuestionnaireRD));
+        },
+        [createMapping, originalQuestionnaireRD],
     );
 
     const saveMapping = useCallback(
@@ -230,6 +301,10 @@ export function useMain(questionnaireId: string) {
         if (isSuccess(response)) {
             toast.success(`The Mapping successfully applied`, { autoClose: false });
         }
+
+        if (isFailure(response)) {
+            toast.error(formatError(response.error), { autoClose: false });
+        }
     }, []);
 
     return {
@@ -242,14 +317,16 @@ export function useMain(questionnaireId: string) {
         manager: {
             saveQuestionnaire,
             reloadQuestionnaire,
+            generateQuestionnaire,
             setQuestionnaireResponse: questionnaireResponseRDManager.set,
             setLaunchContext,
-            removeLaunchContext,
+            clearLaunchContext,
             reloadMapping,
-            addMapping,
+            createMapping,
             setMapping: (m: WithId<Mapping>) => setMappingRD(success(m)),
             applyMapping,
             saveMapping,
+            generateMapping,
         },
     };
 }

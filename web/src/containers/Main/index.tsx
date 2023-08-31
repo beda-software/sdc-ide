@@ -42,7 +42,7 @@ export function Main() {
                                     questionnaire={resource}
                                     launchContext={launchContext}
                                     onChange={manager.setLaunchContext}
-                                    onRemove={manager.removeLaunchContext}
+                                    onRemove={manager.clearLaunchContext}
                                 />
                             )}
                         </RenderRemoteData>
@@ -54,6 +54,7 @@ export function Main() {
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
                             reload={manager.reloadQuestionnaire}
+                            generateQuestionnaire={manager.generateQuestionnaire}
                         />
                     </ExpandableElement>
                     <ExpandableElement
@@ -86,7 +87,8 @@ export function Main() {
                             launchContext={launchContext}
                             questionnaireResponseRD={questionnaireResponseRD}
                             reload={manager.reloadMapping}
-                            addMapping={manager.addMapping}
+                            createMapping={manager.createMapping}
+                            generateMapping={manager.generateMapping}
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request">

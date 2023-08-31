@@ -6,9 +6,28 @@
     flex-direction: column;
     gap: 12px;
 
-    input {
+    input,
+    textarea {
         width: 100%;
         box-sizing: border-box;
+        border-radius: 1px;
+        padding: 8px 12px;
+        outline: none;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        border: 1px solid hsl(0, 0%, 80%);
+    }
+
+    input:hover,
+    input:focus {
+        border-color: #597ef7;
+    }
+
+    input:read-only {
+        background-color: #e5e5e5;
+        border-color: #e5e5e5;
+        color: #888888;
     }
 }
 
