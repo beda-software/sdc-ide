@@ -92,21 +92,20 @@ export function Main() {
                         />
                     </ExpandableElement>
                     <ExpandableElement title="Patient batch request">
-                        <div>
-                            <ResourceCodeDisplay resourceResponse={extractRD} />
-                            {isSuccess(extractRD) && (
-                                <Button
-                                    onClick={() => {
-                                        if (isSuccess(extractRD)) {
-                                            manager.applyMapping(extractRD.data);
-                                        }
-                                    }}
-                                    disabled={!isSuccess(extractRD)}
-                                >
-                                    Apply
-                                </Button>
-                            )}
-                        </div>
+                        <ResourceCodeDisplay resourceResponse={extractRD} />
+                        {isSuccess(extractRD) && (
+                            <Button
+                                onClick={() => {
+                                    if (isSuccess(extractRD)) {
+                                        manager.applyMapping(extractRD.data);
+                                    }
+                                }}
+                                disabled={!isSuccess(extractRD)}
+                                className={s.applyButton}
+                            >
+                                Apply
+                            </Button>
+                        )}
                     </ExpandableElement>
                 </ExpandableRow>
             </div>

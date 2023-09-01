@@ -134,7 +134,7 @@ export function useMain(questionnaireId: string) {
             }
 
             if (isFailure(response)) {
-                toast.error(formatError(response.error));
+                toast.error(formatError(response.error), { autoClose: false });
             }
 
             return response;
@@ -171,7 +171,7 @@ export function useMain(questionnaireId: string) {
             }
 
             if (isFailure(response)) {
-                toast.error(formatError(response.error));
+                toast.error(formatError(response.error), { autoClose: false });
             }
 
             return response;
@@ -236,7 +236,7 @@ export function useMain(questionnaireId: string) {
                 }
 
                 if (isFailure(response)) {
-                    toast.error(formatError(response.error));
+                    toast.error(formatError(response.error), { autoClose: false });
                 }
 
                 return response;
@@ -258,7 +258,7 @@ export function useMain(questionnaireId: string) {
             }
 
             if (isFailure(response)) {
-                toast.error(formatError(response.error));
+                toast.error(formatError(response.error), { autoClose: false });
             }
 
             return response;
@@ -299,7 +299,7 @@ export function useMain(questionnaireId: string) {
         const response = await applyMappingService(bundle);
 
         if (isSuccess(response)) {
-            toast.success(`The Mapping successfully applied`, { autoClose: false });
+            toast.success(`The Mapping successfully applied`);
         }
 
         if (isFailure(response)) {

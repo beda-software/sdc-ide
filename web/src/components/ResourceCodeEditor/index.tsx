@@ -1,4 +1,5 @@
 import { Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
+import { useEffect, useState } from 'react';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
@@ -14,13 +15,25 @@ interface ResourceCodeEditorProps<R> {
     reload: () => void;
 }
 
-export function ResourceCodeEditor<R extends Resource>({
-    resource,
-    onChange,
-    launchContext,
-    questionnaireResponseRD,
-    reload,
-}: ResourceCodeEditorProps<R>) {
+export function ResourceCodeEditor<R extends Resource>(props: ResourceCodeEditorProps<R>) {
+    const {
+        resource: initialResource,
+        onChange,
+        launchContext,
+        questionnaireResponseRD,
+        reload,
+    } = props;
+    const [resource, setResource] = useState(initialResource);
+
+    useEffect(() => {
+        if (
+            initialResource.id !== resource.id ||
+            initialResource.meta?.versionId !== resource.meta?.versionId
+        ) {
+            setResource(initialResource);
+        }
+    }, [initialResource, resource]);
+
     return (
         <div className={s.content}>
             <CodeEditor<R> value={resource} onChange={onChange}>
