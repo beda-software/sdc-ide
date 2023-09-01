@@ -127,9 +127,9 @@ export function useMain(questionnaireId: string) {
                 assembledQuestionnaireRDManager.reload();
 
                 toast.success(
-                    `The ${
-                        response.data.title || response.data.id
-                    } Questionnaire successfully updated`,
+                    `The ${response.data.title || response.data.id} Questionnaire successfully ${
+                        questionnaire.id ? 'updated' : 'created'
+                    } `,
                 );
             }
 

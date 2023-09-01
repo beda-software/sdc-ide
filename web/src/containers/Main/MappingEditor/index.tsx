@@ -147,7 +147,10 @@ export function MappingEditor(props: Props) {
                         setUpdatedResource(undefined);
                     }}
                     resource={mapping}
-                    onChange={setUpdatedResource}
+                    onChange={(updatedMapping) => {
+                        setUpdatedResource(updatedMapping);
+                        onChange(updatedMapping);
+                    }}
                 />
                 <div className={s.actions}>
                     <Button
