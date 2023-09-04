@@ -232,6 +232,7 @@ export function useMain(questionnaireId: string) {
                         newMapping = {
                             resourceType: 'Mapping',
                             body: newMapping,
+                            type: 'FHIRPath',
                         };
                     }
                     const mResponse = await createMapping(newMapping);
