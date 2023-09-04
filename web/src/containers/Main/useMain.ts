@@ -227,7 +227,13 @@ export function useMain(questionnaireId: string) {
                 console.log('generateMapping response', response);
 
                 if (isSuccess(response)) {
-                    const newMapping = response.data;
+                    let newMapping = response.data;
+                    if (newMapping.resourceType !== 'Mapping') {
+                        newMapping = {
+                            resourceType: 'Mapping',
+                            body: newMapping,
+                        };
+                    }
                     const mResponse = await createMapping(newMapping);
 
                     if (isFailure(mResponse)) {
