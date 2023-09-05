@@ -9815,6 +9815,7 @@ export interface Mapping {
     returns?: 'transaction' | 'resource';
     scopeSchema?: any;
     text?: MappingText;
+    type?: 'JUTE' | 'FHIRPath';
 }
 
 export interface MappingText {

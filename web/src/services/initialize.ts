@@ -2,9 +2,9 @@ import { setInstanceBaseURL as setAidboxInstanceBaseURL } from 'aidbox-react/lib
 
 import { setInstanceBaseURL as setFHIRInstanceBaseURL } from 'fhir-react/lib/services/instance';
 
-import { baseURL, juteURL } from 'shared/src/constants';
+import { baseURL, juteURL, fhirpathMappingUrl } from 'shared/src/constants';
 
 setAidboxInstanceBaseURL(baseURL);
 setFHIRInstanceBaseURL(`${baseURL}/fhir`);
 
-export { baseURL, juteURL };
+export { baseURL, juteURL, fhirpathMappingUrl };

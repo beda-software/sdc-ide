@@ -5,7 +5,7 @@ import { service } from 'fhir-react/lib/services/service';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
-import { juteURL } from './initialize';
+import { juteURL, fhirpathMappingUrl } from './initialize';
 
 interface Props {
     mapping: Mapping;
@@ -23,7 +23,7 @@ export async function extract(props: Props) {
         .value();
 
     return await service<Bundle<FhirResource>>({
-        baseURL: juteURL,
+        baseURL: mapping.type === 'FHIRPath' ? fhirpathMappingUrl : juteURL,
         url: `/parse-template`,
         method: 'POST',
         data: {
