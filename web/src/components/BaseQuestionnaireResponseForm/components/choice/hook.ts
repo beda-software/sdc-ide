@@ -1,11 +1,14 @@
-import _ from 'lodash'
-import { AnswerValue, QuestionItemProps } from "sdc-qrf/src";
+import _ from 'lodash';
+import { AnswerValue, QuestionItemProps } from 'sdc-qrf/src';
 
-import { isSuccess, RemoteDataResult, success } from "aidbox-react/lib/libs/remoteData";
-import { applyDataTransformer, service } from "aidbox-react/lib/services/service";
+import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
+import { applyDataTransformer, service } from 'aidbox-react/lib/services/service';
 
-import { QuestionnaireItem, QuestionnaireItemAnswerOption, ValueSet } from "shared/src/contrib/aidbox";
-
+import {
+    QuestionnaireItem,
+    QuestionnaireItemAnswerOption,
+    ValueSet,
+} from 'shared/src/contrib/aidbox';
 
 export function getDisplay(value: AnswerValue): string {
     const valueType = _.keys(value)[0];
@@ -32,10 +35,15 @@ export async function loadAnswerOptions(
         return success(options);
     }
 
+    let valuesetId: string = answerValueSet ?? '';
+    if (valuesetId.startsWith('http')) {
+        valuesetId = valuesetId.split('/').reverse()[0]!;
+    }
+
     return applyDataTransformer<ValueSet>(
         service({
             method: 'GET',
-            url: `/ValueSet/${answerValueSet}/$expand`,
+            url: `/ValueSet/${valuesetId}/$expand`,
             params: {
                 filter: searchText?.replace(' ', ','),
                 count,
@@ -62,8 +70,6 @@ export async function loadAnswerOptions(
         },
     );
 }
-
-
 
 export function useAnswerChoice({ questionItem, parentPath }: QuestionItemProps) {
     const { linkId, repeats, required } = questionItem;
