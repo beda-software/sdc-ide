@@ -576,3 +576,168 @@ test('mapFormToResponse cut empty answers', () => {
     expect(answersLinkIds.includes('reaction')).not.toBe(true);
     expect(answersLinkIds).toEqual(expect.arrayContaining(['type', 'notes']));
 });
+
+describe('enableWhen exists logic for non-repeatable groups primitives', () => {
+    const testConfigs = [
+        {
+            name: 'boolean exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'boolean' },
+            qr: [
+                {
+                    linkId: 'condition',
+                    answer: [{ value: { boolean: true } }],
+                },
+                {
+                    linkId: 'question-for-yes',
+                    answer: [{ value: { string: 'yes' } }],
+                },
+            ],
+        },
+        {
+            name: 'boolean not exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'boolean' },
+            qr: [
+                {
+                    linkId: 'question-for-no',
+                    answer: [{ value: { string: 'no' } }],
+                },
+            ],
+        },
+        {
+            name: 'integer exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'integer' },
+            qr: [
+                {
+                    linkId: 'condition',
+                    answer: [{ value: { integer: 1 } }],
+                },
+                {
+                    linkId: 'question-for-yes',
+                    answer: [{ value: { string: 'yes' } }],
+                },
+            ],
+        },
+        {
+            name: 'integer not exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'integer' },
+            qr: [
+                {
+                    linkId: 'question-for-no',
+                    answer: [{ value: { string: 'no' } }],
+                },
+            ],
+        },
+        {
+            name: 'decimal exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'decimal' },
+            qr: [
+                {
+                    linkId: 'condition',
+                    answer: [{ value: { decimal: 1 } }],
+                },
+                {
+                    linkId: 'question-for-yes',
+                    answer: [{ value: { string: 'yes' } }],
+                },
+            ],
+        },
+        {
+            name: 'decimal not exist',
+            q: { linkId: 'condition', text: 'Condition', type: 'decimal' },
+            qr: [
+                {
+                    linkId: 'question-for-no',
+                    answer: [{ value: { string: 'no' } }],
+                },
+            ],
+        },
+    ];
+
+    test.each(testConfigs)('enableWhen works correctly', async (testConfig) => {
+        const questionnaire: Questionnaire = {
+            resourceType: 'Questionnaire',
+            status: 'active',
+            item: [
+                {
+                    linkId: 'root-group',
+                    type: 'group',
+                    text: 'Root group',
+                    item: [
+                        {
+                            linkId: 'non-repeatable-group',
+                            type: 'group',
+                            text: 'Non Repeatable group',
+                            item: [
+                                testConfig.q,
+                                {
+                                    linkId: 'question-for-yes',
+                                    text: 'Question for yes',
+                                    type: 'text',
+                                    enableWhen: [
+                                        {
+                                            question: 'condition',
+                                            operator: 'exists',
+                                            answer: { boolean: true },
+                                        },
+                                    ],
+                                },
+                                {
+                                    linkId: 'question-for-no',
+                                    text: 'Question for no',
+                                    type: 'text',
+                                    enableWhen: [
+                                        {
+                                            question: 'condition',
+                                            operator: 'exists',
+                                            answer: { boolean: false },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const qr: QuestionnaireResponse = {
+            resourceType: 'QuestionnaireResponse',
+            status: 'completed',
+            item: [
+                {
+                    linkId: 'root-group',
+                    item: [
+                        {
+                            linkId: 'non-repeatable-group',
+                            item: testConfig.qr,
+                        },
+                    ],
+                },
+            ],
+        };
+        const expectedQR: QuestionnaireResponse = {
+            resourceType: 'QuestionnaireResponse',
+            status: 'completed',
+            item: [
+                {
+                    linkId: 'root-group',
+                    item: [
+                        {
+                            linkId: 'non-repeatable-group',
+                            item: testConfig.qr,
+                        },
+                    ],
+                },
+            ],
+        };
+        const formItems = mapResponseToForm(qr, questionnaire);
+        const enabledFormItems = removeDisabledAnswers(questionnaire, formItems, {
+            questionnaire,
+            resource: qr,
+            context: qr,
+        });
+        const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
+
+        expect(actualQR).toEqual(expectedQR);
+    });
+});
