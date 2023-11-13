@@ -1,5 +1,8 @@
 name: github-actions
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
     Test:
         runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
         - name: Install deps
           run: yarn install --network-concurrency 1
         - run: yarn run typecheck
-        # - run: ./run_test.sh
+        - run: ./run_test.sh
         - run: yarn build:web
     Release:
         needs: Test
