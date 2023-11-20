@@ -14,5 +14,5 @@ jobs:
         - name: Install deps
           run: yarn install --network-concurrency 1
         - run: yarn run typecheck
-        - run: yarn test
+        - run: ./run_test.sh
         - run: yarn build:web
