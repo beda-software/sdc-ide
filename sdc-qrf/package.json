@@ -5,8 +5,8 @@
     "scripts": {
         "build": "tsc",
         "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
-        "test": "vitest --no-threads",
-        "prepare": "npm run build",
+        "test": "vitest run --no-threads",
+        // "prepare": "npm run build",
         "typecheck": "tsc"
     },
     "dependencies": {
