@@ -10,9 +10,8 @@ jobs:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v3
           with:
-            node-version: 20
-        - name: Install deps
-          run: yarn install --network-concurrency 1
+            node-version: 20.7.0
+        - run: yarn install --network-concurrency 1
         - run: yarn run typecheck
         - run: yarn test
         - run: yarn build:web
