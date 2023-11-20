@@ -319,7 +319,7 @@ export function mapResponseToForm(resource: QuestionnaireResponse, questionnaire
 }
 
 function initialToQuestionnaireResponseItemAnswer(initial: QuestionnaireItemInitial[] | undefined) {
-    return (initial ?? []).map(({ value }) => ({ value } as QuestionnaireResponseItemAnswer));
+    return (initial ?? []).map(({ value }) => ({ value }) as QuestionnaireResponseItemAnswer);
 }
 
 export function findAnswersForQuestionsRecursive(linkId: string, values?: FormItems): any | null {
@@ -737,4 +737,8 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
     );
 
     return [resourceType, searchParams];
+}
+
+export function isValueEmpty(value: any) {
+    return _.isEmpty(value);
 }

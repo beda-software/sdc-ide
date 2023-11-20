@@ -3,6 +3,7 @@ import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox'
 import { allergiesQuestionnaire } from './resources/questionnaire';
 import {
     getEnabledQuestions,
+    isValueEmpty,
     mapFormToResponse,
     mapResponseToForm,
     removeDisabledAnswers,
@@ -739,5 +740,28 @@ describe('enableWhen exists logic for non-repeatable groups primitives', () => {
         const actualQR = { ...qr, ...mapFormToResponse(enabledFormItems, questionnaire) };
 
         expect(actualQR).toEqual(expectedQR);
+    });
+});
+
+describe('isValueEmpty method test', () => {
+    const valueTypeList = [
+        { value: 1, expect: false },
+        { value: 0, expect: false },
+        { value: 1.1, expect: false },
+        { value: 'a', expect: false },
+        { value: true, expect: false },
+        { value: false, expect: false },
+        { value: { a: 1 }, expect: false },
+        { value: ['a'], expect: false },
+        { value: '', expect: true },
+        { value: [], expect: true },
+        { value: {}, expect: true },
+        { value: undefined, expect: true },
+        { value: null, expect: true },
+        { value: NaN, expect: true },
+    ];
+
+    test.each(valueTypeList)('isValueEmpty works correctly for type %s', async (valueType) => {
+        expect(isValueEmpty(valueType.value)).toEqual(valueType.expect);
     });
 });
