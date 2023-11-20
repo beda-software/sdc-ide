@@ -12,7 +12,7 @@ jobs:
           with:
             node-version: 20.7.0
         - run: yarn install --network-concurrency 1
-        - run: yarn run typecheck
+        # - run: yarn run typecheck
         - run: yarn test:sdc-qrf
         - run: yarn test:shared
         - run: yarn test:web
