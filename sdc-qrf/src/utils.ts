@@ -431,10 +431,17 @@ export function getChecker(
 
     if (operator === 'exists') {
         return (values, answerValue) => {
-            const answersLength = _.reject(
-                values,
-                (value) => _.isEmpty(value.value) || _.every(_.mapValues(value.value, _.isEmpty)),
-            ).length;
+            const answersLength = values.filter((value) => {
+                if (isValueEmpty(value.value)) {
+                    return false;
+                }
+
+                if (typeof value.value === 'object' && value.value !== null) {
+                    return Object.values(value.value).some((val) => !isValueEmpty(val));
+                }
+
+                return true;
+            }).length;
             const answer = answerValue?.boolean ?? true;
             return answersLength > 0 === answer;
         };
@@ -740,5 +747,12 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
 }
 
 export function isValueEmpty(value: any) {
-    return _.isEmpty(value);
+    const isPrimitive = (x: any) =>
+        typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number';
+
+    if (_.isNaN(value)) {
+        return true;
+    }
+
+    return isPrimitive(value) ? false : _.isEmpty(value);
 }
