@@ -6,6 +6,7 @@ coverage
 .idea
 htmlcov
 examples/.env
+.vscode
 
 # Project-specific files
 sentry.properties

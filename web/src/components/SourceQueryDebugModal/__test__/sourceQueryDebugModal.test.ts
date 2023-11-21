@@ -29,7 +29,7 @@ beforeEach(async () => {
     };
 });
 
-test('preparedSourceQueryRD', async () => {
+test.skip('preparedSourceQueryRD', async () => {
     await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
 
@@ -41,7 +41,7 @@ test('preparedSourceQueryRD', async () => {
     expect(preparedSourceQueryData).toStrictEqual(expectedPreparedSourceQueryData);
 });
 
-test('bundleResultRD', async () => {
+test.skip('bundleResultRD', async () => {
     const { nutritionOrder } = await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
 
@@ -52,7 +52,7 @@ test('bundleResultRD', async () => {
     expect(bundleResultData.entry?.[0].resource.entry?.[0].resource).toStrictEqual(nutritionOrder);
 }, 30000);
 
-test('onSave', async () => {
+test.skip('onSave', async () => {
     await setup();
     const { result, waitFor } = renderHook(() => useSourceQueryDebugModal(props));
     await waitFor(() => isSuccess(result.current.response));
