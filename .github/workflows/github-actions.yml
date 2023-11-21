@@ -16,8 +16,8 @@ jobs:
             node-version: 16
         - name: Install deps
           run: yarn install --network-concurrency 1
-        - run: yarn run typecheck
         - run: ./run_test.sh
+        - run: yarn run typecheck
         - run: yarn build:web
     Release:
         needs: Test
