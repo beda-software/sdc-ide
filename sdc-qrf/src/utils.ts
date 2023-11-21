@@ -747,12 +747,5 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
 }
 
 export function isValueEmpty(value: any) {
-    const isPrimitive = (x: any) =>
-        typeof x === 'bigint' || typeof x === 'boolean' || typeof x === 'number';
-
-    if (_.isNaN(value)) {
-        return true;
-    }
-
-    return isPrimitive(value) ? false : _.isEmpty(value);
+    return _.isFinite(value) || _.isBoolean(value) ? false : _.isEmpty(value);
 }
