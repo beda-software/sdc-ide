@@ -430,6 +430,9 @@ export function getChecker(
     }
 
     if (operator === 'exists') {
+        console.warn(
+            "Be mindful of the function of the 'exists' operator. This operator is used to verify the presence of a value. For instance, a boolean value of false is considered to exist, whereas values like undefined or NaN are regarded as non-existent.",
+        );
         return (values, answerValue) => {
             const answersLength = values.filter((value) => {
                 if (isValueEmpty(value.value)) {
