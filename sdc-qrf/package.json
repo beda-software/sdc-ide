@@ -1,12 +1,12 @@
 {
     "name": "sdc-qrf",
     "license": "MIT",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "scripts": {
         "build": "tsc",
         "coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
-        "test": "vitest --no-threads",
         "prepare": "npm run build",
+        "test": "vitest run --no-threads",
         "typecheck": "tsc"
     },
     "dependencies": {

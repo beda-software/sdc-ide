@@ -1,5 +1,8 @@
 name: github-actions
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
     Test:
         runs-on: ubuntu-latest
@@ -10,11 +13,11 @@ jobs:
         - uses: actions/checkout@v2
         - uses: actions/setup-node@v3
           with:
-            node-version: 16
+            node-version: 20.7.0
         - name: Install deps
           run: yarn install --network-concurrency 1
         - run: yarn run typecheck
-        # - run: ./run_test.sh
+        - run: ./run_test.sh
         - run: yarn build:web
     Release:
         needs: Test
@@ -25,7 +28,7 @@ jobs:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v3
               with:
-                node-version: 16
+                node-version: 20.7.0
             - name: Install deps
               run: yarn install --network-concurrency 1
             - run: yarn build:web

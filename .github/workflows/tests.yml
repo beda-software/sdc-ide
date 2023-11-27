@@ -1,0 +1,17 @@
+name: tests
+on: [push]
+jobs:
+    Test:
+        runs-on: ubuntu-latest
+        env:
+            AIDBOX_LICENSE: ${{ secrets.AIDBOX_LICENSE_KEY_TESTS }}
+            AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
+        steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v3
+          with:
+            node-version: 20.7.0
+        - run: yarn install --network-concurrency 1
+        - run: yarn run typecheck
+        - run: ./run_test.sh
+        - run: yarn build:web

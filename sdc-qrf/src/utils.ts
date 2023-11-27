@@ -319,7 +319,7 @@ export function mapResponseToForm(resource: QuestionnaireResponse, questionnaire
 }
 
 function initialToQuestionnaireResponseItemAnswer(initial: QuestionnaireItemInitial[] | undefined) {
-    return (initial ?? []).map(({ value }) => ({ value } as QuestionnaireResponseItemAnswer));
+    return (initial ?? []).map(({ value }) => ({ value }) as QuestionnaireResponseItemAnswer);
 }
 
 export function findAnswersForQuestionsRecursive(linkId: string, values?: FormItems): any | null {
@@ -433,7 +433,8 @@ export function getChecker(
         return (values, answerValue) => {
             const answersLength = _.reject(
                 values,
-                (value) => _.isEmpty(value.value) || _.every(_.mapValues(value.value, _.isEmpty)),
+                (value) =>
+                    isValueEmpty(value.value) || _.every(_.mapValues(value.value, isValueEmpty)),
             ).length;
             const answer = answerValue?.boolean ?? true;
             return answersLength > 0 === answer;
@@ -737,4 +738,14 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
     );
 
     return [resourceType, searchParams];
+}
+
+export function isValueEmpty(value: any) {
+    if (_.isNaN(value)) {
+        console.warn(
+            'Please be aware that a NaN value has been detected. In the context of an "exist" operator, a NaN value is interpreted as a non-existent value. This may lead to unexpected behavior in your code. Ensure to handle or correct this to maintain the integrity of your application.',
+        );
+    }
+
+    return _.isFinite(value) || _.isBoolean(value) ? false : _.isEmpty(value);
 }
