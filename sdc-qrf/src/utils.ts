@@ -430,21 +430,12 @@ export function getChecker(
     }
 
     if (operator === 'exists') {
-        console.warn(
-            "Be mindful of the function of the 'exists' operator. This operator is used to verify the presence of a value. For instance, a boolean value of false is considered to exist, whereas values like undefined or NaN are regarded as non-existent.",
-        );
         return (values, answerValue) => {
-            const answersLength = values.filter((value) => {
-                if (isValueEmpty(value.value)) {
-                    return false;
-                }
-
-                if (typeof value.value === 'object' && value.value !== null) {
-                    return Object.values(value.value).some((val) => !isValueEmpty(val));
-                }
-
-                return true;
-            }).length;
+            const answersLength = _.reject(
+                values,
+                (value) =>
+                    isValueEmpty(value.value) || _.every(_.mapValues(value.value, isValueEmpty)),
+            ).length;
             const answer = answerValue?.boolean ?? true;
             return answersLength > 0 === answer;
         };
@@ -750,5 +741,11 @@ export function parseFhirQueryExpression(expression: string, context: ItemContex
 }
 
 export function isValueEmpty(value: any) {
+    if (_.isNaN(value)) {
+        console.warn(
+            'Please be aware that a NaN value has been detected. In the context of an "exist" operator, a NaN value is interpreted as a non-existent value. This may lead to unexpected behavior in your code. Ensure to handle or correct this to maintain the integrity of your application.',
+        );
+    }
+
     return _.isFinite(value) || _.isBoolean(value) ? false : _.isEmpty(value);
 }
