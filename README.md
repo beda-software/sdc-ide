@@ -1,9 +1,9 @@
 ## SDC IDE
 
-Reactive IDE for [SDC](https://build.fhir.org/ig/HL7/sdc/)
+Reactive IDE for Advanced Clinical Forms Builder based on Structured Data Capture Implementation Guide from HL7 ([SDC](https://build.fhir.org/ig/HL7/sdc/))
 
 Live demo http://sdc.beda.software/.  
-Devdays speach about SDC and SDC IDE https://www.youtube.com/watch?v=6zzpfb7az_c.  
+Devdays talk about SDC and SDC IDE https://www.youtube.com/watch?v=6zzpfb7az_c.  
 
 ### local launch
 To check the app please go to [examples](examples) folder and follow readme.  
