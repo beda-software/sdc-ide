@@ -78,7 +78,7 @@ export function Main() {
                     <ExpandableElement title="QuestionnaireResponse FHIR resource">
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
-                    <ExpandableElement title={'Patient JUTE Mapping'}>
+                    <ExpandableElement title={'Mapping'}>
                         <MappingEditor
                             mappingRD={mappingRD}
                             questionnaireRD={originalQuestionnaireRD}
@@ -91,7 +91,7 @@ export function Main() {
                             generateMapping={manager.generateMapping}
                         />
                     </ExpandableElement>
-                    <ExpandableElement title="Patient batch request">
+                    <ExpandableElement title="Bundle transaction for extraction">
                         <ResourceCodeDisplay resourceResponse={extractRD} />
                         {isSuccess(extractRD) && (
                             <Button
