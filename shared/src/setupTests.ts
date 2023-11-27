@@ -1,10 +1,14 @@
 import {
-    axiosInstance as aidboxInstance,
+    axiosInstance,
+    resetInstanceToken as resetAidboxInstanceToken,
     setInstanceBaseURL as setAidboxInstanceBaseURL,
 } from 'aidbox-react/lib/services/instance';
 import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
-import { setInstanceBaseURL as setFHIRInstanceBaseURL } from 'fhir-react/lib/services/instance';
+import {
+    resetInstanceToken as resetFHIRInstanceToken,
+    setInstanceBaseURL as setFHIRInstanceBaseURL,
+} from 'fhir-react/lib/services/instance';
 
 beforeAll(async () => {
     setAidboxInstanceBaseURL('http://localhost:8181');
@@ -15,7 +19,7 @@ let txId: string;
 
 beforeEach(async () => {
     await withRootAccess(async () => {
-        const response = await aidboxInstance({
+        const response = await axiosInstance({
             method: 'POST',
             url: '/$psql',
             data: { query: 'SELECT last_value from transaction_id_seq;' },
@@ -27,8 +31,10 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
+    resetAidboxInstanceToken();
+    resetFHIRInstanceToken();
     await withRootAccess(async () => {
-        await aidboxInstance({
+        await axiosInstance({
             method: 'POST',
             url: '/$psql',
             data: { query: `select drop_before_all(${txId});` },
