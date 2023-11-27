@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn
+      - run: yarn --network-concurrency 1
       - run: yarn run build:sdc-qrf
       - run: cd sdc-qrf && npm publish
         env:
