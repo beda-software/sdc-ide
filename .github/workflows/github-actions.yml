@@ -15,7 +15,7 @@ jobs:
           with:
             node-version: 20.7.0
         - name: Install deps
-          run: yarn install
+          run: yarn install --network-concurrency 1
         - run: yarn run typecheck
         - run: ./run_test.sh
         - run: yarn build:web
@@ -30,7 +30,7 @@ jobs:
               with:
                 node-version: 20.7.0
             - name: Install deps
-              run: yarn install
+              run: yarn install --network-concurrency 1
             - run: yarn build:web
             - name: Set up Docker Buildx
               id: buildx
