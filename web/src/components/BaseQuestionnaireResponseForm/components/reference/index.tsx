@@ -1,4 +1,4 @@
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { useQuestionnaireResponseFormContext } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
 import { AidboxResource, QuestionnaireItemAnswerOption, Resource } from 'shared/src/contrib/aidbox';

@@ -51,7 +51,8 @@
         "packages": [
             "web",
             "shared",
-            "sdc-qrf"
+            "sdc-qrf",
+            "packages/@beda.software/fhir-questionnaire"
         ],
         "nohoist": [
             "**/react-native",

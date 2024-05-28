@@ -1,10 +1,11 @@
+import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import _ from 'lodash';
 import React from 'react';
 // eslint-disable-next-line import/named
 import { Field, FieldInputProps } from 'react-final-form';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
 
 import s from './RepeatableGroups.module.scss';
+import { QuestionItems } from '../../questionItems';
 import { GroupLabel } from '../label';
 
 interface RepeatableGroupsProps {

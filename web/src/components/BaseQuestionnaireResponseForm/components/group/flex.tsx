@@ -1,11 +1,12 @@
+import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import classNames from 'classnames';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
 
 import { GroupContext } from './context';
 import s from './Group.module.scss';
 import { GTable as GTableControl } from './GTable';
 import { GroupLabel } from './label';
 import { RepeatableGroupRow, RepeatableGroups } from './RepeatableGroups';
+import { QuestionItems } from '../questionItems';
 
 function Flex(props: GroupItemProps & { type?: 'col' | 'row' | 'gtable' }) {
     const { parentPath, questionItem, context, type = 'col' } = props;

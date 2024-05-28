@@ -1,4 +1,4 @@
-import { QuestionItemProps } from 'sdc-qrf/src';
+import { QuestionItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
 import s from '../QuestionnaireResponseForm.module.scss';
 

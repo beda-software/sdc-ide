@@ -1,4 +1,7 @@
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import {
+    QuestionItemProps,
+    useQuestionnaireResponseFormContext,
+} from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
 import { QuestionField } from './field';
 import { QuestionLabel } from './label';

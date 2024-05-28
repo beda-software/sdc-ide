@@ -1,5 +1,8 @@
+import {
+    QuestionItemProps,
+    useQuestionnaireResponseFormContext,
+} from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import moment from 'moment';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
 
 import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 

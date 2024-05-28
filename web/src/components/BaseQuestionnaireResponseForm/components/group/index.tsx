@@ -1,9 +1,10 @@
+import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import _ from 'lodash';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
 
 import s from './Group.module.scss';
 import { GroupLabel } from './label';
 import { RepeatableGroups } from './RepeatableGroups';
+import { QuestionItems } from '../questionItems';
 
 export function Group(props: GroupItemProps) {
     const { parentPath, questionItem, context } = props;
@@ -13,7 +14,6 @@ export function Group(props: GroupItemProps) {
         if (repeats) {
             return <RepeatableGroups groupItem={props} />;
         }
-
         return (
             <div className={s.group}>
                 <GroupLabel questionItem={questionItem} />

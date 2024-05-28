@@ -1,4 +1,4 @@
-import { GroupItemProps } from 'sdc-qrf/src';
+import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
 import s from './GTable.module.scss';
 import { GroupLabel } from '../label';

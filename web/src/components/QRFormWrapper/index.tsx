@@ -1,17 +1,18 @@
 import {
+    fromFirstClassExtension,
+    mapFormToResponse,
+    mapResponseToForm,
+    toFirstClassExtension,
+} from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
+import {
     Questionnaire as FHIRQuestionnaire,
     QuestionnaireResponse as FHIRQuestionnaireResponse,
     Parameters,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import {
-    fromFirstClassExtension,
-    mapFormToResponse,
-    mapResponseToForm,
-    toFirstClassExtension,
-} from 'sdc-qrf/src';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
+import { useFHIRServiceProvider } from 'web/src/services/fhir';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { sequenceMap } from 'fhir-react/lib/services/service';
@@ -38,7 +39,12 @@ export function QRFormWrapper({
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [
         saveQuestionnaireResponse,
     ]);
-    const remoteDataResult = sequenceMap({ questionnaireRD, questionnaireResponseRD });
+    const serviceProvider = useFHIRServiceProvider();
+    const remoteDataResult = sequenceMap({
+        questionnaireRD,
+        questionnaireResponseRD,
+        serviceProvider,
+    });
 
     return (
         <RenderRemoteData
@@ -50,6 +56,7 @@ export function QRFormWrapper({
             {(data) => (
                 <BaseQuestionnaireResponseForm
                     key={data.questionnaireRD.id}
+                    serviceProvider={data.serviceProvider}
                     formData={{
                         context: {
                             questionnaire: toFirstClassExtension(data.questionnaireRD),

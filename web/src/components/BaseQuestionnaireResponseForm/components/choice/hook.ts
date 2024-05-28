@@ -1,5 +1,5 @@
+import { AnswerValue, QuestionItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import _ from 'lodash';
-import { AnswerValue, QuestionItemProps } from 'sdc-qrf/src';
 
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { applyDataTransformer, service } from 'aidbox-react/lib/services/service';

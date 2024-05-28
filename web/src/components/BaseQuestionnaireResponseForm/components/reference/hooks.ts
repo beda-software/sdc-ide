@@ -1,6 +1,9 @@
+import {
+    parseFhirQueryExpression,
+    QuestionItemProps,
+} from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf/src';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
 
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';

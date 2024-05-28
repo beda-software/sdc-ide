@@ -1,6 +1,6 @@
+import { useQuestionnaireResponseFormContext } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import classNames from 'classnames';
 import { useContext } from 'react';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
