@@ -3,6 +3,7 @@ import {
     questionnaireIdWOAssembleLoader,
 } from '@beda.software/fhir-questionnaire';
 import { QuestionnaireResponseFormProps } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/questionnaire-response-form-data';
+import { ParametersParameter } from '@beda.software/fhir-questionnaire/contrib/aidbox';
 import {
     FormItems,
     QuestionnaireResponseFormData,
@@ -66,7 +67,9 @@ export function BaseQuestionnaireResponseForm({
             initialQuestionnaireResponse={
                 formData.context.questionnaireResponse as QuestionnaireResponse
             }
-            launchContextParameters={formData.context.launchContextParameters}
+            launchContextParameters={
+                formData.context.launchContextParameters as ParametersParameter[]
+            }
             serviceProvider={serviceProvider}
             widgetsByQuestionType={{
                 date: QuestionDate,

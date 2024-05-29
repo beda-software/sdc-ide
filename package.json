@@ -51,7 +51,6 @@
         "packages": [
             "web",
             "shared",
-            "sdc-qrf",
             "packages/@beda.software/fhir-questionnaire"
         ],
         "nohoist": [
