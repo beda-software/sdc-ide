@@ -1,9 +1,9 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
-import { QuestionField } from './field';
 import { QuestionLabel } from './label';
 
 export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps) {
@@ -11,27 +11,20 @@ export function QuestionInteger({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'integer'];
     const fieldName = fieldPath.join('.');
+    const { value, onChange, disabled } = useFieldController(fieldPath, questionItem);
 
     return (
-        <QuestionField name={fieldName}>
-            {({ input, meta }) => (
-                <>
-                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                    <input
-                        type="number"
-                        id={fieldName}
-                        {...input}
-                        readOnly={qrfContext.readOnly || readOnly || hidden}
-                        onChange={(e) => {
-                            const value = e.target.value
-                                ? parseInt(e.target.value, 10)
-                                : e.target.value;
-                            input.onChange(value);
-                        }}
-                    />
-                    {meta.touched && meta.error && <span>{meta.error}</span>}
-                </>
-            )}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <input
+                type="number"
+                id={fieldName}
+                value={value ?? ''}
+                readOnly={qrfContext.readOnly || readOnly || hidden}
+                onChange={onChange}
+                disabled={disabled}
+            />
+            {/* {meta.touched && meta.error && <span>{meta.error}</span>} */}
+        </>
     );
 }

@@ -1,12 +1,12 @@
 import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import { useQuestionnaireResponseFormContext } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
+import { useCallback } from 'react';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
 import { AidboxResource, QuestionnaireItemAnswerOption, Resource } from 'shared/src/contrib/aidbox';
 
 import { AnswerReferenceProps, useAnswerReference } from './hooks';
 import { AsyncSelectField } from '../choice/select';
-import { QuestionField } from '../field';
 import { QuestionLabel } from '../label';
 
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
@@ -20,10 +20,9 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     const fieldPath = [...parentPath, questionItem.linkId!];
     const fieldName = fieldPath.join('.');
 
-    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
-        fieldPath,
-        questionItem,
-    );
+    const { value, onChange } = useFieldController(fieldPath, questionItem);
+
+    const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
 
     const fieldProps = { validate };
 
@@ -32,7 +31,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
             <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
             <AsyncSelectField<QuestionnaireItemAnswerOption>
                 key={`answer-choice-${deps.join('-')}`}
-                value={value}
+                value={repeats ? [value] : value}
                 id={fieldName}
                 testId={linkId!}
                 label={text}
@@ -40,7 +39,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                 isMulti={!!repeats}
                 getOptionLabel={(option) => getAnswerDisplay(option.value)}
                 getOptionValue={(option) => getAnswerCode(option.value)}
-                onChange={onChange}
+                onChange={onSelect}
                 readOnly={qrfContext.readOnly || readOnly}
                 helpText={helpText}
             />

@@ -12,10 +12,7 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'string'];
     const fieldName = fieldPath.join('.');
-    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
-        fieldPath,
-        questionItem,
-    );
+    const { value, onChange, disabled } = useFieldController(fieldPath, questionItem);
     return (
         <>
             <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />

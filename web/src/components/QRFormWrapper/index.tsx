@@ -67,7 +67,7 @@ export function QRFormWrapper({
                 return <p>{errors.map((e) => formatError(e)).join(',')}</p>;
             }}
         >
-            {(data) => (
+            {(data: QRFormWrapperProps) => (
                 <BaseQuestionnaireResponseForm
                     key={data.questionnaireRD.id}
                     formData={{
@@ -84,21 +84,21 @@ export function QRFormWrapper({
                         ),
                     }}
                     widgetsByQuestionType={{
-                        // date: QuestionDate,
-                        //     dateTime: QuestionDateTime,
+                        date: QuestionDate,
+                        dateTime: QuestionDateTime,
                         string: QuestionString,
-                        //     text: QuestionString,
-                        //     choice: QuestionChoice,
-                        //     boolean: QuestionBoolean,
-                        //     display: QuestionDisplay,
+                        text: QuestionString,
+                        choice: QuestionChoice,
+                        boolean: QuestionBoolean,
+                        display: QuestionDisplay,
                         decimal: QuestionDecimal,
-                        // reference: QuestionReference,
-                        //     integer: QuestionInteger,
+                        reference: QuestionReference,
+                        integer: QuestionInteger,
                     }}
                     widgetsByQuestionItemControl={{
                         'inline-choice': QuestionChoice,
                     }}
-                    onSubmit={(newFormData) => {
+                    onSubmit={(newFormData: { formValues: any }) => {
                         const fceQR: FCEQuestionnaireResponse = {
                             ...toFirstClassExtension(data.questionnaireResponseRD),
                             ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),

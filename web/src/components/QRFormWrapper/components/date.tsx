@@ -1,3 +1,4 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
@@ -6,7 +7,6 @@ import moment from 'moment';
 
 import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 
-import { QuestionField } from './field';
 import { QuestionLabel } from './label';
 
 export function QuestionDate({ parentPath, questionItem }: QuestionItemProps) {
@@ -14,22 +14,20 @@ export function QuestionDate({ parentPath, questionItem }: QuestionItemProps) {
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'date'];
     const fieldName = fieldPath.join('.');
+    const { value, onChange } = useFieldController(fieldPath, questionItem);
 
     return (
-        <QuestionField name={fieldName}>
-            {({ input, meta }) => (
-                <>
-                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                    <input
-                        type="date"
-                        id={fieldName}
-                        {...input}
-                        readOnly={qrfContext.readOnly || readOnly || hidden}
-                    />
-                    {meta.touched && meta.error && <span>{meta.error}</span>}
-                </>
-            )}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <input
+                type="date"
+                id={fieldName}
+                onChange={onChange}
+                value={value ?? ''}
+                readOnly={qrfContext.readOnly || readOnly || hidden}
+            />
+            {/* {meta.touched && meta.error && <span>{meta.error}</span>} */}
+        </>
     );
 }
 
@@ -46,20 +44,18 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
             ? moment.utc(value, FHIRDateTimeFormat).local().format('YYYY-MM-DDTHH:mm:ss')
             : '';
     };
+    const { value, onChange } = useFieldController(fieldPath, questionItem);
     return (
-        <QuestionField name={fieldName} parse={parseValue} format={formatValue}>
-            {({ input, meta }) => (
-                <>
-                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                    <input
-                        type="datetime-local"
-                        id={fieldName}
-                        {...input}
-                        readOnly={qrfContext.readOnly || readOnly || hidden}
-                    />
-                    {meta.touched && meta.error && <span>{meta.error}</span>}
-                </>
-            )}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <input
+                type="datetime-local"
+                id={fieldName}
+                readOnly={qrfContext.readOnly || readOnly || hidden}
+                value={value}
+                onChange={onChange}
+            />
+            {/* {meta.touched && meta.error && <span>{meta.error}</span>} */}
+        </>
     );
 }

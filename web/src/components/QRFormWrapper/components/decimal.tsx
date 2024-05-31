@@ -4,7 +4,6 @@ import {
     useQuestionnaireResponseFormContext,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
-import { QuestionField } from './field';
 import { QuestionLabel } from './label';
 
 export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps) {
@@ -12,10 +11,7 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'decimal'];
     const fieldName = fieldPath.join('.');
-    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
-        fieldPath,
-        questionItem,
-    );
+    const { value, onChange, disabled } = useFieldController(fieldPath, questionItem);
 
     return (
         <>
