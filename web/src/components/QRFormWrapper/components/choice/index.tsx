@@ -9,24 +9,18 @@ import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 
 import { useAnswerChoice } from './hook';
 import { AsyncSelectField } from './select';
-import { QuestionField } from '../field';
 import { QuestionLabel } from '../label';
 
 export function QuestionChoice(props: QuestionItemProps) {
     const { questionItem } = props;
-    const { fieldName, loadOptions, validate, deps, fieldPath } = useAnswerChoice(props);
+    const { fieldName, loadOptions, deps, fieldPath } = useAnswerChoice(props);
     const { text, repeats, readOnly, hidden, linkId } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
-    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
-        fieldPath,
-        questionItem,
-    );
+    const { value, onChange } = useFieldController(fieldPath, questionItem);
 
     if (hidden) {
         return null;
     }
-
-    const fieldProps = { validate };
 
     return (
         <>

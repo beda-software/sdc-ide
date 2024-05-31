@@ -3,9 +3,9 @@ import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
-import moment from 'moment';
+// import moment from 'moment';
 
-import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
+// import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 
 import { QuestionLabel } from './label';
 
@@ -36,14 +36,14 @@ export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'dateTime'];
     const fieldName = fieldPath.join('.');
-    const parseValue = (value: string) => {
-        return moment(value).local().utc().format(FHIRDateTimeFormat);
-    };
-    const formatValue = (value?: string) => {
-        return value
-            ? moment.utc(value, FHIRDateTimeFormat).local().format('YYYY-MM-DDTHH:mm:ss')
-            : '';
-    };
+    // const parseValue = (value: string) => {
+    //     return moment(value).local().utc().format(FHIRDateTimeFormat);
+    // };
+    // const formatValue = (value?: string) => {
+    //     return value
+    //         ? moment.utc(value, FHIRDateTimeFormat).local().format('YYYY-MM-DDTHH:mm:ss')
+    //         : '';
+    // };
     const { value, onChange } = useFieldController(fieldPath, questionItem);
     return (
         <>

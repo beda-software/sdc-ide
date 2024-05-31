@@ -1,4 +1,8 @@
-import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
+import {
+    BaseQuestionnaireResponseForm,
+    FormWrapperProps,
+    QuestionnaireResponseFormData,
+} from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import {
     fromFirstClassExtension,
     mapFormToResponse,
@@ -98,10 +102,18 @@ export function QRFormWrapper({
                     widgetsByQuestionItemControl={{
                         'inline-choice': QuestionChoice,
                     }}
-                    onSubmit={(newFormData: { formValues: any }) => {
+                    onSubmit={(newFormData: QuestionnaireResponseFormData) => {
+                        const firstClassExtension = toFirstClassExtension(
+                            data.questionnaireResponseRD,
+                        );
+                        const formToResponse = mapFormToResponse(
+                            newFormData.formValues,
+                            data.questionnaireRD,
+                        );
+
                         const fceQR: FCEQuestionnaireResponse = {
-                            ...toFirstClassExtension(data.questionnaireResponseRD),
-                            ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
+                            ...firstClassExtension,
+                            ...formToResponse,
                         };
                         onChange(fromFirstClassExtension(fceQR));
                     }}
@@ -114,7 +126,8 @@ export function QRFormWrapper({
     );
 }
 
-function FormWrapper({ handleSubmit, items }: { handleSubmit: any; items: any }) {
+function FormWrapper(props: FormWrapperProps) {
+    const { handleSubmit, items } = props;
     const { watch } = useFormContext();
 
     watch(() => {
