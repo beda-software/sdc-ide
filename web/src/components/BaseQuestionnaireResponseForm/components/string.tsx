@@ -1,3 +1,4 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
@@ -11,21 +12,21 @@ export function QuestionString({ parentPath, questionItem }: QuestionItemProps) 
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'string'];
     const fieldName = fieldPath.join('.');
-
+    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
+        fieldPath,
+        questionItem,
+    );
     return (
-        <QuestionField name={fieldName}>
-            {({ input, meta }) => (
-                <>
-                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                    <input
-                        type="text"
-                        id={fieldName}
-                        {...input}
-                        readOnly={qrfContext.readOnly || readOnly || hidden}
-                    />
-                    {meta.touched && meta.error && <span>{meta.error}</span>}
-                </>
-            )}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <input
+                type="text"
+                id={fieldName}
+                value={value ?? ''}
+                disabled={disabled}
+                readOnly={qrfContext.readOnly || readOnly || hidden}
+                onChange={(e) => onChange(e.target.value)}
+            />
+        </>
     );
 }

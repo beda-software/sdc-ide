@@ -1,3 +1,4 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
@@ -13,9 +14,13 @@ import { QuestionLabel } from '../label';
 
 export function QuestionChoice(props: QuestionItemProps) {
     const { questionItem } = props;
-    const { fieldName, loadOptions, validate, deps } = useAnswerChoice(props);
+    const { fieldName, loadOptions, validate, deps, fieldPath } = useAnswerChoice(props);
     const { text, repeats, readOnly, hidden, linkId } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
+    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
+        fieldPath,
+        questionItem,
+    );
 
     if (hidden) {
         return null;
@@ -24,26 +29,22 @@ export function QuestionChoice(props: QuestionItemProps) {
     const fieldProps = { validate };
 
     return (
-        <QuestionField name={fieldName} {...fieldProps}>
-            {({ input }) => {
-                return (
-                    <>
-                        <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                        <AsyncSelectField<QuestionnaireItemAnswerOption>
-                            key={`answer-choice-${deps.join('-')}`}
-                            data-testid={`choice-${linkId}`}
-                            id={fieldName}
-                            input={input}
-                            label={text}
-                            loadOptions={loadOptions}
-                            isMulti={!!repeats}
-                            getOptionLabel={(option) => getAnswerDisplay(option.value)}
-                            getOptionValue={(option) => getAnswerCode(option.value)}
-                            readOnly={qrfContext.readOnly || readOnly}
-                        />
-                    </>
-                );
-            }}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <AsyncSelectField<QuestionnaireItemAnswerOption>
+                key={`answer-choice-${deps.join('-')}`}
+                data-testid={`choice-${linkId}`}
+                id={fieldName}
+                onChange={onChange}
+                value={value}
+                // input={input}
+                label={text}
+                loadOptions={loadOptions}
+                isMulti={!!repeats}
+                getOptionLabel={(option) => getAnswerDisplay(option.value)}
+                getOptionValue={(option) => getAnswerCode(option.value)}
+                readOnly={qrfContext.readOnly || readOnly}
+            />
+        </>
     );
 }

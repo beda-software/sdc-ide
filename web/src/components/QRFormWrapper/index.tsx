@@ -1,3 +1,4 @@
+import { BaseQuestionnaireResponseForm } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import {
     fromFirstClassExtension,
     mapFormToResponse,
@@ -11,8 +12,8 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
-import { useFHIRServiceProvider } from 'web/src/services/fhir';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { sequenceMap } from 'fhir-react/lib/services/service';
@@ -20,7 +21,23 @@ import { formatError } from 'fhir-react/lib/utils/error';
 
 import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
-import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
+import {
+    Col,
+    GTable,
+    Group,
+    QuestionBoolean,
+    QuestionChoice,
+    QuestionDate,
+    QuestionDateTime,
+    QuestionDecimal,
+    QuestionDisplay,
+    QuestionString,
+    Row,
+} from '../BaseQuestionnaireResponseForm/components';
+import { QuestionInteger } from '../BaseQuestionnaireResponseForm/components/integer';
+import { QuestionReference } from '../BaseQuestionnaireResponseForm/components/reference';
+import s from '../BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+
 
 interface QRFormWrapperProps {
     questionnaireRD: RemoteData<FHIRQuestionnaire>;
@@ -39,11 +56,9 @@ export function QRFormWrapper({
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [
         saveQuestionnaireResponse,
     ]);
-    const serviceProvider = useFHIRServiceProvider();
     const remoteDataResult = sequenceMap({
         questionnaireRD,
         questionnaireResponseRD,
-        serviceProvider,
     });
 
     return (
@@ -56,7 +71,6 @@ export function QRFormWrapper({
             {(data) => (
                 <BaseQuestionnaireResponseForm
                     key={data.questionnaireRD.id}
-                    serviceProvider={data.serviceProvider}
                     formData={{
                         context: {
                             questionnaire: toFirstClassExtension(data.questionnaireRD),
@@ -70,17 +84,47 @@ export function QRFormWrapper({
                             toFirstClassExtension(data.questionnaireRD),
                         ),
                     }}
-                    /* TODO: Move to useMemo */
-                    onSubmit={async () => {}}
-                    onChange={(newFormData) => {
+                    widgetsByQuestionType={{
+                        // date: QuestionDate,
+                        //     dateTime: QuestionDateTime,
+                        string: QuestionString,
+                        //     text: QuestionString,
+                        //     choice: QuestionChoice,
+                        //     boolean: QuestionBoolean,
+                        //     display: QuestionDisplay,
+                        decimal: QuestionDecimal,
+                        // reference: QuestionReference,
+                        //     integer: QuestionInteger,
+                    }}
+                    widgetsByQuestionItemControl={{
+                        'inline-choice': QuestionChoice,
+                    }}
+                    onSubmit={(newFormData) => {
                         const fceQR: FCEQuestionnaireResponse = {
                             ...toFirstClassExtension(data.questionnaireResponseRD),
                             ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
                         };
                         onChange(fromFirstClassExtension(fceQR));
                     }}
+                    groupItemComponent={Group}
+                    widgetsByGroupQuestionItemControl={{ col: Col, row: Row, gtable: GTable }}
+                    FormWrapper={FormWrapper}
                 />
             )}
         </RenderRemoteData>
+    );
+}
+
+function FormWrapper({ handleSubmit, items }: { handleSubmit: any; items: any }) {
+    const { watch } = useFormContext();
+
+    watch(() => {
+        handleSubmit();
+    });
+
+    return (
+        <form onSubmit={handleSubmit} className={s.form}>
+            {items}
+        </form>
     );
 }

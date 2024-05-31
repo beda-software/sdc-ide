@@ -1,7 +1,7 @@
 import { AnswerValue, QuestionItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import _ from 'lodash';
 
-import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
+import { RemoteDataResult, isSuccess, success } from 'aidbox-react/lib/libs/remoteData';
 import { applyDataTransformer, service } from 'aidbox-react/lib/services/service';
 
 import {
@@ -9,6 +9,7 @@ import {
     QuestionnaireItemAnswerOption,
     ValueSet,
 } from 'shared/src/contrib/aidbox';
+
 
 export function getDisplay(value: AnswerValue): string {
     const valueType = _.keys(value)[0];
@@ -104,5 +105,5 @@ export function useAnswerChoice({ questionItem, parentPath }: QuestionItemProps)
 
     const deps = [linkId];
 
-    return { fieldName, loadOptions, validate, deps };
+    return { fieldName, loadOptions, validate, deps, fieldPath };
 }

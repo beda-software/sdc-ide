@@ -1,15 +1,14 @@
+import { QuestionnaireResponseItemAnswer } from 'fhir/r4b';
 import _ from 'lodash';
-// eslint-disable-next-line import/named
-import { FieldInputProps } from 'react-final-form';
 import { ActionMeta, PropsValue } from 'react-select';
 import { AsyncSelect } from 'web/src/components/Select';
+// eslint-disable-next-line import/named
 
 interface Props<T> {
     label?: string;
     id?: string;
     placeholder?: string;
     helpText?: string;
-    input: FieldInputProps<any, HTMLElement>;
     formItemProps?: any;
     loadOptions: (searchText: string) => Promise<T[]>;
     readOnly?: boolean;
@@ -18,12 +17,12 @@ interface Props<T> {
     getOptionValue: (option: T) => string;
     isMulti?: boolean;
     testId?: string;
+    value?: QuestionnaireResponseItemAnswer[];
 }
 
 export function AsyncSelectField<T>(props: Props<T>) {
     const {
         readOnly,
-        input,
         id,
         placeholder = 'Select...',
         getOptionLabel,
@@ -31,6 +30,7 @@ export function AsyncSelectField<T>(props: Props<T>) {
         onChange,
         isMulti,
         loadOptions,
+        value,
     } = props;
 
     const debouncedLoadOptions = _.debounce(
@@ -42,6 +42,7 @@ export function AsyncSelectField<T>(props: Props<T>) {
 
     return (
         <AsyncSelect
+            value={value}
             defaultOptions
             isDisabled={readOnly}
             loadOptions={debouncedLoadOptions}
@@ -49,16 +50,15 @@ export function AsyncSelectField<T>(props: Props<T>) {
             getOptionLabel={getOptionLabel}
             getOptionValue={getOptionValue}
             id={id}
-            {...input}
             onChange={(value, action) => {
-                input.onChange(value ?? undefined);
+                // onChange(value ?? undefined);
 
                 if (onChange) {
                     onChange(value, action);
                 }
             }}
             isMulti={isMulti}
-            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+            // styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
             menuPortalTarget={document.body}
         />
     );

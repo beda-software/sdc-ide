@@ -1,3 +1,4 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
@@ -11,22 +12,22 @@ export function QuestionDecimal({ parentPath, questionItem }: QuestionItemProps)
     const { linkId, readOnly, hidden } = questionItem;
     const fieldPath = [...parentPath, linkId, 0, 'value', 'decimal'];
     const fieldName = fieldPath.join('.');
+    const { value, onChange, disabled, formItem, onBlur } = useFieldController(
+        fieldPath,
+        questionItem,
+    );
 
     return (
-        <QuestionField name={fieldName}>
-            {({ input, meta }) => (
-                <>
-                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                    <input
-                        type="numeric"
-                        id={fieldName}
-                        {...input}
-                        readOnly={qrfContext.readOnly || readOnly || hidden}
-                        onChange={(e) => input.onChange(parseInt(e.target.value))}
-                    />
-                    {meta.touched && meta.error && <span>{meta.error}</span>}
-                </>
-            )}
-        </QuestionField>
+        <>
+            <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+            <input
+                type="numeric"
+                id={fieldName}
+                value={value ?? ''}
+                disabled={disabled}
+                readOnly={qrfContext.readOnly || readOnly || hidden}
+                onChange={(e) => onChange(Number(e.target.value))}
+            />
+        </>
     );
 }
