@@ -1,7 +1,6 @@
 import {
     BaseQuestionnaireResponseForm,
     FormWrapperProps,
-    QuestionnaireResponseFormData,
 } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm/BaseQuestionnaireResponseForm';
 import {
     fromFirstClassExtension,
@@ -71,7 +70,7 @@ export function QRFormWrapper({
                 return <p>{errors.map((e) => formatError(e)).join(',')}</p>;
             }}
         >
-            {(data: QRFormWrapperProps) => (
+            {(data) => (
                 <BaseQuestionnaireResponseForm
                     key={data.questionnaireRD.id}
                     formData={{
@@ -102,7 +101,7 @@ export function QRFormWrapper({
                     widgetsByQuestionItemControl={{
                         'inline-choice': QuestionChoice,
                     }}
-                    onSubmit={(newFormData: QuestionnaireResponseFormData) => {
+                    onSubmit={(newFormData) => {
                         const firstClassExtension = toFirstClassExtension(
                             data.questionnaireResponseRD,
                         );
@@ -116,6 +115,7 @@ export function QRFormWrapper({
                             ...formToResponse,
                         };
                         onChange(fromFirstClassExtension(fceQR));
+                        return Promise.resolve();
                     }}
                     groupItemComponent={Group}
                     widgetsByGroupQuestionItemControl={{ col: Col, row: Row, gtable: GTable }}

@@ -4,7 +4,6 @@ import {
     useQuestionnaireResponseFormContext,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 
-import { QuestionField } from './field';
 import { QuestionLabel } from './label';
 
 export function QuestionString({ parentPath, questionItem }: QuestionItemProps) {

@@ -1,8 +1,6 @@
-import { QuestionnaireResponseItemAnswer } from 'fhir/r4b';
 import _ from 'lodash';
 import { ActionMeta, PropsValue } from 'react-select';
 import { AsyncSelect } from 'web/src/components/Select';
-// eslint-disable-next-line import/named
 
 interface Props<T> {
     label?: string;
@@ -17,7 +15,7 @@ interface Props<T> {
     getOptionValue: (option: T) => string;
     isMulti?: boolean;
     testId?: string;
-    value?: QuestionnaireResponseItemAnswer[];
+    value?: any; //TODO better define types for choice on the widget level
 }
 
 export function AsyncSelectField<T>(props: Props<T>) {

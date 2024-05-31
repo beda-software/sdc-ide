@@ -13,7 +13,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { questionItem, parentPath } = props;
-    const { loadOptions, deps, validate } = useAnswerReference(props);
+    const { loadOptions, deps } = useAnswerReference(props);
     const { text, repeats, linkId, helpText, readOnly } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
 
@@ -23,8 +23,6 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     const { value, onChange } = useFieldController(fieldPath, questionItem);
 
     const onSelect = useCallback((option: any) => onChange([].concat(option)), [onChange]);
-
-    const fieldProps = { validate };
 
     return (
         <>
