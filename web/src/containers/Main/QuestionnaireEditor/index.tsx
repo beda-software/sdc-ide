@@ -11,7 +11,7 @@ import { RemoteData, RemoteDataResult, isFailure, isLoading } from 'fhir-react/l
 
 import s from './QuestionnaireEditor.module.scss';
 import { useQuestionnaireEditor } from './useQuestionnaireEditor';
-import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import formStyles from '../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
 
 interface Props {

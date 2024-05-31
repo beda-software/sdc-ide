@@ -23,7 +23,7 @@ import { Mapping } from 'shared/src/contrib/aidbox';
 
 import s from './MappingEditor.module.scss';
 import { useMappingEditor } from './useMappingEditor';
-import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import formStyles from '../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
 
 interface Props {

@@ -10,7 +10,6 @@ import {
     ValueSet,
 } from 'shared/src/contrib/aidbox';
 
-
 export function getDisplay(value: AnswerValue): string {
     const valueType = _.keys(value)[0];
     //@ts-ignore

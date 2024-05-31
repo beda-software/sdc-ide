@@ -33,11 +33,10 @@ import {
     QuestionDisplay,
     QuestionString,
     Row,
-} from '../BaseQuestionnaireResponseForm/components';
-import { QuestionInteger } from '../BaseQuestionnaireResponseForm/components/integer';
-import { QuestionReference } from '../BaseQuestionnaireResponseForm/components/reference';
-import s from '../BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
-
+    QuestionInteger,
+    QuestionReference,
+} from './components';
+import s from './QuestionnaireResponseForm.module.scss';
 
 interface QRFormWrapperProps {
     questionnaireRD: RemoteData<FHIRQuestionnaire>;

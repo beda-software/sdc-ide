@@ -9,7 +9,6 @@ import { AsyncSelectField } from '../choice/select';
 import { QuestionField } from '../field';
 import { QuestionLabel } from '../label';
 
-
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
