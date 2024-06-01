@@ -17,6 +17,8 @@ import {
     setToken,
 } from '../../services/auth';
 import { Main } from '../Main';
+import { FormRenderContext } from '../Main/context';
+import { AEHRCFormWrapper } from './AEHRCFormWrapper';
 
 export function App() {
     const [userResponse] = useService<User | null>(async () => {
@@ -43,7 +45,11 @@ export function App() {
             {(user) =>
                 user ? (
                     <Routes>
-                        <Route path="/:questionnaireId" element={<Main />} />
+                        <Route path="/:questionnaireId" element={
+                            <FormRenderContext.Provider value={AEHRCFormWrapper}>
+                                <Main />
+                            </FormRenderContext.Provider>
+                        } />
                         <Route
                             path="*"
                             element={

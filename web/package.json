@@ -58,7 +58,14 @@
         "ts-jest": "^27.1.4",
         "vitest": "^0.33.0",
         "yaml": "^2.1.1",
-        "@beda.software/fhir-questionnaire": "1.0.0"
+        "@beda.software/fhir-questionnaire": "1.0.0",
+        "@aehrc/smart-forms-renderer": "^0.33.1",
+        "@tanstack/react-query": "^4.36.0",
+        "@mui/icons-material": "^5.15.10",
+        "@mui/lab": "^5.0.0-alpha.165",
+        "@mui/material": "^5.15.10",
+        "@emotion/styled": "^11.11.5",
+        "@mui/x-date-pickers": "^6.19.4"
     },
     "scripts": {
         "start": "vite",
