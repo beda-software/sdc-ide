@@ -8,17 +8,12 @@ import {
     mapResponseToForm,
     toFirstClassExtension,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
-import {
-    Questionnaire as FHIRQuestionnaire,
-    QuestionnaireResponse as FHIRQuestionnaireResponse,
-    Parameters,
-} from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
+import { QRFormWrapperProps } from 'web/src/containers/Main/types';
 
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { sequenceMap } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
@@ -40,13 +35,6 @@ import {
     QuestionReference,
 } from './components';
 import s from './QuestionnaireResponseForm.module.scss';
-
-interface QRFormWrapperProps {
-    questionnaireRD: RemoteData<FHIRQuestionnaire>;
-    questionnaireResponseRD: RemoteData<FHIRQuestionnaireResponse>;
-    saveQuestionnaireResponse: (resource: FHIRQuestionnaireResponse) => void;
-    launchContextParameters: Parameters['parameter'];
-}
 
 export function QRFormWrapper({
     questionnaireRD,
