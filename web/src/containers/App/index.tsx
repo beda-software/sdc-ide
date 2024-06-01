@@ -9,6 +9,7 @@ import { success } from 'fhir-react/lib/libs/remoteData';
 
 import { User } from 'shared/src/contrib/aidbox';
 
+import { AEHRCFormWrapper } from './AEHRCFormWrapper';
 import {
     authorize,
     getToken,
@@ -18,7 +19,6 @@ import {
 } from '../../services/auth';
 import { Main } from '../Main';
 import { FormRenderContext } from '../Main/context';
-import { AEHRCFormWrapper } from './AEHRCFormWrapper';
 
 export function App() {
     const [userResponse] = useService<User | null>(async () => {
