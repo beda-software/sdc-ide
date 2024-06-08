@@ -1,7 +1,10 @@
+import Editor from '@monaco-editor/react';
+import { FhirResource } from 'fhir/r4b';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
+import { CodeEditor } from 'web/src/components/CodeEditor';
 import { ExpandableElement } from 'web/src/components/ExpandableElement';
 import { ExpandableRow } from 'web/src/components/ExpandableRow';
 import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
@@ -15,8 +18,8 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { FormRenderContext } from './context';
 import s from './Main.module.scss';
-import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
+import { useFHIRMappingLanguage } from './useFHIRMappingLanguage';
 import { useMain } from './useMain';
 
 export function Main() {
@@ -26,10 +29,11 @@ export function Main() {
         originalQuestionnaireRD,
         assembledQuestionnaireRD,
         questionnaireResponseRD,
-        mappingRD,
         extractRD,
         manager,
     } = useMain(questionnaireId!);
+
+    const { mapString, setMapString, mappingResult } = useFHIRMappingLanguage(isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined)
 
     const QRFormWrapper = useContext(FormRenderContext);
 
@@ -64,8 +68,8 @@ export function Main() {
                         title={
                             isSuccess(originalQuestionnaireRD)
                                 ? originalQuestionnaireRD.data.title ||
-                                  originalQuestionnaireRD.data.name ||
-                                  originalQuestionnaireRD.data.id
+                                originalQuestionnaireRD.data.name ||
+                                originalQuestionnaireRD.data.id
                                 : ''
                         }
                     >
@@ -81,8 +85,24 @@ export function Main() {
                     <ExpandableElement title="QuestionnaireResponse FHIR resource">
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
-                    <ExpandableElement title={'Mapping'}>
-                        <MappingEditor
+                    <ExpandableElement title={'FHIR Mapping Language'}>
+                        <Editor
+                            key="fhir-mapping-language-editor"
+                            defaultLanguage="ruby"
+                            onChange={(value) => {
+                                setMapString(value as string)
+                            }}
+                            value={mapString}
+                            options={{
+                                formatOnPaste: true,
+                                formatOnType: true,
+                                autoIndent: "full",
+                                minimap: {
+                                    enabled: false
+                                }
+                            }}
+                        />
+                        {/* <MappingEditor
                             mappingRD={mappingRD}
                             questionnaireRD={originalQuestionnaireRD}
                             onSave={manager.saveMapping}
@@ -92,10 +112,11 @@ export function Main() {
                             reload={manager.reloadMapping}
                             createMapping={manager.createMapping}
                             generateMapping={manager.generateMapping}
-                        />
+                        /> */}
                     </ExpandableElement>
                     <ExpandableElement title="Bundle transaction for extraction">
-                        <ResourceCodeDisplay resourceResponse={extractRD} />
+                        {/* <ResourceCodeDisplay resourceResponse={{data: mappingResult}} /> */}
+                        <CodeEditor readOnly={true} value={mappingResult as FhirResource} key={JSON.stringify(mappingResult)}/>
                         {isSuccess(extractRD) && (
                             <Button
                                 onClick={() => {

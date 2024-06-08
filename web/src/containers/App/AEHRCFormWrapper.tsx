@@ -14,8 +14,8 @@ import { sequenceMap } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
 
+import { useDebounce } from './utils';
 import { QRFormWrapperProps } from "../Main/types";
-
 
 
 interface YourBaseRendererWrapperProps {
@@ -32,7 +32,7 @@ function YourBaseRendererWrapper(props: YourBaseRendererWrapperProps) {
 
     // This hook builds the form based on the questionnaire
     const isBuilding = useBuildForm(questionnaire, questionnaireResponse);
-    const formQR = useQuestionnaireResponseStore.use.updatableResponse()
+    const formQR = useDebounce(useQuestionnaireResponseStore.use.updatableResponse(), 500)
 
     useEffect(() => {
         saveQuestionnaireResponse(formQR)
