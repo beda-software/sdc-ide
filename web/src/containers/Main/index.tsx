@@ -18,6 +18,7 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 
 import s from './Main.module.scss';
+import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
 import { useFHIRMappingLanguage } from './useFHIRMappingLanguage';
 import { useMain } from './useMain';
@@ -30,11 +31,11 @@ export function Main() {
         originalQuestionnaireRD,
         assembledQuestionnaireRD,
         questionnaireResponseRD,
-        // mappingRD,
+        mappingRD,
         extractRD,
         manager,
     } = useMain(questionnaireId!);
-    const { mapString, setMapString, mappingResult } = useFHIRMappingLanguage(isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined)
+    const { mapString, setMapString, mappingResult, fhirMappingLangMode, toggleMappingMode } = useFHIRMappingLanguage(isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined)
 
     return (
         <>
@@ -84,25 +85,27 @@ export function Main() {
                     <ExpandableElement title="QuestionnaireResponse FHIR resource">
                         <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                     </ExpandableElement>
-                    {/* <ExpandableElement title={'Mapping'}> */}
-                    <ExpandableElement title={'FHIR Mapping Language'}>
-                        <Editor
-                            key="fhir-mapping-language-editor"
-                            defaultLanguage="ruby"
-                            onChange={(value) => {
-                                setMapString(value as string)
-                            }}
-                            value={mapString}
-                            options={{
-                                formatOnPaste: true,
-                                formatOnType: true,
-                                autoIndent: "full",
-                                minimap: {
-                                    enabled: false
-                                }
-                            }}
-                        />
-                        {/* <MappingEditor
+                    <ExpandableElement title={'Mapping'}>
+                        {fhirMappingLangMode ? (
+                            <Editor
+                                key="fhir-mapping-language-editor"
+                                defaultLanguage="ruby"
+                                onChange={(value) => {
+                                    setMapString(value as string)
+                                }}
+                                value={mapString}
+                                options={{
+                                    formatOnPaste: true,
+                                    formatOnType: true,
+                                    autoIndent: "full",
+                                    minimap: {
+                                        enabled: false
+                                    }
+                                }}
+                            />
+
+
+                        ) : (<MappingEditor
                             mappingRD={mappingRD}
                             questionnaireRD={originalQuestionnaireRD}
                             onSave={manager.saveMapping}
@@ -112,7 +115,8 @@ export function Main() {
                             reload={manager.reloadMapping}
                             createMapping={manager.createMapping}
                             generateMapping={manager.generateMapping}
-                        /> */}
+                            toggleMappingMode={toggleMappingMode}
+                        />)}
                     </ExpandableElement>
                     <ExpandableElement title="Bundle transaction for extraction">
                         {/* <ResourceCodeDisplay resourceResponse={extractRD} /> */}

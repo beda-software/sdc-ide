@@ -7,6 +7,7 @@ import { isSuccess } from "fhir-react/lib/libs/remoteData";
 
 
 export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireResponse | undefined) {
+    const [fhirMappingLangMode, setFhirMappingLangMode] = useState<boolean>(false)
     const [mapString, setMapString] = useState<string>('')
     const [prevMapString, setPrevMapString] = useState<string>('')
     const [structureMapData, setStructureMapData] = useState<StructureMap|undefined>(undefined)
@@ -63,7 +64,11 @@ export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireRespo
         setMapString(value);
     }
 
+    const toggleMappingMode = () => setFhirMappingLangMode(!fhirMappingLangMode)
+
     return {
+        fhirMappingLangMode,
+        toggleMappingMode,
         mapString,
         setMapString: changeMapString,
         mappingResult,
