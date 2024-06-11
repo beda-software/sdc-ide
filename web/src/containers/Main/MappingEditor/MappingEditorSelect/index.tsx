@@ -15,7 +15,7 @@ import s from '../MappingEditor.module.scss';
 
 
 export function MappingEditorSelect(props: MappingEditorSelectProps) {
-    const { mappingsRD, mappingRD, showModal, setShowSelect, generateMapping, createMapping, setShowModal, toggleMappingMode, onChange } = props;
+    const { mappingsRD, mappingRD, showModal, generateMapping, createMapping, setShowModal, toggleMappingMode, onChange, setEditorSelect } = props;
 
     return (
         <RenderRemoteData remoteData={mappingsRD}>
@@ -38,7 +38,7 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                             }))}
                             onChange={(option) => {
                                 if (option && !Array.isArray(option)) {
-                                    setShowSelect(false);
+                                    setEditorSelect();
                                     onChange((option as SingleValue<any>).value);
                                 }
                             }}
@@ -48,7 +48,7 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                     <PromptForm
                         id="mapping"
                         onSubmit={generateMapping}
-                        goBack={() => setShowSelect(false)}
+                        goBack={() => setEditorSelect()}
                         label="or describe requirements to new mapper"
                     />
                     <div className={s.actions}>
@@ -56,7 +56,7 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                             className={s.action}
                             variant="secondary"
                             onClick={() => {
-                                setShowSelect(false);
+                                setEditorSelect();
                             }}
                         >
                             cancel
@@ -79,7 +79,7 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                                 });
 
                                 if (isSuccess(response)) {
-                                    setShowSelect(false);
+                                    setEditorSelect();
                                 }
 
                                 if (isFailure(response)) {

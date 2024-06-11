@@ -6,9 +6,9 @@ import { MappingEditorErrorProps } from "../interfaces";
 import s from '../MappingEditor.module.scss';
 
 export function MappingEditorError(props: MappingEditorErrorProps) {
-    const {showSelect, setShowSelect, error} = props;
+    const {error, setEditorSelect, editorState} = props;
 
-    return !showSelect ? (
+    return editorState !== 'ready' ? (
         <div>
             {formatError(error)}
             {error?.id === 'not-found' ? (
@@ -17,7 +17,7 @@ export function MappingEditorError(props: MappingEditorErrorProps) {
                         className={s.action}
                         variant="secondary"
                         onClick={() => {
-                            setShowSelect(true);
+                            setEditorSelect();
                         }}
                     >
                         create new

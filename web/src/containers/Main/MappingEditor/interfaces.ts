@@ -22,24 +22,24 @@ export interface MappingEditorProps extends CommonMappingEditorProps {
 }
 
 export interface MappingEditorErrorProps {
-    showSelect: boolean;
-    setShowSelect: (value: boolean) => void;
     error: any;
+    setEditorSelect: () => void;
+    editorState: 'initial' | 'loading' | 'select' | 'ready';
 }
 
 export interface MappingEditorSelectProps extends CommonMappingEditorProps {
     mappingsRD: RemoteData<WithId<Mapping>[], any>;
     mappingRD: RemoteData<WithId<Mapping>>;
     showModal: boolean;
-    setShowSelect: (value: boolean) => void;
     setShowModal: (value: boolean) => void;
+    setEditorSelect: () => void;
 }
 
 export interface MappingEditorEditorProps extends CommonMappingEditorProps {
-    setShowSelect: (value: boolean) => void;
     updatedResource: WithId<Mapping> | undefined;
     setUpdatedResource: (value: WithId<Mapping> | undefined) => void;
     mapping: WithId<Mapping>;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
+    setEditorSelect: () => void;
 }

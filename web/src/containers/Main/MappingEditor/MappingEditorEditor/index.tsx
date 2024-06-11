@@ -10,7 +10,7 @@ import s from '../MappingEditor.module.scss';
 
 
 export function MappingEditorEditor(props: MappingEditorEditorProps) {
-    const { setShowSelect, reload, onChange, updatedResource, onSave, setUpdatedResource, mapping, launchContext, questionnaireResponseRD } = props;
+    const { reload, onChange, updatedResource, onSave, setUpdatedResource, mapping, launchContext, questionnaireResponseRD, setEditorSelect } = props;
 
     return (
         <>
@@ -32,7 +32,7 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
                     className={s.action}
                     variant="secondary"
                     onClick={() => {
-                        setShowSelect(true);
+                        setEditorSelect();
                     }}
                 >
                     clear

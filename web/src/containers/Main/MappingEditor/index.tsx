@@ -9,27 +9,45 @@ import { useMappingEditor } from './useMappingEditor';
 
 export function MappingEditor(props: MappingEditorProps) {
     const {
-        onSave,
-        onChange,
         mappingRD,
         questionnaireRD,
-        questionnaireResponseRD,
-        createMapping,
-        reload,
-        generateMapping,
-        toggleMappingMode
-    } = props;
-    const { mappingsRD, showModal, showSelect, setShowModal, setShowSelect, setUpdatedResource, updatedResource } = useMappingEditor(questionnaireRD, questionnaireResponseRD);
+        questionnaireResponseRD } = props;
+    const { mappingsRD, showModal,
+        setShowModal, setUpdatedResource,
+        updatedResource, editorState,
+        setEditorSelect } = useMappingEditor(questionnaireRD, questionnaireResponseRD, mappingRD);
+
+    const mapEditorStateRender = {
+        'initial': <>Please, select/create Questionnaire resource</>,
+        'loading': <>Loading...</>,
+        'select': <MappingEditorSelect
+            {...props}
+            mappingsRD={mappingsRD}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            setEditorSelect={setEditorSelect}
+        />,
+        'ready': <RenderRemoteData
+            renderFailure={(error) => <MappingEditorError error={error} setEditorSelect={setEditorSelect} editorState={editorState} />}
+            remoteData={mappingRD}
+        >
+            {(mapping) => {
+                return (
+                    <MappingEditorEditor
+                        {...props}
+                        updatedResource={updatedResource}
+                        setUpdatedResource={setUpdatedResource}
+                        mapping={mapping}
+                        setEditorSelect={setEditorSelect}
+                    />
+                )
+            }}
+        </RenderRemoteData>
+    }
 
     return (
         <div className={s.container}>
-            <RenderRemoteData
-                renderFailure={(error) => <MappingEditorError error={error} showSelect={showSelect} setShowSelect={setShowSelect} />}
-                remoteData={mappingRD}
-            >
-                {(mapping) => <>{!showSelect ? <MappingEditorEditor {...props} launchContext={props.launchContext} questionnaireResponseRD={questionnaireResponseRD} reload={reload} updatedResource={updatedResource} setUpdatedResource={setUpdatedResource} setShowSelect={setShowSelect} onSave={onSave} onChange={onChange} mapping={mapping} /> : null}</>}
-            </RenderRemoteData>
-            {showSelect ? <MappingEditorSelect {...props} toggleMappingMode={toggleMappingMode} onChange={onChange} mappingRD={mappingRD} mappingsRD={mappingsRD} showModal={showModal} setShowModal={setShowModal} setShowSelect={setShowSelect} generateMapping={generateMapping} createMapping={createMapping} /> : null}
+            {mapEditorStateRender[editorState]}
         </div>
     );
 }
