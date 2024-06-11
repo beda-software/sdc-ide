@@ -5,6 +5,8 @@ import { WithId } from "fhir-react/lib/services/fhir";
 
 import { Mapping } from "shared/src/contrib/aidbox";
 
+export type EditorState = 'initial' | 'loading' | 'select' | 'ready'
+
 interface CommonMappingEditorProps {
     onSave: (resource: WithId<Mapping>) => void;
     onChange: (resource: WithId<Mapping>) => void;
@@ -24,7 +26,7 @@ export interface MappingEditorProps extends CommonMappingEditorProps {
 export interface MappingEditorErrorProps {
     error: any;
     setEditorSelect: () => void;
-    editorState: 'initial' | 'loading' | 'select' | 'ready';
+    editorState: EditorState;
 }
 
 export interface MappingEditorSelectProps extends CommonMappingEditorProps {

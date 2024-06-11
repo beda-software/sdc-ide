@@ -19,12 +19,13 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
+import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
 
 export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, questionnaireResponseRD: RemoteData<QuestionnaireResponse>, mappingRD: RemoteData<Mapping>) {
     const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
-    const [editorState, setEditorState] = useState<'initial' | 'loading' | 'select' | 'ready'>('initial')
+    const [editorState, setEditorState] = useState<EditorState>('initial')
 
     const setEditorInitial = () => setEditorState('initial')
     const setEditorLoading = () => setEditorState('loading')
