@@ -1,4 +1,5 @@
-import { Bundle, Questionnaire } from 'fhir/r4b';
+import { Bundle, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { useEffect, useState } from 'react';
 
 import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
 
@@ -7,6 +8,7 @@ import {
     RemoteData,
     RemoteDataResult,
     failure,
+    isLoading,
     isSuccess,
     success,
 } from 'fhir-react/lib/libs/remoteData';
@@ -17,7 +19,18 @@ import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { getMappings } from '../utils';
 
-export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>) {
+export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, questionnaireResponseRD: RemoteData<QuestionnaireResponse>) {
+    const [showSelect, setShowSelect] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
+
+    useEffect(() => {
+        if (isLoading(questionnaireResponseRD)) {
+            setShowSelect(false);
+        }
+    }, [questionnaireResponseRD]);
+
+
     const [mappingsRD] = useService(async () => {
         if (isSuccess(questionnaireRD)) {
             let response: RemoteDataResult<Bundle<WithId<Mapping>>> = success({
@@ -44,5 +57,13 @@ export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>) {
         return await Promise.resolve(failure({}));
     }, [questionnaireRD]);
 
-    return { mappingsRD };
+    return {
+        mappingsRD,
+        setShowModal,
+        showModal,
+        setShowSelect,
+        showSelect,
+        updatedResource,
+        setUpdatedResource
+    };
 }

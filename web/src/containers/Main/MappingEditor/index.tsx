@@ -1,12 +1,4 @@
-import { useEffect, useState } from 'react';
-
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import {
-    isLoading,
-} from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
-
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { MappingEditorProps } from './interfaces';
 import s from './MappingEditor.module.scss';
@@ -27,16 +19,7 @@ export function MappingEditor(props: MappingEditorProps) {
         generateMapping,
         toggleMappingMode
     } = props;
-    const { mappingsRD } = useMappingEditor(questionnaireRD);
-    const [showSelect, setShowSelect] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
-
-    useEffect(() => {
-        if (isLoading(questionnaireResponseRD)) {
-            setShowSelect(false);
-        }
-    }, [questionnaireResponseRD]);
+    const { mappingsRD, showModal, showSelect, setShowModal, setShowSelect, setUpdatedResource, updatedResource } = useMappingEditor(questionnaireRD, questionnaireResponseRD);
 
     return (
         <div className={s.container}>
