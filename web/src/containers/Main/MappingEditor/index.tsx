@@ -8,14 +8,11 @@ import { MappingEditorSelect } from './MappingEditorSelect';
 import { useMappingEditor } from './useMappingEditor';
 
 export function MappingEditor(props: MappingEditorProps) {
-    const {
-        mappingRD,
-        questionnaireRD,
-        questionnaireResponseRD } = props;
+    const { mappingRD, questionnaireRD } = props;
     const { mappingsRD, showModal,
         setShowModal, setUpdatedResource,
         updatedResource, editorState,
-        setEditorSelect } = useMappingEditor(questionnaireRD, questionnaireResponseRD, mappingRD);
+        setEditorSelect } = useMappingEditor(questionnaireRD, mappingRD);
 
     const mapEditorStateRender = {
         'initial': <>Please, select/create Questionnaire resource</>,

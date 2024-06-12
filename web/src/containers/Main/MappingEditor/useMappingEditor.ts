@@ -1,4 +1,4 @@
-import { Bundle, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
+import { Bundle, Questionnaire } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 
 import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
@@ -22,7 +22,7 @@ import { Mapping } from 'shared/src/contrib/aidbox';
 import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
 
-export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, questionnaireResponseRD: RemoteData<QuestionnaireResponse>, mappingRD: RemoteData<Mapping>) {
+export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, mappingRD: RemoteData<Mapping>) {
     const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
     const [editorState, setEditorState] = useState<EditorState>('initial')
@@ -33,18 +33,18 @@ export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, que
     const setEditorReady = () => setEditorState('ready')
 
     useEffect(() => {
-        if (isNotAsked(questionnaireResponseRD)){
+        if (isNotAsked(questionnaireRD)){
             setEditorInitial();
         }
-        if (isLoading(questionnaireResponseRD)) {
+        if (isLoading(questionnaireRD)) {
             setEditorLoading();
         }
 
-        if (isFailure(questionnaireResponseRD)) {
+        if (isFailure(questionnaireRD)) {
             setEditorInitial();
         }
 
-        if (isSuccess(questionnaireResponseRD)) {
+        if (isSuccess(questionnaireRD)) {
             if (isSuccess(mappingRD)) {
                 setEditorReady();
             }
@@ -55,7 +55,7 @@ export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, que
                 setEditorSelect();
             }
         }
-    }, [questionnaireResponseRD, mappingRD]);
+    }, [questionnaireRD, mappingRD]);
 
     const [mappingsRD] = useService(async () => {
         if (isSuccess(questionnaireRD)) {
