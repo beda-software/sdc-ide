@@ -80,12 +80,8 @@ interface SignInProps {
 }
 
 function SignIn(props: SignInProps) {
-    const clientId = localStorage.getItem('clientId');
-    if (clientId) {
-        authorize(clientId, { nextUrl: props.originPathName });
-    } else {
-        authorize('sdc-ide', { nextUrl: props.originPathName });
-    }
+    const clientId = localStorage.getItem('clientId') || 'sdc-ide';
+    authorize(clientId, { nextUrl: props.originPathName });
 
     return null;
 }
