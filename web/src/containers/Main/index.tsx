@@ -16,13 +16,11 @@ import { version } from 'web/src/version';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
-
 import s from './Main.module.scss';
 import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
 import { useFHIRMappingLanguage } from './useFHIRMappingLanguage';
 import { useMain } from './useMain';
-
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
@@ -35,7 +33,10 @@ export function Main() {
         extractRD,
         manager,
     } = useMain(questionnaireId!);
-    const { mapString, setMapString, mappingResult, fhirMappingLangMode, toggleMappingMode } = useFHIRMappingLanguage(isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined)
+    const { mapString, setMapString, mappingResult, fhirMappingLangMode, toggleMappingMode } =
+        useFHIRMappingLanguage(
+            isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined,
+        );
 
     return (
         <>
@@ -68,8 +69,8 @@ export function Main() {
                         title={
                             isSuccess(originalQuestionnaireRD)
                                 ? originalQuestionnaireRD.data.title ||
-                                originalQuestionnaireRD.data.name ||
-                                originalQuestionnaireRD.data.id
+                                  originalQuestionnaireRD.data.name ||
+                                  originalQuestionnaireRD.data.id
                                 : ''
                         }
                     >
@@ -91,36 +92,43 @@ export function Main() {
                                 key="fhir-mapping-language-editor"
                                 defaultLanguage="ruby"
                                 onChange={(value) => {
-                                    setMapString(value as string)
+                                    setMapString(value as string);
                                 }}
                                 value={mapString}
                                 options={{
                                     formatOnPaste: true,
                                     formatOnType: true,
-                                    autoIndent: "full",
+                                    autoIndent: 'full',
                                     minimap: {
-                                        enabled: false
-                                    }
+                                        enabled: false,
+                                    },
                                 }}
                             />
-
-
-                        ) : (<MappingEditor
-                            mappingRD={mappingRD}
-                            questionnaireRD={originalQuestionnaireRD}
-                            onSave={manager.saveMapping}
-                            onChange={manager.setMapping}
-                            launchContext={launchContext}
-                            questionnaireResponseRD={questionnaireResponseRD}
-                            reload={manager.reloadMapping}
-                            createMapping={manager.createMapping}
-                            generateMapping={manager.generateMapping}
-                            toggleMappingMode={toggleMappingMode}
-                        />)}
+                        ) : (
+                            <MappingEditor
+                                mappingRD={mappingRD}
+                                questionnaireRD={originalQuestionnaireRD}
+                                onSave={manager.saveMapping}
+                                onChange={manager.setMapping}
+                                launchContext={launchContext}
+                                questionnaireResponseRD={questionnaireResponseRD}
+                                reload={manager.reloadMapping}
+                                createMapping={manager.createMapping}
+                                generateMapping={manager.generateMapping}
+                                toggleMappingMode={toggleMappingMode}
+                            />
+                        )}
                     </ExpandableElement>
                     <ExpandableElement title="Bundle transaction for extraction">
-                        {/* <ResourceCodeDisplay resourceResponse={extractRD} /> */}
-                        <CodeEditor readOnly={true} value={mappingResult as FhirResource} key={JSON.stringify(mappingResult)} />
+                        {fhirMappingLangMode ? (
+                            <CodeEditor
+                                readOnly={true}
+                                value={mappingResult as FhirResource}
+                                key={JSON.stringify(mappingResult)}
+                            />
+                        ) : (
+                            <ResourceCodeDisplay resourceResponse={extractRD} />
+                        )}
                         {isSuccess(extractRD) && (
                             <Button
                                 onClick={() => {
