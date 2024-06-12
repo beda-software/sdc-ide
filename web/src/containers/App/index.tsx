@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
-import { getData, setData } from 'web/src/services/localStorage';
+import { setData } from 'web/src/services/localStorage';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
@@ -84,9 +84,7 @@ function SignIn(props: SignInProps) {
     if (clientId) {
         authorize(clientId, { nextUrl: props.originPathName });
     } else {
-        const storageData = getData();
-        const baseUrl = storageData.connection.baseUrl;
-        window.location.href = baseUrl + '?client=sdc-ide';
+        authorize('sdc-ide', { nextUrl: props.originPathName });
     }
 
     return null;
