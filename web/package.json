@@ -9,6 +9,7 @@
         "@codemirror/legacy-modes": "^6.3.3",
         "@codemirror/state": "^6.2.1",
         "@codemirror/view": "^6.16.0",
+        "@monaco-editor/react": "^4.6.0",
         "@sentry/browser": "^6.19.7",
         "@sentry/react": "^6.19.7",
         "@sentry/tracing": "^6.19.7",

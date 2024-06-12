@@ -11,3 +11,4 @@ export const aiQuestionnaireBuilderUrl = 'https://builder.emr.beda.software';
 // export const aiQuestionnaireBuilderUrl = 'http://localhost:3002';
 export const fhirpathMappingUrl = 'https://fhirpathmapper.emr.beda.software';
 // export const fhirpathMappingUrl = 'http://localhost:8091';
+export const fhirMappingLanguageUrl = 'http://localhost:8084/matchboxv3/fhir'
