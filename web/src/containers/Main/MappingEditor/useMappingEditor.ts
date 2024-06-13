@@ -1,4 +1,5 @@
 import { Bundle, Questionnaire } from 'fhir/r4b';
+import { useEffect, useState } from 'react';
 
 import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
 
@@ -7,6 +8,9 @@ import {
     RemoteData,
     RemoteDataResult,
     failure,
+    isFailure,
+    isLoading,
+    isNotAsked,
     isSuccess,
     success,
 } from 'fhir-react/lib/libs/remoteData';
@@ -15,9 +19,47 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
+import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
 
-export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>) {
+export function useMappingEditor(
+    questionnaireRD: RemoteData<Questionnaire>,
+    mappingRD: RemoteData<Mapping>,
+) {
+    const [showModal, setShowModal] = useState(false);
+    const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
+    const [editorState, setEditorState] = useState<EditorState>('initial');
+
+    const setEditorInitial = () => setEditorState('initial');
+    const setEditorLoading = () => setEditorState('loading');
+    const setEditorSelect = () => setEditorState('select');
+    const setEditorReady = () => setEditorState('ready');
+
+    useEffect(() => {
+        if (isNotAsked(questionnaireRD)) {
+            setEditorInitial();
+        }
+        if (isLoading(questionnaireRD)) {
+            setEditorLoading();
+        }
+
+        if (isFailure(questionnaireRD)) {
+            setEditorInitial();
+        }
+
+        if (isSuccess(questionnaireRD)) {
+            if (isSuccess(mappingRD)) {
+                setEditorReady();
+            }
+            if (isNotAsked(mappingRD)) {
+                setEditorInitial();
+            }
+            if (isFailure(mappingRD)) {
+                setEditorSelect();
+            }
+        }
+    }, [questionnaireRD, mappingRD]);
+
     const [mappingsRD] = useService(async () => {
         if (isSuccess(questionnaireRD)) {
             let response: RemoteDataResult<Bundle<WithId<Mapping>>> = success({
@@ -44,5 +86,16 @@ export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>) {
         return await Promise.resolve(failure({}));
     }, [questionnaireRD]);
 
-    return { mappingsRD };
+    return {
+        mappingsRD,
+        setShowModal,
+        showModal,
+        updatedResource,
+        setUpdatedResource,
+        editorState,
+        setEditorInitial,
+        setEditorLoading,
+        setEditorReady,
+        setEditorSelect,
+    };
 }

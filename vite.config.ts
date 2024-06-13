@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 export const getBaseConfig = ({ plugins = [], build = {}, test = {} }) =>
     defineConfig(({ command }) => ({
         server: {
-            port: command === 'build' ? 5000 : 3000,
+            port: command === 'build' ? 5000 : 3001,
         },
         plugins: [
             viteCommonjs(),
