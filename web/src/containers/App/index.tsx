@@ -80,10 +80,35 @@ interface SignInProps {
 }
 
 function SignIn(props: SignInProps) {
-    const clientId = localStorage.getItem('clientId') || 'sdc-ide';
-    authorize(clientId, { nextUrl: props.originPathName });
+    useEffect(() => {
+        const clientId = localStorage.getItem('clientId');
+        if (clientId != null) {
+            authorize(clientId, { nextUrl: props.originPathName });
+        }
+    }, [props.originPathName]);
 
-    return null;
+    const handleAuthorizeClick = () => {
+        authorize('sdc-ide', { nextUrl: props.originPathName });
+    };
+
+    return (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+            <h2>Welcome to SDC IDE!</h2>
+            <p>
+                To launch the IDE on top of EMR, please use the following default login credentials:
+                <br />
+                Username: admin / receptionist / practitioner1 / practitioner2 <br />
+                Password: password
+            </p>
+            <p>
+                Click{' '}
+                <a href="#" onClick={handleAuthorizeClick}>
+                    here
+                </a>{' '}
+                to run IDE on top of EMR.
+            </p>
+        </div>
+    );
 }
 
 export function Auth() {
