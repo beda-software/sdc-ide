@@ -4,12 +4,12 @@ import {
 } from 'aidbox-react/lib/services/instance';
 import { service } from 'aidbox-react/lib/services/service';
 
-import { isFailure, success } from 'fhir-react/lib/libs/remoteData';
+import { isFailure, success } from '@beda.software/remote-data';
 import {
     resetInstanceToken as resetFHIRInstanceToken,
     setInstanceToken as setFHIRInstanceToken,
-} from 'fhir-react/lib/services/instance';
-import { extractErrorCode } from 'fhir-react/lib/utils/error';
+} from './fhir';
+import { extractErrorCode } from '@beda.software/fhir-react';
 
 import { User } from 'shared/src/contrib/aidbox';
 

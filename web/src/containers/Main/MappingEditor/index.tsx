@@ -1,4 +1,4 @@
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { MappingEditorProps } from './interfaces';
 import s from './MappingEditor.module.scss';

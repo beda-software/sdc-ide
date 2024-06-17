@@ -1,11 +1,11 @@
 import {
     extractBundleResources,
-    getFHIRResources,
     getReference,
     ResourcesMap,
-} from 'fhir-react/lib/services/fhir';
-import { SearchParams } from 'fhir-react/lib/services/search';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+} from '@beda.software/fhir-react';
+import { getFHIRResources } from './fhir';
+import { SearchParams } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 
 import { Resource } from 'shared/src/contrib/aidbox';
 

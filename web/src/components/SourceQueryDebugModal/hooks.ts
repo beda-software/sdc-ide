@@ -3,11 +3,9 @@ import * as _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isFailure, success, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { useService, formatError } from '@beda.software/fhir-react';
+import { isFailure, success, isSuccess, mapSuccess } from '@beda.software/remote-data';
+import { saveFHIRResource, service } from 'src/services/fhir';
 
 import { Props } from './types';
 

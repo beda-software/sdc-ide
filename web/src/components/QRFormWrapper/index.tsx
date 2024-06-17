@@ -14,8 +14,8 @@ import { useFormContext } from 'react-hook-form';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 import { QRFormWrapperProps } from 'web/src/containers/Main/types';
 
-import { sequenceMap } from 'fhir-react/lib/services/service';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { sequenceMap } from '@beda.software/remote-data';
+import { formatError } from '@beda.software/fhir-react';
 
 import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
 

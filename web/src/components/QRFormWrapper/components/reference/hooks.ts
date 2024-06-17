@@ -6,9 +6,8 @@ import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
 
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { ResourcesMap } from 'fhir-react/lib/services/fhir';
-import { buildQueryParams } from 'fhir-react/lib/services/instance';
+import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
+import { ResourcesMap } from '@beda.software/fhir-react';
 
 import {
     QuestionnaireItemAnswerOption,

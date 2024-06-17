@@ -12,8 +12,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { version } from 'web/src/version';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
+
 
 import { FormRenderContext } from './context';
 import s from './Main.module.scss';

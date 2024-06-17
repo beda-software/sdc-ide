@@ -4,9 +4,8 @@ import { Button } from 'web/src/components/Button';
 import { ModalCreateMapper } from 'web/src/components/ModalCreateMapper';
 import { Select } from 'web/src/components/Select';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { formatError } from 'fhir-react/lib/utils/error';
+import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
+import { isFailure, isSuccess } from '@beda.software/remote-data';
 
 import formStyles from '../../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../../PromptForm';

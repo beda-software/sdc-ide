@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
 
-import { useService } from 'fhir-react/lib/hooks/service';
+import { useService, WithId, extractBundleResources} from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
@@ -13,9 +13,8 @@ import {
     isNotAsked,
     isSuccess,
     success,
-} from 'fhir-react/lib/libs/remoteData';
-import { WithId, extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+    mapSuccess,
+} from '@beda.software/remote-data';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
