@@ -1,6 +1,6 @@
 import { initServices } from '@beda.software/fhir-react';
 
-import { baseURL } from 'shared/src/constants';
+import { configuration } from 'shared/src/constants';
 
 export const {
     axiosInstance,
@@ -16,4 +16,4 @@ export const {
     forceDeleteFHIRResource,
     patchFHIRResource,
     setInstanceBaseURL,
-} = initServices(baseURL + '/fhir');
+} = initServices(configuration.baseURL + '/fhir');

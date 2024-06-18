@@ -61,6 +61,8 @@ export function getAuthorizeUrl(clientId: string, state?: OAuthState) {
         connection: { baseUrl },
     } = getData();
 
+    console.log(baseUrl);
+
     return `${baseUrl}/auth/authorize?client_id=${clientId}&response_type=token${stateStr}`;
 }
 
