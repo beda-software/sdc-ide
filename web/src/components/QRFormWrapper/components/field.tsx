@@ -1,20 +1,27 @@
-// eslint-disable-next-line import/named
-import { Field, FieldProps } from 'react-final-form';
+import { ReactNode } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import s from '../QuestionnaireResponseForm.module.scss';
 
-interface Props extends FieldProps<any, any> {}
+interface Props {
+    name: string;
+    children: ReactNode | ((props: any) => ReactNode);
+}
 
-export function QuestionField(props: Props) {
-    const { children, ...other } = props;
+export function QuestionField({ name, children }: Props) {
+    const { control } = useFormContext();
 
     return (
-        <Field {...other}>
-            {children instanceof Function ? (
-                (props) => <div className={s.field}>{children(props)}</div>
-            ) : (
-                <div className={s.field}>{children}</div>
-            )}
-        </Field>
+        <Controller
+            name={name}
+            control={control}
+            render={({ field }) =>
+                typeof children === 'function' ? (
+                    <div className={s.field}>{children(field)}</div>
+                ) : (
+                    <div className={s.field}>{children}</div>
+                )
+            }
+        />
     );
 }
