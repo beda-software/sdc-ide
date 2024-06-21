@@ -1,3 +1,4 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     parseFhirQueryExpression,
     QuestionItemProps,
@@ -40,6 +41,8 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 
     const fieldName = fieldPath.join('.');
 
+    const { onChange } = useFieldController(fieldPath, questionItem);
+
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(
         answerExpression!.expression!,
@@ -60,14 +63,16 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         return [];
     };
 
-    const onChange = (
-        _value:
+    const handleChange = (
+        selectedValue:
             | SingleValue<QuestionnaireItemAnswerOption>
             | MultiValue<QuestionnaireItemAnswerOption>,
         action: ActionMeta<QuestionnaireItemAnswerOption>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
-            return;
+            onChange(selectedValue as SingleValue<QuestionnaireItemAnswerOption>);
+        } else if (repeats || action.action === 'select-option') {
+            onChange(selectedValue as MultiValue<QuestionnaireItemAnswerOption>);
         }
     };
 
@@ -95,7 +100,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         rootFieldName,
         fieldName,
         loadOptions,
-        onChange,
+        onChange: handleChange,
         validate,
         searchParams,
         resourceType,
