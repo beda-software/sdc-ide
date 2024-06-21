@@ -70,9 +70,11 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         action: ActionMeta<QuestionnaireItemAnswerOption>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
-            onChange(selectedValue as SingleValue<QuestionnaireItemAnswerOption>);
-        } else if (repeats || action.action === 'select-option') {
-            onChange(selectedValue as MultiValue<QuestionnaireItemAnswerOption>);
+            if (Array.isArray(selectedValue)) {
+                onChange(selectedValue as MultiValue<QuestionnaireItemAnswerOption>);
+            } else {
+                onChange(selectedValue as SingleValue<QuestionnaireItemAnswerOption>);
+            }
         }
     };
 
