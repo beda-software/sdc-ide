@@ -12,7 +12,6 @@ import {
 } from 'shared/src/contrib/aidbox';
 import { getByPath, setByPath } from 'shared/src/utils/path';
 
-
 // TODO: Write own type
 type AnswerValue = Required<QuestionnaireResponseItemAnswer>['value'] &
     Required<Observation>['value'];
@@ -322,9 +321,8 @@ export function mapResponseToForm(
             const answerPath = preparePathForAnswers(path, []);
             const questionPath = preparePathForQuestion(path);
             const question = getByPath(questionnaire, questionPath);
-            const answers:
-                | QuestionnaireResponseItemAnswer
-                | QuestionnaireResponseItemAnswer[] = getByPath(resource, answerPath);
+            const answers: QuestionnaireResponseItemAnswer | QuestionnaireResponseItemAnswer[] =
+                getByPath(resource, answerPath);
 
             if (typeof answers === 'undefined') {
                 if (initial) {
@@ -585,7 +583,6 @@ export function extractAnswersDisplay(
     );
 }
 
-
 export function getAnswerDisplay(
     o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
 ) {
@@ -614,7 +611,8 @@ export function getAnswerCode(
     }
 
     if (o?.Reference) {
-        return o.Reference.id;
+        const ref = o.Reference as { id?: string; reference?: string };
+        return ref.id ?? ref.reference ?? '';
     }
 
     return JSON.stringify(o);

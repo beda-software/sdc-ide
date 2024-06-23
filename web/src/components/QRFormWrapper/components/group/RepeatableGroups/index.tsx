@@ -1,6 +1,6 @@
 import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import React from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 
 import s from './RepeatableGroups.module.scss';
 import { QuestionItems } from '../../questionItems';
@@ -18,43 +18,46 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const baseFieldPath = [...parentPath, linkId];
     const fieldName = baseFieldPath.join('.');
 
-    const { control, watch } = useFormContext();
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: fieldName,
+    const { control } = useForm({
+        defaultValues: {
+            [fieldName]: {
+                items: required ? [{}] : [],
+            },
+        },
     });
 
-    const items = watch(fieldName) || (required ? [{}] : []);
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: `${fieldName}.items`,
+    });
+
+    const handleAddAnswer = () => {
+        append({});
+    };
 
     return (
         <div className={s.group}>
-            {fields.map((field, index) => {
-                if (!items[index]) {
-                    return null;
-                }
-
-                return renderGroup ? (
-                    <React.Fragment key={`${fieldName}-${index}`}>
-                        {renderGroup({
+            {fields.map((item, index) => (
+                <React.Fragment key={`${fieldName}-${index}`}>
+                    {renderGroup ? (
+                        renderGroup({
                             index,
-                            field,
+                            input: item,
                             groupItem,
-                            remove: () => remove(index),
-                        })}
-                    </React.Fragment>
-                ) : (
-                    <RepeatableGroupDefault
-                        key={index}
-                        index={index}
-                        groupItem={groupItem}
-                        field={field}
-                        remove={() => remove(index)}
-                    />
-                );
-            })}
+                        })
+                    ) : (
+                        <RepeatableGroupDefault
+                            index={index}
+                            groupItem={groupItem}
+                            input={item}
+                            onRemove={() => remove(index)}
+                        />
+                    )}
+                </React.Fragment>
+            ))}
             <div>
-                <button className={s.addButton} onClick={() => append({})}>
-                    {`+ Add another answer`}
+                <button className={s.addButton} onClick={handleAddAnswer} type="button">
+                    + Add another answer
                 </button>
             </div>
         </div>
@@ -63,36 +66,42 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
 
 interface RepeatableGroupProps {
     index: number;
-    field: Record<'id', string>;
+    input: any;
     groupItem: GroupItemProps;
-    remove: () => void;
+    onRemove?: () => void;
 }
 
 function useRepeatableGroup(props: RepeatableGroupProps) {
-    const { index, groupItem, remove } = props;
+    const { index, input, groupItem } = props;
     const { parentPath, questionItem, context } = groupItem;
     const { linkId } = questionItem;
 
+    const onRemove = () => {
+        input.remove(index);
+    };
+
     return {
-        onRemove: remove,
+        onRemove,
         parentPath: [...parentPath, linkId, 'items', index.toString()],
         context: context[0]!,
     };
 }
 
 export function RepeatableGroupDefault(props: RepeatableGroupProps) {
-    const { index, groupItem } = props;
+    const { index, groupItem, onRemove } = props;
     const { questionItem } = groupItem;
     const { item } = questionItem;
-    const { onRemove, parentPath, context } = useRepeatableGroup(props);
+    const { parentPath, context } = useRepeatableGroup(props);
 
     return (
         <>
             <div className={s.groupHeader}>
                 <GroupLabel>{`${questionItem.text} #${index + 1}`}</GroupLabel>
-                <button onClick={onRemove} className={s.removeButton} type="button">
-                    Remove
-                </button>
+                {onRemove && (
+                    <button onClick={onRemove} className={s.removeButton} type="button">
+                        Remove
+                    </button>
+                )}
             </div>
             <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
         </>
@@ -100,18 +109,20 @@ export function RepeatableGroupDefault(props: RepeatableGroupProps) {
 }
 
 export function RepeatableGroupRow(props: RepeatableGroupProps) {
-    const { groupItem } = props;
+    const { groupItem, onRemove } = props;
     const { questionItem } = groupItem;
     const { item } = questionItem;
-    const { onRemove, parentPath, context } = useRepeatableGroup(props);
+    const { parentPath, context } = useRepeatableGroup(props);
 
     return (
         <div className={s.row}>
             <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
             <div className={s.rowControls}>
-                <button onClick={onRemove} className={s.removeIconButton} type="button">
-                    +
-                </button>
+                {onRemove && (
+                    <button onClick={onRemove} className={s.removeIconButton} type="button">
+                        +
+                    </button>
+                )}
             </div>
         </div>
     );
