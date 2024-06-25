@@ -1,6 +1,5 @@
 import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
-import React from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
 
 import s from './RepeatableGroups.module.scss';
 import { QuestionItems } from '../../questionItems';
@@ -18,11 +17,15 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const baseFieldPath = [...parentPath, linkId];
     const fieldName = baseFieldPath.join('.');
 
-    const { control } = useForm();
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: fieldName,
-    });
+    const [fields, setFields] = useState<any[]>([]);
+
+    const append = () => {
+        setFields((prevFields) => [...prevFields, { id: Date.now().toString() }]);
+    };
+
+    const remove = (index: number) => {
+        setFields((prevFields) => prevFields.filter((_, i) => i !== index));
+    };
 
     return (
         <div className={s.group}>
@@ -45,7 +48,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                 );
             })}
             <div>
-                <button className={s.addButton} onClick={() => append({})}>
+                <button className={s.addButton} onClick={append}>
                     + Add another answer
                 </button>
             </div>
