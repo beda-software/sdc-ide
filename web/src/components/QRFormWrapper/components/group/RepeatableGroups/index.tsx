@@ -1,5 +1,8 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire';
 import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
-import React, { useState } from 'react';
+import _ from 'lodash';
+import React from 'react';
+import { useWatch } from 'react-hook-form';
 
 import s from './RepeatableGroups.module.scss';
 import { QuestionItems } from '../../questionItems';
@@ -13,25 +16,32 @@ interface RepeatableGroupsProps {
 export function RepeatableGroups(props: RepeatableGroupsProps) {
     const { groupItem, renderGroup } = props;
     const { parentPath, questionItem } = groupItem;
-    const { linkId } = questionItem;
+    const { linkId, required } = questionItem;
     const baseFieldPath = [...parentPath, linkId];
     const fieldName = baseFieldPath.join('.');
 
-    const [fields, setFields] = useState<any[]>([]);
+    const { onChange } = useFieldController(baseFieldPath, questionItem);
+    const value = useWatch({ name: fieldName });
+    const items = value.items && value.items.length ? value.items : required ? [{}] : [];
 
     const append = () => {
-        setFields((prevFields) => [...prevFields, { id: Date.now().toString() }]);
+        const existingItems = value.items || [];
+        const updatedInput = { items: [...existingItems, {}] };
+        onChange(updatedInput);
     };
 
     const remove = (index: number) => {
-        setFields((prevFields) => prevFields.filter((_, i) => i !== index));
+        const filteredArray = _.filter(value.items, (_val, valIndex: number) => valIndex !== index);
+        onChange({
+            items: [...filteredArray],
+        });
     };
 
     return (
         <div className={s.group}>
-            {fields.map((field, index) => {
+            {_.map(items, (_elem, index: number) => {
                 return renderGroup ? (
-                    <React.Fragment key={`${fieldName}-${field.id}`}>
+                    <React.Fragment key={`${fieldName}-${index}`}>
                         {renderGroup({
                             index,
                             groupItem,
@@ -40,7 +50,7 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
                     </React.Fragment>
                 ) : (
                     <RepeatableGroupDefault
-                        key={field.id}
+                        key={index}
                         index={index}
                         groupItem={groupItem}
                         remove={() => remove(index)}
