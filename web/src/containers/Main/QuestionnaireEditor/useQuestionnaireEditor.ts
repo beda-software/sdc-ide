@@ -1,8 +1,8 @@
 import { Questionnaire } from 'fhir/r4b';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { extractBundleResources, getFHIRResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { useService, extractBundleResources } from '@beda.software/fhir-react';
+import { getFHIRResources } from 'src/services/fhir';
+import { mapSuccess } from '@beda.software/remote-data';
 
 export function useQuestionnaireEditor() {
     const [questionnairesRD] = useService(async () =>

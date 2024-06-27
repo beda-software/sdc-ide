@@ -1,7 +1,7 @@
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { useSourceQueryDebugModal } from './hooks';
 import s from './SourceQueryDebugModal.module.scss';
