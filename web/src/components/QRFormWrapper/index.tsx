@@ -8,14 +8,13 @@ import {
     mapResponseToForm,
     toFirstClassExtension,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
+import { formatError } from '@beda.software/fhir-react';
+import { sequenceMap } from '@beda.software/remote-data';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 import { QRFormWrapperProps } from 'web/src/containers/Main/types';
-
-import { sequenceMap } from '@beda.software/remote-data';
-import { formatError } from '@beda.software/fhir-react';
 
 import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
@@ -51,6 +50,38 @@ export function QRFormWrapper({
         questionnaireResponseRD,
     });
 
+    const widgetsByQuestionType = useMemo(
+        () => ({
+            date: QuestionDate,
+            dateTime: QuestionDateTime,
+            string: QuestionString,
+            text: QuestionString,
+            choice: QuestionChoice,
+            boolean: QuestionBoolean,
+            display: QuestionDisplay,
+            decimal: QuestionDecimal,
+            reference: QuestionReference,
+            integer: QuestionInteger,
+        }),
+        [],
+    );
+
+    const widgetsByQuestionItemControl = useMemo(
+        () => ({
+            'inline-choice': QuestionChoice,
+        }),
+        [],
+    );
+
+    const widgetsByGroupQuestionItemControl = useMemo(
+        () => ({
+            col: Col,
+            row: Row,
+            gtable: GTable,
+        }),
+        [],
+    );
+
     return (
         <RenderRemoteData
             remoteData={remoteDataResult}
@@ -74,21 +105,8 @@ export function QRFormWrapper({
                             toFirstClassExtension(data.questionnaireRD),
                         ),
                     }}
-                    widgetsByQuestionType={{
-                        date: QuestionDate,
-                        dateTime: QuestionDateTime,
-                        string: QuestionString,
-                        text: QuestionString,
-                        choice: QuestionChoice,
-                        boolean: QuestionBoolean,
-                        display: QuestionDisplay,
-                        decimal: QuestionDecimal,
-                        reference: QuestionReference,
-                        integer: QuestionInteger,
-                    }}
-                    widgetsByQuestionItemControl={{
-                        'inline-choice': QuestionChoice,
-                    }}
+                    widgetsByQuestionType={widgetsByQuestionType}
+                    widgetsByQuestionItemControl={widgetsByQuestionItemControl}
                     onSubmit={(newFormData) => {
                         const firstClassExtension = toFirstClassExtension(
                             data.questionnaireResponseRD,
@@ -106,7 +124,7 @@ export function QRFormWrapper({
                         return Promise.resolve();
                     }}
                     groupItemComponent={Group}
-                    widgetsByGroupQuestionItemControl={{ col: Col, row: Row, gtable: GTable }}
+                    widgetsByGroupQuestionItemControl={widgetsByGroupQuestionItemControl}
                     FormWrapper={FormWrapper}
                 />
             )}
