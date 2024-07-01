@@ -1,14 +1,12 @@
-import { useFieldController } from '@beda.software/fhir-questionnaire/components/QuestionnaireResponseForm';
 import {
     parseFhirQueryExpression,
     QuestionItemProps,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
+import { ResourcesMap } from '@beda.software/fhir-react';
+import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
 import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
-
-import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
-import { ResourcesMap } from '@beda.software/fhir-react';
 
 import {
     QuestionnaireItemAnswerOption,
@@ -40,8 +38,6 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
 
     const fieldName = fieldPath.join('.');
 
-    const { onChange } = useFieldController(fieldPath, questionItem);
-
     // TODO: add support for fhirpath and application/x-fhir-query
     const [resourceType, searchParams] = parseFhirQueryExpression(
         answerExpression!.expression!,
@@ -62,18 +58,14 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         return [];
     };
 
-    const handleChange = (
-        selectedValue:
+    const onChange = (
+        _value:
             | SingleValue<QuestionnaireItemAnswerOption>
             | MultiValue<QuestionnaireItemAnswerOption>,
         action: ActionMeta<QuestionnaireItemAnswerOption>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
-            if (Array.isArray(selectedValue)) {
-                onChange(selectedValue as MultiValue<QuestionnaireItemAnswerOption>);
-            } else {
-                onChange(selectedValue as SingleValue<QuestionnaireItemAnswerOption>);
-            }
+            return;
         }
     };
 
@@ -101,7 +93,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         rootFieldName,
         fieldName,
         loadOptions,
-        onChange: handleChange,
+        onChange,
         validate,
         searchParams,
         resourceType,
