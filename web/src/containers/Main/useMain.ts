@@ -1,23 +1,4 @@
-import {
-    Questionnaire,
-    Parameters,
-    ParametersParameter,
-    Bundle,
-    FhirResource,
-} from 'fhir/r4b';
-import { useCallback, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
-import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
-
-import {
-    createFHIRResource as createAidboxFHIRResource,
-    getFHIRResource as getAidboxFHIRResource,
-    saveFHIRResource as saveAidboxFHIRResource,
-} from 'aidbox-react/lib/services/fhir';
-
-import { useService, WithId } from '@beda.software/fhir-react';
+import { useService, WithId , formatError } from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
@@ -27,15 +8,27 @@ import {
     notAsked,
     success,
 } from '@beda.software/remote-data';
+import { Questionnaire, Parameters, ParametersParameter, Bundle, FhirResource } from 'fhir/r4b';
+import { useCallback, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
+import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
+import { service, saveFHIRResource } from 'web/src/services/fhir';
+
+import {
+    createFHIRResource as createAidboxFHIRResource,
+    getFHIRResource as getAidboxFHIRResource,
+    saveFHIRResource as saveAidboxFHIRResource,
+} from 'aidbox-react/lib/services/fhir';
+
 // import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 // import { service } from 'fhir-react/lib/services/service';
-import {service, saveFHIRResource} from 'src/services/fhir';
-import { formatError } from '@beda.software/fhir-react';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
-import { getMappings, makeMappingExtension } from './utils';
 import { SDCContext } from './context';
+import { getMappings, makeMappingExtension } from './utils';
 
 export function useLaunchContext() {
     const [launchContext, setLaunchContext] = useState<Parameters>({
@@ -65,7 +58,7 @@ export function useLaunchContext() {
 
 export function useMain(questionnaireId: string) {
     const navigate = useNavigate();
-    const {assemble, populate} = useContext(SDCContext)
+    const { assemble, populate } = useContext(SDCContext);
     const { launchContext, setLaunchContext, clearLaunchContext } = useLaunchContext();
 
     const [mappingRD, setMappingRD] = useState<RemoteData<WithId<Mapping>>>(notAsked);
@@ -107,7 +100,8 @@ export function useMain(questionnaireId: string) {
 
     const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(
         () => assemble(questionnaireId),
-        [questionnaireId, assemble]);
+        [questionnaireId, assemble],
+    );
 
     const reloadQuestionnaire = useCallback(async () => {
         originalQuestionnaireRDManager.reload();
@@ -178,7 +172,8 @@ export function useMain(questionnaireId: string) {
 
     const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(
         () => populate(launchContext),
-        [launchContext, populate]);
+        [launchContext, populate],
+    );
 
     const createMapping = useCallback(
         async (mapping: Mapping) => {
