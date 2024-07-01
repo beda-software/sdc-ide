@@ -1,12 +1,12 @@
-import { Button } from "web/src/components/Button";
+import { Button } from 'web/src/components/Button';
 
-import { formatError } from "fhir-react/lib/utils/error";
+import { formatError } from '@beda.software/fhir-react';
 
-import { MappingEditorErrorProps } from "../interfaces";
+import { MappingEditorErrorProps } from '../interfaces';
 import s from '../MappingEditor.module.scss';
 
 export function MappingEditorError(props: MappingEditorErrorProps) {
-    const {error, setEditorSelect, editorState} = props;
+    const { error, setEditorSelect, editorState } = props;
 
     return editorState !== 'ready' ? (
         <div>
@@ -27,5 +27,5 @@ export function MappingEditorError(props: MappingEditorErrorProps) {
         </div>
     ) : (
         <div />
-    )
+    );
 }

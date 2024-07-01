@@ -1,7 +1,7 @@
 import { Bundle, Questionnaire, QuestionnaireResponse, Parameters, FhirResource } from 'fhir/r4b';
 import _ from 'lodash';
 
-import { service } from 'fhir-react/lib/services/service';
+import { service } from './fhir';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 

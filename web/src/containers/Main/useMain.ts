@@ -1,12 +1,11 @@
 import {
     Questionnaire,
-    QuestionnaireResponse,
     Parameters,
     ParametersParameter,
     Bundle,
     FhirResource,
 } from 'fhir/r4b';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
@@ -18,7 +17,7 @@ import {
     saveFHIRResource as saveAidboxFHIRResource,
 } from 'aidbox-react/lib/services/fhir';
 
-import { useService } from 'fhir-react/lib/hooks/service';
+import { useService, WithId } from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
@@ -27,14 +26,16 @@ import {
     isSuccess,
     notAsked,
     success,
-} from 'fhir-react/lib/libs/remoteData';
-import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { service } from 'fhir-react/lib/services/service';
-import { formatError } from 'fhir-react/lib/utils/error';
+} from '@beda.software/remote-data';
+// import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
+// import { service } from 'fhir-react/lib/services/service';
+import {service, saveFHIRResource} from 'src/services/fhir';
+import { formatError } from '@beda.software/fhir-react';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { getMappings, makeMappingExtension } from './utils';
+import { SDCContext } from './context';
 
 export function useLaunchContext() {
     const [launchContext, setLaunchContext] = useState<Parameters>({
@@ -64,6 +65,7 @@ export function useLaunchContext() {
 
 export function useMain(questionnaireId: string) {
     const navigate = useNavigate();
+    const {assemble, populate} = useContext(SDCContext)
     const { launchContext, setLaunchContext, clearLaunchContext } = useLaunchContext();
 
     const [mappingRD, setMappingRD] = useState<RemoteData<WithId<Mapping>>>(notAsked);
@@ -103,14 +105,9 @@ export function useMain(questionnaireId: string) {
         return response;
     }, [questionnaireId]);
 
-    const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(async () => {
-        const response = await service<Questionnaire>({
-            method: 'GET',
-            url: `Questionnaire/${questionnaireId}/$assemble`,
-        });
-
-        return response;
-    }, [questionnaireId]);
+    const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(
+        () => assemble(questionnaireId),
+        [questionnaireId, assemble]);
 
     const reloadQuestionnaire = useCallback(async () => {
         originalQuestionnaireRDManager.reload();
@@ -179,15 +176,9 @@ export function useMain(questionnaireId: string) {
         [saveQuestionnaire, navigate],
     );
 
-    const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(async () => {
-        const response = await service<QuestionnaireResponse>({
-            method: 'POST',
-            url: '/Questionnaire/$populate',
-            data: launchContext,
-        });
-
-        return response;
-    }, [launchContext]);
+    const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(
+        () => populate(launchContext),
+        [launchContext, populate]);
 
     const createMapping = useCallback(
         async (mapping: Mapping) => {

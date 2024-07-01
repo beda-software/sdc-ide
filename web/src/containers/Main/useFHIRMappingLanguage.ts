@@ -1,27 +1,25 @@
-import { Bundle, QuestionnaireResponse, StructureMap } from "fhir/r4b";
-import { useCallback, useEffect, useState } from "react";
-import { convert, createStructureMap, transform } from "web/src/services/fhirmapping";
+import { Bundle, QuestionnaireResponse, StructureMap } from 'fhir/r4b';
+import { useCallback, useEffect, useState } from 'react';
+import { convert, createStructureMap, transform } from 'web/src/services/fhirmapping';
 
-import { isSuccess } from "fhir-react/lib/libs/remoteData";
-
-
+import { isSuccess } from '@beda.software/remote-data';
 
 export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireResponse | undefined) {
-    const [fhirMappingLangMode, setFhirMappingLangMode] = useState<boolean>(false)
-    const [mapString, setMapString] = useState<string>('')
-    const [prevMapString, setPrevMapString] = useState<string>('')
-    const [structureMapData, setStructureMapData] = useState<StructureMap|undefined>(undefined)
-    const [structureMap, setStructureMap] = useState<StructureMap|undefined>(undefined)
-    const [structureMapUrl, setStructureMapUrl] = useState<string | undefined>(undefined)
-    const [mappingResult, setMappingResult] = useState<Bundle | undefined>(undefined)
+    const [fhirMappingLangMode, setFhirMappingLangMode] = useState<boolean>(false);
+    const [mapString, setMapString] = useState<string>('');
+    const [prevMapString, setPrevMapString] = useState<string>('');
+    const [structureMapData, setStructureMapData] = useState<StructureMap | undefined>(undefined);
+    const [structureMap, setStructureMap] = useState<StructureMap | undefined>(undefined);
+    const [structureMapUrl, setStructureMapUrl] = useState<string | undefined>(undefined);
+    const [mappingResult, setMappingResult] = useState<Bundle | undefined>(undefined);
 
     const fetchConvertData = useCallback(async (mapString: string, prevMapString: string) => {
-        if (mapString !== prevMapString){
+        if (mapString !== prevMapString) {
             const response = await convert({ mapString });
             if (isSuccess(response)) {
                 setStructureMapData(response.data);
             } else {
-                setMappingResult(response.error)
+                setMappingResult(response.error);
             }
         }
     }, []);
@@ -35,11 +33,14 @@ export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireRespo
         }
     }, []);
 
-    const fetchMappingResult = useCallback(async (structureMapUrl: string, questionnaireResponse: QuestionnaireResponse) => {
-        const response = await transform({ structureMapUrl, questionnaireResponse });
-        const dataToSet = isSuccess(response) ? response.data : response.error
-        setMappingResult(dataToSet)
-    }, []);
+    const fetchMappingResult = useCallback(
+        async (structureMapUrl: string, questionnaireResponse: QuestionnaireResponse) => {
+            const response = await transform({ structureMapUrl, questionnaireResponse });
+            const dataToSet = isSuccess(response) ? response.data : response.error;
+            setMappingResult(dataToSet);
+        },
+        [],
+    );
 
     useEffect(() => {
         if (mapString !== prevMapString) {
@@ -62,9 +63,9 @@ export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireRespo
     const changeMapString = (value: string) => {
         setPrevMapString(mapString);
         setMapString(value);
-    }
+    };
 
-    const toggleMappingMode = () => setFhirMappingLangMode(!fhirMappingLangMode)
+    const toggleMappingMode = () => setFhirMappingLangMode(!fhirMappingLangMode);
 
     return {
         fhirMappingLangMode,

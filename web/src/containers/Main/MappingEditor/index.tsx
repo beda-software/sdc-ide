@@ -1,4 +1,4 @@
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 
 import { MappingEditorProps } from './interfaces';
 import s from './MappingEditor.module.scss';
@@ -9,42 +9,53 @@ import { useMappingEditor } from './useMappingEditor';
 
 export function MappingEditor(props: MappingEditorProps) {
     const { mappingRD, questionnaireRD } = props;
-    const { mappingsRD, showModal,
-        setShowModal, setUpdatedResource,
-        updatedResource, editorState,
-        setEditorSelect } = useMappingEditor(questionnaireRD, mappingRD);
+    const {
+        mappingsRD,
+        showModal,
+        setShowModal,
+        setUpdatedResource,
+        updatedResource,
+        editorState,
+        setEditorSelect,
+    } = useMappingEditor(questionnaireRD, mappingRD);
 
     const mapEditorStateRender = {
-        'initial': <>Please, select/create Questionnaire resource</>,
-        'loading': <>Loading...</>,
-        'select': <MappingEditorSelect
-            {...props}
-            mappingsRD={mappingsRD}
-            showModal={showModal}
-            setShowModal={setShowModal}
-            setEditorSelect={setEditorSelect}
-        />,
-        'ready': <RenderRemoteData
-            renderFailure={(error) => <MappingEditorError error={error} setEditorSelect={setEditorSelect} editorState={editorState} />}
-            remoteData={mappingRD}
-        >
-            {(mapping) => {
-                return (
-                    <MappingEditorEditor
-                        {...props}
-                        updatedResource={updatedResource}
-                        setUpdatedResource={setUpdatedResource}
-                        mapping={mapping}
+        initial: <>Please, select/create Questionnaire resource</>,
+        loading: <>Loading...</>,
+        select: (
+            <MappingEditorSelect
+                {...props}
+                mappingsRD={mappingsRD}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                setEditorSelect={setEditorSelect}
+            />
+        ),
+        ready: (
+            <RenderRemoteData
+                renderFailure={(error) => (
+                    <MappingEditorError
+                        error={error}
                         setEditorSelect={setEditorSelect}
+                        editorState={editorState}
                     />
-                )
-            }}
-        </RenderRemoteData>
-    }
+                )}
+                remoteData={mappingRD}
+            >
+                {(mapping) => {
+                    return (
+                        <MappingEditorEditor
+                            {...props}
+                            updatedResource={updatedResource}
+                            setUpdatedResource={setUpdatedResource}
+                            mapping={mapping}
+                            setEditorSelect={setEditorSelect}
+                        />
+                    );
+                }}
+            </RenderRemoteData>
+        ),
+    };
 
-    return (
-        <div className={s.container}>
-            {mapEditorStateRender[editorState]}
-        </div>
-    );
+    return <div className={s.container}>{mapEditorStateRender[editorState]}</div>;
 }

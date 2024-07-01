@@ -5,9 +5,9 @@ import { extractParameterName } from 'web/src/components/ModalExpression/utils';
 import { ExpressionResultOutput } from 'web/src/containers/Main/types';
 import YAML, { visitor } from 'yaml';
 
-import { useService } from 'fhir-react/lib/hooks/service';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { service } from 'fhir-react/lib/services/service';
+import { useService } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
+import { service } from 'src/services/fhir';
 
 import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 

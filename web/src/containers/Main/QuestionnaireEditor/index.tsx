@@ -6,12 +6,12 @@ import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { Select } from 'web/src/components/Select';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { RemoteData, RemoteDataResult, isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { RemoteData, RemoteDataResult, isFailure, isLoading } from '@beda.software/remote-data';
 
 import s from './QuestionnaireEditor.module.scss';
 import { useQuestionnaireEditor } from './useQuestionnaireEditor';
-import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import formStyles from '../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
 
 interface Props {

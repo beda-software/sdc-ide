@@ -1,6 +1,7 @@
 import Editor from '@monaco-editor/react';
 import { Allotment } from 'allotment';
 import { FhirResource } from 'fhir/r4b';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from 'web/src/components/Button';
 import { Cell } from 'web/src/components/Cell';
@@ -8,13 +9,14 @@ import { CodeEditor } from 'web/src/components/CodeEditor';
 import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
 import { Logo } from 'web/src/components/Logo';
 import 'react-toastify/dist/ReactToastify.css';
-import { QRFormWrapper } from 'web/src/components/QRFormWrapper';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { version } from 'web/src/version';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 
+
+import { FormRenderContext } from './context';
 import s from './Main.module.scss';
 import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
@@ -38,6 +40,8 @@ export function Main() {
         useFHIRMappingLanguage(
             isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined,
         );
+
+    const QRFormWrapper = useContext(FormRenderContext);
 
     return (
         <>

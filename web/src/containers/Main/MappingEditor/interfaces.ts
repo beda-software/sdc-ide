@@ -1,11 +1,11 @@
-import { Questionnaire, Parameters, QuestionnaireResponse } from "fhir/r4b";
+import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
 
-import { RemoteData, RemoteDataResult } from "fhir-react/lib/libs/remoteData";
-import { WithId } from "fhir-react/lib/services/fhir";
+import { RemoteData, RemoteDataResult } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
 
-import { Mapping } from "shared/src/contrib/aidbox";
+import { Mapping } from 'shared/src/contrib/aidbox';
 
-export type EditorState = 'initial' | 'loading' | 'select' | 'ready'
+export type EditorState = 'initial' | 'loading' | 'select' | 'ready';
 
 interface CommonMappingEditorProps {
     onSave: (resource: WithId<Mapping>) => void;

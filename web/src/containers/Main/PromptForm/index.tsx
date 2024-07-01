@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Field, Form } from 'react-final-form';
 import { Button } from 'web/src/components/Button';
 
-import { RemoteDataResult, isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
+import { RemoteDataResult, isFailure, isSuccess } from '@beda.software/remote-data';
 
-import s from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import s from '../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 
 interface PromptFormInterface {
     prompt: string;

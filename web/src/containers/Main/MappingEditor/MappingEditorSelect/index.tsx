@@ -4,18 +4,26 @@ import { Button } from 'web/src/components/Button';
 import { ModalCreateMapper } from 'web/src/components/ModalCreateMapper';
 import { Select } from 'web/src/components/Select';
 
-import { RenderRemoteData } from "fhir-react/lib/components/RenderRemoteData";
-import { isFailure, isSuccess } from "fhir-react/lib/libs/remoteData";
-import { formatError } from 'fhir-react/lib/utils/error';
+import { RenderRemoteData, formatError } from '@beda.software/fhir-react';
+import { isFailure, isSuccess } from '@beda.software/remote-data';
 
-import formStyles from '../../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
+import formStyles from '../../../../components/QRFormWrapper/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../../PromptForm';
 import { MappingEditorSelectProps } from '../interfaces';
 import s from '../MappingEditor.module.scss';
 
-
 export function MappingEditorSelect(props: MappingEditorSelectProps) {
-    const { mappingsRD, mappingRD, showModal, generateMapping, createMapping, setShowModal, toggleMappingMode, onChange, setEditorSelect } = props;
+    const {
+        mappingsRD,
+        mappingRD,
+        showModal,
+        generateMapping,
+        createMapping,
+        setShowModal,
+        toggleMappingMode,
+        onChange,
+        setEditorSelect,
+    } = props;
 
     return (
         <RenderRemoteData remoteData={mappingsRD}>
@@ -27,9 +35,9 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                             value={
                                 isSuccess(mappingRD)
                                     ? {
-                                        value: mappingRD.data,
-                                        label: mappingRD.data.id,
-                                    }
+                                          value: mappingRD.data,
+                                          label: mappingRD.data.id,
+                                      }
                                     : undefined
                             }
                             options={mappings.map((mapping) => ({

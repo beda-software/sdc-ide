@@ -5,7 +5,7 @@ import { InputField } from 'web/src/components/InputField';
 import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 
-import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
+import { isSuccess, RemoteData } from '@beda.software/remote-data';
 
 import s from './ModalExpression.module.scss';
 import { ModalExpressionProps } from './types';

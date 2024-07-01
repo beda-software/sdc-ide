@@ -3,7 +3,7 @@ import { FhirResource, Parameters, ParametersParameter, Questionnaire } from 'fh
 import { useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
 
-import { success } from 'fhir-react/lib/libs/remoteData';
+import { success } from '@beda.software/remote-data';
 
 import { groupLaunchContextParams } from './groupLaunchContextParams';
 import s from './LaunchContextEditor.module.scss';
