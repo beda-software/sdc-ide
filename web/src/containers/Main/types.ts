@@ -1,5 +1,5 @@
+import { RemoteData } from '@beda.software/remote-data';
 import { Parameters, Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
-import { RemoteData } from 'fhir-react';
 
 export interface MappingErrorManager {
     errorCount: number;

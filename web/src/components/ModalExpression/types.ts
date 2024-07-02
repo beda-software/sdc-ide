@@ -1,6 +1,5 @@
+import { RemoteData } from '@beda.software/remote-data';
 import { QuestionnaireResponse, Parameters } from 'fhir/r4b';
-
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import { CursorPosition, ExpressionType } from '../CodeEditor/ContextMenu/types';
 

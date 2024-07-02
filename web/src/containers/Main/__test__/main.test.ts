@@ -1,13 +1,12 @@
+import { ensure } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
 import { act } from 'react-dom/test-utils';
 import { EXPECTED_RESOURCES } from 'web/src/containers/Main/__test__/resources';
 import { useMain } from 'web/src/containers/Main/useMain';
+import { service } from 'web/src/services/fhir';
 import { setData } from 'web/src/services/localStorage';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { service } from 'fhir-react/lib/services/service';
-import { ensure } from 'fhir-react/lib/utils/tests';
 
 import { Extension, Questionnaire } from 'shared/src/contrib/aidbox';
 

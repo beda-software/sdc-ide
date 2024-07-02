@@ -8,6 +8,8 @@ jobs:
             AIDBOX_LICENSE_ID_TESTS: ${{ secrets.AIDBOX_LICENSE_ID_TESTS }}
         steps:
         - uses: actions/checkout@v2
+          with:
+            submodules: true
         - uses: actions/setup-node@v3
           with:
             node-version: 20.7.0

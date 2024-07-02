@@ -3,9 +3,6 @@ import {
     QuestionItemProps,
     useQuestionnaireResponseFormContext,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
-// import moment from 'moment';
-
-// import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 
 import { QuestionLabel } from './label';
 

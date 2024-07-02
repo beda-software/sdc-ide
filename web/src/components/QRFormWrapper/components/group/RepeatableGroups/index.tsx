@@ -1,8 +1,8 @@
+import { useFieldController } from '@beda.software/fhir-questionnaire';
 import { GroupItemProps } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
 import _ from 'lodash';
 import React from 'react';
-// eslint-disable-next-line import/named
-import { Field, FieldInputProps } from 'react-final-form';
+import { useWatch } from 'react-hook-form';
 
 import s from './RepeatableGroups.module.scss';
 import { QuestionItems } from '../../questionItems';
@@ -20,82 +20,65 @@ export function RepeatableGroups(props: RepeatableGroupsProps) {
     const baseFieldPath = [...parentPath, linkId];
     const fieldName = baseFieldPath.join('.');
 
+    const { onChange } = useFieldController(baseFieldPath, questionItem);
+    const value = useWatch({ name: fieldName });
+    const items = value.items && value.items.length ? value.items : required ? [{}] : [];
+
+    const append = () => {
+        const existingItems = value.items || [];
+        const updatedInput = { items: [...existingItems, {}] };
+        onChange(updatedInput);
+    };
+
+    const remove = (index: number) => {
+        const filteredArray = _.filter(value.items, (_val, valIndex: number) => valIndex !== index);
+        onChange({
+            items: [...filteredArray],
+        });
+    };
+
     return (
-        <Field name={fieldName}>
-            {({ input }) => {
-                const items =
-                    input.value.items && input.value.items.length
-                        ? input.value.items
-                        : required
-                        ? [{}]
-                        : [];
-
-                return (
-                    <div className={s.group}>
-                        {_.map(items, (_elem, index: number) => {
-                            if (!input.value.items[index]) {
-                                return null;
-                            }
-
-                            return renderGroup ? (
-                                <React.Fragment key={`${fieldName}-${index}`}>
-                                    {renderGroup({
-                                        index,
-                                        input,
-                                        groupItem,
-                                    })}
-                                </React.Fragment>
-                            ) : (
-                                <RepeatableGroupDefault
-                                    key={index}
-                                    index={index}
-                                    groupItem={groupItem}
-                                    input={input}
-                                />
-                            );
+        <div className={s.group}>
+            {_.map(items, (_elem, index: number) => {
+                return renderGroup ? (
+                    <React.Fragment key={`${fieldName}-${index}`}>
+                        {renderGroup({
+                            index,
+                            groupItem,
+                            remove: () => remove(index),
                         })}
-                        <div>
-                            <button
-                                className={s.addButton}
-                                onClick={() => {
-                                    const existingItems = input.value.items || [];
-                                    const updatedInput = { items: [...existingItems, {}] };
-                                    input.onChange(updatedInput);
-                                }}
-                            >
-                                {`+ Add another answer`}
-                            </button>
-                        </div>
-                    </div>
+                    </React.Fragment>
+                ) : (
+                    <RepeatableGroupDefault
+                        key={index}
+                        index={index}
+                        groupItem={groupItem}
+                        remove={() => remove(index)}
+                    />
                 );
-            }}
-        </Field>
+            })}
+            <div>
+                <button className={s.addButton} onClick={append}>
+                    + Add another answer
+                </button>
+            </div>
+        </div>
     );
 }
 
 interface RepeatableGroupProps {
     index: number;
-    input: FieldInputProps<any, HTMLElement>;
     groupItem: GroupItemProps;
+    remove: () => void;
 }
 
 function useRepeatableGroup(props: RepeatableGroupProps) {
-    const { index, input, groupItem } = props;
+    const { index, groupItem, remove } = props;
     const { parentPath, questionItem, context } = groupItem;
     const { linkId } = questionItem;
 
-    const onRemove = () => {
-        const filteredArray = _.filter(
-            input.value.items,
-            (_val, valIndex: number) => valIndex !== index,
-        );
-        input.onChange({
-            items: [...filteredArray],
-        });
-    };
-
     return {
-        onRemove,
+        onRemove: remove,
         parentPath: [...parentPath, linkId, 'items', index.toString()],
         context: context[0]!,
     };
@@ -131,7 +114,7 @@ export function RepeatableGroupRow(props: RepeatableGroupProps) {
             <QuestionItems questionItems={item!} parentPath={parentPath} context={context} />
             <div className={s.rowControls}>
                 <button onClick={onRemove} className={s.removeIconButton} type="button">
-                    +
+                    Remove
                 </button>
             </div>
         </div>

@@ -1,11 +1,10 @@
+import { useService, formatError } from '@beda.software/fhir-react';
+import { isFailure, success, isSuccess, mapSuccess } from '@beda.software/remote-data';
 import { Questionnaire, Bundle, Resource } from 'fhir/r4b';
 import * as _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { toast } from 'react-toastify';
-
-import { useService, formatError } from '@beda.software/fhir-react';
-import { isFailure, success, isSuccess, mapSuccess } from '@beda.software/remote-data';
-import { saveFHIRResource, service } from 'src/services/fhir';
+import { saveFHIRResource, service } from 'web/src/services/fhir';
 
 import { Props } from './types';
 

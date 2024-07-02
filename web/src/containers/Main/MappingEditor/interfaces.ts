@@ -1,7 +1,6 @@
+import { WithId } from '@beda.software/fhir-react';
+import { RemoteData, RemoteDataResult } from '@beda.software/remote-data';
 import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
-
-import { RemoteData, RemoteDataResult } from 'fhir-react/lib/libs/remoteData';
-import { WithId } from 'fhir-react/lib/services/fhir';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 

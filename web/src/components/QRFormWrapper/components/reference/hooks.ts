@@ -2,12 +2,11 @@ import {
     parseFhirQueryExpression,
     QuestionItemProps,
 } from '@beda.software/fhir-questionnaire/vendor/sdc-qrf';
+import { ResourcesMap } from '@beda.software/fhir-react';
+import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
 import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
-
-import { isSuccess, buildQueryParams } from '@beda.software/remote-data';
-import { ResourcesMap } from '@beda.software/fhir-react';
 
 import {
     QuestionnaireItemAnswerOption,

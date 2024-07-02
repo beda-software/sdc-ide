@@ -59,11 +59,6 @@ module.exports = {
                         position: 'after',
                     },
                     {
-                        pattern: 'fhir-react/**',
-                        group: 'external',
-                        position: 'after',
-                    },
-                    {
                         pattern: 'shared/**',
                         group: 'internal',
                         position: 'after',

@@ -1,10 +1,9 @@
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import { Field } from 'react-final-form';
+import { useController, useFormContext } from 'react-hook-form';
 import AsyncSelect from 'react-select/async';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
+import { service } from 'web/src/services/fhir';
 
 import { Coding, ValueSet } from 'shared/src/contrib/aidbox';
 
@@ -32,6 +31,8 @@ function getOptionValue({ value }: Option) {
 }
 
 export function TerminologyField({ label, name, valueSetId, repeats }: TerminologyFieldProps) {
+    const { control } = useFormContext();
+    const { field } = useController({ name, control });
     const loadOptions = useCallback(
         async (searchText: string) => {
             const response = mapSuccess(
@@ -77,21 +78,17 @@ export function TerminologyField({ label, name, valueSetId, repeats }: Terminolo
     );
 
     return (
-        <Field name={name}>
-            {({ input }) => (
-                <div className={s.wrapper}>
-                    <label className={s.groupLabel}>{label}</label>
-                    <AsyncSelect<Option>
-                        loadOptions={debouncedLoadOptions}
-                        defaultOptions
-                        getOptionLabel={getOptionLabel}
-                        getOptionValue={getOptionValue}
-                        onChange={input.onChange}
-                        value={input.value}
-                        isMulti={repeats === false ? false : undefined}
-                    />
-                </div>
-            )}
-        </Field>
+        <div className={s.wrapper}>
+            <label className={s.groupLabel}>{label}</label>
+            <AsyncSelect<Option>
+                loadOptions={debouncedLoadOptions}
+                defaultOptions
+                getOptionLabel={getOptionLabel}
+                getOptionValue={getOptionValue}
+                onChange={field.onChange}
+                value={field.value}
+                isMulti={repeats === false ? false : undefined}
+            />
+        </div>
     );
 }

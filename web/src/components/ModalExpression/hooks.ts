@@ -1,13 +1,13 @@
+import { useService } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { extractParameterName } from 'web/src/components/ModalExpression/utils';
 import { ExpressionResultOutput } from 'web/src/containers/Main/types';
+import { service } from 'web/src/services/fhir';
 import YAML, { visitor } from 'yaml';
 
-import { useService } from '@beda.software/fhir-react';
-import { isSuccess } from '@beda.software/remote-data';
-import { service } from 'src/services/fhir';
 
 import { QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
