@@ -1,10 +1,9 @@
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import AsyncSelect from 'react-select/async';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
+import { service } from 'web/src/services/fhir';
 
 import { Coding, ValueSet } from 'shared/src/contrib/aidbox';
 

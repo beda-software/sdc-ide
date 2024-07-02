@@ -1,5 +1,5 @@
+import { WithId } from '@beda.software/fhir-react';
 import classNames from 'classnames';
-import { WithId } from 'fhir-react';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 

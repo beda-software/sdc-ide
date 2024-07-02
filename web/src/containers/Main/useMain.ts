@@ -1,4 +1,4 @@
-import { useService, WithId , formatError } from '@beda.software/fhir-react';
+import { useService, WithId, formatError } from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
@@ -21,9 +21,6 @@ import {
     getFHIRResource as getAidboxFHIRResource,
     saveFHIRResource as saveAidboxFHIRResource,
 } from 'aidbox-react/lib/services/fhir';
-
-// import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-// import { service } from 'fhir-react/lib/services/service';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 

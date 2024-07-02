@@ -1,7 +1,6 @@
+import { RemoteData } from '@beda.software/remote-data';
 import { Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
-
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import s from './ResourceCodeEditor.module.scss';
 import { CodeEditor } from '../CodeEditor';
