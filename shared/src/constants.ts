@@ -1,14 +1,16 @@
-export const baseURL =
-    (window as any).BASE_URL === '{{BASE_URL}}'
-        ? 'http://localhost:8080/'
-        : (window as any).BASE_URL;
-export const juteURL =
-    (window as any).JUTE_URL === '{{JUTE_URL}}'
-        ? 'http://localhost:8099/'
-        : (window as any).JUTE_URL;
+function getConfig(key: string, defaultValue: string) {
+    const value = (window as any)[key];
+    if (value === '{{' + key + '}}' || value === null || value === undefined) {
+        return defaultValue;
+    }
+    return value;
+}
 
-export const aiQuestionnaireBuilderUrl = 'https://builder.emr.beda.software';
-// export const aiQuestionnaireBuilderUrl = 'http://localhost:3002';
-export const fhirpathMappingUrl = 'https://fhirpathmapper.emr.beda.software';
-// export const fhirpathMappingUrl = 'http://localhost:8091';
-export const fhirMappingLanguageUrl = 'http://localhost:8084/matchboxv3/fhir'
+export const baseURL = getConfig('BASE_URL', 'http://localhost:8080');
+export const juteURL = getConfig('JUTE_URL', 'http://localhost:8099');
+export const aiQuestionnaireBuilderUrl = getConfig('AI_BUILDER_URL', 'http://localhost:3002');
+export const fhirMappingLanguageUrl = getConfig(
+    'FHIR_MAPPING_LANGUAGE_URL',
+    'http://localhost:8084/matchboxv3/fhir',
+);
+export const fhirpathMappingUrl = getConfig('FHIRPATH_MAPPING_URL', 'http://localhost:8091');
