@@ -1,3 +1,5 @@
+import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
+
 import { Questionnaire, QuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { allergiesQuestionnaire } from './resources/questionnaire';
@@ -7,6 +9,7 @@ import {
     mapFormToResponse,
     mapResponseToForm,
     removeDisabledAnswers,
+    toFirstClassExtension,
 } from '../src';
 
 test('Transform nested repeatable-groups from new resource to new resource', () => {
@@ -763,5 +766,100 @@ describe('isValueEmpty method test', () => {
 
     test.each(valueTypeList)('isValueEmpty works correctly for type %s', async (valueType) => {
         expect(isValueEmpty(valueType.value)).toEqual(valueType.expect);
+    });
+});
+
+describe('enableWhenExpression', () => {
+    const fhirQuestionnaire: FHIRQuestionnaire = {
+        resourceType: 'Questionnaire',
+        status: 'active',
+        meta: {
+            profile: ['https://beda.software/beda-emr-questionnaire'],
+        },
+        item: [
+            {
+                type: 'string',
+                linkId: 'patient-id',
+            },
+            {
+                text: 'Patient',
+                type: 'reference',
+                linkId: 'patient-reference',
+                extension: [
+                    {
+                        url: 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
+                        valueExpression: {
+                            language: 'text/fhirpath',
+                            expression:
+                                "QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString.empty()",
+                        },
+                    },
+                ],
+            },
+        ],
+    };
+    const questionnaire = toFirstClassExtension(fhirQuestionnaire);
+
+    test('Empty answer check', () => {
+        const qr: QuestionnaireResponse = {
+            resourceType: 'QuestionnaireResponse',
+            status: 'completed',
+            item: [
+                {
+                    linkId: 'patient-id',
+                },
+            ],
+        };
+        const formItems = mapResponseToForm(qr, questionnaire);
+        const enabledFormItems = getEnabledQuestions(questionnaire.item!, [], formItems, {
+            questionnaire,
+            resource: qr,
+            context: qr,
+        });
+        expect(enabledFormItems).toEqual([
+            {
+                linkId: 'patient-id',
+                type: 'string',
+            },
+            {
+                enableWhenExpression: {
+                    expression:
+                        "QuestionnaireResponse.repeat(item).where(linkId='patient-id').answer.valueString.empty()",
+                    language: 'text/fhirpath',
+                },
+                linkId: 'patient-reference',
+                text: 'Patient',
+                type: 'reference',
+            },
+        ]);
+    });
+
+    test('Non empty answer check', () => {
+        const qr: QuestionnaireResponse = {
+            resourceType: 'QuestionnaireResponse',
+            status: 'completed',
+            item: [
+                {
+                    linkId: 'patient-id',
+                    answer: [
+                        {
+                            value: { string: '123' },
+                        },
+                    ],
+                },
+            ],
+        };
+        const formItems = mapResponseToForm(qr, questionnaire);
+        const enabledFormItems = getEnabledQuestions(questionnaire.item!, [], formItems, {
+            questionnaire,
+            resource: qr,
+            context: qr,
+        });
+        expect(enabledFormItems).toEqual([
+            {
+                linkId: 'patient-id',
+                type: 'string',
+            },
+        ]);
     });
 });
