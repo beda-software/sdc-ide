@@ -13,6 +13,7 @@ import {
     QuestionnaireResponseItemAnswer,
 } from 'shared/src/contrib/aidbox';
 
+import { fromFirstClassExtension } from './converter';
 import {
     AnswerValue,
     FormAnswerItems,
@@ -502,8 +503,9 @@ function isQuestionEnabled(args: IsQuestionEnabledArgs) {
 
     if (enableWhenExpression && enableWhenExpression.language === 'text/fhirpath') {
         const expressionResult = fhirpath.evaluate(
-            args.context.resource,
+            fromFirstClassExtension(args.context.resource),
             enableWhenExpression.expression!,
+            //TODO convert context
             args.context ?? {},
         )[0];
 
