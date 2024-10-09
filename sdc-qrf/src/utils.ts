@@ -110,15 +110,25 @@ export function calcContext(
     qrItem: QuestionnaireResponseItem,
 ): ItemContext {
     // TODO: add root variable support
-    return {
-        ...(variables || []).reduce(
-            (acc, curVariable) => ({
-                ...acc,
-                [curVariable.name!]: fhirpath.evaluate(qrItem || {}, curVariable.expression!, acc),
-            }),
-            { ...initialContext, context: qrItem, qitem: qItem },
-        ),
-    };
+    try {
+        return {
+            ...(variables || []).reduce(
+                (acc, curVariable) => ({
+                    ...acc,
+                    [curVariable.name!]: fhirpath.evaluate(
+                        qrItem || {},
+                        curVariable.expression!,
+                        acc,
+                    ),
+                }),
+                { ...initialContext, context: qrItem, qitem: qItem },
+            ),
+        };
+    } catch (err: unknown) {
+        throw Error(
+            `FHIRPath expression evaluation failure for "variable" in ${qItem.linkId}: ${err}`,
+        );
+    }
 }
 
 export function compareValue(firstAnswerValue: AnswerValue, secondAnswerValue: AnswerValue) {
@@ -501,21 +511,25 @@ function isQuestionEnabled(args: IsQuestionEnabledArgs) {
     }
 
     if (enableWhenExpression && enableWhenExpression.language === 'text/fhirpath') {
-        const expressionResult = fhirpath.evaluate(
-            args.context.resource,
-            enableWhenExpression.expression!,
-            args.context ?? {},
-        )[0];
+        try {
+            const expressionResult = fhirpath.evaluate(
+                args.context.resource,
+                enableWhenExpression.expression!,
+                args.context ?? {},
+            )[0];
 
-        if (typeof expressionResult !== 'boolean') {
-            throw Error(`
-            linkId: ${args.qItem.linkId}
-            Expression result: ${expressionResult}
-            The result of enableWhenExpression is not a boolean value
-            `);
+            if (typeof expressionResult !== 'boolean') {
+                throw Error(
+                    `The result of enableWhenExpression is not a boolean value. Expression result: ${expressionResult}`,
+                );
+            }
+
+            return expressionResult;
+        } catch (err: unknown) {
+            throw Error(
+                `FHIRPath expression evaluation failure for "enableWhenExpression" in ${args.qItem.linkId}: ${err}`,
+            );
         }
-
-        return expressionResult;
     }
 
     const iterFn = enableBehavior === 'any' ? _.some : _.every;

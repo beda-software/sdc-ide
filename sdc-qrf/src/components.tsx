@@ -78,20 +78,28 @@ export function QuestionItem(props: QuestionItemProps) {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
             // TODO: Add support for x-fhir-query
             if (calculatedExpression.language === 'text/fhirpath') {
-                const newValues = fhirpath.evaluate(
-                    context.context || {},
-                    calculatedExpression.expression!,
-                    context as ItemContext,
-                );
-                const newAnswers = newValues.length
-                    ? repeats
-                        ? newValues.map((answer: any) => ({ value: wrapAnswerValue(type, answer) }))
-                        : [{ value: wrapAnswerValue(type, newValues[0]) }]
-                    : undefined;
+                try {
+                    const newValues = fhirpath.evaluate(
+                        context.context || {},
+                        calculatedExpression.expression!,
+                        context as ItemContext,
+                    );
+                    const newAnswers = newValues.length
+                        ? repeats
+                            ? newValues.map((answer: any) => ({
+                                  value: wrapAnswerValue(type, answer),
+                              }))
+                            : [{ value: wrapAnswerValue(type, newValues[0]) }]
+                        : undefined;
 
-                if (!isEqual(newAnswers, prevAnswers)) {
-                    const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
-                    setFormValues(allValues, fieldPath, newAnswers);
+                    if (!isEqual(newAnswers, prevAnswers)) {
+                        const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
+                        setFormValues(allValues, fieldPath, newAnswers);
+                    }
+                } catch (err: unknown) {
+                    throw Error(
+                        `FHIRPath expression evaluation failure for "calculatedExpression" in ${questionItem.linkId}: ${err}`,
+                    );
                 }
             }
         }
