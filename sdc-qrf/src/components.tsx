@@ -7,7 +7,13 @@ import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
 import { useQuestionnaireResponseFormContext } from '.';
 import { QRFContext } from './context';
-import { ItemContext, QRFContextData, QuestionItemProps, QuestionItemsProps } from './types';
+import {
+    FormAnswerItems,
+    ItemContext,
+    QRFContextData,
+    QuestionItemProps,
+    QuestionItemsProps,
+} from './types';
 import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
@@ -72,7 +78,9 @@ export function QuestionItem(props: QuestionItemProps) {
                   calcContext(initialContext, variable, branchItems.qItem, curQRItem),
               )
             : calcContext(initialContext, variable, branchItems.qItem, branchItems.qrItems[0]!);
-    const prevAnswers = usePreviousValue(_.get(formValues, fieldPath));
+    const prevAnswers: FormAnswerItems[] | undefined = usePreviousValue(
+        _.get(formValues, fieldPath),
+    );
 
     useEffect(() => {
         if (!isGroupItem(questionItem, context) && calculatedExpression) {
@@ -84,7 +92,7 @@ export function QuestionItem(props: QuestionItemProps) {
                         calculatedExpression.expression!,
                         context as ItemContext,
                     );
-                    const newAnswers = newValues.length
+                    const newAnswers: FormAnswerItems[] | undefined = newValues.length
                         ? repeats
                             ? newValues.map((answer: any) => ({
                                   value: wrapAnswerValue(type, answer),
@@ -92,7 +100,12 @@ export function QuestionItem(props: QuestionItemProps) {
                             : [{ value: wrapAnswerValue(type, newValues[0]) }]
                         : undefined;
 
-                    if (!isEqual(newAnswers, prevAnswers)) {
+                    if (
+                        !isEqual(
+                            newAnswers?.map((answer) => answer.value),
+                            prevAnswers?.map((answer) => answer.value),
+                        )
+                    ) {
                         const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
                         setFormValues(allValues, fieldPath, newAnswers);
                     }
