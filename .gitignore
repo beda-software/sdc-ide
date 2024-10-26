@@ -7,8 +7,11 @@ coverage
 htmlcov
 examples/.env
 .vscode
+.history
 
 # Project-specific files
 sentry.properties
 .env.test.local
 sdc-qrf/lib/
+
+zen-packages/

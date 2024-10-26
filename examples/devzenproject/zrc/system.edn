@@ -1,0 +1,31 @@
+{ns system
+ import #{aidbox
+          aidbox.rest
+          aidbox.search-parameter.v1
+          aidbox.repository.v1
+          beda-emr-core.questionnaire
+          hl7-fhir-r4-core
+          zen.fhir}
+
+ box
+ {:zen/tags #{aidbox/system}
+  :zen/desc "SDC IDE"
+  :services {:demo-data demo-data
+             :seed-fixtures seed-fixtures}}
+
+ demo-data
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox/seed
+  :files ["demo-data.ndjson.gz"]}
+
+ seed-fixtures
+ {:zen/tags  #{aidbox/service}
+  :engine    aidbox/seed-v2
+  :resources
+  {:Client {:sdc-ide {:auth {:implicit {:redirect_uri #env SDC_IDE_AUTH_URL}}
+                      :first_party true
+                      :grant_types [:implicit]}}
+   :Attribute {:Mapping.type {:type {:resourceType "Entity" :id "code"}
+                              :path [:type]
+                              :resource {:resourceType "Entity" :id "Mapping"}
+                              :enum ["JUTE" "FHIRPath"]}}}}}

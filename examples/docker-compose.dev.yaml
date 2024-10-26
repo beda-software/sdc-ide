@@ -1,7 +1,7 @@
 version: '3.1'
 services:
-  backend:
-    image: bedasoftware/aidbox-sdc:latest
+  sdc:
+    image: bedasoftware/fhir-sdc:latest
     depends_on:
       devbox-healthcheck:
         condition:
@@ -9,8 +9,7 @@ services:
     links:
       - devbox
     env_file:
-      - .env.base
-      - .env
+      - devenv/sdc
     volumes:
       - ./config:/var/config:cached
     # Colored logs
@@ -28,21 +27,30 @@ services:
       timeout: 20s
       retries: 100
   devbox:
-    image: healthsamurai/devbox:edge
+    image: healthsamurai/aidboxone:stable
     depends_on:
       - devbox-db
     links:
       - devbox-db:database
     env_file:
-      - .env.base
+      - devenv/aidbox
       - .env
     volumes:
       - ./config:/var/config:cached
+      - ./devzenproject:/zenproject
     ports:
-      - 9000:8080
+      - 8080:8080
   devbox-db:
-    image: healthsamurai/aidboxdb:13.2
+    image: healthsamurai/aidboxdb:16.1
     environment:
       POSTGRES_USER:     postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB:       devbox
+  jute:
+      image: bedasoftware/jute-microservice:latest
+      ports:
+          - '8099:8090'
+  fhirpath_mapping:
+      image: bedasoftware/fhirpath-extract:main
+      ports:
+          - '8091:8090'
