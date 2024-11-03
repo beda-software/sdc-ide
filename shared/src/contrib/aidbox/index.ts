@@ -14368,7 +14368,7 @@ export interface QuestionnaireItem {
     /** ElementDefinition - details for the item */
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/cqf-expression */
     /** An expression that, when evaluated, provides the value for the element on which it appears. */
-    cqfExpression: Expression;
+    cqfExpression?: Expression;
     definition?: uri;
     /** all | any */
     enableBehavior?: code;
