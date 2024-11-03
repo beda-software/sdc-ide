@@ -63,7 +63,8 @@ export function QuestionItem(props: QuestionItemProps) {
     } = useContext(QRFContext);
     const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
 
-    const { type, linkId, calculatedExpression, variable, repeats, itemControl } = questionItem;
+    const { type, linkId, calculatedExpression, variable, repeats, itemControl, cqfExpression } =
+        questionItem;
     const fieldPath = useMemo(() => [...parentPath, linkId!], [parentPath, linkId]);
 
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
@@ -116,10 +117,26 @@ export function QuestionItem(props: QuestionItemProps) {
                 }
             }
         }
+        if (!isGroupItem(questionItem, context) && cqfExpression) {
+            try {
+                if (cqfExpression.language === 'text/fhirpath') {
+                    questionItem.text = fhirpath.evaluate(
+                        context.context || {},
+                        cqfExpression.expression!,
+                        context as ItemContext,
+                    )[0];
+                }
+            } catch (err: unknown) {
+                throw Error(
+                    `FHIRPath expression evaluation failure for "cqfExpression" in ${questionItem.linkId}: ${err}`,
+                );
+            }
+        }
     }, [
         setFormValues,
         formValues,
         calculatedExpression,
+        cqfExpression,
         context,
         parentPath,
         repeats,

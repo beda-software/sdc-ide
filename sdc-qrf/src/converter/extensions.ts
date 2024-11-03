@@ -8,6 +8,7 @@ export enum ExtensionIdentifier {
     SliderStepValue = 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
     Unit = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
     ReferenceResource = 'http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource',
+    CqfExpression = 'http://hl7.org/fhir/StructureDefinition/cqf-expression',
 
     ItemPopulationContext = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext',
     InitialExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
@@ -73,6 +74,9 @@ export const extensionTransformers: ExtensionTransformer = {
                 }
             },
         },
+    },
+    [ExtensionIdentifier.CqfExpression]: {
+        path: { extension: 'valueExpression', questionnaire: 'cqfExpression' },
     },
 
     [ExtensionIdentifier.ItemPopulationContext]: {
