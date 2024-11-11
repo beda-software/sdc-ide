@@ -23,6 +23,7 @@ import {
     Row,
 } from './components';
 import { QuestionInteger } from './components/integer';
+import { QuestionQuantity } from './components/quantity';
 import { QuestionReference } from './components/reference';
 import s from './QuestionnaireResponseForm.module.scss';
 
@@ -76,6 +77,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                             decimal: QuestionDecimal,
                             reference: QuestionReference,
                             integer: QuestionInteger,
+                            quantity: QuestionQuantity,
                         }}
                         readOnly={readOnly}
                     >
