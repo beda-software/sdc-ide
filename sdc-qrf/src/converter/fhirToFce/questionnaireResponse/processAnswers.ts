@@ -44,8 +44,11 @@ function processAnswer(
 
     for (const key in valueHandlers) {
         if (key in fceAnswer) {
+            //@ts-ignore
             const value = fceAnswer[key];
+            //@ts-ignore
             delete fceAnswer[key];
+            //@ts-ignore
             fceAnswer.value = valueHandlers[key]?.(value);
         }
     }

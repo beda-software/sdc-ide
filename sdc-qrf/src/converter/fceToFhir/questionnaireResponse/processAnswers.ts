@@ -39,8 +39,10 @@ function processAnswer(
     };
     for (const key in valueMappings) {
         if (key in value) {
+            //@ts-ignore
             const newKey = valueMappings[key];
             if (newKey) {
+                //@ts-ignore
                 fhirAnswerItem[newKey] = value[key];
             }
             break;

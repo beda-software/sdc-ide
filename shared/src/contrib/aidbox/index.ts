@@ -2811,7 +2811,8 @@ export interface Client {
     secret?: string;
     smart?: ClientSmart;
     trusted?: boolean;
-    type?: 'smart';
+    type?: string;
+    name?: string;
 }
 
 export interface ClientAuth {
@@ -14366,7 +14367,6 @@ export interface QuestionnaireItem {
     /** An invariant that must be satisfied before responses to the questionnaire can be considered "complete". */
     constraint?: QuestionnaireItemConstraint[];
     /** ElementDefinition - details for the item */
-    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/cqf-expression */
     definition?: uri;
     /** all | any */
     enableBehavior?: code;
@@ -14423,6 +14423,10 @@ export interface QuestionnaireItem {
     _text?: QuestionnaireItemText;
     /** group | display | boolean | decimal | integer | date | dateTime + */
     type: code;
+    /** NOTE: from extension https://jira.hl7.org/browse/FHIR-22356#subQuestionnaire */
+    /** Additional instructions for the user to guide their input (i.e. a human readable version of a regular expression like “nnn-nnn-nnn”). In most UIs this is the placeholder (or ‘ghost’) text placed directly inside the edit controls and that disappear when the control gets the focus. */
+    entryFormat?: string;
+    /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/entryFormat */
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/variable */
     /** Variable specifying a logic to generate a variable for use in subsequent logic. The name of the variable will be added to FHIRPath's context when processing descendants of the element that contains this extension. */
     variable?: Expression[];
@@ -14433,6 +14437,25 @@ export interface QuestionnaireItem {
     stop?: integer;
     helpText?: string;
     stopLabel?: string;
+    rowsNumber?: integer;
+    unitOption?: Coding[];
+    columnSize?: integer;
+    itemMedia?: Attachment;
+    regex?: string;
+    observationExtract?: boolean;
+    observationLinkPeriod?: Duration;
+    minValue?: Extension;
+    maxValue?: Extension;
+    minQuantity?: Extension;
+    maxQuantity?: Extension;
+    showOrdinalValue?: boolean;
+    preferredTerminologyServer?: uri;
+    openLabel?: string;
+    backgroundImage?: Attachment;
+    language?: Coding;
+    choiceOrientation?: 'horizontal' | 'vertical';
+    choiceColumns?: integer;
+    ordinalValue?: decimal;
 }
 
 export interface QuestionnaireItemText {

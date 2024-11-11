@@ -5,6 +5,7 @@ import {
     QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
 } from 'fhir/r4b';
+import _ from 'lodash';
 
 import {
     QuestionnaireItem as FCEQuestionnaireItem,
@@ -14,11 +15,7 @@ import {
     QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
 } from 'shared/src/contrib/aidbox';
 
-import {
-    convertFromFHIRExtension,
-    convertToFHIRExtension,
-    toFHIRReference,
-} from '../../../converter';
+import { convertFromFHIRExtension, convertToFHIRExtension, toFHIRReference } from '../..';
 
 export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireItem[] {
     return items.map((item) => {
@@ -29,6 +26,7 @@ export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireIt
                 .filter((ext): ext is Partial<FCEQuestionnaireItem> => ext !== undefined)
                 .flatMap(Object.keys);
             for (const field of fieldsToOmit) {
+                //@ts-ignore
                 delete item[field];
             }
             item.extension = extensions.sort();
@@ -78,6 +76,7 @@ const convertEnableWhen = (
     answerType: string,
     result: FHIRQuestionnaireItemEnableWhen,
 ) => {
+    //@ts-ignore
     if (answer[answerType] !== undefined) {
         switch (answerType) {
             case 'boolean':
@@ -124,22 +123,26 @@ function processAnswerOption(
 
         const fhirOption: FHIRQuestionnaireItemAnswerOption = { ...commonOptions };
 
-        if (value?.Coding) {
+        if (!value) {
+            return fhirOption;
+        }
+
+        if (value.Coding) {
             fhirOption.valueCoding = value.Coding;
         }
-        if (value?.string) {
+        if (value.string) {
             fhirOption.valueString = value.string;
         }
-        if (value?.Reference) {
+        if (value.Reference) {
             fhirOption.valueReference = toFHIRReference(value.Reference);
         }
-        if (value?.date) {
+        if (value.date) {
             fhirOption.valueDate = value.date;
         }
-        if (value?.integer) {
+        if (_.isNumber(value.integer)) {
             fhirOption.valueInteger = value.integer;
         }
-        if (value?.time) {
+        if (value.time) {
             fhirOption.valueTime = value.time;
         }
 

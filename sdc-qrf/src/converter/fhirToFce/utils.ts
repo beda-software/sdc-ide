@@ -13,8 +13,7 @@ export function checkFhirQuestionnaireProfile(fhirQuestionnaire: FHIRQuestionnai
 
 export function trimUndefined(e: any) {
     for (const prop in e) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (e.hasOwnProperty(prop)) {
+        if (Object.prototype.hasOwnProperty.call(e, prop)) {
             const val = e[prop];
             if (val === undefined) {
                 delete e[prop];

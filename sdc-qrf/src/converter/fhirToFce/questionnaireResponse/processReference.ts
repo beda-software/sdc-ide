@@ -7,7 +7,7 @@ import { fromFHIRReference } from '../../../converter';
 export function processReference(
     fhirQuestionnaireResponse: FHIRQuestionnaireResponse,
 ): FCEQuestionnaireResponse {
-    const { encounter, source, ...commonProperties } = fhirQuestionnaireResponse;
+    const { encounter, source, subject, ...commonProperties } = fhirQuestionnaireResponse;
     const fceQuestionnaireResponse: FCEQuestionnaireResponse =
         commonProperties as FCEQuestionnaireResponse;
     if (encounter?.reference) {
@@ -15,6 +15,9 @@ export function processReference(
     }
     if (source?.reference) {
         fceQuestionnaireResponse.source = fromFHIRReference(source);
+    }
+    if (subject?.reference) {
+        fceQuestionnaireResponse.subject = fromFHIRReference(subject);
     }
     return fceQuestionnaireResponse;
 }

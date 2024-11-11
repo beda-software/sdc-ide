@@ -5,6 +5,7 @@ import {
     QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
 } from 'fhir/r4b';
+import _ from 'lodash';
 
 import {
     QuestionnaireItem as FCEQuestionnaireItem,
@@ -12,10 +13,11 @@ import {
     QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer,
     QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
+    Coding as FCECoding,
 } from 'shared/src/contrib/aidbox';
 
 import { convertFromFHIRExtension, findExtension, fromFHIRReference } from '../../../converter';
-import { ExtensionIdentifier } from '../../../converter/extensions';
+import { ExtensionIdentifier } from '../../extensions';
 
 export function processItems(fhirQuestionnaire: FHIRQuestionnaire) {
     return fhirQuestionnaire.item?.map(convertItemProperties);
@@ -37,9 +39,20 @@ function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireIte
 function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
-    for (const identifer in ExtensionIdentifier) {
-        const identifierURI = ExtensionIdentifier[identifer];
-        const extension = findExtension(item, identifierURI);
+    for (const identifier of Object.values(ExtensionIdentifier)) {
+        if (identifier === ExtensionIdentifier.UnitOption) {
+            const unitOptions =
+                item.extension?.filter((ext) => ext.url === ExtensionIdentifier.UnitOption) || [];
+            if (unitOptions.length > 0) {
+                const unitOption = unitOptions.map(
+                    (ext) => convertFromFHIRExtension(ext)?.unitOption,
+                ) as FCECoding[];
+                updatedProperties = { ...updatedProperties, unitOption };
+            }
+            continue;
+        }
+
+        const extension = findExtension(item, identifier);
         if (extension !== undefined) {
             updatedProperties = {
                 ...updatedProperties,
@@ -141,7 +154,7 @@ function processItemOption(
             },
         };
     }
-    if (option.valueInteger) {
+    if (_.isNumber(option.valueInteger)) {
         return {
             value: {
                 integer: option.valueInteger,
