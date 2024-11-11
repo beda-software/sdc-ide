@@ -7,7 +7,7 @@ import { QuestionLabel } from './label';
 export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, readOnly, hidden, unitOption } = questionItem;
-    const fieldPath = [...parentPath, linkId, 0, 'value', 'decimal'];
+    const fieldPath = [...parentPath, linkId, 0, 'value', 'Quantity'];
     const fieldName = fieldPath.join('.');
 
     const [selectedUnit, setSelectedUnit] = React.useState(unitOption?.[0]);

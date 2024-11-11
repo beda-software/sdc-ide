@@ -36,6 +36,7 @@ function processAnswer(
         date: 'valueDate',
         dateTime: 'valueDateTime',
         time: 'valueTime',
+        Quantity: 'valueQuantity',
     };
     for (const key in valueMappings) {
         if (key in value) {
