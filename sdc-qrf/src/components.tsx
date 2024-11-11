@@ -14,7 +14,13 @@ import {
     QuestionItemProps,
     QuestionItemsProps,
 } from './types';
-import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
+import {
+    calcContext,
+    findExtensionByUrl,
+    getBranchItems,
+    getEnabledQuestions,
+    wrapAnswerValue,
+} from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
     const prevValue = useRef<T>();
@@ -63,7 +69,7 @@ export function QuestionItem(props: QuestionItemProps) {
     } = useContext(QRFContext);
     const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
 
-    const { type, linkId, calculatedExpression, variable, repeats, itemControl, cqfExpression } =
+    const { type, linkId, calculatedExpression, variable, repeats, itemControl, _text } =
         questionItem;
     const fieldPath = useMemo(() => [...parentPath, linkId!], [parentPath, linkId]);
 
@@ -117,12 +123,16 @@ export function QuestionItem(props: QuestionItemProps) {
                 }
             }
         }
-        if (!isGroupItem(questionItem, context) && cqfExpression) {
+        if (!isGroupItem(questionItem, context) && _text) {
             try {
-                if (cqfExpression.language === 'text/fhirpath') {
+                const extension = findExtensionByUrl(
+                    'http://hl7.org/fhir/StructureDefinition/cqf-expression',
+                    _text.extension,
+                );
+                if (_text && extension?.valueExpression?.expression) {
                     questionItem.text = fhirpath.evaluate(
                         context.context || {},
-                        cqfExpression.expression!,
+                        extension.valueExpression.expression,
                         context as ItemContext,
                     )[0];
                 }
@@ -136,7 +146,6 @@ export function QuestionItem(props: QuestionItemProps) {
         setFormValues,
         formValues,
         calculatedExpression,
-        cqfExpression,
         context,
         parentPath,
         repeats,
@@ -144,6 +153,7 @@ export function QuestionItem(props: QuestionItemProps) {
         questionItem,
         prevAnswers,
         fieldPath,
+        _text,
     ]);
 
     if (isGroupItem(questionItem, context)) {

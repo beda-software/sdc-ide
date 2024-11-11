@@ -14367,8 +14367,6 @@ export interface QuestionnaireItem {
     constraint?: QuestionnaireItemConstraint[];
     /** ElementDefinition - details for the item */
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/cqf-expression */
-    /** An expression that, when evaluated, provides the value for the element on which it appears. */
-    cqfExpression?: Expression;
     definition?: uri;
     /** all | any */
     enableBehavior?: code;
@@ -14422,6 +14420,7 @@ export interface QuestionnaireItem {
     subQuestionnaire?: canonical;
     /** Primary text for the item */
     text?: string;
+    _text?: QuestionnaireItemText;
     /** group | display | boolean | decimal | integer | date | dateTime + */
     type: code;
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/variable */
@@ -14434,6 +14433,11 @@ export interface QuestionnaireItem {
     stop?: integer;
     helpText?: string;
     stopLabel?: string;
+}
+
+export interface QuestionnaireItemText {
+    cqfExpression?: Expression;
+    extension?: Extension[];
 }
 
 export interface QuestionnaireItemAnswerOption {

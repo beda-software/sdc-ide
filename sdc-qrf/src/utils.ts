@@ -5,6 +5,7 @@ import isPlainObject from 'lodash/isPlainObject';
 import queryString from 'query-string';
 
 import {
+    Extension,
     Questionnaire,
     QuestionnaireItem,
     QuestionnaireItemInitial,
@@ -762,4 +763,8 @@ export function isValueEmpty(value: any) {
     }
 
     return _.isFinite(value) || _.isBoolean(value) ? false : _.isEmpty(value);
+}
+
+export function findExtensionByUrl(url: string, extensionList?: Extension[]) {
+    return extensionList?.find((extension) => extension.url === url) || null;
 }
