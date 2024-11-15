@@ -1,7 +1,8 @@
+import { Expression } from 'fhir/r4b';
 import fhirpath from 'fhirpath';
 import _ from 'lodash';
 import isEqual from 'lodash/isEqual';
-import React, { ReactChild, useEffect, useContext, useMemo, useRef } from 'react';
+import React, { ReactChild, useEffect, useContext, useMemo, useRef, useState } from 'react';
 
 import { QuestionnaireItem } from 'shared/src/contrib/aidbox';
 
@@ -58,8 +59,10 @@ export function QuestionItems(props: QuestionItemsProps) {
     );
 }
 
+const cqfExpressionExtensionUrl = 'http://hl7.org/fhir/StructureDefinition/cqf-expression';
+
 export function QuestionItem(props: QuestionItemProps) {
-    const { questionItem, context: initialContext, parentPath } = props;
+    const { questionItem: initialQuestionItem, context: initialContext, parentPath } = props;
     const {
         questionItemComponents,
         customWidgets,
@@ -68,9 +71,20 @@ export function QuestionItem(props: QuestionItemProps) {
         itemControlGroupItemComponents,
     } = useContext(QRFContext);
     const { formValues, setFormValues } = useQuestionnaireResponseFormContext();
+    const [questionItem, setQuestionItem] = useState(initialQuestionItem);
+    const prevQuestionItem: QuestionnaireItem | undefined = usePreviousValue(questionItem);
 
-    const { type, linkId, calculatedExpression, variable, repeats, itemControl, _text } =
-        questionItem;
+    const {
+        type,
+        linkId,
+        calculatedExpression,
+        variable,
+        repeats,
+        itemControl,
+        _text,
+        _readOnly,
+        _required,
+    } = questionItem;
     const fieldPath = useMemo(() => [...parentPath, linkId!], [parentPath, linkId]);
 
     // TODO: how to do when item is not in QR (e.g. default element of repeatable group)
@@ -89,57 +103,37 @@ export function QuestionItem(props: QuestionItemProps) {
         _.get(formValues, fieldPath),
     );
 
-    useEffect(() => {
-        if (!isGroupItem(questionItem, context) && calculatedExpression) {
-            // TODO: Add support for x-fhir-query
-            if (calculatedExpression.language === 'text/fhirpath') {
-                try {
-                    const newValues = fhirpath.evaluate(
-                        context.context || {},
-                        calculatedExpression.expression!,
-                        context as ItemContext,
-                    );
-                    const newAnswers: FormAnswerItems[] | undefined = newValues.length
-                        ? repeats
-                            ? newValues.map((answer: any) => ({
-                                  value: wrapAnswerValue(type, answer),
-                              }))
-                            : [{ value: wrapAnswerValue(type, newValues[0]) }]
-                        : undefined;
+    const itemContext = useMemo(
+        () => (isGroupItem(questionItem, context) ? context[0] : context),
+        [questionItem, context],
+    );
 
-                    if (
-                        !isEqual(
-                            newAnswers?.map((answer) => answer.value),
-                            prevAnswers?.map((answer) => answer.value),
-                        )
-                    ) {
-                        const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
-                        setFormValues(allValues, fieldPath, newAnswers);
-                    }
-                } catch (err: unknown) {
-                    throw Error(
-                        `FHIRPath expression evaluation failure for "calculatedExpression" in ${questionItem.linkId}: ${err}`,
-                    );
-                }
-            }
-        }
-        if (!isGroupItem(questionItem, context) && _text) {
-            try {
-                const extension = findExtensionByUrl(
-                    'http://hl7.org/fhir/StructureDefinition/cqf-expression',
-                    _text.extension,
-                );
-                if (_text && extension?.valueExpression?.expression) {
-                    questionItem.text = fhirpath.evaluate(
-                        context.context || {},
-                        extension.valueExpression.expression,
-                        context as ItemContext,
-                    )[0];
-                }
-            } catch (err: unknown) {
-                throw Error(
-                    `FHIRPath expression evaluation failure for "cqfExpression" in ${questionItem.linkId}: ${err}`,
-                );
+    useEffect(() => {
+        // TODO: think about use cases for group context
+        if (itemContext && calculatedExpression) {
+            const newValues = evaluateQuestionItemExpression(
+                linkId,
+                'calculatedExpression',
+                itemContext,
+                calculatedExpression,
+            );
+
+            const newAnswers: FormAnswerItems[] | undefined = newValues.length
+                ? repeats
+                    ? newValues.map((answer: any) => ({
+                          value: wrapAnswerValue(type, answer),
+                      }))
+                    : [{ value: wrapAnswerValue(type, newValues[0]) }]
+                : undefined;
+
+            if (
+                !isEqual(
+                    newAnswers?.map((answer) => answer.value),
+                    prevAnswers?.map((answer) => answer.value),
+                )
+            ) {
+                const allValues = _.set(_.cloneDeep(formValues), fieldPath, newAnswers);
+                setFormValues(allValues, fieldPath, newAnswers);
             }
         }
     }, [
@@ -150,11 +144,70 @@ export function QuestionItem(props: QuestionItemProps) {
         parentPath,
         repeats,
         type,
-        questionItem,
+        linkId,
+        itemContext,
         prevAnswers,
         fieldPath,
-        _text,
     ]);
+
+    useEffect(() => {
+        if (itemContext && _text) {
+            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _text.extension);
+            const cqfExpression = extension?.valueExpression;
+            const calculatedValue =
+                evaluateQuestionItemExpression(
+                    linkId,
+                    '_text.cqfExpression',
+                    itemContext,
+                    cqfExpression,
+                ) ?? initialQuestionItem.text;
+
+            if (prevQuestionItem?.text !== calculatedValue) {
+                setQuestionItem((qi) => ({
+                    ...qi,
+                    text: calculatedValue,
+                }));
+            }
+        }
+
+        if (itemContext && _readOnly) {
+            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _readOnly.extension);
+            const cqfExpression = extension?.valueExpression;
+            const calculatedValue =
+                evaluateQuestionItemExpression(
+                    linkId,
+                    '_readOnly.cqfExpression',
+                    itemContext,
+                    cqfExpression,
+                ) ?? initialQuestionItem.readOnly;
+
+            if (prevQuestionItem?.readOnly !== calculatedValue) {
+                setQuestionItem((qi) => ({
+                    ...qi,
+                    readOnly: calculatedValue,
+                }));
+            }
+        }
+
+        if (itemContext && _required) {
+            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _required.extension);
+            const cqfExpression = extension?.valueExpression;
+            const calculatedValue =
+                evaluateQuestionItemExpression(
+                    linkId,
+                    '_required.cqfExpression',
+                    itemContext,
+                    cqfExpression,
+                ) ?? initialQuestionItem.required;
+
+            if (prevQuestionItem?.required !== calculatedValue) {
+                setQuestionItem((qi) => ({
+                    ...qi,
+                    required: calculatedValue,
+                }));
+            }
+        }
+    }, [linkId, initialQuestionItem, prevQuestionItem, itemContext, _text, _readOnly, _required]);
 
     if (isGroupItem(questionItem, context)) {
         if (itemControl) {
@@ -263,4 +316,26 @@ function isGroupItem(
     context: ItemContext | ItemContext[],
 ): context is ItemContext[] {
     return questionItem.type === 'group';
+}
+
+export function evaluateQuestionItemExpression(
+    linkId: string,
+    path: string,
+    context: ItemContext,
+    expression?: Expression,
+) {
+    if (!expression) {
+        return;
+    }
+
+    if (expression.language !== 'text/fhirpath') {
+        console.error('Only fhirpath expression is supported');
+        return;
+    }
+
+    try {
+        return fhirpath.evaluate(context.context ?? {}, expression.expression!, context)[0];
+    } catch (err: unknown) {
+        throw Error(`FHIRPath expression evaluation failure for ${linkId}.${path}: ${err}`);
+    }
 }

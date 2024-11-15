@@ -14409,6 +14409,7 @@ export interface QuestionnaireItem {
     prefix?: string;
     /** Don't allow human editing */
     readOnly?: boolean;
+    _readOnly?: QuestionnaireItemReadOnly;
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/questionnaire-referenceResource */
     /** Where the type for a question is Reference, indicates a type of resource that is permitted. */
     referenceResource?: code[];
@@ -14416,6 +14417,7 @@ export interface QuestionnaireItem {
     repeats?: boolean;
     /** Whether the item must be included in data results */
     required?: boolean;
+    _required?: QuestionnaireItemRequired;
     /** NOTE: from extension https://jira.hl7.org/browse/FHIR-22356#subQuestionnaire */
     subQuestionnaire?: canonical;
     /** Primary text for the item */
@@ -14459,6 +14461,16 @@ export interface QuestionnaireItem {
 }
 
 export interface QuestionnaireItemText {
+    cqfExpression?: Expression;
+    extension?: Extension[];
+}
+
+export interface QuestionnaireItemReadOnly {
+    cqfExpression?: Expression;
+    extension?: Extension[];
+}
+
+export interface QuestionnaireItemRequired {
     cqfExpression?: Expression;
     extension?: Extension[];
 }

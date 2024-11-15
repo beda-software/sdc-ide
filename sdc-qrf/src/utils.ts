@@ -528,7 +528,7 @@ function isQuestionEnabled(args: IsQuestionEnabledArgs) {
             return expressionResult;
         } catch (err: unknown) {
             throw Error(
-                `FHIRPath expression evaluation failure for "enableWhenExpression" in ${args.qItem.linkId}: ${err}`,
+                `FHIRPath expression evaluation failure for ${args.qItem.linkId}.enableWhenExpression: ${err}`,
             );
         }
     }
