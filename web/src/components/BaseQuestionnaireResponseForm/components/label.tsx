@@ -15,7 +15,7 @@ interface Props
 export function QuestionLabel(props: Props) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { questionItem, ...other } = props;
-    const { text, helpText } = questionItem;
+    const { text, helpText, required } = questionItem;
     const readOnly = qrfContext.readOnly || questionItem.readOnly || questionItem.hidden;
     const { type: groupType } = useContext(GroupContext);
 
@@ -36,6 +36,7 @@ export function QuestionLabel(props: Props) {
                     })}
                     {...other}
                 >
+                    {required ? <span style={{ color: 'red' }}>{`* `}</span> : null}
                     {text}
                 </label>
             )}
