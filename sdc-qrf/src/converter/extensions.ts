@@ -34,6 +34,7 @@ export enum ExtensionIdentifier {
     CalculatedExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
     EnableWhenExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression',
     AnswerExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-answerExpression',
+    CqfExpression = 'http://hl7.org/fhir/StructureDefinition/cqf-expression',
 
     AdjustLastToRight = 'https://beda.software/fhir-emr-questionnaire/adjust-last-to-right',
     SliderStart = 'https://beda.software/fhir-emr-questionnaire/slider-start',
@@ -218,6 +219,10 @@ export const extensionTransformers: ExtensionTransformer = {
                 }
             },
         },
+    },
+    [ExtensionIdentifier.CqfExpression]: {
+        // @ts-ignore
+        path: { extension: 'valueExpression', questionnaire: 'cqfExpression' },
     },
 
     [ExtensionIdentifier.AdjustLastToRight]: {

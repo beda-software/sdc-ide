@@ -4,6 +4,7 @@ import {
     QuestionnaireItem as FHIRQuestionnaireItem,
     QuestionnaireItemAnswerOption as FHIRQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FHIRQuestionnaireItemInitial,
+    Element as FHIRElement,
 } from 'fhir/r4b';
 import _ from 'lodash';
 
@@ -50,6 +51,21 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
                 updatedProperties = { ...updatedProperties, unitOption };
             }
             continue;
+        }
+
+        for (const property of Object.keys(item)) {
+            const element = item[property as keyof FHIRQuestionnaireItem];
+            if (property.startsWith('_') && element instanceof Object) {
+                const primitiveExtensions = (element as FHIRElement)?.extension ?? [];
+                for (const extension of primitiveExtensions) {
+                    if (extension.url === identifier) {
+                        updatedProperties = {
+                            ...updatedProperties,
+                            ...{ [property]: convertFromFHIRExtension(extension) },
+                        };
+                    }
+                }
+            }
         }
 
         const extension = findExtension(item, identifier);

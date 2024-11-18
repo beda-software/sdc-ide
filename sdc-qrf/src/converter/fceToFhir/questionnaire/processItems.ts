@@ -47,6 +47,19 @@ export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireIt
             type: type as FHIRQuestionnaireItem['type'],
         };
 
+        for (const property of Object.keys(item)) {
+            const element = item[property as keyof FCEQuestionnaireItem];
+
+            if (property.startsWith('_') && element instanceof Object) {
+                // @ts-ignore
+                fhirItem[property] = {
+                    // TODO: update convertToFHIRExtension to accept element type to convert
+                    // @ts-ignore
+                    extension: convertToFHIRExtension(element),
+                };
+            }
+        }
+
         if (answerOption !== undefined) {
             fhirItem.answerOption = processAnswerOption(answerOption);
         }

@@ -14,6 +14,7 @@ import fce_allergies from './resources/questionnaire_fce/allergies.json';
 import fce_beverages from './resources/questionnaire_fce/beverages.json';
 import fce_choice_answer_option from './resources/questionnaire_fce/choice_answer_option.json';
 import fce_consent from './resources/questionnaire_fce/consent.json';
+import fce_cqf_examples from './resources/questionnaire_fce/cqf-examples.json';
 import fce_enable_when from './resources/questionnaire_fce/enable_when.json';
 import fce_encounter_create from './resources/questionnaire_fce/encounter_create.json';
 import fce_gad_7 from './resources/questionnaire_fce/gad_7.json';
@@ -37,6 +38,7 @@ import fhir_allergies from './resources/questionnaire_fhir/allergies.json';
 import fhir_beverages from './resources/questionnaire_fhir/beverages.json';
 import fhir_choice_answer_option from './resources/questionnaire_fhir/choice_answer_option.json';
 import fhir_consent from './resources/questionnaire_fhir/consent.json';
+import fhir_cqf_examples from './resources/questionnaire_fhir/cqf-examples.json';
 import fhir_enable_when from './resources/questionnaire_fhir/enable_when.json';
 import fhir_encounter_create from './resources/questionnaire_fhir/encounter_create.json';
 import fhir_gad_7 from './resources/questionnaire_fhir/gad_7.json';
@@ -134,6 +136,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fhir_practitioner_create_structure_map, fce_practitioner_create_structure_map],
         [fhir_consent, fce_consent],
         [fhir_enable_when, fce_enable_when],
+        [fhir_cqf_examples, fce_cqf_examples],
     ])(
         'Each FHIR Questionnaire should convert to FCE',
         async (fhir_questionnaire, fce_questionnaire) => {
@@ -166,6 +169,7 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fce_practitioner_create_structure_map, fhir_practitioner_create_structure_map],
         [fce_consent, fhir_consent],
         [fce_enable_when, fhir_enable_when],
+        [fce_cqf_examples, fhir_cqf_examples],
     ])(
         'Each FCE Questionnaire should convert to FHIR',
         async (fce_questionnaire, fhir_questionnaire) => {
