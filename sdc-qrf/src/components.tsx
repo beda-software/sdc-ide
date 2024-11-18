@@ -15,13 +15,7 @@ import {
     QuestionItemProps,
     QuestionItemsProps,
 } from './types';
-import {
-    calcContext,
-    findExtensionByUrl,
-    getBranchItems,
-    getEnabledQuestions,
-    wrapAnswerValue,
-} from './utils';
+import { calcContext, getBranchItems, getEnabledQuestions, wrapAnswerValue } from './utils';
 
 export function usePreviousValue<T = any>(value: T) {
     const prevValue = useRef<T>();
@@ -56,8 +50,6 @@ export function QuestionItems(props: QuestionItemsProps) {
         </React.Fragment>
     );
 }
-
-const cqfExpressionExtensionUrl = 'http://hl7.org/fhir/StructureDefinition/cqf-expression';
 
 export function QuestionItem(props: QuestionItemProps) {
     const { questionItem: initialQuestionItem, context: initialContext, parentPath } = props;
@@ -147,8 +139,7 @@ export function QuestionItem(props: QuestionItemProps) {
 
     useEffect(() => {
         if (itemContext && _text) {
-            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _text.extension);
-            const cqfExpression = extension?.valueExpression;
+            const cqfExpression = _text.cqfExpression;
             const calculatedValue =
                 evaluateQuestionItemExpression(
                     linkId,
@@ -166,8 +157,7 @@ export function QuestionItem(props: QuestionItemProps) {
         }
 
         if (itemContext && _readOnly) {
-            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _readOnly.extension);
-            const cqfExpression = extension?.valueExpression;
+            const cqfExpression = _readOnly.cqfExpression;
             const calculatedValue =
                 evaluateQuestionItemExpression(
                     linkId,
@@ -185,8 +175,7 @@ export function QuestionItem(props: QuestionItemProps) {
         }
 
         if (itemContext && _required) {
-            const extension = findExtensionByUrl(cqfExpressionExtensionUrl, _required.extension);
-            const cqfExpression = extension?.valueExpression;
+            const cqfExpression = _required.cqfExpression;
             const calculatedValue =
                 evaluateQuestionItemExpression(
                     linkId,
