@@ -43,18 +43,16 @@ export function QuestionItems(props: QuestionItemsProps) {
 
     return (
         <React.Fragment>
-            {getEnabledQuestions(questionItems, parentPath, formValues, context).map(
-                (item, index) => {
-                    return (
-                        <QuestionItem
-                            key={index}
-                            questionItem={item}
-                            context={context}
-                            parentPath={parentPath}
-                        />
-                    );
-                },
-            )}
+            {getEnabledQuestions(questionItems, parentPath, formValues, context).map((item) => {
+                return (
+                    <QuestionItem
+                        key={item.linkId}
+                        questionItem={item}
+                        context={context}
+                        parentPath={parentPath}
+                    />
+                );
+            })}
         </React.Fragment>
     );
 }
@@ -103,10 +101,7 @@ export function QuestionItem(props: QuestionItemProps) {
         _.get(formValues, fieldPath),
     );
 
-    const itemContext = useMemo(
-        () => (isGroupItem(questionItem, context) ? context[0] : context),
-        [questionItem, context],
-    );
+    const itemContext = isGroupItem(questionItem, context) ? context[0] : context;
 
     useEffect(() => {
         // TODO: think about use cases for group context
@@ -160,7 +155,7 @@ export function QuestionItem(props: QuestionItemProps) {
                     '_text.cqfExpression',
                     itemContext,
                     cqfExpression,
-                ) ?? initialQuestionItem.text;
+                )[0] ?? initialQuestionItem.text;
 
             if (prevQuestionItem?.text !== calculatedValue) {
                 setQuestionItem((qi) => ({
@@ -179,7 +174,7 @@ export function QuestionItem(props: QuestionItemProps) {
                     '_readOnly.cqfExpression',
                     itemContext,
                     cqfExpression,
-                ) ?? initialQuestionItem.readOnly;
+                )[0] ?? initialQuestionItem.readOnly;
 
             if (prevQuestionItem?.readOnly !== calculatedValue) {
                 setQuestionItem((qi) => ({
@@ -198,7 +193,7 @@ export function QuestionItem(props: QuestionItemProps) {
                     '_required.cqfExpression',
                     itemContext,
                     cqfExpression,
-                ) ?? initialQuestionItem.required;
+                )[0] ?? initialQuestionItem.required;
 
             if (prevQuestionItem?.required !== calculatedValue) {
                 setQuestionItem((qi) => ({
@@ -325,16 +320,16 @@ export function evaluateQuestionItemExpression(
     expression?: Expression,
 ) {
     if (!expression) {
-        return;
+        return [];
     }
 
     if (expression.language !== 'text/fhirpath') {
         console.error('Only fhirpath expression is supported');
-        return;
+        return [];
     }
 
     try {
-        return fhirpath.evaluate(context.context ?? {}, expression.expression!, context)[0];
+        return fhirpath.evaluate(context.context ?? {}, expression.expression!, context);
     } catch (err: unknown) {
         throw Error(`FHIRPath expression evaluation failure for ${linkId}.${path}: ${err}`);
     }
