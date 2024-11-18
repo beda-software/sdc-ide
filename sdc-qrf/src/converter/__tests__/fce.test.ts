@@ -2,7 +2,6 @@ import {
     QuestionnaireResponse as FHIRQuestionnaireResponse,
     Questionnaire as FHIRQuestionnaire,
 } from 'fhir/r4b';
-import cloneDeep from 'lodash/cloneDeep';
 
 import {
     QuestionnaireResponse as FCEQuestionnaireResponse,
@@ -88,29 +87,7 @@ import fhir_reference_answer_with_assoc from './resources/questionnaire_response
 import fhir_review_of_systems_qr from './resources/questionnaire_response_fhir/review_of_systems.json';
 import fhir_vitals_qr from './resources/questionnaire_response_fhir/vitals.json';
 import { toFirstClassExtension, fromFirstClassExtension } from '../../converter';
-
-function sortExtensionsRecursive(object: any) {
-    if (typeof object !== 'object' || object === null) {
-        return object;
-    }
-    for (const [key, property] of Object.entries(object)) {
-        if (Array.isArray(property)) {
-            if (key === 'extension') {
-                property.sort((a, b) => (a.url === b.url ? 0 : a.url < b.url ? -1 : 1));
-            }
-            for (const nestedProperty of property) {
-                sortExtensionsRecursive(nestedProperty);
-            }
-        } else {
-            sortExtensionsRecursive(property);
-        }
-    }
-    return object;
-}
-
-export function sortExtensionsList(object: any) {
-    return sortExtensionsRecursive(cloneDeep(object));
-}
+import { sortExtensionsList } from '../utils';
 
 describe('Questionanire and QuestionnaireResponses transformation', () => {
     test.each([

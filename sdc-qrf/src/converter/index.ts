@@ -14,6 +14,7 @@ import { ExtensionIdentifier, extensionTransformers } from './extensions';
 import { fromFirstClassExtension } from './fceToFhir';
 import { toFirstClassExtension } from './fhirToFce';
 import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
+export * from './utils';
 
 export function convertFromFHIRExtension(
     extension: FHIRExtension,
