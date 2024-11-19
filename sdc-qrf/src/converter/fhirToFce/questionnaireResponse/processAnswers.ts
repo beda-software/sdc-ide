@@ -1,4 +1,5 @@
 import {
+    Attachment,
     Coding as FHIRCoding,
     QuestionnaireResponseItem as FHIRQuestionnaireResponseItem,
     QuestionnaireResponseItemAnswer as FHIRQuestionnaireResponseItemAnswer,
@@ -41,6 +42,7 @@ function processAnswer(
         }),
         valueTime: (value: string) => ({ time: value }),
         valueQuantity: (value: FHIRCoding) => ({ Quantity: value }),
+        valueAttachment: (value: Attachment) => ({ Attachment: value }),
     };
 
     for (const key in valueHandlers) {

@@ -37,6 +37,7 @@ function processAnswer(
         dateTime: 'valueDateTime',
         time: 'valueTime',
         Quantity: 'valueQuantity',
+        Attachment: 'valueAttachment',
     };
     for (const key in valueMappings) {
         if (key in value) {
