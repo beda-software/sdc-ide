@@ -14,10 +14,9 @@ import {
     QuestionnaireItemEnableWhenAnswer as FCEQuestionnaireItemEnableWhenAnswer,
     QuestionnaireItemAnswerOption as FCEQuestionnaireItemAnswerOption,
     QuestionnaireItemInitial as FCEQuestionnaireItemInitial,
-    Coding as FCECoding,
 } from 'shared/src/contrib/aidbox';
 
-import { convertFromFHIRExtension, findExtension, fromFHIRReference } from '../../../converter';
+import { convertFromFHIRExtension, filterExtensions, fromFHIRReference } from '../../../converter';
 import { ExtensionIdentifier } from '../../extensions';
 
 export function processItems(fhirQuestionnaire: FHIRQuestionnaire) {
@@ -41,18 +40,6 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
     for (const identifier of Object.values(ExtensionIdentifier)) {
-        if (identifier === ExtensionIdentifier.UnitOption) {
-            const unitOptions =
-                item.extension?.filter((ext) => ext.url === ExtensionIdentifier.UnitOption) || [];
-            if (unitOptions.length > 0) {
-                const unitOption = unitOptions.map(
-                    (ext) => convertFromFHIRExtension(ext)?.unitOption,
-                ) as FCECoding[];
-                updatedProperties = { ...updatedProperties, unitOption };
-            }
-            continue;
-        }
-
         for (const property of Object.keys(item)) {
             const element = item[property as keyof FHIRQuestionnaireItem];
             if (property.startsWith('_') && element instanceof Object) {
@@ -61,18 +48,18 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
                     if (extension.url === identifier) {
                         updatedProperties = {
                             ...updatedProperties,
-                            ...{ [property]: convertFromFHIRExtension(extension) },
+                            ...{ [property]: convertFromFHIRExtension([extension]) },
                         };
                     }
                 }
             }
         }
 
-        const extension = findExtension(item, identifier);
-        if (extension !== undefined) {
+        const extensions = filterExtensions(item, identifier);
+        if (extensions?.length) {
             updatedProperties = {
                 ...updatedProperties,
-                ...convertFromFHIRExtension(extension),
+                ...convertFromFHIRExtension(extensions),
             };
         }
     }

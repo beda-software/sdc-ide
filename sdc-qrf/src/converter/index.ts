@@ -17,15 +17,19 @@ import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/q
 export * from './utils';
 
 export function convertFromFHIRExtension(
-    extension: FHIRExtension,
+    extensions: FHIRExtension[],
 ): Partial<FCEQuestionnaireItem> | undefined {
-    const identifier = extension.url;
+    const identifier = extensions[0]!.url;
     const transformer = extensionTransformers[identifier as ExtensionIdentifier];
     if (transformer !== undefined) {
         if ('transform' in transformer) {
-            return transformer.transform.fromExtension(extension);
+            return transformer.transform.fromExtensions(extensions);
         } else {
-            return { [transformer.path.questionnaire]: extension[transformer.path.extension] };
+            return {
+                [transformer.path.questionnaire]: transformer.path.isCollection
+                    ? extensions.map((extension) => extension[transformer.path.extension])
+                    : extensions[0]![transformer.path.extension],
+            };
         }
     }
 }
@@ -35,18 +39,18 @@ export function convertToFHIRExtension(item: FCEQuestionnaireItem): FHIRExtensio
     Object.values(ExtensionIdentifier).forEach((identifier) => {
         const transformer = extensionTransformers[identifier];
         if ('transform' in transformer) {
-            const extension = transformer.transform.toExtension(item);
-            if (extension !== undefined) {
-                extensions.push(extension);
-            }
+            extensions.push(...transformer.transform.toExtensions(item));
         } else {
-            const extensionValue = item[transformer.path.questionnaire];
-            if (extensionValue !== undefined) {
-                const extension: FHIRExtension = {
-                    [transformer.path.extension]: extensionValue,
-                    url: identifier,
-                };
-                extensions.push(extension);
+            const value = item[transformer.path.questionnaire];
+            if (value !== undefined) {
+                const valueArray = Array.isArray(value) ? value : [value];
+
+                extensions.push(
+                    ...valueArray.map((extensionValue) => ({
+                        [transformer.path.extension]: extensionValue,
+                        url: identifier,
+                    })),
+                );
             }
         }
     });
@@ -57,8 +61,8 @@ export function extractExtension(extension: FCEExtension[] | undefined, url: 'ex
     return extension?.find((e) => e.url === url)?.valueInstant;
 }
 
-export function findExtension(item: FHIRQuestionnaireItem, url: string) {
-    return item.extension?.find((ext) => ext.url === url);
+export function filterExtensions(item: FHIRQuestionnaireItem, url: string) {
+    return item.extension?.filter((ext) => ext.url === url);
 }
 
 export function fromFHIRReference(r?: FHIRReference): InternalReference | undefined {
@@ -66,6 +70,9 @@ export function fromFHIRReference(r?: FHIRReference): InternalReference | undefi
         return undefined;
     }
 
+    // We remove original reference from r in this "strange" way
+    // TODO: re-write omitting
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { reference: literalReference, ...commonReferenceProperties } = r;
     const isHistoryVersionLink = r.reference.split('/').slice(-2, -1)[0] === '_history';
 

@@ -21,7 +21,7 @@ export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireIt
     return items.map((item) => {
         const extensions = convertToFHIRExtension(item);
         if (extensions.length > 0) {
-            const fieldsToOmit = extensions
+            const fieldsToOmit = Object.values(_.groupBy(extensions, (extension) => extension.url))
                 .map(convertFromFHIRExtension)
                 .filter((ext): ext is Partial<FCEQuestionnaireItem> => ext !== undefined)
                 .flatMap(Object.keys);

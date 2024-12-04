@@ -1,0 +1,40 @@
+{
+    "item": [
+        {
+            "type": "quantity",
+            "linkId": "height",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+                    "valueCoding": {
+                        "code": "foot",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "ft"
+                    }
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+                    "valueCoding": {
+                        "code": "inch",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "in"
+                    }
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption",
+                    "valueCoding": {
+                        "code": "cm",
+                        "system": "http://unitsofmeasure.org",
+                        "display": "cm"
+                    }
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"]
+    },
+    "status": "active",
+    "id": "unit-option",
+    "resourceType": "Questionnaire"
+}

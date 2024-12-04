@@ -1,0 +1,66 @@
+{
+    "item": [
+        {
+            "type": "string",
+            "linkId": "email",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
+                    "extension": [
+                        {
+                            "url": "key",
+                            "valueId": "first"
+                        },
+                        {
+                            "url": "human",
+                            "valueString": "Human first"
+                        },
+                        {
+                            "url": "severity",
+                            "valueCode": "error"
+                        },
+                        {
+                            "url": "expression",
+                            "valueString": "false"
+                        },
+                        {
+                            "url": "requirements",
+                            "valueString": "Req first"
+                        }
+                    ]
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-constraint",
+                    "extension": [
+                        {
+                            "url": "key",
+                            "valueId": "second"
+                        },
+                        {
+                            "url": "human",
+                            "valueString": "Human second"
+                        },
+                        {
+                            "url": "severity",
+                            "valueCode": "error"
+                        },
+                        {
+                            "url": "expression",
+                            "valueString": "true"
+                        },
+                        {
+                            "url": "requirements",
+                            "valueString": "Req second"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"]
+    },
+    "status": "active",
+    "resourceType": "Questionnaire",
+    "id": "constraint"
+}

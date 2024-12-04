@@ -13,6 +13,7 @@ import fce_allergies from './resources/questionnaire_fce/allergies.json';
 import fce_beverages from './resources/questionnaire_fce/beverages.json';
 import fce_choice_answer_option from './resources/questionnaire_fce/choice_answer_option.json';
 import fce_consent from './resources/questionnaire_fce/consent.json';
+import fce_constraint from './resources/questionnaire_fce/constraint.json';
 import fce_cqf_examples from './resources/questionnaire_fce/cqf-examples.json';
 import fce_enable_when from './resources/questionnaire_fce/enable_when.json';
 import fce_encounter_create from './resources/questionnaire_fce/encounter_create.json';
@@ -31,12 +32,14 @@ import fce_practitioner_role_create from './resources/questionnaire_fce/practiti
 import fce_public_appointment from './resources/questionnaire_fce/public_appointment.json';
 import fce_review_of_systems from './resources/questionnaire_fce/review_of_systems.json';
 import fce_source_queries from './resources/questionnaire_fce/source_queries.json';
+import fce_unit_option from './resources/questionnaire_fce/unit-option.json';
 import fce_vitals from './resources/questionnaire_fce/vitals.json';
 // fhir questionnaire
 import fhir_allergies from './resources/questionnaire_fhir/allergies.json';
 import fhir_beverages from './resources/questionnaire_fhir/beverages.json';
 import fhir_choice_answer_option from './resources/questionnaire_fhir/choice_answer_option.json';
 import fhir_consent from './resources/questionnaire_fhir/consent.json';
+import fhir_constraint from './resources/questionnaire_fhir/constraint.json';
 import fhir_cqf_examples from './resources/questionnaire_fhir/cqf-examples.json';
 import fhir_enable_when from './resources/questionnaire_fhir/enable_when.json';
 import fhir_encounter_create from './resources/questionnaire_fhir/encounter_create.json';
@@ -55,6 +58,7 @@ import fhir_practitioner_role_create from './resources/questionnaire_fhir/practi
 import fhir_public_appointment from './resources/questionnaire_fhir/public_appointment.json';
 import fhir_review_of_systems from './resources/questionnaire_fhir/review_of_systems.json';
 import fhir_source_queries from './resources/questionnaire_fhir/source_queries.json';
+import fhir_unit_option from './resources/questionnaire_fhir/unit-option.json';
 import fhir_vitals from './resources/questionnaire_fhir/vitals.json';
 // fce questionnaire response
 import fce_allergies_inprogress_qr from './resources/questionnaire_response_fce/allergies_inprogress.json';
@@ -114,6 +118,8 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fhir_consent, fce_consent],
         [fhir_enable_when, fce_enable_when],
         [fhir_cqf_examples, fce_cqf_examples],
+        [fhir_constraint, fce_constraint],
+        [fhir_unit_option, fce_unit_option],
     ])(
         'Each FHIR Questionnaire should convert to FCE',
         async (fhir_questionnaire, fce_questionnaire) => {
@@ -147,6 +153,8 @@ describe('Questionanire and QuestionnaireResponses transformation', () => {
         [fce_consent, fhir_consent],
         [fce_enable_when, fhir_enable_when],
         [fce_cqf_examples, fhir_cqf_examples],
+        [fce_constraint, fhir_constraint],
+        [fce_unit_option, fhir_unit_option],
     ])(
         'Each FCE Questionnaire should convert to FHIR',
         async (fce_questionnaire, fhir_questionnaire) => {

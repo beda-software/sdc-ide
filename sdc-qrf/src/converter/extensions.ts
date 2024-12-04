@@ -29,6 +29,7 @@ export enum ExtensionIdentifier {
     ChoiceColumns = 'http://aidbox.io/fhir/StructureDefinition/questionnaire-choiceColumns',
 
     ItemPopulationContext = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-itemPopulationContext',
+    ItemConstraint = 'http://hl7.org/fhir/StructureDefinition/questionnaire-constraint',
     InitialExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression',
     ChoiceColumn = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-choiceColumn',
     CalculatedExpression = 'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression',
@@ -49,16 +50,17 @@ export type ExtensionTransformer = {
     [key in ExtensionIdentifier]:
         | {
               transform: {
-                  fromExtension: (
-                      extension: FHIRExtension,
+                  fromExtensions: (
+                      extensions: FHIRExtension[],
                   ) => Partial<FCEQuestionnaireItem> | undefined;
-                  toExtension: (item: FCEQuestionnaireItem) => FHIRExtension | undefined;
+                  toExtensions: (item: FCEQuestionnaireItem) => FHIRExtension[];
               };
           }
         | {
               path: {
                   extension: keyof FHIRExtension;
                   questionnaire: keyof FCEQuestionnaireItem;
+                  isCollection?: boolean;
               };
           };
 };
@@ -80,27 +82,31 @@ export const extensionTransformers: ExtensionTransformer = {
         path: { extension: 'valueCoding', questionnaire: 'unit' },
     },
     [ExtensionIdentifier.UnitOption]: {
-        path: { extension: 'valueCoding', questionnaire: 'unitOption' },
+        path: { extension: 'valueCoding', questionnaire: 'unitOption', isCollection: true },
     },
     [ExtensionIdentifier.RowsNumber]: {
         path: { extension: 'valueInteger', questionnaire: 'rowsNumber' },
     },
     [ExtensionIdentifier.ReferenceResource]: {
         transform: {
-            fromExtension: (extension) => {
-                if (extension.valueCode) {
-                    return { referenceResource: [extension.valueCode] };
+            fromExtensions: (extensions) => {
+                if (extensions[0]!.valueCode) {
+                    return { referenceResource: [extensions[0]!.valueCode] };
                 } else {
                     return {};
                 }
             },
-            toExtension: (item) => {
+            toExtensions: (item) => {
                 if (item.referenceResource?.length) {
-                    return {
-                        url: ExtensionIdentifier.ReferenceResource,
-                        valueCode: item.referenceResource[0],
-                    };
+                    return [
+                        {
+                            url: ExtensionIdentifier.ReferenceResource,
+                            valueCode: item.referenceResource[0],
+                        },
+                    ];
                 }
+
+                return [];
             },
         },
     },
@@ -121,26 +127,26 @@ export const extensionTransformers: ExtensionTransformer = {
     },
     [ExtensionIdentifier.MinValue]: {
         transform: {
-            fromExtension: (extension) => ({ minValue: extension }),
-            toExtension: (item) => item.minValue,
+            fromExtensions: (extensions) => ({ minValue: extensions[0]! }),
+            toExtensions: (item) => (item.minValue ? [item.minValue] : []),
         },
     },
     [ExtensionIdentifier.MaxValue]: {
         transform: {
-            fromExtension: (extension) => ({ maxValue: extension }),
-            toExtension: (item) => item.maxValue,
+            fromExtensions: (extensions) => ({ maxValue: extensions[0]! }),
+            toExtensions: (item) => (item.maxValue ? [item.maxValue] : []),
         },
     },
     [ExtensionIdentifier.MinQuantity]: {
         transform: {
-            fromExtension: (extension) => ({ minQuantity: extension }),
-            toExtension: (item) => item.minQuantity,
+            fromExtensions: (extensions) => ({ minQuantity: extensions[0]! }),
+            toExtensions: (item) => (item.minQuantity ? [item.minQuantity] : []),
         },
     },
     [ExtensionIdentifier.MaxQuantity]: {
         transform: {
-            fromExtension: (extension) => ({ maxQuantity: extension }),
-            toExtension: (item) => item.maxQuantity,
+            fromExtensions: (extensions) => ({ maxQuantity: extensions[0]! }),
+            toExtensions: (item) => (item.maxQuantity ? [item.maxQuantity] : []),
         },
     },
     [ExtensionIdentifier.ShowOrdinalValue]: {
@@ -171,6 +177,62 @@ export const extensionTransformers: ExtensionTransformer = {
     [ExtensionIdentifier.ItemPopulationContext]: {
         path: { extension: 'valueExpression', questionnaire: 'itemPopulationContext' },
     },
+    [ExtensionIdentifier.ItemConstraint]: {
+        transform: {
+            fromExtensions: (extensions) => {
+                return {
+                    itemConstraint: extensions.map((extension) => {
+                        const itemConstraintExtension = extension.extension!;
+
+                        return {
+                            key: itemConstraintExtension.find((obj) => obj.url === 'key')!.valueId!,
+                            requirements: itemConstraintExtension.find(
+                                (obj) => obj.url === 'requirements',
+                            )?.valueString,
+                            severity: itemConstraintExtension.find((obj) => obj.url === 'severity')!
+                                .valueCode!,
+                            human: itemConstraintExtension.find((obj) => obj.url === 'human')!
+                                .valueString!,
+                            expression: itemConstraintExtension.find(
+                                (obj) => obj.url === 'expression',
+                            )!.valueString!,
+                        };
+                    }),
+                };
+            },
+            toExtensions: (item) => {
+                if (item.itemConstraint) {
+                    return item.itemConstraint.map((itemConstraint) => ({
+                        url: ExtensionIdentifier.ItemConstraint,
+                        extension: [
+                            {
+                                url: 'key',
+                                valueId: itemConstraint.key,
+                            },
+                            {
+                                url: 'requirements',
+                                valueString: itemConstraint.requirements,
+                            },
+                            {
+                                url: 'severity',
+                                valueCode: itemConstraint.severity,
+                            },
+                            {
+                                url: 'human',
+                                valueString: itemConstraint?.human,
+                            },
+                            {
+                                url: 'expression',
+                                valueString: itemConstraint.expression,
+                            },
+                        ],
+                    }));
+                }
+
+                return [];
+            },
+        },
+    },
     [ExtensionIdentifier.InitialExpression]: {
         path: { extension: 'valueExpression', questionnaire: 'initialExpression' },
     },
@@ -185,38 +247,39 @@ export const extensionTransformers: ExtensionTransformer = {
     },
     [ExtensionIdentifier.ChoiceColumn]: {
         transform: {
-            fromExtension: (extension) => {
-                const choiceColumnExtension = extension.extension;
-                if (choiceColumnExtension) {
-                    return {
-                        choiceColumn: [
-                            {
-                                forDisplay:
-                                    choiceColumnExtension.find((obj) => obj.url === 'forDisplay')
-                                        ?.valueBoolean ?? false,
-                                path: choiceColumnExtension.find((obj) => obj.url === 'path')
-                                    ?.valueString,
-                            },
-                        ],
-                    };
-                }
+            fromExtensions: (extensions) => {
+                return {
+                    choiceColumn: extensions.map((extension) => {
+                        const choiceColumnExtension = extension.extension!;
+
+                        return {
+                            forDisplay:
+                                choiceColumnExtension.find((obj) => obj.url === 'forDisplay')
+                                    ?.valueBoolean ?? false,
+                            path: choiceColumnExtension.find((obj) => obj.url === 'path')
+                                ?.valueString,
+                        };
+                    }),
+                };
             },
-            toExtension: (item) => {
+            toExtensions: (item) => {
                 if (item.choiceColumn) {
-                    return {
+                    return item.choiceColumn.map((choiceColumn) => ({
                         url: ExtensionIdentifier.ChoiceColumn,
                         extension: [
                             {
                                 url: 'forDisplay',
-                                valueBoolean: item.choiceColumn[0]?.forDisplay,
+                                valueBoolean: choiceColumn.forDisplay,
                             },
                             {
                                 url: 'path',
-                                valueString: item.choiceColumn[0]?.path,
+                                valueString: choiceColumn.path,
                             },
                         ],
-                    };
+                    }));
                 }
+
+                return [];
             },
         },
     },

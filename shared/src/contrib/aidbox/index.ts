@@ -14365,7 +14365,7 @@ export interface QuestionnaireItem {
     code?: Coding[];
     /** NOTE: from extension http://hl7.org/fhir/StructureDefinition/questionnaire-constraint */
     /** An invariant that must be satisfied before responses to the questionnaire can be considered "complete". */
-    constraint?: QuestionnaireItemConstraint[];
+    itemConstraint?: QuestionnaireItemConstraint[];
     /** ElementDefinition - details for the item */
     definition?: uri;
     /** all | any */
@@ -14514,13 +14514,14 @@ export interface QuestionnaireItemChoiceColumn {
 
 export interface QuestionnaireItemConstraint {
     /** NOTE: from extension expression */
-    expression: Expression;
+    expression: string;
     /** NOTE: from extension human */
     human: string;
     /** NOTE: from extension key */
     key: id;
     /** NOTE: from extension location */
-    location?: string[];
+    // TODO: not supported yet
+    // location?: string[];
     /** NOTE: from extension requirements */
     requirements?: string;
     /** NOTE: from extension severity */
