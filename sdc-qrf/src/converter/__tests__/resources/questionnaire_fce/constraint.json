@@ -15,16 +15,15 @@
                     "requirements": "Req first",
                     "severity": "error",
                     "human": "Human first",
-                    "expression": "false"
+                    "expression": { "language": "text/fhirpath", "expression": "false" }
                 },
                 {
                     "key": "second",
                     "requirements": "Req second",
                     "severity": "error",
                     "human": "Human second",
-                    "expression": "true"
+                    "expression": { "language": "text/fhirpath", "expression": "true" }
                 }
-                 
             ]
         }
     ]

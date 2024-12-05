@@ -21,7 +21,7 @@
                         },
                         {
                             "url": "expression",
-                            "valueString": "false"
+                            "valueExpression": { "language": "text/fhirpath", "expression": "false" }
                         },
                         {
                             "url": "requirements",
@@ -46,7 +46,7 @@
                         },
                         {
                             "url": "expression",
-                            "valueString": "true"
+                            "valueExpression": { "language": "text/fhirpath", "expression": "true" }
                         },
                         {
                             "url": "requirements",
