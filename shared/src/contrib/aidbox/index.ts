@@ -14514,7 +14514,7 @@ export interface QuestionnaireItemChoiceColumn {
 
 export interface QuestionnaireItemConstraint {
     /** NOTE: from extension expression */
-    expression: Expression;
+    expression: string;
     /** NOTE: from extension human */
     human: string;
     /** NOTE: from extension key */

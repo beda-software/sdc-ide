@@ -195,7 +195,7 @@ export const extensionTransformers: ExtensionTransformer = {
                                 .valueString!,
                             expression: itemConstraintExtension.find(
                                 (obj) => obj.url === 'expression',
-                            )!.valueExpression!,
+                            )!.valueString!,
                         };
                     }),
                 };
@@ -223,7 +223,7 @@ export const extensionTransformers: ExtensionTransformer = {
                             },
                             {
                                 url: 'expression',
-                                valueExpression: itemConstraint.expression,
+                                valueString: itemConstraint.expression,
                             },
                         ],
                     }));
