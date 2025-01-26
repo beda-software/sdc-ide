@@ -50,7 +50,7 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
                         setEditorSelect();
                     }}
                 >
-                    clear
+                    back
                 </Button>
                 <Button
                     className={classNames(s.action, {

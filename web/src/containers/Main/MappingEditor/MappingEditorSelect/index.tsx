@@ -61,20 +61,11 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                         label="or describe requirements to new mapper"
                     />
                     <div className={s.actions}>
-                        <Button
-                            className={s.action}
-                            variant="secondary"
-                            onClick={() => {
-                                setEditorSelect();
-                            }}
-                        >
-                            cancel
-                        </Button>
                         <Button className={s.action} onClick={() => setShowModal(true)}>
-                            Add blank mapper
+                            add blank mapper
                         </Button>
                         <Button className={s.action} onClick={() => toggleMappingMode()}>
-                            Add FHIRMapping Language
+                            add FHIRMapping Language
                         </Button>
                     </div>
 
@@ -83,7 +74,10 @@ export function MappingEditorSelect(props: MappingEditorSelectProps) {
                             saveMapping={async (partialMapping) => {
                                 const response = await createMapping({
                                     resourceType: 'Mapping',
-                                    body: {},
+                                    body: {
+                                        resourceType: 'Bundle',
+                                        type: 'transaction',
+                                    },
                                     ...partialMapping,
                                 });
 

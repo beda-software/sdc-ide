@@ -112,7 +112,7 @@ export function QuestionnaireEditor(props: Props) {
                                     cancel
                                 </Button>
                                 <Button className={s.action} onClick={() => setShowModal(true)}>
-                                    Add blank questionnaire
+                                    add blank questionnaire
                                 </Button>
                             </div>
                             {showModal ? (
@@ -146,7 +146,7 @@ export function QuestionnaireEditor(props: Props) {
                                         setShowSelect(true);
                                     }}
                                 >
-                                    clear
+                                    back
                                 </Button>
                                 <Button
                                     className={classNames(s.action, {
