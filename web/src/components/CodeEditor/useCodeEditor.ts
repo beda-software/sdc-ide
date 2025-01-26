@@ -1,19 +1,12 @@
-import { history, indentWithTab } from '@codemirror/commands';
-import {
-    StreamLanguage,
-    defaultHighlightStyle,
-    foldGutter,
-    syntaxHighlighting,
-} from '@codemirror/language';
-import * as yamlMode from '@codemirror/legacy-modes/mode/yaml';
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
+import { yaml as langYaml } from '@codemirror/lang-yaml';
+import { defaultHighlightStyle, foldGutter, syntaxHighlighting } from '@codemirror/language';
 import { Annotation, EditorState } from '@codemirror/state';
 import { EditorView, ViewUpdate, highlightActiveLine, keymap, lineNumbers } from '@codemirror/view';
 import { indentationMarkers } from '@replit/codemirror-indentation-markers';
 import yaml, { YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
 import { toYaml } from 'web/src/utils/yaml';
-
-const yamlExt = StreamLanguage.define(yamlMode.yaml);
 
 const External = Annotation.define<boolean>();
 
@@ -49,17 +42,17 @@ export function useCodeEditor<R>(props: Props<R>) {
         if (container && !state) {
             const config = {
                 doc: toYaml(value),
-                lineNumbers: true,
                 extensions: [
                     syntaxHighlighting(defaultHighlightStyle),
                     highlightActiveLine(),
                     onDocChanged,
-                    yamlExt,
+                    langYaml(),
                     EditorState.readOnly.of(readOnly),
                     history(),
-                    keymap.of([indentWithTab]),
+                    keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
                     lineNumbers(),
                     indentationMarkers(),
+                    foldGutter(),
                 ],
             };
             const newState = EditorState.create(config);
