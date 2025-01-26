@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
+import { sortKeys } from 'web/src/utils/sort-keys';
 
 import {
     createFHIRResource as createAidboxFHIRResource,
@@ -29,7 +30,7 @@ import {
     success,
 } from 'fhir-react/lib/libs/remoteData';
 import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { service } from 'fhir-react/lib/services/service';
+import { mapSuccess, service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
@@ -100,7 +101,19 @@ export function useMain(questionnaireId: string) {
             loadMapping(response.data);
         }
 
-        return response;
+        return mapSuccess(response, (q) =>
+            sortKeys(q, [
+                'resourceType',
+                'id',
+                'status',
+                'linkId',
+                'text',
+                'type',
+                '*',
+                'item',
+                'meta',
+            ]),
+        );
     }, [questionnaireId]);
 
     const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(async () => {
