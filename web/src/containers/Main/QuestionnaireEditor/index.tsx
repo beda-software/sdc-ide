@@ -1,9 +1,11 @@
+/* eslint-disable import/order */
 import classNames from 'classnames';
 import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
+import { ModalCreateQuestionnaire } from 'web/src/components/ModalCreateQuestionnaire';
 import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
@@ -21,15 +23,25 @@ interface Props {
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
     generateQuestionnaire: (prompt: string) => Promise<RemoteDataResult<any>>;
+    createBlankQuestionnaire: (
+        partialQuestionnaire: Partial<Questionnaire>,
+    ) => Promise<RemoteDataResult<any>>;
 }
 
 export function QuestionnaireEditor(props: Props) {
-    const { onSave, questionnaireRD, questionnaireResponseRD, reload, generateQuestionnaire } =
-        props;
+    const {
+        onSave,
+        questionnaireRD,
+        questionnaireResponseRD,
+        reload,
+        generateQuestionnaire,
+        createBlankQuestionnaire,
+    } = props;
     const { questionnairesRD } = useQuestionnaireEditor();
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const navigate = useNavigate();
     const [showSelect, setShowSelect] = useState(isFailure(questionnaireResponseRD));
+    const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<Questionnaire | undefined>();
 
     useEffect(() => {
@@ -90,7 +102,16 @@ export function QuestionnaireEditor(props: Props) {
                                 >
                                     cancel
                                 </Button>
+                                <Button className={s.action} onClick={() => setShowModal(true)}>
+                                    Add blank questionnaire
+                                </Button>
                             </div>
+                            {showModal ? (
+                                <ModalCreateQuestionnaire
+                                    saveQuestionnaire={createBlankQuestionnaire}
+                                    closeModal={() => setShowModal(false)}
+                                />
+                            ) : null}
                         </>
                     )}
                 </RenderRemoteData>

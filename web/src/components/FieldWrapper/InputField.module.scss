@@ -1,0 +1,14 @@
+@import 'src/styles/colors';
+@import 'src/styles/fonts';
+
+.wrapper {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.label {
+    @include base-text-12-bold;
+}

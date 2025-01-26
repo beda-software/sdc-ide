@@ -73,6 +73,7 @@ export function Main() {
                                 questionnaireResponseRD={questionnaireResponseRD}
                                 reload={manager.reloadQuestionnaire}
                                 generateQuestionnaire={manager.generateQuestionnaire}
+                                createBlankQuestionnaire={manager.createBlankQuestionnaire}
                             />
                         </Cell>
                         <Cell

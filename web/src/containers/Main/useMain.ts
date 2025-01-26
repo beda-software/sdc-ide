@@ -179,6 +179,27 @@ export function useMain(questionnaireId: string) {
         [saveQuestionnaire, navigate],
     );
 
+    const createBlankQuestionnaire = useCallback(
+        async (partialQuestionnaire: Partial<Questionnaire>): Promise<RemoteDataResult<any>> => {
+            const newQuestionnaire: Questionnaire = {
+                resourceType: 'Questionnaire',
+                status: 'draft',
+                meta: {
+                    profile: ['https://beda.software/beda-emr-questionnaire'],
+                },
+                ...partialQuestionnaire,
+            };
+            const qResponse = await saveQuestionnaire(newQuestionnaire);
+
+            if (isSuccess(qResponse)) {
+                navigate(`/${qResponse.data.id}`);
+            }
+
+            return qResponse;
+        },
+        [saveQuestionnaire, navigate],
+    );
+
     const [questionnaireResponseRD, questionnaireResponseRDManager] = useService(async () => {
         const response = await service<QuestionnaireResponse>({
             method: 'POST',
@@ -325,6 +346,7 @@ export function useMain(questionnaireId: string) {
             saveQuestionnaire,
             reloadQuestionnaire,
             generateQuestionnaire,
+            createBlankQuestionnaire,
             setQuestionnaireResponse: questionnaireResponseRDManager.set,
             setLaunchContext,
             clearLaunchContext,
