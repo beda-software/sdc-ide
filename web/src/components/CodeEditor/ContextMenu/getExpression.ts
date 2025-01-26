@@ -63,5 +63,7 @@ export function getExpression(props: Props) {
 
     if (type && expression) {
         openDebugger(expression, type);
+    } else {
+        toast.warning('Debugger is available only for FHIRPath expressions');
     }
 }
