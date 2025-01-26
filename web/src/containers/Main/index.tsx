@@ -19,6 +19,7 @@ import s from './Main.module.scss';
 import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
 import { useFHIRMappingLanguage } from './useFHIRMappingLanguage';
+import { useIDELayout } from './useIDELayout';
 import { useMain } from './useMain';
 
 import 'allotment/dist/style.css';
@@ -38,12 +39,20 @@ export function Main() {
         useFHIRMappingLanguage(
             isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined,
         );
+    const { layout, setLayout } = useIDELayout();
 
     return (
         <>
             <div className={s.editor}>
-                <Allotment vertical>
-                    <Allotment>
+                <Allotment
+                    vertical
+                    defaultSizes={layout.vertical}
+                    onChange={(newSizes) => setLayout('vertical', newSizes)}
+                >
+                    <Allotment
+                        defaultSizes={layout.horizontal1}
+                        onChange={(newSizes) => setLayout('horizontal1', newSizes)}
+                    >
                         <Cell title="Launch Context">
                             <RenderRemoteData remoteData={originalQuestionnaireRD}>
                                 {(resource) => (
@@ -83,7 +92,10 @@ export function Main() {
                             />
                         </Cell>
                     </Allotment>
-                    <Allotment>
+                    <Allotment
+                        defaultSizes={layout.horizontal2}
+                        onChange={(newSizes) => setLayout('horizontal2', newSizes)}
+                    >
                         <Cell title="QuestionnaireResponse FHIR resource">
                             <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
                         </Cell>
