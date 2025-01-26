@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { ModalCreateQuestionnaire } from 'web/src/components/ModalCreateQuestionnaire';
-import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import {
@@ -18,11 +17,11 @@ import {
 } from 'fhir-react/lib/libs/remoteData';
 
 import s from './QuestionnaireEditor.module.scss';
-import { useQuestionnaireEditor } from './useQuestionnaireEditor';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
 import { toast } from 'react-toastify';
 import { YAMLException } from 'js-yaml';
+import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 
 interface Props {
     onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;
@@ -45,7 +44,6 @@ export function QuestionnaireEditor(props: Props) {
         generateQuestionnaire,
         createBlankQuestionnaire,
     } = props;
-    const { questionnairesRD } = useQuestionnaireEditor();
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
     const navigate = useNavigate();
     const [showSelect, setShowSelect] = useState(isFailure(questionnaireResponseRD));
@@ -65,65 +63,55 @@ export function QuestionnaireEditor(props: Props) {
     return (
         <div className={s.container}>
             {showSelect ? (
-                <RenderRemoteData remoteData={questionnairesRD}>
-                    {(questionnaires) => (
-                        <>
-                            <div className={formStyles.field}>
-                                <div className={formStyles.label}>
-                                    Choose questionnaire from the list
-                                </div>
-                                <Select
-                                    value={{
-                                        value: questionnaireId,
-                                        label: questionnaireId,
-                                    }}
-                                    options={questionnaires.map((questionnaire) => ({
-                                        value: questionnaire.id,
-                                        label: questionnaire.title ?? questionnaire.id,
-                                    }))}
-                                    onChange={(option) => {
-                                        if (option) {
-                                            setShowSelect(false);
-                                            navigate(
-                                                `/${
-                                                    (option as { value: string; label: string })
-                                                        .value
-                                                }`,
-                                            );
-                                        }
-                                    }}
-                                />
-                            </div>
-                            <div />
-                            <PromptForm
-                                id="questionnaire"
-                                onSubmit={generateQuestionnaire}
-                                goBack={() => setShowSelect(false)}
-                                label="or describe requirements to new questionnaire"
-                            />
-                            <div className={s.actions}>
-                                <Button
-                                    className={s.action}
-                                    variant="secondary"
-                                    onClick={() => {
-                                        setShowSelect(false);
-                                    }}
-                                >
-                                    cancel
-                                </Button>
-                                <Button className={s.action} onClick={() => setShowModal(true)}>
-                                    add blank questionnaire
-                                </Button>
-                            </div>
-                            {showModal ? (
-                                <ModalCreateQuestionnaire
-                                    saveQuestionnaire={createBlankQuestionnaire}
-                                    closeModal={() => setShowModal(false)}
-                                />
-                            ) : null}
-                        </>
-                    )}
-                </RenderRemoteData>
+                <>
+                    <div className={formStyles.field}>
+                        <div className={formStyles.label}>Choose questionnaire from the list</div>
+                        <RemoteResourceSelect<Questionnaire>
+                            resourceType="Questionnaire"
+                            searchParams={{
+                                _sort: 'id',
+                                profile: 'https://beda.software/beda-emr-questionnaire',
+                            }}
+                            value={questionnaireId}
+                            onChange={(value) => {
+                                if (value) {
+                                    setShowSelect(false);
+                                    navigate(`/${(value as Questionnaire).id}`);
+                                }
+                            }}
+                            display={(questionnaire) =>
+                                questionnaire.title ?? questionnaire.name ?? questionnaire.id!
+                            }
+                        />
+                    </div>
+                    <div />
+                    <PromptForm
+                        id="questionnaire"
+                        onSubmit={generateQuestionnaire}
+                        goBack={() => setShowSelect(false)}
+                        label="or describe requirements to new questionnaire"
+                    />
+                    <div className={s.actions}>
+                        <Button
+                            className={s.action}
+                            variant="secondary"
+                            onClick={() => {
+                                setShowSelect(false);
+                            }}
+                        >
+                            cancel
+                        </Button>
+                        <Button className={s.action} onClick={() => setShowModal(true)}>
+                            add blank questionnaire
+                        </Button>
+                    </div>
+                    {showModal ? (
+                        <ModalCreateQuestionnaire
+                            saveQuestionnaire={createBlankQuestionnaire}
+                            closeModal={() => setShowModal(false)}
+                        />
+                    ) : null}
+                </>
             ) : (
                 <RenderRemoteData remoteData={questionnaireRD}>
                     {(questionnaire) => (

@@ -120,7 +120,7 @@ function TabContent(props: TabContentProps) {
             <RemoteResourceSelect
                 key={type}
                 resourceType={type}
-                value={activeParam?.resource}
+                value={activeParam?.resource?.id}
                 onChange={(resource) => {
                     if (resource && Array.isArray(resource) === false) {
                         onChange({

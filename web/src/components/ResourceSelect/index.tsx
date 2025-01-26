@@ -7,6 +7,7 @@ import { MultiValue, SingleValue } from 'react-select';
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
+import { SearchParams } from 'fhir-react/lib/services/search';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
 import s from './ResourceSelect.module.scss';
@@ -47,10 +48,11 @@ export function ResourceSelect<R extends Resource>({
 }
 
 interface RemoteResourceSelectProps<R extends Resource> {
-    value: R | null | undefined;
+    value: string | null | undefined;
     onChange: (resource: MultiValue<R> | SingleValue<R> | null | undefined) => void;
     display?: (resource: R) => string;
     resourceType: string;
+    searchParams?: SearchParams;
 }
 
 export function RemoteResourceSelect<R extends Resource>({
@@ -58,10 +60,14 @@ export function RemoteResourceSelect<R extends Resource>({
     resourceType,
     onChange,
     display,
+    searchParams,
 }: RemoteResourceSelectProps<R>) {
     const loadOptions = useCallback(
         async (searchText: string) => {
-            const response = await getFHIRResources(resourceType, { _ilike: `%${searchText}%` });
+            const response = await getFHIRResources(resourceType, {
+                _ilike: `%${searchText}%`,
+                ...searchParams,
+            });
             const prepared = mapSuccess(response, (bundle) =>
                 (bundle.entry ?? []).map((e) => e.resource!),
             );
@@ -70,7 +76,7 @@ export function RemoteResourceSelect<R extends Resource>({
             }
             return [];
         },
-        [resourceType],
+        [resourceType, searchParams],
     );
 
     const debouncedLoadOptions = _.debounce(
@@ -85,9 +91,9 @@ export function RemoteResourceSelect<R extends Resource>({
             loadOptions={debouncedLoadOptions}
             defaultOptions
             getOptionLabel={display ?? getId}
-            getOptionValue={_.identity}
+            getOptionValue={(option) => option.id!}
             onChange={onChange}
-            value={value}
+            value={{ id: value } as R}
         />
     );
 }
