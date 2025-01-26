@@ -7,7 +7,10 @@ import { mapSuccess } from 'fhir-react/lib/services/service';
 export function useQuestionnaireEditor() {
     const [questionnairesRD] = useService(async () =>
         mapSuccess(
-            await getFHIRResources<Questionnaire>('Questionnaire', { _sort: 'id' }),
+            await getFHIRResources<Questionnaire>('Questionnaire', {
+                _sort: 'id',
+                profile: 'https://beda.software/beda-emr-questionnaire',
+            }),
             (bundle) => extractBundleResources(bundle).Questionnaire,
         ),
     );
