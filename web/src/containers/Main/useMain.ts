@@ -90,6 +90,19 @@ export function useMain(questionnaireId: string) {
         }
     }, [mappingRD]);
 
+    const prepareQuestionnaire = (q: Questionnaire) =>
+        sortKeys(q, [
+            'resourceType',
+            'id',
+            'status',
+            'linkId',
+            'text',
+            'type',
+            '*',
+            'item',
+            'meta',
+        ]);
+
     const [originalQuestionnaireRD, originalQuestionnaireRDManager] = useService(async () => {
         const response = await service<Questionnaire>({
             method: 'GET',
@@ -101,19 +114,7 @@ export function useMain(questionnaireId: string) {
             loadMapping(response.data);
         }
 
-        return mapSuccess(response, (q) =>
-            sortKeys(q, [
-                'resourceType',
-                'id',
-                'status',
-                'linkId',
-                'text',
-                'type',
-                '*',
-                'item',
-                'meta',
-            ]),
-        );
+        return mapSuccess(response, prepareQuestionnaire);
     }, [questionnaireId]);
 
     const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(async () => {
@@ -135,7 +136,7 @@ export function useMain(questionnaireId: string) {
             const response = await saveFHIRResource(questionnaire);
 
             if (isSuccess(response)) {
-                originalQuestionnaireRDManager.set(response.data);
+                originalQuestionnaireRDManager.set(prepareQuestionnaire(response.data));
                 setLaunchContext({ name: 'questionnaire', resource: response.data });
                 assembledQuestionnaireRDManager.reload();
 
