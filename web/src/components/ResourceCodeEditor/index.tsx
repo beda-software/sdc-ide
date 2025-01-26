@@ -1,4 +1,5 @@
 import { Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
+import { YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
@@ -10,6 +11,7 @@ import { ContextMenu } from '../CodeEditor/ContextMenu';
 interface ResourceCodeEditorProps<R> {
     resource: R;
     onChange: (resource: R) => void;
+    onParseError: (error: YAMLException | null) => void;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
@@ -19,6 +21,7 @@ export function ResourceCodeEditor<R extends Resource>(props: ResourceCodeEditor
     const {
         resource: initialResource,
         onChange,
+        onParseError,
         launchContext,
         questionnaireResponseRD,
         reload,
@@ -36,7 +39,7 @@ export function ResourceCodeEditor<R extends Resource>(props: ResourceCodeEditor
 
     return (
         <div className={s.content}>
-            <CodeEditor<R> value={resource} onChange={onChange}>
+            <CodeEditor<R> value={resource} onChange={onChange} onParseError={onParseError}>
                 <ContextMenu
                     reload={reload}
                     resource={resource}

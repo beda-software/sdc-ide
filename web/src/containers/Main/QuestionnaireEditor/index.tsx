@@ -9,15 +9,23 @@ import { ModalCreateQuestionnaire } from 'web/src/components/ModalCreateQuestion
 import { Select } from 'web/src/components/Select';
 
 import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { RemoteData, RemoteDataResult, isFailure, isLoading } from 'fhir-react/lib/libs/remoteData';
+import {
+    RemoteData,
+    RemoteDataResult,
+    isFailure,
+    isLoading,
+    isSuccess,
+} from 'fhir-react/lib/libs/remoteData';
 
 import s from './QuestionnaireEditor.module.scss';
 import { useQuestionnaireEditor } from './useQuestionnaireEditor';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
+import { toast } from 'react-toastify';
+import { YAMLException } from 'js-yaml';
 
 interface Props {
-    onSave: (resource: Questionnaire) => void;
+    onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;
     questionnaireRD: RemoteData<Questionnaire>;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
@@ -43,6 +51,7 @@ export function QuestionnaireEditor(props: Props) {
     const [showSelect, setShowSelect] = useState(isFailure(questionnaireResponseRD));
     const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<Questionnaire | undefined>();
+    const [parseError, setParseError] = useState<YAMLException | null>(null);
 
     useEffect(() => {
         if (isLoading(questionnaireRD)) {
@@ -127,6 +136,7 @@ export function QuestionnaireEditor(props: Props) {
                                 }}
                                 resource={questionnaire}
                                 onChange={setUpdatedResource}
+                                onParseError={setParseError}
                             />
                             <div className={s.actions}>
                                 <Button
@@ -142,10 +152,22 @@ export function QuestionnaireEditor(props: Props) {
                                     className={classNames(s.action, {
                                         _active: !!updatedResource,
                                     })}
-                                    onClick={() => {
+                                    onClick={async () => {
+                                        if (parseError) {
+                                            toast.error(
+                                                `Cannot parse YAML on line ${parseError.mark.line}: ${parseError.reason}`,
+                                                { autoClose: false },
+                                            );
+
+                                            return;
+                                        }
+
                                         if (updatedResource) {
-                                            onSave(updatedResource);
-                                            setUpdatedResource(undefined);
+                                            const response = await onSave(updatedResource);
+
+                                            if (isSuccess(response)) {
+                                                setUpdatedResource(undefined);
+                                            }
                                         }
                                     }}
                                 >

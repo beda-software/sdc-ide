@@ -1,4 +1,5 @@
 import { Bundle, Questionnaire } from 'fhir/r4b';
+import { YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
 
 import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
@@ -22,18 +23,22 @@ import { Mapping } from 'shared/src/contrib/aidbox';
 import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
 
-export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, mappingRD: RemoteData<Mapping>) {
+export function useMappingEditor(
+    questionnaireRD: RemoteData<Questionnaire>,
+    mappingRD: RemoteData<Mapping>,
+) {
     const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<WithId<Mapping> | undefined>();
-    const [editorState, setEditorState] = useState<EditorState>('initial')
+    const [editorState, setEditorState] = useState<EditorState>('initial');
+    const [parseError, setParseError] = useState<YAMLException | null>(null);
 
-    const setEditorInitial = () => setEditorState('initial')
-    const setEditorLoading = () => setEditorState('loading')
-    const setEditorSelect = () => setEditorState('select')
-    const setEditorReady = () => setEditorState('ready')
+    const setEditorInitial = () => setEditorState('initial');
+    const setEditorLoading = () => setEditorState('loading');
+    const setEditorSelect = () => setEditorState('select');
+    const setEditorReady = () => setEditorState('ready');
 
     useEffect(() => {
-        if (isNotAsked(questionnaireRD)){
+        if (isNotAsked(questionnaireRD)) {
             setEditorInitial();
         }
         if (isLoading(questionnaireRD)) {
@@ -93,6 +98,8 @@ export function useMappingEditor(questionnaireRD: RemoteData<Questionnaire>, map
         setEditorInitial,
         setEditorLoading,
         setEditorReady,
-        setEditorSelect
+        setEditorSelect,
+        parseError,
+        setParseError,
     };
 }

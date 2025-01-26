@@ -1,14 +1,15 @@
-import { Questionnaire, Parameters, QuestionnaireResponse } from "fhir/r4b";
+import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
+import { YAMLException } from 'js-yaml';
 
-import { RemoteData, RemoteDataResult } from "fhir-react/lib/libs/remoteData";
-import { WithId } from "fhir-react/lib/services/fhir";
+import { RemoteData, RemoteDataResult } from 'fhir-react/lib/libs/remoteData';
+import { WithId } from 'fhir-react/lib/services/fhir';
 
-import { Mapping } from "shared/src/contrib/aidbox";
+import { Mapping } from 'shared/src/contrib/aidbox';
 
-export type EditorState = 'initial' | 'loading' | 'select' | 'ready'
+export type EditorState = 'initial' | 'loading' | 'select' | 'ready';
 
 interface CommonMappingEditorProps {
-    onSave: (resource: WithId<Mapping>) => void;
+    onSave: (resource: WithId<Mapping>) => Promise<RemoteDataResult<any>>;
     onChange: (resource: WithId<Mapping>) => void;
     reload: () => void;
     createMapping: (mapping: Mapping) => Promise<RemoteData<any>>;
@@ -44,4 +45,6 @@ export interface MappingEditorEditorProps extends CommonMappingEditorProps {
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     setEditorSelect: () => void;
+    parseError: YAMLException | null;
+    setParseError: (error: YAMLException | null) => void;
 }

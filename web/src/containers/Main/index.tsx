@@ -2,6 +2,7 @@ import Editor from '@monaco-editor/react';
 import { Allotment } from 'allotment';
 import { FhirResource } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
 import { Cell } from 'web/src/components/Cell';
 import { CodeEditor } from 'web/src/components/CodeEditor';
@@ -164,6 +165,7 @@ export function Main() {
                 <div className={s.version}>{`v${version}`}</div>
                 <Logo />
             </div>
+            <ToastContainer />
         </>
     );
 }

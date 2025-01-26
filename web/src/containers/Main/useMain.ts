@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
+import { formatFHIRError } from 'web/src/utils/errors';
 import { sortKeys } from 'web/src/utils/sort-keys';
 
 import {
@@ -145,10 +146,8 @@ export function useMain(questionnaireId: string) {
                         questionnaire.id ? 'updated' : 'created'
                     } `,
                 );
-            }
-
-            if (isFailure(response)) {
-                toast.error(formatError(response.error), { autoClose: false });
+            } else {
+                toast.error(formatFHIRError(response.error), { autoClose: false });
             }
 
             return response;
@@ -300,7 +299,7 @@ export function useMain(questionnaireId: string) {
             }
 
             if (isFailure(response)) {
-                toast.error(formatError(response.error), { autoClose: false });
+                toast.error(formatFHIRError(response.error), { autoClose: false });
             }
 
             return response;
@@ -345,7 +344,7 @@ export function useMain(questionnaireId: string) {
         }
 
         if (isFailure(response)) {
-            toast.error(formatError(response.error), { autoClose: false });
+            toast.error(formatFHIRError(response.error), { autoClose: false });
         }
     }, []);
 

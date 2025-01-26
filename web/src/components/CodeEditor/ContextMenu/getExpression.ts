@@ -1,4 +1,5 @@
 import { EditorView } from '@codemirror/view';
+import { toast } from 'react-toastify';
 import YAML, { Pair, visitor, visitorFn } from 'yaml';
 
 import { ExpressionType, CursorPosition } from './types';

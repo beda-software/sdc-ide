@@ -2,11 +2,19 @@ import { history, indentWithTab } from '@codemirror/commands';
 import { StreamLanguage, defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import * as yamlMode from '@codemirror/legacy-modes/mode/yaml';
 import { Annotation, EditorState } from '@codemirror/state';
-import { EditorView, ViewUpdate, highlightActiveLine, keymap } from '@codemirror/view';
+import {
+    EditorView,
+    ViewUpdate,
+    gutter,
+    highlightActiveLine,
+    keymap,
+    lineNumbers,
+} from '@codemirror/view';
+import yaml, { YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
-import { fromYaml, toYaml } from 'web/src/utils/yaml';
+import { toYaml } from 'web/src/utils/yaml';
 
-const yaml = StreamLanguage.define(yamlMode.yaml);
+const yamlExt = StreamLanguage.define(yamlMode.yaml);
 
 const External = Annotation.define<boolean>();
 
@@ -17,7 +25,7 @@ interface Props<R> extends CodeEditorProps<R> {
 }
 
 export function useCodeEditor<R>(props: Props<R>) {
-    const { value, onChange, readOnly = false } = props;
+    const { value, onChange, onParseError, readOnly = false } = props;
     const [container, setContainer] = useState<HTMLDivElement>();
     const [view, setView] = useState<EditorView>();
     const [state, setState] = useState<EditorState>();
@@ -27,12 +35,13 @@ export function useCodeEditor<R>(props: Props<R>) {
     const onDocChanged = EditorView.updateListener.of((vu: ViewUpdate) => {
         if (vu.docChanged && onChange && !vu.transactions.some((tr) => tr.annotation(External))) {
             const doc = vu.state.doc;
-            const changedValue = fromYaml<R>(doc.toString());
-
-            if (changedValue) {
-                onChange(changedValue, vu);
-            } else {
-                console.warn('Error parsing value from yaml: ', changedValue);
+            try {
+                onChange(yaml.load(doc.toString()) as R, vu);
+                onParseError?.(null);
+            } catch (e: unknown) {
+                if (e instanceof YAMLException) {
+                    onParseError?.(e);
+                }
             }
         }
     });
@@ -41,14 +50,17 @@ export function useCodeEditor<R>(props: Props<R>) {
         if (container && !state) {
             const config = {
                 doc: toYaml(value),
+                lineNumbers: true,
                 extensions: [
                     syntaxHighlighting(defaultHighlightStyle),
                     highlightActiveLine(),
                     onDocChanged,
-                    yaml,
+                    yamlExt,
                     EditorState.readOnly.of(readOnly),
                     history(),
                     keymap.of([indentWithTab]),
+                    lineNumbers(),
+                    gutter({}),
                 ],
             };
             const newState = EditorState.create(config);
