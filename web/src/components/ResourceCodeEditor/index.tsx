@@ -17,7 +17,9 @@ interface ResourceCodeEditorProps<R> {
     reload: () => void;
 }
 
-export function ResourceCodeEditor<R extends Resource>(props: ResourceCodeEditorProps<R>) {
+export function ResourceCodeEditor<R extends Pick<Resource, 'id' | 'meta'>>(
+    props: ResourceCodeEditorProps<R>,
+) {
     const {
         resource: initialResource,
         onChange,

@@ -6,7 +6,7 @@ import { CodeEditorContext } from './context';
 import { CodeEditorProps } from './types';
 import { useCodeEditor } from './useCodeEditor';
 
-export function CodeEditor<R extends Resource>(props: CodeEditorProps<R>) {
+export function CodeEditor<R extends Pick<Resource, 'id' | 'meta'>>(props: CodeEditorProps<R>) {
     const { children } = props;
     const editorRef = useRef<HTMLDivElement>(null);
 

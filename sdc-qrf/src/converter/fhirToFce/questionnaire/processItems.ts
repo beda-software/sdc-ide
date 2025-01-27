@@ -19,15 +19,20 @@ import {
 import { convertFromFHIRExtension, filterExtensions, fromFHIRReference } from '../../../converter';
 import { ExtensionIdentifier } from '../../extensions';
 
-export function processItems(fhirQuestionnaire: FHIRQuestionnaire) {
-    return fhirQuestionnaire.item?.map(convertItemProperties);
+export function processItems(fhirQuestionnaire: FHIRQuestionnaire, extensionsOnly: boolean) {
+    return fhirQuestionnaire.item?.map((item) => convertItemProperties(item, extensionsOnly));
 }
 
-function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireItem {
-    const updatedProperties = getUpdatedPropertiesFromItem(item);
+function convertItemProperties(
+    item: FHIRQuestionnaireItem,
+    extensionsOnly: boolean,
+): FCEQuestionnaireItem {
+    const updatedProperties = getUpdatedPropertiesFromItem(item, extensionsOnly);
     const newItem = { ...item, ...updatedProperties };
 
-    newItem.item = item.item?.map((nestedItem) => convertItemProperties(nestedItem));
+    newItem.item = item.item?.map((nestedItem) =>
+        convertItemProperties(nestedItem, extensionsOnly),
+    );
 
     if (newItem.extension) {
         delete newItem.extension;
@@ -36,7 +41,7 @@ function convertItemProperties(item: FHIRQuestionnaireItem): FCEQuestionnaireIte
     return newItem;
 }
 
-function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
+function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem, extensionsOnly: boolean) {
     let updatedProperties: FCEQuestionnaireItem = { linkId: item.linkId, type: item.type };
 
     for (const identifier of Object.values(ExtensionIdentifier)) {
@@ -64,9 +69,11 @@ function getUpdatedPropertiesFromItem(item: FHIRQuestionnaireItem) {
         }
     }
 
-    updatedProperties.answerOption = item.answerOption?.map(processItemOption);
-    updatedProperties.initial = item.initial?.map(processItemOption);
-    updatedProperties.enableWhen = item.enableWhen?.map(processEnableWhenItem);
+    if (!extensionsOnly) {
+        updatedProperties.answerOption = item.answerOption?.map(processItemOption);
+        updatedProperties.initial = item.initial?.map(processItemOption);
+        updatedProperties.enableWhen = item.enableWhen?.map(processEnableWhenItem);
+    }
 
     return updatedProperties;
 }

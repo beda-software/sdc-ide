@@ -15,13 +15,15 @@ import {
     isLoading,
     isSuccess,
 } from 'fhir-react/lib/libs/remoteData';
-
+import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 import s from './QuestionnaireEditor.module.scss';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
 import { toast } from 'react-toastify';
 import { YAMLException } from 'js-yaml';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
+import { sortKeys } from 'web/src/utils/sort-keys';
+import { fromFirstClassExtension, toFirstClassExtensionV2 } from 'sdc-qrf/src/converter';
 
 interface Props {
     onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;
@@ -48,7 +50,7 @@ export function QuestionnaireEditor(props: Props) {
     const navigate = useNavigate();
     const [showSelect, setShowSelect] = useState(isFailure(questionnaireResponseRD));
     const [showModal, setShowModal] = useState(false);
-    const [updatedResource, setUpdatedResource] = useState<Questionnaire | undefined>();
+    const [updatedResource, setUpdatedResource] = useState<FCEQuestionnaire | undefined>();
     const [parseError, setParseError] = useState<YAMLException | null>(null);
 
     useEffect(() => {
@@ -116,13 +118,15 @@ export function QuestionnaireEditor(props: Props) {
                 <RenderRemoteData remoteData={questionnaireRD}>
                     {(questionnaire) => (
                         <>
-                            <ResourceCodeEditor<Questionnaire>
+                            <ResourceCodeEditor<FCEQuestionnaire>
                                 {...props}
                                 reload={() => {
                                     reload();
                                     setUpdatedResource(undefined);
                                 }}
-                                resource={questionnaire}
+                                resource={prepareQuestionnaire(
+                                    toFirstClassExtensionV2(questionnaire),
+                                )}
                                 onChange={setUpdatedResource}
                                 onParseError={setParseError}
                             />
@@ -151,7 +155,9 @@ export function QuestionnaireEditor(props: Props) {
                                         }
 
                                         if (updatedResource) {
-                                            const response = await onSave(updatedResource);
+                                            const response = await onSave(
+                                                fromFirstClassExtension(updatedResource),
+                                            );
 
                                             if (isSuccess(response)) {
                                                 setUpdatedResource(undefined);
@@ -168,4 +174,19 @@ export function QuestionnaireEditor(props: Props) {
             )}
         </div>
     );
+}
+
+function prepareQuestionnaire(q: FCEQuestionnaire): FCEQuestionnaire {
+    return sortKeys(q, [
+        'resourceType',
+        'id',
+        'status',
+        'launchContext',
+        'linkId',
+        'text',
+        'type',
+        '*',
+        'item',
+        'meta',
+    ]);
 }

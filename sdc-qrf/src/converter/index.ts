@@ -12,7 +12,7 @@ import {
 
 import { ExtensionIdentifier, extensionTransformers } from './extensions';
 import { fromFirstClassExtension } from './fceToFhir';
-import { toFirstClassExtension } from './fhirToFce';
+import { toFirstClassExtension, toFirstClassExtensionV2 } from './fhirToFce';
 import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
 export * from './utils';
 
@@ -110,4 +110,9 @@ export function toFHIRReference(r?: InternalReference): FHIRReference | undefine
     };
 }
 
-export { toFirstClassExtension, fromFirstClassExtension, processLaunchContextToFce };
+export {
+    toFirstClassExtension,
+    toFirstClassExtensionV2,
+    fromFirstClassExtension,
+    processLaunchContextToFce,
+};

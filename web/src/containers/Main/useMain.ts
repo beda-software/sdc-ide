@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
 import { formatFHIRError } from 'web/src/utils/errors';
-import { sortKeys } from 'web/src/utils/sort-keys';
 
 import {
     createFHIRResource as createAidboxFHIRResource,
@@ -31,7 +30,7 @@ import {
     success,
 } from 'fhir-react/lib/libs/remoteData';
 import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
+import { service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
@@ -91,19 +90,6 @@ export function useMain(questionnaireId: string) {
         }
     }, [mappingRD]);
 
-    const prepareQuestionnaire = (q: Questionnaire) =>
-        sortKeys(q, [
-            'resourceType',
-            'id',
-            'status',
-            'linkId',
-            'text',
-            'type',
-            '*',
-            'item',
-            'meta',
-        ]);
-
     const [originalQuestionnaireRD, originalQuestionnaireRDManager] = useService(async () => {
         const response = await service<Questionnaire>({
             method: 'GET',
@@ -115,7 +101,7 @@ export function useMain(questionnaireId: string) {
             loadMapping(response.data);
         }
 
-        return mapSuccess(response, prepareQuestionnaire);
+        return response;
     }, [questionnaireId]);
 
     const [assembledQuestionnaireRD, assembledQuestionnaireRDManager] = useService(async () => {
@@ -137,7 +123,7 @@ export function useMain(questionnaireId: string) {
             const response = await saveFHIRResource(questionnaire);
 
             if (isSuccess(response)) {
-                originalQuestionnaireRDManager.set(prepareQuestionnaire(response.data));
+                originalQuestionnaireRDManager.set(response.data);
                 setLaunchContext({ name: 'questionnaire', resource: response.data });
                 assembledQuestionnaireRDManager.reload();
 
