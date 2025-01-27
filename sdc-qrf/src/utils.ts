@@ -356,8 +356,10 @@ export function findAnswersForQuestionsRecursive(linkId: string, values?: FormIt
                         if (acc2) {
                             return acc2;
                         }
-
-                        return findAnswersForQuestionsRecursive(linkId, v2.items);
+                        if (v2) {
+                            return findAnswersForQuestionsRecursive(linkId, v2.items);
+                        }
+                        return null;
                     },
                     null,
                 );
