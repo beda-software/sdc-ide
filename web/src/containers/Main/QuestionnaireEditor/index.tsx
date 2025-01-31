@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 import { YAMLException } from 'js-yaml';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { sortKeys } from 'web/src/utils/sort-keys';
-import { fromFirstClassExtension, toFirstClassExtensionV2 } from 'sdc-qrf/src/converter';
+import { fromFirstClassExtensionV2, toFirstClassExtensionV2 } from 'sdc-qrf/src/converter';
 
 interface Props {
     onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;
@@ -156,7 +156,7 @@ export function QuestionnaireEditor(props: Props) {
 
                                         if (updatedResource) {
                                             const response = await onSave(
-                                                fromFirstClassExtension(updatedResource),
+                                                fromFirstClassExtensionV2(updatedResource),
                                             );
 
                                             if (isSuccess(response)) {

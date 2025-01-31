@@ -25,3 +25,18 @@ export function fromFirstClassExtension(
             return convertQuestionnaireResponse(fceResource);
     }
 }
+
+export function fromFirstClassExtensionV2(
+    fceQuestionnaireResponse: FCEQuestionnaireResponse,
+): FHIRQuestionnaireResponse;
+export function fromFirstClassExtensionV2(fceQuestionnaire: FCEQuestionnaire): FHIRQuestionnaire;
+export function fromFirstClassExtensionV2(
+    fceResource: FCEQuestionnaire | FCEQuestionnaireResponse,
+): FHIRQuestionnaireResponse | FHIRQuestionnaire {
+    switch (fceResource.resourceType) {
+        case 'Questionnaire':
+            return convertQuestionnaire(fceResource, true);
+        case 'QuestionnaireResponse':
+            return convertQuestionnaireResponse(fceResource);
+    }
+}

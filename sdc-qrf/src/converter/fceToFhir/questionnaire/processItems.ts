@@ -17,7 +17,10 @@ import {
 
 import { convertFromFHIRExtension, convertToFHIRExtension, toFHIRReference } from '../..';
 
-export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireItem[] {
+export function processItems(
+    items: FCEQuestionnaireItem[],
+    onlyExtensions = false,
+): FHIRQuestionnaireItem[] {
     return items.map((item) => {
         const extensions = convertToFHIRExtension(item);
         if (extensions.length > 0) {
@@ -61,7 +64,9 @@ export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireIt
         }
 
         if (answerOption !== undefined) {
-            fhirItem.answerOption = processAnswerOption(answerOption);
+            fhirItem.answerOption = onlyExtensions
+                ? answerOption
+                : processAnswerOption(answerOption);
         }
 
         if (enableBehavior !== undefined) {
@@ -69,15 +74,17 @@ export function processItems(items: FCEQuestionnaireItem[]): FHIRQuestionnaireIt
         }
 
         if (enableWhen !== undefined) {
-            fhirItem.enableWhen = processEnableWhen(enableWhen);
+            fhirItem.enableWhen = onlyExtensions
+                ? (enableWhen as FHIRQuestionnaireItemEnableWhen[])
+                : processEnableWhen(enableWhen);
         }
 
         if (initial) {
-            fhirItem.initial = processInitial(initial);
+            fhirItem.initial = onlyExtensions ? initial : processInitial(initial);
         }
 
         if (nestedItems) {
-            fhirItem.item = processItems(nestedItems);
+            fhirItem.item = processItems(nestedItems, onlyExtensions);
         }
 
         return fhirItem;

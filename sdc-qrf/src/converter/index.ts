@@ -11,7 +11,7 @@ import {
 } from 'shared/src/contrib/aidbox';
 
 import { ExtensionIdentifier, extensionTransformers } from './extensions';
-import { fromFirstClassExtension } from './fceToFhir';
+import { fromFirstClassExtension, fromFirstClassExtensionV2 } from './fceToFhir';
 import { toFirstClassExtension, toFirstClassExtensionV2 } from './fhirToFce';
 import { processLaunchContext as processLaunchContextToFce } from './fhirToFce/questionnaire/processExtensions';
 export * from './utils';
@@ -114,5 +114,6 @@ export {
     toFirstClassExtension,
     toFirstClassExtensionV2,
     fromFirstClassExtension,
+    fromFirstClassExtensionV2,
     processLaunchContextToFce,
 };

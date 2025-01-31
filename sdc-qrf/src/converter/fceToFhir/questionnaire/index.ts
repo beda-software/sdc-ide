@@ -7,9 +7,16 @@ import { processExtensions } from './processExtensions';
 import { processItems } from './processItems';
 import { processMeta } from './processMeta';
 
-export function convertQuestionnaire(questionnaire: FCEQuestionnaire): FHIRQuestionnaire {
+export function convertQuestionnaire(
+    questionnaire: FCEQuestionnaire,
+    onlyExtensions = false,
+): FHIRQuestionnaire {
     questionnaire = cloneDeep(questionnaire);
-    questionnaire.meta = questionnaire.meta ? processMeta(questionnaire.meta) : questionnaire.meta;
-    questionnaire.item = processItems(questionnaire.item ?? []);
+    if (!onlyExtensions) {
+        questionnaire.meta = questionnaire.meta
+            ? processMeta(questionnaire.meta)
+            : questionnaire.meta;
+    }
+    questionnaire.item = processItems(questionnaire.item ?? [], onlyExtensions);
     return processExtensions(questionnaire) as FHIRQuestionnaire;
 }
