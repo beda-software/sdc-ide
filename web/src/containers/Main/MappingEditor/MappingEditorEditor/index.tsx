@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { WithId } from 'fhir-react';
+import { useBeforeUnload } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
@@ -25,6 +26,12 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
         questionnaireResponseRD,
         setEditorSelect,
     } = props;
+
+    useBeforeUnload((event) => {
+        if (updatedResource) {
+            event.preventDefault();
+        }
+    });
 
     return (
         <>

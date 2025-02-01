@@ -2,7 +2,7 @@
 import classNames from 'classnames';
 import { Questionnaire, Parameters, QuestionnaireResponse } from 'fhir/r4b';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useBeforeUnload, useNavigate, useParams } from 'react-router-dom';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { ModalCreateQuestionnaire } from 'web/src/components/ModalCreateQuestionnaire';
@@ -52,6 +52,12 @@ export function QuestionnaireEditor(props: Props) {
     const [showModal, setShowModal] = useState(false);
     const [updatedResource, setUpdatedResource] = useState<FCEQuestionnaire | undefined>();
     const [parseError, setParseError] = useState<YAMLException | null>(null);
+
+    useBeforeUnload((event) => {
+        if (updatedResource) {
+            event.preventDefault();
+        }
+    });
 
     useEffect(() => {
         if (isLoading(questionnaireRD)) {
