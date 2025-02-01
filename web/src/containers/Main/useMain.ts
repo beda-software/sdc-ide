@@ -9,6 +9,7 @@ import {
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { LaunchContext } from 'web/src/components/LaunchContextEditor/types';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
 import { formatFHIRError } from 'web/src/utils/errors';
@@ -35,7 +36,7 @@ import { formatError } from 'fhir-react/lib/utils/error';
 
 import { Mapping } from 'shared/src/contrib/aidbox';
 
-import { getMappings, makeMappingExtension } from './utils';
+import { getMappings, makeMappingExtension, makeLaunchContextExtension } from './utils';
 
 export function useLaunchContext() {
     const [launchContext, setLaunchContext] = useState<Parameters>({
@@ -334,6 +335,29 @@ export function useMain(questionnaireId: string) {
         }
     }, []);
 
+    const createLaunchContext = useCallback(
+        async (launchContext: LaunchContext) => {
+            if (isSuccess(originalQuestionnaireRD)) {
+                const questionnaire = originalQuestionnaireRD.data;
+                const updatedQuestionnaire = {
+                    ...questionnaire,
+                    extension: [
+                        ...(questionnaire.extension || []),
+                        makeLaunchContextExtension(launchContext),
+                    ],
+                };
+                const qResponse = await saveFHIRResource(updatedQuestionnaire);
+
+                if (isSuccess(qResponse)) {
+                    originalQuestionnaireRDManager.set(qResponse.data);
+                }
+
+                return qResponse;
+            }
+        },
+        [originalQuestionnaireRD, originalQuestionnaireRDManager],
+    );
+
     return {
         launchContext,
         originalQuestionnaireRD,
@@ -349,6 +373,7 @@ export function useMain(questionnaireId: string) {
             setQuestionnaireResponse: questionnaireResponseRDManager.set,
             setLaunchContext,
             clearLaunchContext,
+            createLaunchContext,
             reloadMapping,
             createMapping,
             setMapping: (m: WithId<Mapping>) => setMappingRD(success(m)),

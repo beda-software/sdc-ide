@@ -62,6 +62,7 @@ export function Main() {
                                         launchContext={launchContext}
                                         onChange={manager.setLaunchContext}
                                         onRemove={manager.clearLaunchContext}
+                                        createLaunchContext={manager.createLaunchContext}
                                     />
                                 )}
                             </RenderRemoteData>

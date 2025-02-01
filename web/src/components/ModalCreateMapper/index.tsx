@@ -44,6 +44,7 @@ export function ModalCreateMapper({ saveMapping, closeModal, mappings }: ModalCr
                         onBlur: () => {},
                         onFocus: () => {},
                     }}
+                    required
                     label="Mapping id"
                 />
                 <FieldWrapper label="Mapping type">

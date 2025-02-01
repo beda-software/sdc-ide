@@ -7,7 +7,9 @@ import { success } from 'fhir-react/lib/libs/remoteData';
 
 import { groupLaunchContextParams } from './groupLaunchContextParams';
 import s from './LaunchContextEditor.module.scss';
+import { LaunchContext } from './types';
 import { Button } from '../Button';
+import { ModalCreateLaunchContext } from '../ModalCreateLaunchContext';
 import { ResourceCodeDisplay } from '../ResourceCodeDisplay';
 import { RemoteResourceSelect } from '../ResourceSelect';
 import { Select } from '../Select';
@@ -17,11 +19,7 @@ interface Props {
     launchContext: Parameters;
     onChange: (parameter: ParametersParameter) => void;
     onRemove: (parameter: ParametersParameter) => void;
-}
-
-interface Param {
-    name: string;
-    types: string[];
+    createLaunchContext: (launchContext: LaunchContext) => Promise<any>;
 }
 
 function useLaunchContext(questionnaire: Questionnaire) {
@@ -31,15 +29,18 @@ function useLaunchContext(questionnaire: Questionnaire) {
             name: ext.extension?.find((ext) => ext?.url === 'name')?.valueCoding?.code,
             types: ext.extension?.filter((ext) => ext?.url === 'type').map((t) => t.valueCode),
         }))
-        .filter(({ name, types }) => typeof name !== 'undefined' || types?.length) as Param[];
+        .filter(
+            ({ name, types }) => typeof name !== 'undefined' || types?.length,
+        ) as LaunchContext[];
 
     return { allParams };
 }
 
 export function LaunchContextEditor(props: Props) {
-    const { questionnaire, launchContext, onChange, onRemove } = props;
+    const { questionnaire, launchContext, onChange, onRemove, createLaunchContext } = props;
     const { allParams } = useLaunchContext(questionnaire);
     const [activeTab, setActiveTab] = useState(allParams[0]);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const activeParam = useMemo(
         () => launchContext.parameter?.find((p) => p.name === activeTab?.name),
@@ -75,16 +76,24 @@ export function LaunchContextEditor(props: Props) {
                         />
                     );
                 })}
+
+                <NewTab onClick={() => setShowCreateModal(true)} />
             </div>
             {renderTabContent()}
+            {showCreateModal && (
+                <ModalCreateLaunchContext
+                    closeModal={() => setShowCreateModal(false)}
+                    saveLaunchContext={createLaunchContext}
+                />
+            )}
         </>
     );
 }
 
 interface TabProps {
-    tab: Param;
-    activeTab?: Param;
-    setActiveTab: (v: Param) => void;
+    tab: LaunchContext;
+    activeTab?: LaunchContext;
+    setActiveTab: (v: LaunchContext) => void;
 }
 
 function Tab(props: TabProps) {
@@ -92,7 +101,7 @@ function Tab(props: TabProps) {
 
     return (
         <button
-            type={'button'}
+            type="button"
             onClick={() => setActiveTab(tab)}
             className={classNames(s.tab, {
                 _active: tab.name === activeTab?.name,
@@ -102,9 +111,16 @@ function Tab(props: TabProps) {
         </button>
     );
 }
+function NewTab({ onClick }: { onClick: () => void }) {
+    return (
+        <button type="button" onClick={onClick} className={s.tab}>
+            +
+        </button>
+    );
+}
 
 interface TabContentProps {
-    activeTab: Param;
+    activeTab: LaunchContext;
     activeParam?: ParametersParameter;
     onChange: (parameter: ParametersParameter) => void;
     onRemove: (parameter: ParametersParameter) => void;
@@ -145,7 +161,7 @@ function TabContent(props: TabContentProps) {
                         setResourceType(undefined);
                     }}
                 >
-                    clear
+                    back
                 </Button>
             </div>
         );

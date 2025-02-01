@@ -1,6 +1,8 @@
 import { Extension, Questionnaire } from 'fhir/r4b';
 import _ from 'lodash';
 
+import { launchContextExtensionUrl } from './types';
+
 /*
     Group launchContext params by name.
     Should be deleted when $assemble for extensions is fixed.
@@ -115,11 +117,7 @@ import _ from 'lodash';
 export function groupLaunchContextParams(questionnaire: Questionnaire): Extension[] {
     const params = questionnaire.extension
         ? _.chain(questionnaire.extension)
-              .filter(
-                  (ext) =>
-                      ext.url ===
-                      'http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext',
-              )
+              .filter((ext) => ext.url === launchContextExtensionUrl)
               .groupBy((ext) => ext.extension?.find(({ url }) => url === 'name')?.valueCoding?.code)
               .mapValues(
                   (extensions): Extension => ({
