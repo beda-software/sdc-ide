@@ -45,6 +45,13 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
                     setUpdatedResource(updatedMapping);
                     onChange(updatedMapping);
                 }}
+                onSubmit={async (submittedResource) => {
+                    const response = await onSave(submittedResource);
+
+                    if (isSuccess(response)) {
+                        setUpdatedResource(undefined);
+                    }
+                }}
                 onParseError={setParseError}
                 launchContext={launchContext}
                 questionnaireResponseRD={questionnaireResponseRD}

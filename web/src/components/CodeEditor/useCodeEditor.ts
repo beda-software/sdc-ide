@@ -7,6 +7,7 @@ import { indentationMarkers } from '@replit/codemirror-indentation-markers';
 import yaml, { YAMLException } from 'js-yaml';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { toYaml } from 'web/src/utils/yaml';
 
 const External = Annotation.define<boolean>();
@@ -18,7 +19,7 @@ interface Props<R> extends CodeEditorProps<R> {
 }
 
 export function useCodeEditor<R>(props: Props<R>) {
-    const { value, onChange, onParseError, readOnly = false } = props;
+    const { value, onChange, onParseError, onSubmit, readOnly = false } = props;
     const [container, setContainer] = useState<HTMLDivElement>();
     const [view, setView] = useState<EditorView>();
     const [state, setState] = useState<EditorState>();
@@ -50,7 +51,30 @@ export function useCodeEditor<R>(props: Props<R>) {
                     langYaml(),
                     EditorState.readOnly.of(readOnly),
                     history(),
-                    keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
+                    keymap.of([
+                        ...defaultKeymap,
+                        ...historyKeymap,
+                        indentWithTab,
+                        {
+                            key: 'Mod-s',
+                            run({ state }) {
+                                try {
+                                    onSubmit?.(yaml.load(state.doc.toString()) as R);
+                                } catch (e: unknown) {
+                                    if (e instanceof YAMLException) {
+                                        toast.error(
+                                            `Cannot parse YAML on line ${e.mark.line}: ${e.reason}`,
+                                            {
+                                                autoClose: false,
+                                            },
+                                        );
+                                    }
+                                }
+
+                                return true;
+                            },
+                        },
+                    ]),
                     lineNumbers(),
                     indentationMarkers(),
                     foldGutter(),

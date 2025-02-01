@@ -14,6 +14,7 @@ interface ResourceCodeEditorProps<R> {
     resource: R;
     onChange: (resource: R) => void;
     onParseError: (error: YAMLException | null) => void;
+    onSubmit?: (resource: R) => void;
     launchContext: Parameters;
     questionnaireResponseRD: RemoteData<QuestionnaireResponse>;
     reload: () => void;
@@ -26,6 +27,7 @@ export function ResourceCodeEditor<R extends Pick<Resource, 'id' | 'meta'>>(
         resource,
         onChange: originalOnChange,
         onParseError,
+        onSubmit,
         launchContext,
         questionnaireResponseRD,
         reload,
@@ -51,7 +53,12 @@ export function ResourceCodeEditor<R extends Pick<Resource, 'id' | 'meta'>>(
 
     return (
         <div className={s.content}>
-            <CodeEditor<R> value={value} onChange={onChange} onParseError={onParseError}>
+            <CodeEditor<R>
+                value={value}
+                onChange={onChange}
+                onParseError={onParseError}
+                onSubmit={onSubmit}
+            >
                 <ContextMenu
                     reload={reload}
                     resource={value}

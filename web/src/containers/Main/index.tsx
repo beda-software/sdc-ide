@@ -166,7 +166,7 @@ export function Main() {
                 <div className={s.version}>{`v${version}`}</div>
                 <Logo />
             </div>
-            <ToastContainer />
+            <ToastContainer autoClose={500} />
         </>
     );
 }

@@ -134,6 +134,15 @@ export function QuestionnaireEditor(props: Props) {
                                     toFirstClassExtensionV2(questionnaire),
                                 )}
                                 onChange={setUpdatedResource}
+                                onSubmit={async (submittedResource) => {
+                                    const response = await onSave(
+                                        fromFirstClassExtensionV2(submittedResource),
+                                    );
+
+                                    if (isSuccess(response)) {
+                                        setUpdatedResource(undefined);
+                                    }
+                                }}
                                 onParseError={setParseError}
                             />
                             <div className={s.actions}>
@@ -154,7 +163,9 @@ export function QuestionnaireEditor(props: Props) {
                                         if (parseError) {
                                             toast.error(
                                                 `Cannot parse YAML on line ${parseError.mark.line}: ${parseError.reason}`,
-                                                { autoClose: false },
+                                                {
+                                                    autoClose: false,
+                                                },
                                             );
 
                                             return;
