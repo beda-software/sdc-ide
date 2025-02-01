@@ -5,6 +5,7 @@ import { Annotation, EditorState } from '@codemirror/state';
 import { EditorView, ViewUpdate, highlightActiveLine, keymap, lineNumbers } from '@codemirror/view';
 import { indentationMarkers } from '@replit/codemirror-indentation-markers';
 import yaml, { YAMLException } from 'js-yaml';
+import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { toYaml } from 'web/src/utils/yaml';
 
@@ -82,7 +83,7 @@ export function useCodeEditor<R>(props: Props<R>) {
         }
         const currentValue = view ? view.state.doc.toString() : '';
 
-        if (view && value !== currentValue) {
+        if (view && !_.isEqual(value, yaml.load(currentValue))) {
             view.dispatch({
                 changes: { from: 0, to: currentValue.length, insert: toYaml(value) || '' },
                 annotations: [External.of(true)],
