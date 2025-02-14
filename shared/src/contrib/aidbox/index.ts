@@ -14588,7 +14588,7 @@ export interface QuestionnaireLaunchContext {
     /** NOTE: from extension name */
     name?: Coding;
     /** NOTE: from extension type */
-    type?: code;
+    type?: Array<code>;
 }
 
 /** A structured set of questions and their answers */
