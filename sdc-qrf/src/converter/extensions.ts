@@ -5,7 +5,7 @@ import { QuestionnaireItem as FCEQuestionnaireItem } from 'shared/src/contrib/ai
 export enum ExtensionIdentifier {
     Hidden = 'http://hl7.org/fhir/StructureDefinition/questionnaire-hidden',
     ItemControl = 'http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl',
-    ReadonlyItemControl = 'https://beda.software/fhir-emr-questionnaire/readonlyItemControl',
+    ReadOnlyItemControl = 'https://beda.software/fhir-emr-questionnaire/readOnlyItemControl',
     SliderStepValue = 'http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue',
     Unit = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unit',
     UnitOption = 'http://hl7.org/fhir/StructureDefinition/questionnaire-unitOption',
@@ -73,8 +73,8 @@ export const extensionTransformers: ExtensionTransformer = {
     [ExtensionIdentifier.ItemControl]: {
         path: { extension: 'valueCodeableConcept', questionnaire: 'itemControl' },
     },
-    [ExtensionIdentifier.ReadonlyItemControl]: {
-        path: { extension: 'valueCodeableConcept', questionnaire: 'readonlyItemControl' },
+    [ExtensionIdentifier.ReadOnlyItemControl]: {
+        path: { extension: 'valueCodeableConcept', questionnaire: 'readOnlyItemControl' },
     },
     [ExtensionIdentifier.SliderStepValue]: {
         path: { extension: 'valueInteger', questionnaire: 'sliderStepValue' },

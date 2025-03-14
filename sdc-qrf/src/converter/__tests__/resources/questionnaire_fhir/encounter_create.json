@@ -131,7 +131,7 @@
                     }
                 },
                 {
-                    "url": "https://beda.software/fhir-emr-questionnaire/readonlyItemControl",
+                    "url": "https://beda.software/fhir-emr-questionnaire/readOnlyItemControl",
                     "valueCodeableConcept": {
                         "coding": [
                             {
