@@ -41,6 +41,7 @@ export function processExtensions(questionnaire: FCEQuestionnaire): FHIRQuestion
     if (mapping) {
         extensions = extensions.concat(
             mapping.map((m) => ({
+                // url: 'https://emr.beda.software/StructureDefinition/questionnaire-mapper',
                 url: 'http://beda.software/fhir-extensions/questionnaire-mapper',
                 valueReference: {
                     reference: `Mapping/${m.id}`,
