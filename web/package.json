@@ -1,7 +1,7 @@
 {
     "name": "web",
     "type": "module",
-    "version": "0.3.15",
+    "version": "0.3.16",
     "private": true,
     "dependencies": {
         "@codemirror/commands": "^6.8.0",
