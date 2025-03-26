@@ -7,7 +7,7 @@ import {
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
-} from 'sdc-qrf/src';
+} from 'sdc-qrf';
 
 import {
     Col,
@@ -64,7 +64,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                     <QuestionnaireResponseFormProvider
                         formValues={values}
                         setFormValues={(newValues) => form.change('', newValues)}
-                        groupItemComponent={Group}
+                        groupItemComponent={Group ? Group : undefined}
                         itemControlGroupItemComponents={{ col: Col, row: Row, gtable: GTable }}
                         questionItemComponents={{
                             date: QuestionDate,
