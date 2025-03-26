@@ -1,100 +1,101 @@
 {
-    "subjectType": [
-     "Encounter",
-     "Patient"
-    ],
+    "subjectType": ["Encounter", "Patient"],
     "meta": {
-     "profile": [
-      "https://beda.software/beda-emr-questionnaire"
-     ],
-     "lastUpdated": "2024-11-18T13:35:34.455065Z",
-     "versionId": "11968",
-     "extension": [
-      {
-       "url": "ex:createdAt",
-       "valueInstant": "2024-11-15T17:04:52.598486Z"
-      }
-     ]
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
+        "lastUpdated": "2024-11-18T13:35:34.455065Z",
+        "versionId": "11968",
+        "extension": [
+            {
+                "url": "ex:createdAt",
+                "valueInstant": "2024-11-15T17:04:52.598486Z"
+            }
+        ]
     },
     "name": "CQF Examples",
     "item": [
-     {
-      "text": "Click on this checkbox to see result",
-      "type": "boolean",
-      "linkId": "input-1"
-     },
-     {
-      "text": "This is default input label",
-      "type": "string",
-      "_text": {
-       "extension": [
         {
-         "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
-         "valueExpression": {
-          "language": "text/fhirpath",
-          "expression": "iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true, 'Now the input label changed', null)"
-         }
-        }
-       ]
-      },
-      "linkId": "input-2"
-     },
-     {
-      "item": [
-       {
-        "text": "This input is disabled if the checkbox is unchecked",
-        "type": "string",
-        "linkId": "input-5",
-        "readOnly": true,
-        "_readOnly": {
-         "extension": [
-          {
-           "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
-           "valueExpression": {
-            "language": "text/fhirpath",
-            "expression": "%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = false"
-           }
-          }
-         ]
-        }
-       },
-       {
-        "text": "This input is required if the checkbox is checked",
-        "type": "string",
-        "linkId": "input-6",
-        "required": false,
-        "_required": {
-         "extension": [
-          {
-           "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
-           "valueExpression": {
-            "language": "text/fhirpath",
-            "expression": "%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true"
-           }
-          }
-         ]
-        }
-       }
-      ],
-      "text": "This is default group label",
-      "type": "group",
-      "_text": {
-       "extension": [
+            "text": "Click on this checkbox to see result",
+            "type": "boolean",
+            "linkId": "input-1"
+        },
         {
-         "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
-         "valueExpression": {
-          "language": "text/fhirpath",
-          "expression": "iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true, 'Now the group label changed', null)"
-         }
+            "text": "This is default input label",
+            "type": "string",
+            "_text": {
+                "extension": [
+                    {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                        "valueExpression": {
+                            "language": "text/fhirpath",
+                            "expression": "iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true, 'Now the input label changed', null)"
+                        }
+                    }
+                ]
+            },
+            "linkId": "input-2"
+        },
+        {
+            "item": [
+                {
+                    "text": "This input is disabled if the checkbox is unchecked",
+                    "type": "string",
+                    "linkId": "input-5",
+                    "readOnly": true,
+                    "_readOnly": {
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                                "valueExpression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = false"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "text": "This input is required if the checkbox is checked",
+                    "type": "string",
+                    "linkId": "input-6",
+                    "required": false,
+                    "_required": {
+                        "extension": [
+                            {
+                                "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                                "valueExpression": {
+                                    "language": "text/fhirpath",
+                                    "expression": "%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "text": "This is default group label",
+            "type": "group",
+            "_text": {
+                "extension": [
+                    {
+                        "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+                        "valueExpression": {
+                            "language": "text/fhirpath",
+                            "expression": "iif(%QuestionnaireResponse.item.where(linkId='input-1').answer.value.boolean = true, 'Now the group label changed', null)"
+                        }
+                    }
+                ]
+            },
+            "linkId": "input-3"
         }
-       ]
-      },
-      "linkId": "input-3"
-     }
     ],
     "resourceType": "Questionnaire",
     "title": "CQF Examples",
     "status": "active",
+    "extension": [
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "cqf-examples"
+        }
+    ],
     "id": "cqf-examples",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/cqf-examples"
-   }
+}

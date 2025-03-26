@@ -398,6 +398,7 @@
             "resourceType": "Mapping"
         }
     ],
+    "assembledFrom": "allergies",
     "resourceType": "Questionnaire",
     "status": "active",
     "id": "allergies",

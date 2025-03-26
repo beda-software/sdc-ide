@@ -81,6 +81,7 @@
     "resourceType": "Questionnaire",
     "title": "Sign-off Consent",
     "status": "active",
+    "assembledFrom": "consent",
     "id": "consent",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/consent"
 }

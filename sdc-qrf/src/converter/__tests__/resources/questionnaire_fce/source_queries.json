@@ -1,34 +1,35 @@
 {
-  "meta": {
-    "profile": ["https://beda.software/beda-emr-questionnaire"]
-  },
-  "item": [
-    {
-      "linkId": "question-1",
-      "type": "string",
-      "text": "Question"
-    }
-  ],
-  "status": "active",
-  "resourceType": "Questionnaire",
-  "contained": [
-    {
-      "id": "PrePopQuery",
-      "type": "batch",
-      "entry": [
+    "meta": {
+        "profile": ["https://beda.software/beda-emr-questionnaire"]
+    },
+    "item": [
         {
-          "request": {
-            "url": "Patient?_id={{%LaunchPatient.id}}",
-            "method": "GET"
-          }
+            "linkId": "question-1",
+            "type": "string",
+            "text": "Question"
         }
-      ],
-      "resourceType": "Bundle"
-    }
-  ],
-  "sourceQueries": [
-    {
-      "localRef": "Bundle#PrePopQuery"
-    }
-  ]
+    ],
+    "status": "active",
+    "resourceType": "Questionnaire",
+    "assembledFrom": "source-queries",
+    "contained": [
+        {
+            "id": "PrePopQuery",
+            "type": "batch",
+            "entry": [
+                {
+                    "request": {
+                        "url": "Patient?_id={{%LaunchPatient.id}}",
+                        "method": "GET"
+                    }
+                }
+            ],
+            "resourceType": "Bundle"
+        }
+    ],
+    "sourceQueries": [
+        {
+            "localRef": "Bundle#PrePopQuery"
+        }
+    ]
 }

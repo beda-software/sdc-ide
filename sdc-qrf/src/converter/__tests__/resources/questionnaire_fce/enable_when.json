@@ -92,6 +92,7 @@
     ],
     "status": "active",
     "subjectType": ["Patient"],
+    "assembledFrom": "enable-when",
     "id": "example",
     "resourceType": "Questionnaire",
     "meta": {

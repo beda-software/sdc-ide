@@ -547,6 +547,7 @@
     ],
     "resourceType": "Questionnaire",
     "status": "active",
+    "assembledFrom": "phq2phq9",
     "id": "phq2phq9",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/phq2phq9"
 }

@@ -121,6 +121,7 @@
     "resourceType": "Questionnaire",
     "title": "Encounter create",
     "status": "active",
+    "assembledFrom": "encounter-create",
     "id": "encounter-create",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/encounter-create"
 }

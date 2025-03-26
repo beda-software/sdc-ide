@@ -1,21 +1,26 @@
 import { Questionnaire as FHIRQuestionnaire } from 'fhir/r4b';
 
+import { canonical } from 'shared/src/contrib/aidbox';
+
 export function processExtensions(fhirQuestionnaire: FHIRQuestionnaire): {
     launchContext?: any[];
     mapping?: any[];
     sourceQueries?: any[];
     targetStructureMap?: any[];
+    assembledFrom?: canonical;
 } {
     const launchContext = processLaunchContext(fhirQuestionnaire);
     const mapping = processMapping(fhirQuestionnaire);
     const sourceQueries = processSourceQueries(fhirQuestionnaire);
     const targetStructureMap = processTargetStructureMap(fhirQuestionnaire);
+    const assembledFrom = processAssembledFrom(fhirQuestionnaire);
 
     return {
         launchContext: launchContext?.length ? launchContext : undefined,
         mapping: mapping?.length ? mapping : undefined,
         sourceQueries: sourceQueries?.length ? sourceQueries : undefined,
         targetStructureMap: targetStructureMap?.length ? targetStructureMap : undefined,
+        assembledFrom,
     };
 }
 
@@ -112,4 +117,16 @@ function processTargetStructureMap(fhirQuestionnaire: FHIRQuestionnaire): string
     }
 
     return extensions.map((extension) => extension.valueCanonical!);
+}
+
+function processAssembledFrom(fhirQuestionnaire: FHIRQuestionnaire): canonical | undefined {
+    const extension = fhirQuestionnaire.extension?.find(
+        (ext) => ext.url === 'https://jira.hl7.org/browse/FHIR-22356#assembledFrom',
+    );
+
+    if (!extension) {
+        return undefined;
+    }
+
+    return extension.valueCanonical;
 }

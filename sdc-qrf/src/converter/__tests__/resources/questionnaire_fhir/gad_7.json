@@ -1,12 +1,7 @@
 {
-    "subjectType": [
-        "Encounter",
-        "Patient"
-    ],
+    "subjectType": ["Encounter", "Patient"],
     "meta": {
-        "profile": [
-            "https://beda.software/beda-emr-questionnaire"
-        ],
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-04-10T03:43:34.792167Z",
         "versionId": "694",
         "extension": [
@@ -481,6 +476,10 @@
             "valueReference": {
                 "reference": "Mapping/gad-7-extract"
             }
+        },
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "gad-7"
         }
     ],
     "status": "active",
