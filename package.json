@@ -6,12 +6,10 @@
         "test": "lerna run test --stream",
         "test:web": "lerna run test --stream --concurrency=1 --scope web --",
         "test:shared": "lerna run test --stream --concurrency=1 --scope shared --",
-        "test:sdc-qrf": "lerna run test --stream --concurrency=1 --scope sdc-qrf --",
         "start": "lerna run --parallel start",
         "start:web": "lerna run start --parallel --scope web",
         "build": "lerna run --parallel build",
         "build:web": "lerna run --parallel build --scope web",
-        "build:sdc-qrf": "lerna run --parallel build --scope sdc-qrf",
         "typecheck": "lerna run --parallel typecheck",
         "prepare": "husky install"
     },
@@ -50,8 +48,7 @@
     "workspaces": {
         "packages": [
             "web",
-            "shared",
-            "sdc-qrf"
+            "shared"
         ],
         "nohoist": [
             "**/react-native",
