@@ -5,6 +5,7 @@
         "profile": ["https://beda.software/beda-emr-questionnaire"]
     },
     "status": "active",
+    "assembledFrom": "unit-option",
     "item": [
         {
             "type": "quantity",

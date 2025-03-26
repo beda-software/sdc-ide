@@ -3,8 +3,14 @@ import { Extension as FHIRExtension, Questionnaire as FHIRQuestionnaire } from '
 import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
 
 export function processExtensions(questionnaire: FCEQuestionnaire): FHIRQuestionnaire {
-    const { launchContext, mapping, sourceQueries, targetStructureMap, ...fhirQuestionnaire } =
-        questionnaire;
+    const {
+        launchContext,
+        mapping,
+        sourceQueries,
+        targetStructureMap,
+        assembledFrom,
+        ...fhirQuestionnaire
+    } = questionnaire;
 
     let extensions: FHIRExtension[] = [];
 
@@ -66,6 +72,13 @@ export function processExtensions(questionnaire: FCEQuestionnaire): FHIRQuestion
                 valueCanonical: targetStructureMapRef,
             })),
         );
+    }
+
+    if (assembledFrom) {
+        extensions.push({
+            url: 'https://jira.hl7.org/browse/FHIR-22356#assembledFrom',
+            valueCanonical: assembledFrom,
+        });
     }
 
     if (extensions.length) {

@@ -73,6 +73,12 @@
     "subjectType": ["Patient"],
     "id": "example",
     "resourceType": "Questionnaire",
+    "extension": [
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "enable-when"
+        }
+    ],
     "meta": {
         "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-05-07T09:04:40.566686Z",

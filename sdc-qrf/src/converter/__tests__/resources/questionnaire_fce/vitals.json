@@ -229,6 +229,7 @@
     ],
     "resourceType": "Questionnaire",
     "status": "active",
+    "assembledFrom": "vitals",
     "id": "vitals",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/vitals"
 }

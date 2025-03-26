@@ -1,12 +1,7 @@
 {
-    "subjectType": [
-        "Encounter",
-        "Patient"
-    ],
+    "subjectType": ["Encounter", "Patient"],
     "meta": {
-        "profile": [
-            "https://beda.software/beda-emr-questionnaire"
-        ],
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-04-10T03:43:34.792167Z",
         "createdAt": "2023-04-05T05:22:35.752466Z",
         "versionId": "694"
@@ -17,10 +12,7 @@
                 "code": "LaunchPatient",
                 "system": "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext"
             },
-            "type": [
-                "Patient",
-                "Resource"
-            ]
+            "type": ["Patient", "Resource"]
         }
     ],
     "name": "Allergies",
@@ -401,6 +393,7 @@
     ],
     "resourceType": "Questionnaire",
     "status": "active",
+    "assembledFrom": "multiple-type-launch-context",
     "id": "allergies",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/allergies"
 }

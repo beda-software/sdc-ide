@@ -120,6 +120,7 @@
     "resourceType": "Questionnaire",
     "title": "Edit patient",
     "status": "active",
+    "assembledFrom": "patient-edit",
     "id": "patient-edit",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/patient-edit"
 }

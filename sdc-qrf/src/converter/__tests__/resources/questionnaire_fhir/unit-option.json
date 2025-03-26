@@ -34,6 +34,12 @@
     "meta": {
         "profile": ["https://beda.software/beda-emr-questionnaire"]
     },
+    "extension": [
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "unit-option"
+        }
+    ],
     "status": "active",
     "id": "unit-option",
     "resourceType": "Questionnaire"

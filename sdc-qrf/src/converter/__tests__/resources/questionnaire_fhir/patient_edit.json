@@ -1,8 +1,6 @@
 {
     "meta": {
-        "profile": [
-            "https://beda.software/beda-emr-questionnaire"
-        ],
+        "profile": ["https://beda.software/beda-emr-questionnaire"],
         "lastUpdated": "2023-04-10T03:43:34.792167Z",
         "versionId": "694",
         "extension": [
@@ -175,6 +173,10 @@
             "valueReference": {
                 "reference": "Mapping/patient-create"
             }
+        },
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "patient-edit"
         }
     ],
     "status": "active",

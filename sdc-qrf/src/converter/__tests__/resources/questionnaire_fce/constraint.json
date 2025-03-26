@@ -24,8 +24,8 @@
                     "human": "Human second",
                     "expression": "true"
                 }
-                 
             ]
         }
-    ]
+    ],
+    "assembledFrom": "constraint"
 }

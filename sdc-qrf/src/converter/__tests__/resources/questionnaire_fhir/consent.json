@@ -111,6 +111,10 @@
             "valueReference": {
                 "reference": "Mapping/consent-extract"
             }
+        },
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "consent"
         }
     ],
     "status": "active",

@@ -309,6 +309,10 @@
             "valueReference": {
                 "reference": "Mapping/vitals"
             }
+        },
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "vitals"
         }
     ],
     "status": "active",

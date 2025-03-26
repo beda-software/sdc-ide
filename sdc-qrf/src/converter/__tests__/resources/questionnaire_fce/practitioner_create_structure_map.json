@@ -86,6 +86,7 @@
     "title": "Practitioner create",
     "targetStructureMap": ["StructureMap/practitioner-create"],
     "status": "active",
+    "assembledFrom": "practitioner-create-structure-map",
     "id": "practitioner-create-fhir-testing",
     "url": "https://aidbox.emr.beda.software/ui/console#/entities/Questionnaire/practitioner-create"
 }

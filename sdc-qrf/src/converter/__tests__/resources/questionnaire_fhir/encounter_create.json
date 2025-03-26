@@ -163,6 +163,10 @@
             "valueReference": {
                 "reference": "Mapping/test-mapper"
             }
+        },
+        {
+            "url": "https://jira.hl7.org/browse/FHIR-22356#assembledFrom",
+            "valueCanonical": "encounter-create"
         }
     ],
     "status": "active",
