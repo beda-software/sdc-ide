@@ -29,8 +29,6 @@
       "forceConsistentCasingInFileNames": true,
       "noUncheckedIndexedAccess": true,
 
-      // Option 'suppressImplicitAnyIndexErrors' is deprecated and will stop functioning in TypeScript 5.5
-      "suppressImplicitAnyIndexErrors": true,
       "ignoreDeprecations": "5.0",
     },
     "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],

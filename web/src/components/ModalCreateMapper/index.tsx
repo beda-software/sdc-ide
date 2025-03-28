@@ -1,3 +1,4 @@
+import { Mapping } from '@beda.software/aidbox-types';
 import { useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { toast } from 'react-toastify';
@@ -5,7 +6,6 @@ import { Button } from 'web/src/components/Button';
 import { InputField } from 'web/src/components/InputField';
 import { Select } from 'web/src/components/Select';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import s from './ModalCreateMapper.module.scss';
 import { FieldWrapper } from '../FieldWrapper';

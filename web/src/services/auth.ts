@@ -1,3 +1,5 @@
+import { User } from '@beda.software/aidbox-types';
+
 import {
     resetInstanceToken as resetAidboxInstanceToken,
     setInstanceToken as setAidboxInstanceToken,
@@ -11,7 +13,6 @@ import {
 } from 'fhir-react/lib/services/instance';
 import { extractErrorCode } from 'fhir-react/lib/utils/error';
 
-import { User } from 'shared/src/contrib/aidbox';
 
 import { getData } from './localStorage';
 

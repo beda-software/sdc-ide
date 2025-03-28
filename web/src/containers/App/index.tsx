@@ -1,3 +1,4 @@
+import { User } from '@beda.software/aidbox-types';
 import queryString from 'query-string';
 import { useEffect, useRef } from 'react';
 import { Route, Routes, useLocation, Navigate } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { success } from 'fhir-react/lib/libs/remoteData';
 
-import { User } from 'shared/src/contrib/aidbox';
 
 import {
     authorize,

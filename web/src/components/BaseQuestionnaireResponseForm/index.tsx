@@ -64,7 +64,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                     <QuestionnaireResponseFormProvider
                         formValues={values}
                         setFormValues={(newValues) => form.change('', newValues)}
-                        groupItemComponent={Group ? Group : undefined}
+                        groupItemComponent={Group}
                         itemControlGroupItemComponents={{ col: Col, row: Row, gtable: GTable }}
                         questionItemComponents={{
                             date: QuestionDate,

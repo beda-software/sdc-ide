@@ -1,3 +1,4 @@
+import { Mapping } from '@beda.software/aidbox-types';
 import {
     Questionnaire,
     QuestionnaireResponse,
@@ -34,7 +35,6 @@ import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { getMappings, makeMappingExtension, makeLaunchContextExtension } from './utils';
 

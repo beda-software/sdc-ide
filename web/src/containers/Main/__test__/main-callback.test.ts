@@ -1,3 +1,4 @@
+import { Mapping } from '@beda.software/aidbox-types';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useMain } from 'web/src/containers/Main/useMain';
@@ -9,7 +10,6 @@ import { axiosInstance } from 'fhir-react/lib/services/instance';
 import { service } from 'fhir-react/lib/services/service';
 import { ensure } from 'fhir-react/lib/utils/tests';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { EXPECTED_RESOURCES } from './resources';
 import mappingDemo1 from './resources/Mapping/demo-1.json';

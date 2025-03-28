@@ -1,3 +1,4 @@
+import { Coding, ValueSet } from '@beda.software/aidbox-types';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { Field } from 'react-final-form';
@@ -6,7 +7,6 @@ import AsyncSelect from 'react-select/async';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { mapSuccess, service } from 'fhir-react/lib/services/service';
 
-import { Coding, ValueSet } from 'shared/src/contrib/aidbox';
 
 import s from './TerminologyField.module.scss';
 

@@ -1166,6 +1166,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@beda.software/aidbox-types@link:shared/src/contrib/aidbox-types":
+  version "0.0.0"
+  uid ""
+
 "@codemirror/autocomplete@^6.0.0":
   version "6.18.4"
   resolved "https://registry.yarnpkg.com/@codemirror/autocomplete/-/autocomplete-6.18.4.tgz#4394f55d6771727179f2e28a871ef46bbbeb11b1"
@@ -12094,9 +12098,15 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
 
-"sdc-qrf@link:/Users/dmitrijsutov/projects/bedasoftware/open-source/sdc-qrf":
-  version "0.0.0"
-  uid ""
+sdc-qrf@^0.3.17-alpha.0:
+  version "0.3.17-alpha.0"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.3.17-alpha.0.tgz#32464a00b4cd65e94e70a9fee80d1b1475a4802a"
+  integrity sha512-ByMpdqmg+UN8QJrIGLOiCUzL+YQU/7H2S4dTZxUa/a3nVuMqeNqqSdu4bXX7qzaJaaEAQ1i95hJwSh7YkMfmbg==
+  dependencies:
+    classnames "^2.5.1"
+    fhirpath "^3.18.0"
+    lodash "^4.17.21"
+    query-string "^9.1.1"
 
 select-hose@^2.0.0:
   version "2.0.0"

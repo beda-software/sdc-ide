@@ -1,14 +1,14 @@
+import {
+    QuestionnaireItem,
+    QuestionnaireItemAnswerOption,
+    ValueSet,
+} from '@beda.software/aidbox-types';
 import _ from 'lodash';
 import { AnswerValue, QuestionItemProps } from 'sdc-qrf/src';
 
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { applyDataTransformer, service } from 'aidbox-react/lib/services/service';
 
-import {
-    QuestionnaireItem,
-    QuestionnaireItemAnswerOption,
-    ValueSet,
-} from 'shared/src/contrib/aidbox';
 
 export function getDisplay(value: AnswerValue): string {
     const valueType = _.keys(value)[0];

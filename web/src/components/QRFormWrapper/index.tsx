@@ -1,3 +1,4 @@
+import { QuestionnaireResponse as FCEQuestionnaireResponse } from '@beda.software/aidbox-types';
 import {
     Questionnaire as FHIRQuestionnaire,
     QuestionnaireResponse as FHIRQuestionnaireResponse,
@@ -17,7 +18,6 @@ import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { sequenceMap } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
-import { QuestionnaireResponse as FCEQuestionnaireResponse } from 'shared/src/contrib/aidbox';
 
 import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 
