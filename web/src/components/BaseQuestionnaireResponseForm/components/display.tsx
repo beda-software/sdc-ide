@@ -1,4 +1,4 @@
-import { QuestionItemProps } from 'sdc-qrf/src';
+import { QuestionItemProps } from 'sdc-qrf';
 
 import s from '../QuestionnaireResponseForm.module.scss';
 

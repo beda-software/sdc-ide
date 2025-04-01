@@ -3,9 +3,8 @@ import {
     QuestionnaireItemAnswerOption,
     Resource,
 } from '@beda.software/aidbox-types';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
-
 
 import { AnswerReferenceProps, useAnswerReference } from './hooks';
 import { AsyncSelectField } from '../choice/select';

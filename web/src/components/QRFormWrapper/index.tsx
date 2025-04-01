@@ -11,13 +11,12 @@ import {
     mapFormToResponse,
     mapResponseToForm,
     toFirstClassExtension,
-} from 'sdc-qrf/src';
+} from 'sdc-qrf';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 import { sequenceMap } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
-
 
 import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 

@@ -2,7 +2,7 @@ import { Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
 import { YAMLException } from 'js-yaml';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { usePreviousValue } from 'sdc-qrf/src';
+import { usePreviousValue } from 'sdc-qrf';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 

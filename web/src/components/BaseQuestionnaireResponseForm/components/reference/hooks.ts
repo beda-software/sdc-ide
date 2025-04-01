@@ -5,13 +5,12 @@ import {
 } from '@beda.software/aidbox-types';
 import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf/src';
+import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
 
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { ResourcesMap } from 'fhir-react/lib/services/fhir';
 import { buildQueryParams } from 'fhir-react/lib/services/instance';
-
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 

@@ -1,5 +1,5 @@
 import { Field } from 'react-final-form';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import s from './BooleanField.module.scss';
 import { QuestionLabel } from '../label';

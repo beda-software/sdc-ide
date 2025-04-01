@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import { GroupContext } from './context';
 import s from './Group.module.scss';

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 // eslint-disable-next-line import/named
 import { Field, FieldInputProps } from 'react-final-form';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import s from './RepeatableGroups.module.scss';
 import { GroupLabel } from '../label';
