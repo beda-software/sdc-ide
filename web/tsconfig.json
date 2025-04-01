@@ -11,5 +11,5 @@
     "../node_modules/@types/jest/index.d.ts",
     "../shared/src/contrib/fhirpath/index.d.ts"
   ],
-  "exclude": ["**/__test__", "../node_modules"] // Temporary exclude tests from typecheck
+  "exclude": ["**/__test__"] // Temporary exclude tests from typecheck
 }
