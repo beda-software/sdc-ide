@@ -26,7 +26,7 @@ module.exports = {
     settings: {
         'import/resolver': {
             'eslint-import-resolver-custom-alias': {
-                extensions: ['.js', '.jsx', '.ts', '.tsx'],
+                extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'],
             },
         },
     },

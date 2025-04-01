@@ -1,4 +1,4 @@
-import { GroupItemProps } from 'sdc-qrf/src';
+import { GroupItemProps } from 'sdc-qrf';
 
 import s from './GTable.module.scss';
 import { GroupLabel } from '../label';

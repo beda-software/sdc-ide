@@ -1,3 +1,5 @@
+import { Resource } from '@beda.software/aidbox-types';
+
 import {
     extractBundleResources,
     getFHIRResources,
@@ -7,7 +9,6 @@ import {
 import { SearchParams } from 'fhir-react/lib/services/search';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
-import { Resource } from 'shared/src/contrib/aidbox';
 
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     resourceType: R['resourceType'],

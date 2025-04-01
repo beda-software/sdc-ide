@@ -1,3 +1,4 @@
+import { Extension, Questionnaire } from '@beda.software/aidbox-types';
 import { renderHook } from '@testing-library/react-hooks';
 import _ from 'lodash';
 import { act } from 'react-dom/test-utils';
@@ -9,7 +10,6 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { service } from 'fhir-react/lib/services/service';
 import { ensure } from 'fhir-react/lib/utils/tests';
 
-import { Extension, Questionnaire } from 'shared/src/contrib/aidbox';
 
 const questionnaireIdInitial = 'demo-1';
 

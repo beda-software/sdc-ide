@@ -1,7 +1,6 @@
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf/src';
+import { QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
+import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
-
-import { QuestionnaireItemAnswerOption } from 'shared/src/contrib/aidbox';
 
 import { useAnswerChoice } from './hook';
 import { AsyncSelectField } from './select';

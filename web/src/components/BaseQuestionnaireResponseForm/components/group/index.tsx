@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GroupItemProps, QuestionItems } from 'sdc-qrf/src';
+import { GroupItemProps, QuestionItems } from 'sdc-qrf';
 
 import s from './Group.module.scss';
 import { GroupLabel } from './label';

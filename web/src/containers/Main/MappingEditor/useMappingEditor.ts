@@ -1,3 +1,4 @@
+import { Mapping } from '@beda.software/aidbox-types';
 import { Bundle, Questionnaire } from 'fhir/r4b';
 import { YAMLException } from 'js-yaml';
 import { useEffect, useState } from 'react';
@@ -18,7 +19,6 @@ import {
 import { WithId, extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { EditorState } from './interfaces';
 import { getMappings } from '../utils';

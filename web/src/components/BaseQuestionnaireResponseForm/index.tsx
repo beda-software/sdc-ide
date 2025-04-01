@@ -7,7 +7,7 @@ import {
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
-} from 'sdc-qrf/src';
+} from 'sdc-qrf';
 
 import {
     Col,

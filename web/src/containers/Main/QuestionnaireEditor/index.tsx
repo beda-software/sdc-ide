@@ -15,7 +15,7 @@ import {
     isLoading,
     isSuccess,
 } from 'fhir-react/lib/libs/remoteData';
-import { Questionnaire as FCEQuestionnaire } from 'shared/src/contrib/aidbox';
+import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 import s from './QuestionnaireEditor.module.scss';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
@@ -23,7 +23,7 @@ import { toast } from 'react-toastify';
 import { YAMLException } from 'js-yaml';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { sortKeys } from 'web/src/utils/sort-keys';
-import { fromFirstClassExtensionV2, toFirstClassExtensionV2 } from 'sdc-qrf/src/converter';
+import { fromFirstClassExtensionV2, toFirstClassExtensionV2 } from 'sdc-qrf';
 
 interface Props {
     onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;

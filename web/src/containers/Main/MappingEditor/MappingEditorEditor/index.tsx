@@ -1,3 +1,4 @@
+import { Mapping } from '@beda.software/aidbox-types';
 import classNames from 'classnames';
 import { WithId } from 'fhir-react';
 import { useBeforeUnload } from 'react-router-dom';
@@ -7,7 +8,6 @@ import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
-import { Mapping } from 'shared/src/contrib/aidbox';
 
 import { MappingEditorEditorProps } from '../interfaces';
 import s from '../MappingEditor.module.scss';
