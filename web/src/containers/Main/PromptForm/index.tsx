@@ -15,11 +15,10 @@ interface Props {
     onSubmit: (prompt: string) => Promise<RemoteDataResult<any>>;
     goBack: () => void;
     label: string;
-    placeholder?: string;
 }
 
 export function PromptForm(props: Props) {
-    const { id, onSubmit, goBack, label, placeholder } = props;
+    const { id, onSubmit, goBack, label } = props;
     const [isLoading, setIsLoading] = useState(false);
     const disabled = isLoading;
 
@@ -49,9 +48,8 @@ export function PromptForm(props: Props) {
                             rows={5}
                             style={{ resize: 'vertical' }}
                             id={`prompt-${id}`}
-                            component={(input) => <textarea {...input} placeholder={placeholder} />}
+                            component="textarea"
                         />
-
                         <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
                             <Button type="submit" disabled={disabled}>
                                 {'Submit'}
