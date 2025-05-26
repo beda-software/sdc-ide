@@ -35,6 +35,7 @@ import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
 import { service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
+import { questionnaireProfileUrl } from 'shared/src/constants';
 
 import { getMappings, makeMappingExtension, makeLaunchContextExtension } from './utils';
 
@@ -148,7 +149,7 @@ export function useMain(questionnaireId: string) {
                 resourceType: 'Questionnaire',
                 status: 'draft',
                 meta: {
-                    profile: ['https://beda.software/beda-emr-questionnaire'],
+                    profile: [questionnaireProfileUrl],
                 },
             };
             const response = await generateQuestionnaireService(
@@ -185,7 +186,9 @@ export function useMain(questionnaireId: string) {
                 resourceType: 'Questionnaire',
                 status: 'draft',
                 meta: {
-                    profile: ['https://beda.software/beda-emr-questionnaire'],
+                    profile: [
+                        'https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire',
+                    ],
                 },
                 ...partialQuestionnaire,
             };

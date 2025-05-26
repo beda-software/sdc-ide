@@ -24,6 +24,7 @@ import { YAMLException } from 'js-yaml';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { sortKeys } from 'web/src/utils/sort-keys';
 import { fromFirstClassExtensionV2, toFirstClassExtensionV2 } from 'sdc-qrf';
+import { legacyQuestionnaireProfileUrl, questionnaireProfileUrl } from 'shared/src/constants';
 
 interface Props {
     onSave: (resource: Questionnaire) => Promise<RemoteDataResult<any>>;
@@ -78,7 +79,7 @@ export function QuestionnaireEditor(props: Props) {
                             resourceType="Questionnaire"
                             searchParams={{
                                 _sort: 'id',
-                                profile: 'https://beda.software/beda-emr-questionnaire',
+                                profile: `${legacyQuestionnaireProfileUrl},${questionnaireProfileUrl}`,
                             }}
                             value={questionnaireId}
                             onChange={(value) => {

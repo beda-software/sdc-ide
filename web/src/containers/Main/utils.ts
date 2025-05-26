@@ -4,10 +4,12 @@ import {
     launchContextExtensionUrl,
 } from 'web/src/components/LaunchContextEditor/types';
 
-export const mappingExtensionUrl = 'http://beda.software/fhir-extensions/questionnaire-mapper';
+import { legacyMappingExtensionUrl, mappingExtensionUrl } from 'shared/src/constants';
 
 export function getMappings(questionnaire: Questionnaire) {
-    return questionnaire.extension?.filter((ext) => ext.url === mappingExtensionUrl);
+    return questionnaire.extension?.filter(
+        (ext) => ext.url === mappingExtensionUrl || ext.url === legacyMappingExtensionUrl,
+    );
 }
 
 export function makeMappingExtension(name: string) {
