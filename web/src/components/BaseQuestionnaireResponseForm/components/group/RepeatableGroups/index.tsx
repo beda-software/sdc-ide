@@ -96,7 +96,7 @@ function useRepeatableGroup(props: RepeatableGroupProps) {
     return {
         onRemove,
         parentPath: [...parentPath, linkId, 'items', index.toString()],
-        context: context[0]!,
+        context: context[index]!,
     };
 }
 
