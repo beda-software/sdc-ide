@@ -187,7 +187,7 @@ export function useMain(questionnaireId: string) {
                 status: 'draft',
                 meta: {
                     profile: [
-                        'https://emr.beda.software/StructureDefinition/fhir-emr-questionnaire',
+		        questionnaireProfileUrl
                     ],
                 },
                 ...partialQuestionnaire,
