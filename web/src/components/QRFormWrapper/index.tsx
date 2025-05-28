@@ -40,7 +40,7 @@ export function QRFormWrapper({
     launchContextParameters,
 }: QRFormWrapperProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [
+    const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 250), [
         saveQuestionnaireResponse,
     ]);
     const remoteDataResult = sequenceMap({
