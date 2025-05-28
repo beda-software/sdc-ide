@@ -15,7 +15,6 @@ import {
     isLoading,
     isSuccess,
 } from 'fhir-react/lib/libs/remoteData';
-import { Questionnaire as FCEQuestionnaire } from '@beda.software/aidbox-types';
 import s from './QuestionnaireEditor.module.scss';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';
@@ -23,7 +22,7 @@ import { toast } from 'react-toastify';
 import { YAMLException } from 'js-yaml';
 import { RemoteResourceSelect } from 'web/src/components/ResourceSelect';
 import { sortKeys } from 'web/src/utils/sort-keys';
-import { fromFirstClassExtensionV2, toFirstClassExtensionV2 } from 'sdc-qrf';
+import { FCEQuestionnaire, fromFirstClassExtension, toFirstClassExtension } from 'sdc-qrf';
 import { legacyQuestionnaireProfileUrl, questionnaireProfileUrl } from 'shared/src/constants';
 
 interface Props {
@@ -132,12 +131,12 @@ export function QuestionnaireEditor(props: Props) {
                                     setUpdatedResource(undefined);
                                 }}
                                 resource={prepareQuestionnaire(
-                                    toFirstClassExtensionV2(questionnaire),
+                                    toFirstClassExtension(questionnaire),
                                 )}
                                 onChange={setUpdatedResource}
                                 onSubmit={async (submittedResource) => {
                                     const response = await onSave(
-                                        fromFirstClassExtensionV2(submittedResource),
+                                        fromFirstClassExtension(submittedResource),
                                     );
 
                                     if (isSuccess(response)) {
@@ -174,7 +173,7 @@ export function QuestionnaireEditor(props: Props) {
 
                                         if (updatedResource) {
                                             const response = await onSave(
-                                                fromFirstClassExtensionV2(updatedResource),
+                                                fromFirstClassExtension(updatedResource),
                                             );
 
                                             if (isSuccess(response)) {

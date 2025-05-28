@@ -20,6 +20,7 @@ import {
     QuestionDecimal,
     QuestionDisplay,
     QuestionString,
+    QuestionTime,
     Row,
 } from './components';
 import { QuestionInteger } from './components/integer';
@@ -68,6 +69,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                         itemControlGroupItemComponents={{ col: Col, row: Row, gtable: GTable }}
                         questionItemComponents={{
                             date: QuestionDate,
+                            time: QuestionTime,
                             dateTime: QuestionDateTime,
                             string: QuestionString,
                             text: QuestionString,
@@ -83,7 +85,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                     >
                         <>
                             <QuestionItems
-                                questionItems={formData.context.questionnaire.item!}
+                                questionItems={formData.context.fceQuestionnaire.item!}
                                 parentPath={[]}
                                 context={calcInitialContext(formData.context, values)}
                             />

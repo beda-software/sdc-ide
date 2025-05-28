@@ -1,4 +1,3 @@
-import { QuestionnaireResponse as FCEQuestionnaireResponse } from '@beda.software/aidbox-types';
 import {
     Questionnaire as FHIRQuestionnaire,
     QuestionnaireResponse as FHIRQuestionnaireResponse,
@@ -6,12 +5,7 @@ import {
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import {
-    fromFirstClassExtension,
-    mapFormToResponse,
-    mapResponseToForm,
-    toFirstClassExtension,
-} from 'sdc-qrf';
+import { mapFormToResponse, mapResponseToForm, toFirstClassExtension } from 'sdc-qrf';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
@@ -51,25 +45,24 @@ export function QRFormWrapper({
                     key={data.questionnaireRD.id}
                     formData={{
                         context: {
-                            questionnaire: toFirstClassExtension(data.questionnaireRD),
-                            questionnaireResponse: toFirstClassExtension(
-                                data.questionnaireResponseRD,
-                            ),
+                            fceQuestionnaire: toFirstClassExtension(data.questionnaireRD),
+                            questionnaire: data.questionnaireRD,
+                            questionnaireResponse: data.questionnaireResponseRD,
                             launchContextParameters: launchContextParameters ?? [],
                         },
                         formValues: mapResponseToForm(
-                            toFirstClassExtension(data.questionnaireResponseRD),
-                            toFirstClassExtension(data.questionnaireRD),
+                            data.questionnaireResponseRD,
+                            data.questionnaireRD,
                         ),
                     }}
                     /* TODO: Move to useMemo */
                     onSubmit={async () => {}}
                     onChange={(newFormData) => {
-                        const fceQR: FCEQuestionnaireResponse = {
-                            ...toFirstClassExtension(data.questionnaireResponseRD),
+                        const fceQR = {
+                            ...data.questionnaireResponseRD,
                             ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
                         };
-                        onChange(fromFirstClassExtension(fceQR));
+                        onChange(fceQR);
                     }}
                 />
             )}

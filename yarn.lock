@@ -12079,10 +12079,10 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
 
-sdc-qrf@^0.3.24:
-  version "0.3.24"
-  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-0.3.24.tgz#45dd684a26ae9c871efa544accefa7bfc362be9e"
-  integrity sha512-V4HgtqESgpbGRfbQqK7WFiY/s5bAep14Ace0h1QH3jyxWtLgQprNPqBYbA8Yp6cbdPvWMiu/mJO4EP8Jyp36QQ==
+sdc-qrf@^1.0.0-beta.2:
+  version "1.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/sdc-qrf/-/sdc-qrf-1.0.0-beta.2.tgz#dee05748845588edf9d8c9b84af390c9ca888240"
+  integrity sha512-TbrkYTw8hBR3jKlnNBDCG9e86e6kyGEWNia9qBoTHt6t6p/rXD4cq7FZu4su54uzStowCpYqFSb1EGOU2hFHJg==
   dependencies:
     classnames "^2.5.1"
     fhirpath "^3.18.0"

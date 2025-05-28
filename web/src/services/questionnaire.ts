@@ -1,14 +1,12 @@
-import { Resource } from '@beda.software/aidbox-types';
+import { Resource } from 'fhir/r4b';
 
 import {
     extractBundleResources,
     getFHIRResources,
-    getReference,
     ResourcesMap,
 } from 'fhir-react/lib/services/fhir';
 import { SearchParams } from 'fhir-react/lib/services/search';
 import { mapSuccess } from 'fhir-react/lib/services/service';
-
 
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     resourceType: R['resourceType'],
@@ -20,8 +18,8 @@ export async function loadResourceOptions<R extends Resource, IR extends Resourc
         return resourcesMap[resourceType].map((resource) => ({
             value: {
                 Reference: {
-                    ...getReference(resource, getDisplayFn(resource as R, resourcesMap)),
-                    resource,
+                    reference: `${resource.resourceType}/${resource.id}`,
+                    display: getDisplayFn(resource as R, resourcesMap),
                 },
             },
         }));

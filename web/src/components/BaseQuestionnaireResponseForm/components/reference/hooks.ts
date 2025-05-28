@@ -1,11 +1,7 @@
-import {
-    QuestionnaireItemAnswerOption,
-    QuestionnaireResponseItemAnswer,
-    Resource,
-} from '@beda.software/aidbox-types';
+import { Resource } from 'fhir/r4b';
 import fhirpath from 'fhirpath';
 import { ActionMeta, MultiValue, SingleValue } from 'react-select';
-import { parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
+import { AnswerValue, FormAnswerItems, parseFhirQueryExpression, QuestionItemProps } from 'sdc-qrf';
 import { loadResourceOptions } from 'web/src/services/questionnaire';
 
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
@@ -14,9 +10,7 @@ import { buildQueryParams } from 'fhir-react/lib/services/instance';
 
 export type AnswerReferenceProps<R extends Resource, IR extends Resource> = QuestionItemProps & {
     overrideGetDisplay?: (resource: R, includedResources: ResourcesMap<R | IR>) => string;
-    overrideGetLabel?: (
-        o: QuestionnaireItemAnswerOption['value'] | QuestionnaireResponseItemAnswer['value'],
-    ) => React.ReactElement | string;
+    overrideGetLabel?: (o: AnswerValue) => React.ReactElement | string;
 };
 
 export function useAnswerReference<R extends Resource = any, IR extends Resource = any>({
@@ -42,7 +36,7 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         context,
     );
 
-    const loadOptions = async (searchText: string): Promise<QuestionnaireItemAnswerOption[]> => {
+    const loadOptions = async (searchText: string): Promise<FormAnswerItems[]> => {
         const response = await loadResourceOptions(
             resourceType as any,
             { ...(typeof searchParams === 'string' ? {} : searchParams ?? {}), _ilike: searchText },
@@ -50,17 +44,15 @@ export function useAnswerReference<R extends Resource = any, IR extends Resource
         );
 
         if (isSuccess(response)) {
-            return response.data as QuestionnaireItemAnswerOption[];
+            return response.data;
         }
 
         return [];
     };
 
     const onChange = (
-        _value:
-            | SingleValue<QuestionnaireItemAnswerOption>
-            | MultiValue<QuestionnaireItemAnswerOption>,
-        action: ActionMeta<QuestionnaireItemAnswerOption>,
+        _value: SingleValue<FormAnswerItems> | MultiValue<FormAnswerItems>,
+        action: ActionMeta<FormAnswerItems>,
     ) => {
         if (!repeats || action.action !== 'select-option') {
             return;

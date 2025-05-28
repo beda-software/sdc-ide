@@ -1,14 +1,13 @@
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
 import classNames from 'classnames';
 import { useContext } from 'react';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { FCEQuestionnaireItem, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 
 import { GroupContext } from './group/context';
 import s from '../QuestionnaireResponseForm.module.scss';
 
 interface Props
     extends React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement> {
-    questionItem: QuestionnaireItem;
+    questionItem: FCEQuestionnaireItem;
 }
 
 export function QuestionLabel(props: Props) {

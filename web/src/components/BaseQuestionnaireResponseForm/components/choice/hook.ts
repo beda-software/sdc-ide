@@ -1,10 +1,12 @@
-import {
-    QuestionnaireItem,
-    QuestionnaireItemAnswerOption,
-    ValueSet,
-} from '@beda.software/aidbox-types';
+import { ValueSet } from '@beda.software/aidbox-types';
 import _ from 'lodash';
-import { AnswerValue, QuestionItemProps } from 'sdc-qrf';
+import {
+    AnswerValue,
+    FCEQuestionnaireItem,
+    FormAnswerItems,
+    QuestionItemProps,
+    toAnswerValue,
+} from 'sdc-qrf';
 
 import { isSuccess, RemoteDataResult, success } from 'aidbox-react/lib/libs/remoteData';
 import { applyDataTransformer, service } from 'aidbox-react/lib/services/service';
@@ -16,13 +18,16 @@ export function getDisplay(value: AnswerValue): string {
     return output;
 }
 export async function loadAnswerOptions(
-    questionnaireItem: QuestionnaireItem,
+    questionnaireItem: FCEQuestionnaireItem,
     searchText?: string,
     count = 50,
-): Promise<RemoteDataResult<QuestionnaireItemAnswerOption[]>> {
-    const { answerOption, answerValueSet } = questionnaireItem;
+): Promise<RemoteDataResult<FormAnswerItems[]>> {
+    const { answerOption: answerOptionRaw, answerValueSet } = questionnaireItem;
 
-    if (answerOption) {
+    if (answerOptionRaw) {
+        const answerOption = answerOptionRaw.map((option) => ({
+            value: toAnswerValue(option, 'value'),
+        }));
         const options = searchText
             ? answerOption.filter(
                   (answer) =>
@@ -56,7 +61,7 @@ export async function loadAnswerOptions(
                 : [];
 
             return expansionEntries.map(
-                (expansion): QuestionnaireItemAnswerOption => ({
+                (expansion): FormAnswerItems => ({
                     value: {
                         Coding: {
                             code: expansion.code,

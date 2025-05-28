@@ -1,9 +1,5 @@
-import {
-    AidboxResource,
-    QuestionnaireItemAnswerOption,
-    Resource,
-} from '@beda.software/aidbox-types';
-import { useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { Resource } from 'fhir/r4b';
+import { FormAnswerItems, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
 import { AnswerReferenceProps, useAnswerReference } from './hooks';
@@ -14,13 +10,10 @@ import { QuestionLabel } from '../label';
 function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
-    const { questionItem, parentPath } = props;
-    const { loadOptions, onChange, deps, validate } = useAnswerReference(props);
+    const { questionItem } = props;
+    const { loadOptions, onChange, deps, validate, fieldName } = useAnswerReference(props);
     const { text, repeats, linkId, helpText, readOnly } = questionItem;
     const qrfContext = useQuestionnaireResponseFormContext();
-
-    const fieldPath = [...parentPath, questionItem.linkId!];
-    const fieldName = fieldPath.join('.');
 
     const fieldProps = { validate };
 
@@ -30,7 +23,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
                 return (
                     <>
                         <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                        <AsyncSelectField<QuestionnaireItemAnswerOption>
+                        <AsyncSelectField<FormAnswerItems>
                             key={`answer-choice-${deps.join('-')}`}
                             input={input}
                             id={fieldName}
@@ -51,7 +44,7 @@ function QuestionReferenceUnsafe<R extends Resource = any, IR extends Resource =
     );
 }
 
-export function QuestionReference<R extends AidboxResource = any, IR extends AidboxResource = any>(
+export function QuestionReference<R extends Resource = any, IR extends Resource = any>(
     props: AnswerReferenceProps<R, IR>,
 ) {
     const { answerExpression, choiceColumn, linkId } = props.questionItem;

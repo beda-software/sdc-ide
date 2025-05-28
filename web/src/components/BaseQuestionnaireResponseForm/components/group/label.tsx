@@ -1,9 +1,9 @@
-import { QuestionnaireItem } from '@beda.software/aidbox-types';
+import { FCEQuestionnaireItem } from 'sdc-qrf';
 
 import s from './Group.module.scss';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-    questionItem?: QuestionnaireItem;
+    questionItem?: FCEQuestionnaireItem;
 }
 
 export function GroupLabel({ questionItem = {} as any, children }: Props) {

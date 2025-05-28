@@ -1,5 +1,4 @@
-import { QuestionnaireItemAnswerOption } from '@beda.software/aidbox-types';
-import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
+import { FormAnswerItems, QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
 import { getAnswerCode, getAnswerDisplay } from 'web/src/utils/questionnaire';
 
 import { useAnswerChoice } from './hook';
@@ -25,7 +24,7 @@ export function QuestionChoice(props: QuestionItemProps) {
                 return (
                     <>
                         <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
-                        <AsyncSelectField<QuestionnaireItemAnswerOption>
+                        <AsyncSelectField<FormAnswerItems>
                             key={`answer-choice-${deps.join('-')}`}
                             data-testid={`choice-${linkId}`}
                             id={fieldName}

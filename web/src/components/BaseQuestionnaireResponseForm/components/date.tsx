@@ -30,6 +30,30 @@ export function QuestionDate({ parentPath, questionItem }: QuestionItemProps) {
     );
 }
 
+export function QuestionTime({ parentPath, questionItem }: QuestionItemProps) {
+    const qrfContext = useQuestionnaireResponseFormContext();
+    const { linkId, readOnly, hidden } = questionItem;
+    const fieldPath = [...parentPath, linkId, 0, 'value', 'time'];
+    const fieldName = fieldPath.join('.');
+
+    return (
+        <QuestionField name={fieldName}>
+            {({ input, meta }) => (
+                <>
+                    <QuestionLabel questionItem={questionItem} htmlFor={fieldName} />
+                    <input
+                        type="time"
+                        id={fieldName}
+                        {...input}
+                        readOnly={qrfContext.readOnly || readOnly || hidden}
+                    />
+                    {meta.touched && meta.error && <span>{meta.error}</span>}
+                </>
+            )}
+        </QuestionField>
+    );
+}
+
 export function QuestionDateTime({ parentPath, questionItem }: QuestionItemProps) {
     const qrfContext = useQuestionnaireResponseFormContext();
     const { linkId, readOnly, hidden } = questionItem;

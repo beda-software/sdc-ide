@@ -1,4 +1,4 @@
-import { QuestionnaireResponse } from '@beda.software/aidbox-types';
+import { QuestionnaireResponse } from 'fhir/r4b';
 import fhirpath from 'fhirpath';
 import yaml from 'js-yaml';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -9,7 +9,6 @@ import YAML, { visitor } from 'yaml';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { service } from 'fhir-react/lib/services/service';
-
 
 import { ModalExpressionProps } from './types';
 import { CodeEditorContext } from '../CodeEditor/context';
