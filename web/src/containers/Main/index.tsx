@@ -96,7 +96,7 @@ export function Main() {
                                     : ''
                             }
                         >
-                            <ErrorBoundary>
+                            <ErrorBoundary resetKeys={[assembledQuestionnaireRD]}>
                                 <QRFormWrapper
                                     questionnaireRD={assembledQuestionnaireRD}
                                     questionnaireResponseRD={questionnaireResponseRD}

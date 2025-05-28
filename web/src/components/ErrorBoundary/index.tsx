@@ -1,6 +1,8 @@
+import _ from 'lodash';
 import React, { ReactNode } from 'react';
 
 interface ErrorBoundaryProps {
+    resetKeys?: unknown[];
     fallback?: (error: Error) => ReactNode;
     children: ReactNode;
 }
@@ -20,8 +22,10 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
         return { hasError: true, error };
     }
 
-    componentDidCatch(error: Error, info: React.ErrorInfo): void {
-        console.error('Caught in ErrorBoundary:', error, info);
+    componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+        if (this.state.hasError && !_.isEqual(prevProps.resetKeys, this.props.resetKeys)) {
+            this.setState({ hasError: false, error: null });
+        }
     }
 
     render(): ReactNode {
