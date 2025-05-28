@@ -4,9 +4,11 @@ import { Form, FormSpy } from 'react-final-form';
 import {
     calcInitialContext,
     FormItems,
+    getItemKey,
     QuestionItems,
     QuestionnaireResponseFormData,
     QuestionnaireResponseFormProvider,
+    removeItemKey,
 } from 'sdc-qrf';
 
 import {
@@ -37,11 +39,32 @@ interface Props {
 
 type FormValues = FormItems;
 
+function isFormItemsEqualCustomizer(first: any, second: any) {
+    if (
+        _.isPlainObject(first) &&
+        _.isPlainObject(second) &&
+        getItemKey(first) &&
+        getItemKey(second)
+    ) {
+        return _.isEqualWith(
+            removeItemKey(first),
+            removeItemKey(second),
+            isFormItemsEqualCustomizer,
+        );
+    }
+
+    return undefined;
+}
+
+function isFormItemsEqual(first: FormItems, second: FormItems) {
+    return _.isEqualWith(first, second, isFormItemsEqualCustomizer);
+}
+
 export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, onChange }: Props) {
     const previousValues = useRef<FormValues | null>(null);
 
     const onFormChange = (values: FormValues) => {
-        if (_.isEqual(values, previousValues.current)) {
+        if (previousValues.current && isFormItemsEqual(values, previousValues.current)) {
             return;
         }
 
