@@ -7,6 +7,7 @@ import { Button } from 'web/src/components/Button';
 import { CachedRemoteData } from 'web/src/components/CachedRemoteData';
 import { Cell } from 'web/src/components/Cell';
 import { CodeEditor } from 'web/src/components/CodeEditor';
+import { ErrorBoundary } from 'web/src/components/ErrorBoundary';
 import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
 import { Logo } from 'web/src/components/Logo';
 import 'react-toastify/dist/ReactToastify.css';
@@ -95,12 +96,14 @@ export function Main() {
                                     : ''
                             }
                         >
-                            <QRFormWrapper
-                                questionnaireRD={assembledQuestionnaireRD}
-                                questionnaireResponseRD={questionnaireResponseRD}
-                                saveQuestionnaireResponse={manager.setQuestionnaireResponse}
-                                launchContextParameters={launchContext.parameter}
-                            />
+                            <ErrorBoundary>
+                                <QRFormWrapper
+                                    questionnaireRD={assembledQuestionnaireRD}
+                                    questionnaireResponseRD={questionnaireResponseRD}
+                                    saveQuestionnaireResponse={manager.setQuestionnaireResponse}
+                                    launchContextParameters={launchContext.parameter}
+                                />
+                            </ErrorBoundary>
                         </Cell>
                     </Allotment>
                     <Allotment
