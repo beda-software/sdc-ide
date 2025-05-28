@@ -24,6 +24,8 @@ import { useIDELayout } from './useIDELayout';
 import { useMain } from './useMain';
 
 import 'allotment/dist/style.css';
+// eslint-disable-next-line import/order
+import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();
@@ -38,7 +40,9 @@ export function Main() {
     } = useMain(questionnaireId!);
     const { mapString, setMapString, mappingResult, fhirMappingLangMode, toggleMappingMode } =
         useFHIRMappingLanguage(
-            isSuccess(questionnaireResponseRD) ? questionnaireResponseRD.data : undefined,
+            isSuccess(questionnaireResponseRD)
+                ? questionnaireResponseRD.data.completedQR
+                : undefined,
         );
     const { layout, setLayout } = useIDELayout();
 
@@ -72,7 +76,10 @@ export function Main() {
                                 questionnaireRD={originalQuestionnaireRD}
                                 onSave={manager.saveQuestionnaire}
                                 launchContext={launchContext}
-                                questionnaireResponseRD={questionnaireResponseRD}
+                                questionnaireResponseRD={mapSuccess(
+                                    questionnaireResponseRD,
+                                    ({ inProgressQR }) => inProgressQR,
+                                )}
                                 reload={manager.reloadQuestionnaire}
                                 generateQuestionnaire={manager.generateQuestionnaire}
                                 createBlankQuestionnaire={manager.createBlankQuestionnaire}
@@ -100,7 +107,12 @@ export function Main() {
                         onChange={(newSizes) => setLayout('horizontal2', newSizes)}
                     >
                         <Cell title="QuestionnaireResponse FHIR resource">
-                            <ResourceCodeDisplay resourceResponse={questionnaireResponseRD} />
+                            <ResourceCodeDisplay
+                                resourceResponse={mapSuccess(
+                                    questionnaireResponseRD,
+                                    ({ completedQR }) => completedQR,
+                                )}
+                            />
                         </Cell>
                         <Cell title="Mapping" even={true}>
                             {fhirMappingLangMode ? (
@@ -127,7 +139,10 @@ export function Main() {
                                     onSave={manager.saveMapping}
                                     onChange={manager.setMapping}
                                     launchContext={launchContext}
-                                    questionnaireResponseRD={questionnaireResponseRD}
+                                    questionnaireResponseRD={mapSuccess(
+                                        questionnaireResponseRD,
+                                        ({ completedQR }) => completedQR,
+                                    )}
                                     reload={manager.reloadMapping}
                                     createMapping={manager.createMapping}
                                     generateMapping={manager.generateMapping}

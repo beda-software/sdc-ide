@@ -2,10 +2,18 @@ import {
     Questionnaire as FHIRQuestionnaire,
     QuestionnaireResponse as FHIRQuestionnaireResponse,
     Parameters,
+    QuestionnaireResponse,
 } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
-import { mapFormToResponse, mapResponseToForm, toFirstClassExtension } from 'sdc-qrf';
+import {
+    calcInitialContext,
+    mapFormToResponse,
+    mapResponseToForm,
+    QuestionnaireResponseFormData,
+    removeDisabledAnswers,
+    toFirstClassExtension,
+} from 'sdc-qrf';
 import { RenderRemoteData } from 'web/src/components/RenderRemoteData';
 
 import { RemoteData } from 'fhir-react/lib/libs/remoteData';
@@ -14,10 +22,14 @@ import { formatError } from 'fhir-react/lib/utils/error';
 
 import { BaseQuestionnaireResponseForm } from '../BaseQuestionnaireResponseForm';
 
+interface QRData {
+    inProgressQR: FHIRQuestionnaireResponse;
+    completedQR: FHIRQuestionnaireResponse;
+}
 interface QRFormWrapperProps {
     questionnaireRD: RemoteData<FHIRQuestionnaire>;
-    questionnaireResponseRD: RemoteData<FHIRQuestionnaireResponse>;
-    saveQuestionnaireResponse: (resource: FHIRQuestionnaireResponse) => void;
+    questionnaireResponseRD: RemoteData<QRData>;
+    saveQuestionnaireResponse: (data: QRData) => void;
     launchContextParameters: Parameters['parameter'];
 }
 
@@ -31,7 +43,10 @@ export function QRFormWrapper({
     const onChange = useCallback(_.debounce(saveQuestionnaireResponse, 1000), [
         saveQuestionnaireResponse,
     ]);
-    const remoteDataResult = sequenceMap({ questionnaireRD, questionnaireResponseRD });
+    const remoteDataResult = sequenceMap({
+        questionnaire: questionnaireRD,
+        questionnaireResponse: questionnaireResponseRD,
+    });
 
     return (
         <RenderRemoteData
@@ -40,32 +55,53 @@ export function QRFormWrapper({
                 return <p>{errors.map((e) => formatError(e)).join(',')}</p>;
             }}
         >
-            {(data) => (
-                <BaseQuestionnaireResponseForm
-                    key={data.questionnaireRD.id}
-                    formData={{
-                        context: {
-                            fceQuestionnaire: toFirstClassExtension(data.questionnaireRD),
-                            questionnaire: data.questionnaireRD,
-                            questionnaireResponse: data.questionnaireResponseRD,
-                            launchContextParameters: launchContextParameters ?? [],
-                        },
-                        formValues: mapResponseToForm(
-                            data.questionnaireResponseRD,
-                            data.questionnaireRD,
-                        ),
-                    }}
-                    /* TODO: Move to useMemo */
-                    onSubmit={async () => {}}
-                    onChange={(newFormData) => {
-                        const fceQR = {
-                            ...data.questionnaireResponseRD,
-                            ...mapFormToResponse(newFormData.formValues, data.questionnaireRD),
-                        };
-                        onChange(fceQR);
-                    }}
-                />
-            )}
+            {(data) => {
+                const context: QuestionnaireResponseFormData['context'] = {
+                    fceQuestionnaire: toFirstClassExtension(data.questionnaire),
+                    questionnaire: data.questionnaire,
+                    questionnaireResponse: data.questionnaireResponse.inProgressQR,
+                    launchContextParameters: launchContextParameters ?? [],
+                };
+
+                return (
+                    <BaseQuestionnaireResponseForm
+                        key={data.questionnaire.id}
+                        formData={{
+                            context,
+                            formValues: mapResponseToForm(
+                                data.questionnaireResponse.inProgressQR,
+                                data.questionnaire,
+                            ),
+                        }}
+                        /* TODO: Move to useMemo */
+                        onSubmit={async () => {}}
+                        onChange={(newFormData) => {
+                            const inProgressQR: QuestionnaireResponse = {
+                                ...data.questionnaireResponse.inProgressQR,
+                                ...mapFormToResponse(newFormData.formValues, data.questionnaire),
+                                status: 'in-progress',
+                            };
+                            const initialContext = calcInitialContext(
+                                context,
+                                newFormData.formValues,
+                            );
+                            const completedQR: QuestionnaireResponse = {
+                                ...data.questionnaireResponse.inProgressQR,
+                                ...mapFormToResponse(
+                                    removeDisabledAnswers(
+                                        data.questionnaire,
+                                        newFormData.formValues,
+                                        initialContext,
+                                    ),
+                                    data.questionnaire,
+                                ),
+                                status: 'completed',
+                            };
+                            onChange({ inProgressQR, completedQR });
+                        }}
+                    />
+                );
+            }}
         </RenderRemoteData>
     );
 }

@@ -32,7 +32,7 @@ import {
     success,
 } from 'fhir-react/lib/libs/remoteData';
 import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { service } from 'fhir-react/lib/services/service';
+import { mapSuccess, service } from 'fhir-react/lib/services/service';
 import { formatError } from 'fhir-react/lib/utils/error';
 
 import { questionnaireProfileUrl } from 'shared/src/constants';
@@ -186,9 +186,7 @@ export function useMain(questionnaireId: string) {
                 resourceType: 'Questionnaire',
                 status: 'draft',
                 meta: {
-                    profile: [
-		        questionnaireProfileUrl
-                    ],
+                    profile: [questionnaireProfileUrl],
                 },
                 ...partialQuestionnaire,
             };
@@ -210,7 +208,10 @@ export function useMain(questionnaireId: string) {
             data: launchContext,
         });
 
-        return response;
+        return mapSuccess(response, (qr) => ({
+            inProgressQR: qr,
+            completedQR: qr,
+        }));
     }, [launchContext]);
 
     const createMapping = useCallback(
@@ -305,7 +306,7 @@ export function useMain(questionnaireId: string) {
         ) {
             return await extract({
                 questionnaire: assembledQuestionnaireRD.data,
-                questionnaireResponse: questionnaireResponseRD.data,
+                questionnaireResponse: questionnaireResponseRD.data.completedQR,
                 mapping: mappingRD.data,
                 launchContext: launchContext,
             });
