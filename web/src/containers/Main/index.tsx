@@ -4,6 +4,7 @@ import { FhirResource } from 'fhir/r4b';
 import { useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
+import { CachedRemoteData } from 'web/src/components/CachedRemoteData';
 import { Cell } from 'web/src/components/Cell';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 import { LaunchContextEditor } from 'web/src/components/LaunchContextEditor';
@@ -158,20 +159,31 @@ export function Main() {
                                     key={JSON.stringify(mappingResult)}
                                 />
                             ) : (
-                                <ResourceCodeDisplay resourceResponse={extractRD} />
-                            )}
-                            {isSuccess(extractRD) && (
-                                <Button
-                                    onClick={() => {
-                                        if (isSuccess(extractRD)) {
-                                            manager.applyMapping(extractRD.data);
-                                        }
-                                    }}
-                                    disabled={!isSuccess(extractRD)}
-                                    className={s.applyButton}
-                                >
-                                    Apply
-                                </Button>
+                                <CachedRemoteData remoteData={extractRD}>
+                                    {(cachedExtractRD) => (
+                                        <>
+                                            <ResourceCodeDisplay
+                                                resourceResponse={cachedExtractRD}
+                                            />
+                                            {isSuccess(cachedExtractRD) && (
+                                                <Button
+                                                    key="button"
+                                                    onClick={() => {
+                                                        if (isSuccess(cachedExtractRD)) {
+                                                            manager.applyMapping(
+                                                                cachedExtractRD.data,
+                                                            );
+                                                        }
+                                                    }}
+                                                    disabled={!isSuccess(cachedExtractRD)}
+                                                    className={s.applyButton}
+                                                >
+                                                    Apply
+                                                </Button>
+                                            )}
+                                        </>
+                                    )}
+                                </CachedRemoteData>
                             )}
                         </Cell>
                     </Allotment>

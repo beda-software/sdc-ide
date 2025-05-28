@@ -2,7 +2,6 @@ import { Mapping } from '@beda.software/aidbox-types';
 import classNames from 'classnames';
 import { WithId } from 'fhir-react';
 import _ from 'lodash';
-import { useCallback } from 'react';
 import { useBeforeUnload } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
@@ -17,6 +16,7 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
     const {
         reload,
         updatedResource,
+        onChange,
         onSave,
         setUpdatedResource,
         parseError,
@@ -27,7 +27,6 @@ export function MappingEditorEditor(props: MappingEditorEditorProps) {
         setEditorSelect,
     } = props;
 
-    const onChange = useCallback(_.debounce(props.onChange, 250), [props.onChange]);
     useBeforeUnload((event) => {
         if (updatedResource) {
             event.preventDefault();

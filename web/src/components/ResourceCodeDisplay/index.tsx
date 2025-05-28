@@ -12,7 +12,7 @@ interface ResourceDisplayBoxProps {
 function ResourceCodeDisplayRaw({ resourceResponse }: ResourceDisplayBoxProps) {
     return (
         <RenderRemoteData remoteData={resourceResponse}>
-            {(resource) => <CodeEditor value={resource} key={JSON.stringify(resource)} readOnly />}
+            {(resource) => <CodeEditor value={resource} readOnly />}
         </RenderRemoteData>
     );
 }
