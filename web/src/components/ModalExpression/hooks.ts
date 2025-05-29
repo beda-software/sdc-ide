@@ -25,7 +25,7 @@ export function useExpressionModal(props: ModalExpressionProps) {
     const { view } = useContext(CodeEditorContext);
     const [expressionResultOutput, setExpressionResultOutput] =
         useState<ExpressionResultOutput | null>(null);
-    const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>([]);
+    const [fullLaunchContext, setFullLaunchContext] = useState<Record<string, any>>({});
 
     const [fullLaunchContextRD] = useService(async () => {
         return await service<Record<string, QuestionnaireResponse>>({
@@ -36,10 +36,17 @@ export function useExpressionModal(props: ModalExpressionProps) {
     });
 
     useEffect(() => {
-        if (isSuccess(fullLaunchContextRD)) {
-            setFullLaunchContext(fullLaunchContextRD.data);
-        }
-    }, [fullLaunchContext, fullLaunchContextRD]);
+        const context: Record<string, any> = {
+            ...(isSuccess(fullLaunchContextRD) ? fullLaunchContextRD.data : {}),
+            ...(isSuccess(questionnaireResponseRD)
+                ? {
+                      QuestionnaireResponse: questionnaireResponseRD.data,
+                      resource: questionnaireResponseRD.data,
+                  }
+                : {}),
+        };
+        setFullLaunchContext(context);
+    }, [fullLaunchContextRD, questionnaireResponseRD]);
 
     const parameterName = extractParameterName(expression);
 
