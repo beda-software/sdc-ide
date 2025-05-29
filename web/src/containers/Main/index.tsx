@@ -96,7 +96,9 @@ export function Main() {
                                     : ''
                             }
                         >
-                            <ErrorBoundary resetKeys={[assembledQuestionnaireRD]}>
+                            <ErrorBoundary
+                                resetKeys={[assembledQuestionnaireRD, launchContext.parameter]}
+                            >
                                 <QRFormWrapper
                                     questionnaireRD={assembledQuestionnaireRD}
                                     questionnaireResponseRD={questionnaireResponseRD}

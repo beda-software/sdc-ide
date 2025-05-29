@@ -172,12 +172,20 @@ export function QuestionnaireEditor(props: Props) {
                                         }
 
                                         if (updatedResource) {
-                                            const response = await onSave(
-                                                fromFirstClassExtension(updatedResource),
-                                            );
-
-                                            if (isSuccess(response)) {
-                                                setUpdatedResource(undefined);
+                                            try {
+                                                const response = await onSave(
+                                                    fromFirstClassExtension(updatedResource),
+                                                );
+                                                if (isSuccess(response)) {
+                                                    setUpdatedResource(undefined);
+                                                }
+                                            } catch (err) {
+                                                toast.error(
+                                                    `Error while converting FCE to FHIR resource: ${err}`,
+                                                    {
+                                                        autoClose: false,
+                                                    },
+                                                );
                                             }
                                         }
                                     }}
