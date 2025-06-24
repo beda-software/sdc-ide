@@ -133,19 +133,31 @@ function TabContent(props: TabContentProps) {
 
     const renderResourceSelect = (type: string) => {
         return (
-            <RemoteResourceSelect
-                key={type}
-                resourceType={type}
-                value={activeParam?.resource?.id}
-                onChange={(resource) => {
-                    if (resource && Array.isArray(resource) === false) {
+            <>
+                <RemoteResourceSelect
+                    key={type}
+                    resourceType={type}
+                    value={activeParam?.resource?.id}
+                    onChange={(resource) => {
+                        if (resource && Array.isArray(resource) === false) {
+                            onChange({
+                                resource: resource as FhirResource,
+                                name: activeTab!.name,
+                            });
+                        }
+                    }}
+                />
+                <button
+                    onClick={() =>
                         onChange({
-                            resource: resource as FhirResource,
+                            resource: { resourceType: activeTab.types[0] } as FhirResource,
                             name: activeTab!.name,
-                        });
+                        })
                     }
-                }}
-            />
+                >
+                    Empty
+                </button>
+            </>
         );
     };
 
