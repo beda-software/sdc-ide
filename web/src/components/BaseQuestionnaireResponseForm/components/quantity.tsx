@@ -23,8 +23,11 @@ export function QuestionQuantity({ parentPath, questionItem }: QuestionItemProps
                             id={fieldName}
                             readOnly={qrfContext.readOnly || readOnly || hidden}
                             onChange={(e) => {
+                                const value = e.target.value
+                                    ? parseFloat(e.target.value)
+                                    : undefined;
                                 input.onChange({
-                                    value: e.target.value,
+                                    value: value,
                                     unit: selectedUnit?.display,
                                     system: selectedUnit?.system,
                                     code: selectedUnit?.code,
