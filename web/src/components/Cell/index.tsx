@@ -2,8 +2,8 @@ import classNames from 'classnames';
 
 import s from './Cell.module.scss';
 
-interface CellProps extends React.HTMLAttributes<HTMLDivElement> {
-    title?: string;
+interface CellProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+    title?: React.ReactNode;
     even?: boolean;
 }
 

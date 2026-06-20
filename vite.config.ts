@@ -21,6 +21,9 @@ export const getBaseConfig = ({ plugins = [], build = {}, test = {} }) =>
             }),
             ...plugins,
         ],
+        resolve: {
+            dedupe: ['react', 'react-dom', 'react-hook-form', 'sdc-qrf', '@babel/runtime'],
+        },
         define: command === 'build' ? {} : { global: {} },
         build: {
             commonjsOptions: {
