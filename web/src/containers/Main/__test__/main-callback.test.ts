@@ -2,10 +2,9 @@ import { Mapping } from '@beda.software/aidbox-types';
 import { ensure } from '@beda.software/fhir-react';
 import { isFailure, isSuccess } from '@beda.software/remote-data';
 import { renderHook, act } from '@testing-library/react-hooks';
-import { axiosInstance } from 'aidbox-react';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useMain } from 'web/src/containers/Main/useMain';
-import { getFHIRResource , service } from 'web/src/services/initialize';
+import { getFHIRResource, service } from 'web/src/services/initialize';
 import { setData } from 'web/src/services/localStorage';
 
 import { EXPECTED_RESOURCES } from './resources';
@@ -125,8 +124,7 @@ test.skip(
         ).toBeUndefined();
 
         const responseBefore = await getFHIRResource<Mapping>({
-            resourceType: 'Mapping',
-            id: notFoundMappingId,
+            reference: `Mapping/${notFoundMappingId}`,
         });
 
         if (isFailure(responseBefore)) {
@@ -141,8 +139,7 @@ test.skip(
         });
 
         const responseAfter = await getFHIRResource<Mapping>({
-            resourceType: 'Mapping',
-            id: existingMappingId,
+            reference: `Mapping/${existingMappingId}`,
         });
 
         if (isSuccess(responseAfter)) {
