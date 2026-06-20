@@ -1,15 +1,12 @@
 import { Mapping } from '@beda.software/aidbox-types';
+import { ensure } from '@beda.software/fhir-react';
+import { isFailure, isSuccess } from '@beda.software/remote-data';
 import { renderHook, act } from '@testing-library/react-hooks';
+import { axiosInstance } from 'aidbox-react';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useMain } from 'web/src/containers/Main/useMain';
+import { getFHIRResource , service } from 'web/src/services/initialize';
 import { setData } from 'web/src/services/localStorage';
-
-import { isFailure, isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResource } from 'fhir-react/lib/services/fhir';
-import { axiosInstance } from 'fhir-react/lib/services/instance';
-import { service } from 'fhir-react/lib/services/service';
-import { ensure } from 'fhir-react/lib/utils/tests';
-
 
 import { EXPECTED_RESOURCES } from './resources';
 import mappingDemo1 from './resources/Mapping/demo-1.json';

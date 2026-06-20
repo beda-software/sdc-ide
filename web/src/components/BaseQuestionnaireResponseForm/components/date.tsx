@@ -1,7 +1,6 @@
+import { FHIRDateTimeFormat } from '@beda.software/fhir-react';
 import moment from 'moment';
 import { QuestionItemProps, useQuestionnaireResponseFormContext } from 'sdc-qrf';
-
-import { FHIRDateTimeFormat } from 'fhir-react/lib/utils/date';
 
 import { QuestionField } from './field';
 import { QuestionLabel } from './label';

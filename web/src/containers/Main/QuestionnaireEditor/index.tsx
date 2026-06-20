@@ -7,14 +7,14 @@ import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
 import { ModalCreateQuestionnaire } from 'web/src/components/ModalCreateQuestionnaire';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
+import { RenderRemoteData } from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
     isFailure,
     isLoading,
     isSuccess,
-} from 'fhir-react/lib/libs/remoteData';
+} from '@beda.software/remote-data';
 import s from './QuestionnaireEditor.module.scss';
 import formStyles from '../../../components/BaseQuestionnaireResponseForm/QuestionnaireResponseForm.module.scss';
 import { PromptForm } from '../PromptForm';

@@ -1,12 +1,7 @@
+import { extractBundleResources, ResourcesMap, SearchParams } from '@beda.software/fhir-react';
+import { mapSuccess } from '@beda.software/remote-data';
 import { Resource } from 'fhir/r4b';
-
-import {
-    extractBundleResources,
-    getFHIRResources,
-    ResourcesMap,
-} from 'fhir-react/lib/services/fhir';
-import { SearchParams } from 'fhir-react/lib/services/search';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { getFHIRResources } from 'web/src/services/initialize';
 
 export async function loadResourceOptions<R extends Resource, IR extends Resource = any>(
     resourceType: R['resourceType'],

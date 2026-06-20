@@ -1,11 +1,10 @@
+import { isSuccess, RemoteData } from '@beda.software/remote-data';
 import { QuestionnaireResponse } from 'fhir/r4b';
 import { Button } from 'web/src/components/Button';
 import { CodeEditor } from 'web/src/components/CodeEditor';
 import { InputField } from 'web/src/components/InputField';
 import { useExpressionModal } from 'web/src/components/ModalExpression/hooks';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
-
-import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import s from './ModalExpression.module.scss';
 import { ModalExpressionProps } from './types';

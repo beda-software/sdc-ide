@@ -1,4 +1,15 @@
 import { Mapping } from '@beda.software/aidbox-types';
+import { useService, WithId, formatError } from '@beda.software/fhir-react';
+import {
+    RemoteData,
+    RemoteDataResult,
+    failure,
+    isFailure,
+    isSuccess,
+    mapSuccess,
+    notAsked,
+    success,
+} from '@beda.software/remote-data';
 import {
     Questionnaire,
     QuestionnaireResponse,
@@ -13,27 +24,13 @@ import { toast } from 'react-toastify';
 import { LaunchContext } from 'web/src/components/LaunchContextEditor/types';
 import { generateMappingService, generateQuestionnaireService } from 'web/src/services/builder';
 import { applyMapping as applyMappingService, extract } from 'web/src/services/extract';
+import {
+    saveFHIRResource,
+    service,
+    createFHIRResource,
+    getFHIRResource,
+} from 'web/src/services/initialize';
 import { formatFHIRError } from 'web/src/utils/errors';
-
-import {
-    createFHIRResource as createAidboxFHIRResource,
-    getFHIRResource as getAidboxFHIRResource,
-    saveFHIRResource as saveAidboxFHIRResource,
-} from 'aidbox-react/lib/services/fhir';
-
-import { useService } from 'fhir-react/lib/hooks/service';
-import {
-    RemoteData,
-    RemoteDataResult,
-    failure,
-    isFailure,
-    isSuccess,
-    notAsked,
-    success,
-} from 'fhir-react/lib/libs/remoteData';
-import { WithId, saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { mapSuccess, service } from 'fhir-react/lib/services/service';
-import { formatError } from 'fhir-react/lib/utils/error';
 
 import { questionnaireProfileUrl } from 'shared/src/constants';
 
@@ -74,18 +71,16 @@ export function useMain(questionnaireId: string) {
         const mappings =
             getMappings(q)?.map((ext) => ext.valueReference!.reference!.split('/')[1]!) || [];
 
-        const response = await getAidboxFHIRResource<Mapping>({
-            resourceType: 'Mapping',
-            id: mappings[0]!,
+        const response = await getFHIRResource<Mapping>({
+            reference: `Mapping/${mappings[0]!}`,
         });
 
         setMappingRD(response);
     }, []);
     const reloadMapping = useCallback(async () => {
         if (isSuccess(mappingRD)) {
-            const response = await getAidboxFHIRResource<Mapping>({
-                resourceType: 'Mapping',
-                id: mappingRD.data.id,
+            const response = await getFHIRResource<Mapping>({
+                reference: `Mapping/${mappingRD.data.id}`,
             });
 
             setMappingRD(response);
@@ -216,7 +211,7 @@ export function useMain(questionnaireId: string) {
 
     const createMapping = useCallback(
         async (mapping: Mapping) => {
-            const mappingResponse = await createAidboxFHIRResource(mapping);
+            const mappingResponse = await createFHIRResource(mapping);
 
             if (isSuccess(mappingResponse) && isSuccess(originalQuestionnaireRD)) {
                 const questionnaire = originalQuestionnaireRD.data;
@@ -281,7 +276,7 @@ export function useMain(questionnaireId: string) {
 
     const saveMapping = useCallback(
         async (mapping: Mapping) => {
-            const response = await saveAidboxFHIRResource(mapping);
+            const response = await saveFHIRResource(mapping);
 
             if (isSuccess(response)) {
                 setMappingRD(response);

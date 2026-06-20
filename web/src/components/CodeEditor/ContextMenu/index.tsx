@@ -1,9 +1,8 @@
+import { RemoteData } from '@beda.software/remote-data';
 import { QuestionnaireResponse, Parameters, Questionnaire } from 'fhir/r4b';
 import { useRef } from 'react';
 import { ModalExpression } from 'web/src/components/ModalExpression';
 import { SourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal';
-
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import s from './ContextMenu.module.scss';
 import { useContextMenu } from './useContextMenu';

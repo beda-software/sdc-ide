@@ -1,11 +1,10 @@
+import { ensure } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 import { act, renderHook } from '@testing-library/react-hooks';
+import { axiosInstance } from 'aidbox-react';
 import { NutritionOrder, Patient } from 'fhir/r4b';
 import { useSourceQueryDebugModal } from 'web/src/components/SourceQueryDebugModal/hooks';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-import { saveFHIRResource } from 'fhir-react/lib/services/fhir';
-import { axiosInstance } from 'fhir-react/lib/services/instance';
-import { ensure } from 'fhir-react/lib/utils/tests';
+import { saveFHIRResource } from 'web/src/services/initialize';
 
 import {
     nutritionOrderData,

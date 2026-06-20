@@ -1,6 +1,5 @@
+import { formatError } from '@beda.software/fhir-react';
 import { OperationOutcome } from 'fhir/r4b';
-
-import { formatError } from 'fhir-react/lib/utils/error';
 
 export function formatFHIRError(error: any) {
     if (error) {

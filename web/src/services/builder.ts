@@ -1,4 +1,4 @@
-import { service } from 'fhir-react';
+import { service } from 'web/src/services/initialize';
 
 import { aiQuestionnaireBuilderUrl } from 'shared/src/constants';
 
