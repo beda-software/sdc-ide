@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import { service } from 'fhir-react/lib/services/service';
 
-
 import { juteURL, fhirpathMappingUrl } from './initialize';
 
 interface Props {

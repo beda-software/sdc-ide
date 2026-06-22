@@ -7,7 +7,6 @@ import AsyncSelect from 'react-select/async';
 import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { mapSuccess, service } from 'fhir-react/lib/services/service';
 
-
 import s from './TerminologyField.module.scss';
 
 interface TerminologyFieldProps {

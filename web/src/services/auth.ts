@@ -13,7 +13,6 @@ import {
 } from 'fhir-react/lib/services/instance';
 import { extractErrorCode } from 'fhir-react/lib/utils/error';
 
-
 import { getData } from './localStorage';
 
 export function getUserInfo() {

@@ -3,7 +3,6 @@ import _ from 'lodash';
 import { MappingSelectError } from 'web/src/components/MappingSelectError';
 import { MappingErrorManager, Title } from 'web/src/containers/Main/types';
 
-
 import s from './MappingSelect.module.scss';
 
 interface MappingSelectProps {

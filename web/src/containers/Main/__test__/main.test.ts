@@ -10,7 +10,6 @@ import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 import { service } from 'fhir-react/lib/services/service';
 import { ensure } from 'fhir-react/lib/utils/tests';
 
-
 const questionnaireIdInitial = 'demo-1';
 
 import mappingDemo1 from './resources/Mapping/demo-1.json';
