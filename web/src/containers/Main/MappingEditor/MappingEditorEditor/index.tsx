@@ -1,13 +1,12 @@
 import { Mapping } from '@beda.software/aidbox-types';
+import { WithId } from '@beda.software/fhir-react';
+import { isSuccess } from '@beda.software/remote-data';
 import classNames from 'classnames';
-import { WithId } from 'fhir-react';
 import _ from 'lodash';
 import { useBeforeUnload } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button } from 'web/src/components/Button';
 import { ResourceCodeEditor } from 'web/src/components/ResourceCodeEditor';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 import { MappingEditorEditorProps } from '../interfaces';
 import s from '../MappingEditor.module.scss';

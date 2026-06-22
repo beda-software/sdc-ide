@@ -1,13 +1,12 @@
-import { ReactElement } from 'react';
-
+import { formatError } from '@beda.software/fhir-react';
 import {
     isFailure,
     isLoading,
     isNotAsked,
     isSuccess,
     RemoteData,
-} from 'fhir-react/lib/libs/remoteData';
-import { formatError } from 'fhir-react/lib/utils/error';
+} from '@beda.software/remote-data';
+import { ReactElement } from 'react';
 
 interface RenderRemoteDataProps<S, E = any> {
     remoteData: RemoteData<S, E>;

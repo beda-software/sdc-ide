@@ -1,8 +1,7 @@
+import { isSuccess } from '@beda.software/remote-data';
 import { Bundle, QuestionnaireResponse, StructureMap } from 'fhir/r4b';
 import { useCallback, useEffect, useState } from 'react';
 import { convert, createStructureMap, transform } from 'web/src/services/fhirmapping';
-
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
 
 export function useFHIRMappingLanguage(questionnaireResponse: QuestionnaireResponse | undefined) {
     const [fhirMappingLangMode, setFhirMappingLangMode] = useState<boolean>(false);

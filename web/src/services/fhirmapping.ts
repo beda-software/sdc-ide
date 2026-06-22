@@ -1,6 +1,5 @@
 import { Bundle, QuestionnaireResponse, StructureMap } from 'fhir/r4b';
-
-import { service } from 'fhir-react/lib/services/service';
+import { service } from 'web/src/services/initialize';
 
 import { fhirMappingLanguageUrl } from 'shared/src/constants';
 

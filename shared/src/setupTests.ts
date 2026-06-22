@@ -5,14 +5,8 @@ import {
 } from 'aidbox-react/lib/services/instance';
 import { withRootAccess } from 'aidbox-react/lib/utils/tests';
 
-import {
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceBaseURL as setFHIRInstanceBaseURL,
-} from 'fhir-react/lib/services/instance';
-
 beforeAll(async () => {
     setAidboxInstanceBaseURL('http://localhost:8181');
-    setFHIRInstanceBaseURL('http://localhost:8181/fhir');
 });
 
 let txId: string;
@@ -32,7 +26,6 @@ beforeEach(async () => {
 
 afterEach(async () => {
     resetAidboxInstanceToken();
-    resetFHIRInstanceToken();
     await withRootAccess(async () => {
         await axiosInstance({
             method: 'POST',

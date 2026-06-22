@@ -1,3 +1,5 @@
+import { RenderRemoteData } from '@beda.software/fhir-react';
+import { isSuccess, mapSuccess } from '@beda.software/remote-data';
 import Editor from '@monaco-editor/react';
 import { Allotment } from 'allotment';
 import { FhirResource } from 'fhir/r4b';
@@ -15,9 +17,6 @@ import { QRFormWrapper } from 'web/src/components/QRFormWrapper';
 import { ResourceCodeDisplay } from 'web/src/components/ResourceCodeDisplay';
 import { version } from 'web/src/version';
 
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isSuccess } from 'fhir-react/lib/libs/remoteData';
-
 import s from './Main.module.scss';
 import { MappingEditor } from './MappingEditor';
 import { QuestionnaireEditor } from './QuestionnaireEditor';
@@ -26,8 +25,6 @@ import { useIDELayout } from './useIDELayout';
 import { useMain } from './useMain';
 
 import 'allotment/dist/style.css';
-// eslint-disable-next-line import/order
-import { mapSuccess } from 'aidbox-react/lib/services/service';
 
 export function Main() {
     const { questionnaireId } = useParams<{ questionnaireId: string }>();

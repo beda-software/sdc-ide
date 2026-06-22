@@ -1,9 +1,8 @@
+import { success } from '@beda.software/remote-data';
 import classNames from 'classnames';
 import { FhirResource, Parameters, ParametersParameter, Questionnaire } from 'fhir/r4b';
 import { useMemo, useState } from 'react';
 import { SingleValue } from 'react-select';
-
-import { success } from 'fhir-react/lib/libs/remoteData';
 
 import { groupLaunchContextParams } from './groupLaunchContextParams';
 import s from './LaunchContextEditor.module.scss';

@@ -1,6 +1,5 @@
+import { formatError } from '@beda.software/fhir-react';
 import { Button } from 'web/src/components/Button';
-
-import { formatError } from 'fhir-react/lib/utils/error';
 
 import { MappingEditorErrorProps } from '../interfaces';
 import s from '../MappingEditor.module.scss';

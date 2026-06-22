@@ -10,6 +10,7 @@ import {
     QuestionnaireResponseFormProvider,
     removeItemKey,
 } from 'sdc-qrf';
+import { fhirService } from 'web/src/services/initialize';
 
 import {
     Col,
@@ -88,6 +89,7 @@ export function BaseQuestionnaireResponseForm({ formData, onSubmit, readOnly, on
                     <QuestionnaireResponseFormProvider
                         formValues={values}
                         setFormValues={(newValues) => form.change('', newValues)}
+                        fhirService={fhirService}
                         groupItemComponent={Group}
                         itemControlGroupItemComponents={{ col: Col, row: Row, gtable: GTable }}
                         questionItemComponents={{

@@ -1,9 +1,8 @@
+import { RemoteData } from '@beda.software/remote-data';
 import { Parameters, Resource, QuestionnaireResponse } from 'fhir/r4b';
 import { YAMLException } from 'js-yaml';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-
-import { RemoteData } from 'fhir-react/lib/libs/remoteData';
 
 import { usePreviousValue } from 'shared/src/hooks/previous-value';
 

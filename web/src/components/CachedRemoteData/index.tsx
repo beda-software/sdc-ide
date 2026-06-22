@@ -1,4 +1,4 @@
-import { isLoading, RemoteData } from 'fhir-react';
+import { isLoading, RemoteData } from '@beda.software/remote-data';
 import { ReactElement, useEffect, useState } from 'react';
 
 export function CachedRemoteData<S, E>(props: {

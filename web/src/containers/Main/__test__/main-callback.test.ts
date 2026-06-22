@@ -1,11 +1,11 @@
 import { Mapping } from '@beda.software/aidbox-types';
+import { ensure } from '@beda.software/fhir-react';
+import { isFailure, isSuccess } from '@beda.software/remote-data';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { Questionnaire, QuestionnaireResponse } from 'fhir/r4b';
 import { useMain } from 'web/src/containers/Main/useMain';
+import { getFHIRResource, service } from 'web/src/services/initialize';
 import { setData } from 'web/src/services/localStorage';
-
-import { service } from 'fhir-react/lib/services/service';
-import { ensure } from 'fhir-react/lib/utils/tests';
 
 import { EXPECTED_RESOURCES } from './resources';
 import mappingDemo1 from './resources/Mapping/demo-1.json';
@@ -103,6 +103,50 @@ test.skip(
             const mapping = ensure(result.current.mappingRD);
             expect(mapping.body.entry[0].request.method).toBe('PUT');
         });
+    },
+    timeOutMs,
+);
+
+test.skip(
+    'saveNewMapping',
+    async () => {
+        const notFoundMappingId = 'foobar-100';
+        const existingMappingId = 'foobar-101';
+
+        await setup();
+        const { result } = renderHook(() => useMain('test-1'));
+
+        expect(
+            result.current.saveNewMapping(
+                EXPECTED_RESOURCES.mappingIdListEmpty,
+                EXPECTED_RESOURCES.mappingInfoList,
+            ),
+        ).toBeUndefined();
+
+        const responseBefore = await getFHIRResource<Mapping>({
+            reference: `Mapping/${notFoundMappingId}`,
+        });
+
+        if (isFailure(responseBefore)) {
+            expect(responseBefore.error.id).toBe('not-found');
+        }
+
+        await act(async () => {
+            result.current.saveNewMapping(
+                EXPECTED_RESOURCES.mappingIdList,
+                EXPECTED_RESOURCES.mappingInfoList,
+            );
+        });
+
+        const responseAfter = await getFHIRResource<Mapping>({
+            reference: `Mapping/${existingMappingId}`,
+        });
+
+        if (isSuccess(responseAfter)) {
+            expect(responseAfter.data.id).toBe(existingMappingId);
+        } else {
+            expect(responseAfter.error.id).toBe('not-found');
+        }
     },
     timeOutMs,
 );

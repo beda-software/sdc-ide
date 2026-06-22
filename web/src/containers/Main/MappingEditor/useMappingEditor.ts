@@ -1,11 +1,5 @@
 import { Mapping } from '@beda.software/aidbox-types';
-import { Bundle, Questionnaire } from 'fhir/r4b';
-import { YAMLException } from 'js-yaml';
-import { useEffect, useState } from 'react';
-
-import { getFHIRResources as getAidboxFHIRResources } from 'aidbox-react/lib/services/fhir';
-
-import { useService } from 'fhir-react/lib/hooks/service';
+import { useService, WithId, extractBundleResources } from '@beda.software/fhir-react';
 import {
     RemoteData,
     RemoteDataResult,
@@ -14,10 +8,13 @@ import {
     isLoading,
     isNotAsked,
     isSuccess,
+    mapSuccess,
     success,
-} from 'fhir-react/lib/libs/remoteData';
-import { WithId, extractBundleResources } from 'fhir-react/lib/services/fhir';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+} from '@beda.software/remote-data';
+import { Bundle, Questionnaire } from 'fhir/r4b';
+import { YAMLException } from 'js-yaml';
+import { useEffect, useState } from 'react';
+import { getFHIRResources } from 'web/src/services/initialize';
 
 import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
@@ -75,7 +72,7 @@ export function useMappingEditor(
                 ) || [];
 
             if (ids.length) {
-                response = await getAidboxFHIRResources<Mapping>('Mapping', {
+                response = await getFHIRResources<Mapping>('Mapping', {
                     _sort: 'id',
                     _id: [ids.join(',')],
                 });

@@ -1,17 +1,11 @@
 import { User } from '@beda.software/aidbox-types';
-
+import { extractErrorCode } from '@beda.software/fhir-react';
+import { isFailure, success } from '@beda.software/remote-data';
 import {
-    resetInstanceToken as resetAidboxInstanceToken,
-    setInstanceToken as setAidboxInstanceToken,
-} from 'aidbox-react/lib/services/instance';
-import { service } from 'aidbox-react/lib/services/service';
-
-import { isFailure, success } from 'fhir-react/lib/libs/remoteData';
-import {
-    resetInstanceToken as resetFHIRInstanceToken,
-    setInstanceToken as setFHIRInstanceToken,
-} from 'fhir-react/lib/services/instance';
-import { extractErrorCode } from 'fhir-react/lib/utils/error';
+    resetAidboxInstanceToken,
+    setAidboxInstanceToken,
+    aidboxService,
+} from 'web/src/services/initialize';
 
 import { getData } from './localStorage';
 
@@ -20,7 +14,7 @@ export function getUserInfo() {
         connection: { baseUrl },
     } = getData();
 
-    return service<User>({
+    return aidboxService<User>({
         baseURL: baseUrl,
         method: 'GET',
         url: '/auth/userinfo',
@@ -33,13 +27,11 @@ export function getToken() {
 
 export async function restoreUserSession(token: string) {
     setAidboxInstanceToken({ access_token: token, token_type: 'Bearer' });
-    setFHIRInstanceToken({ access_token: token, token_type: 'Bearer' });
 
     const userResponse = await getUserInfo();
 
     if (isFailure(userResponse) && extractErrorCode(userResponse.error) !== 'network_error') {
         resetAidboxInstanceToken();
-        resetFHIRInstanceToken();
 
         return success(null);
     }

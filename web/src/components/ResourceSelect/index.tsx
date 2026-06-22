@@ -1,14 +1,11 @@
+import { RenderRemoteData, WithId, SearchParams } from '@beda.software/fhir-react';
+import { isSuccess, RemoteData, mapSuccess } from '@beda.software/remote-data';
 import classNames from 'classnames';
 import { Bundle, Resource } from 'fhir/r4b';
 import _ from 'lodash';
 import { useCallback } from 'react';
 import { MultiValue, SingleValue } from 'react-select';
-
-import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
-import { isSuccess, RemoteData } from 'fhir-react/lib/libs/remoteData';
-import { getFHIRResources, WithId } from 'fhir-react/lib/services/fhir';
-import { SearchParams } from 'fhir-react/lib/services/search';
-import { mapSuccess } from 'fhir-react/lib/services/service';
+import { getFHIRResources } from 'web/src/services/initialize';
 
 import s from './ResourceSelect.module.scss';
 import { AsyncSelect } from '../Select';
