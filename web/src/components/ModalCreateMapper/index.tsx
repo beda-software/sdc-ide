@@ -6,7 +6,6 @@ import { Button } from 'web/src/components/Button';
 import { InputField } from 'web/src/components/InputField';
 import { Select } from 'web/src/components/Select';
 
-
 import s from './ModalCreateMapper.module.scss';
 import { FieldWrapper } from '../FieldWrapper';
 

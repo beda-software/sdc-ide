@@ -19,7 +19,6 @@ import {
 import { WithId, extractBundleResources } from 'fhir-react/lib/services/fhir';
 import { mapSuccess } from 'fhir-react/lib/services/service';
 
-
 import { EditorState } from './interfaces';
 import { getMappings } from '../utils';
 

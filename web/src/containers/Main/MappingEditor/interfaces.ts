@@ -5,7 +5,6 @@ import { YAMLException } from 'js-yaml';
 import { RemoteData, RemoteDataResult } from 'fhir-react/lib/libs/remoteData';
 import { WithId } from 'fhir-react/lib/services/fhir';
 
-
 export type EditorState = 'initial' | 'loading' | 'select' | 'ready';
 
 interface CommonMappingEditorProps {

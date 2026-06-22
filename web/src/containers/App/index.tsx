@@ -8,7 +8,6 @@ import { RenderRemoteData } from 'fhir-react/lib/components/RenderRemoteData';
 import { useService } from 'fhir-react/lib/hooks/service';
 import { success } from 'fhir-react/lib/libs/remoteData';
 
-
 import {
     authorize,
     getToken,
