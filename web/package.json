@@ -1,7 +1,7 @@
 {
     "name": "web",
     "type": "module",
-    "version": "0.3.16",
+    "version": "0.3.17",
     "private": true,
     "dependencies": {
         "@beda.software/aidbox-types": "link:../shared/src/contrib/aidbox-types",
