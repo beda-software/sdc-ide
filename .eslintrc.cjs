@@ -43,7 +43,7 @@ module.exports = {
         'import/no-unresolved': [
             2,
             {
-                ignore: ['fhir/r4b'], // Fixes error: Unable to resolve path to module 'fhir/r4b'.
+                ignore: ['fhir/r4b', '@beda.software/web-item-controls/controls'],
             },
         ],
         'import/order': [

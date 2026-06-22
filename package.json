@@ -48,7 +48,8 @@
     "workspaces": {
         "packages": [
             "web",
-            "shared"
+            "shared",
+            "contrib/*"
         ],
         "nohoist": [
             "**/react-native",
